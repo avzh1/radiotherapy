@@ -1,1 +1,10 @@
+# ignore large pdfs
 /research/source/**/*.pdf
+
+# ignore auxiliary outputs of latex documents
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+
