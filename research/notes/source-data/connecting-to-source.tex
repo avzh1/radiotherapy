@@ -16,6 +16,8 @@
                    \labelwidth=\leftmargin}\item[\Large\ding{43}]}
   {\end{list}\end{mdframed}\par}
 
+\setlength{\parindent}{0pt}
+
 \begin{document}
 
 \maketitle
@@ -112,13 +114,48 @@ which python3
 
 Activating it gives us a new path for the pyhton executable because, in an active environment, the \$PATH environment variable is slightly modified.
 
-% \subsection*{See Queue of jobs}
+\subsection*{Using CUDA}
 
-% To see the queue of jobs run \verb|squeue -l|
+Many jobs will make use of the \href{https://developer.nvidia.com/cuda-toolkit}{Nvidia CUDA toolkit}, multiple versions of which are at \texttt{/vol/cuda}. If there ever appears a need to use this toolkit then in the submission bash script add:
 
-% \subsection*{Delete a slurm job}
+\begin{lstlisting}[language=sh]
+    . /vol/cuda/12.0.0/setup.sh # if you're using version 12.0.0
+\end{lstlisting}
 
-% To delete a slurm job run \verb|scancel <job ID>|
+Care that you choose a version with which your tensorflow or pytorch are compatible with.
 
+\subsection*{Template Example bash submission script}
+
+\begin{warning}
+    This example assumes you have followed the previous steps and installed a python environment (using virtualenv, extra lines may  be needed using minconda, check the example script further below) as directed. Please adjust paths if you have an existing python environment, or if you already load your environment in ~/.bashrc (note: sbatch does not load ~/.bashrc, source it as per example script) . Do not uncomment \#SBATCH lines, keep them as below, make sure the \#SBATCH directives are directly after \verb|#!/bin/bash|
+\end{warning}
+
+Remember to make the sumbission script\footnote{example can be found at \texttt{/vol/bitbucket/shared/slurmseg.sh}}. executable with \verb|chmod +x <script_name>.sh|
+
+\begin{lstlisting}{language=bash}
+#!/bin/bash
+#SBATCH --gres=gpu:1
+#SBATCH --mail-type=ALL # required to send email notifcations
+#SBATCH --mail-user=<your_username> # required to send email notifcations
+export PATH=/vol/bitbucket/${USER}/myvenv/bin/:$PATH
+# the above path could also point to a miniconda install
+# if using miniconda, uncomment the below line
+# source ~/.bashrc
+source activate
+source /vol/cuda/12.0.0/setup.sh
+/usr/bin/nvidia-smi
+uptime
+\end{lstlisting}
+
+\subsection*{Scheduling job}
+
+\begin{itemize}
+    \item \texttt{ssh gpucluster2}
+    \item \texttt{cd /vol/bitbucket/\$USER}
+    \item \texttt{sbatch <path to executable>.sh}
+    \item \texttt{less slurm-XYZ.out} saves the output.
+    \item \verb|squeue -l| for queue of running jobs
+    \item \verb|scancel <job ID>| to delete slurm job
+\end{itemize}
 
 \end{document}
