@@ -1,0 +1,50 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{listings}
+
+\title{Description of Source Data}
+\author{Anton Zhitomirsky}
+
+\begin{document}
+
+\maketitle
+
+\section{The data}
+
+Results are structured in the file:
+
+\begin{lstlisting}[language=bash]
+/vol/biomedic3/bglocker/nnUNet
+\end{lstlisting}
+
+\begin{lstlisting}[language=inform]
+-rwxr-xr-x   1 bglocker biomedia 236 Sep 24 15:16 exports
+drwxr-sr-x   9 bglocker biomedia   9 Nov 25 10:55 nnUNet_preprocessed
+drwxr-sr-x   9 bglocker biomedia  10 Nov 25 10:50 nnUNet_raw
+drwxr-sr-x   9 bglocker biomedia   9 Nov 25 12:20 nnUNet_results
+drwxr-sr-x  11 bglocker biomedia  11 Dec 16 09:10 nnUNet_testing
+-rw-r--r--   1 bglocker biomedia 644 Oct 20 07:20 run_nnunet_0.sh
+-rw-r--r--   1 bglocker biomedia 644 Oct 20 07:20 run_nnunet_1.sh
+-rw-r--r--   1 bglocker biomedia 644 Oct 20 07:20 run_nnunet_2.sh
+-rw-r--r--   1 bglocker biomedia 644 Oct 20 07:21 run_nnunet_3.sh
+-rw-r--r--   1 bglocker biomedia 644 Oct 20 07:21 run_nnunet_4.sh
+\end{lstlisting}
+
+\section*{nnUNet\_raw}
+
+nnUNet\_raw has the original (training) images with manual annotations. Each Dataset below is treated as a binary segmentation problem. See section \ref{section:itksnap}
+
+\begin{lstlisting}[language=inform]
+drwxr-sr-x  4 bglocker biomedia   5 Sep 17 13:47 Dataset001_Anorectum
+drwxr-sr-x  3 bglocker biomedia   5 Sep 17 20:24 Dataset002_Bladder
+drwxr-sr-x  3 bglocker biomedia   5 Sep 17 20:27 Dataset003_CTVn
+drwxr-sr-x  3 bglocker biomedia   5 Sep 17 20:28 Dataset004_CTVp
+drwxr-sr-x  3 bglocker biomedia   5 Sep 17 20:29 Dataset005_Parametrium
+-rw-r--r--  1 bglocker biomedia 135 Nov 25 10:50 note
+\end{lstlisting}
+
+\subsection*{What is a Binary Segmentation Problem?}
+
+\section{Viewing the Data using ItkSnap} \label{section:itksnap}
+
+\end{document}
