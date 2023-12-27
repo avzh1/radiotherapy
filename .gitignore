@@ -9,3 +9,6 @@
 *.synctex.gz
 *.out
 
+# ignore anything that is stored in the temp directory
+
+*.nii.gz
