@@ -31,15 +31,15 @@ function fetch_raw() {
             mkdir -p $destination
             
             sample_name=$randomSample
-            if [ $type = $images ]; then
+            if [ $type = "imagesTr" ]; then
                 sample_name="${sample_name}_0000"
             fi
 
             source="shell1:/vol/biomedic3/bglocker/nnUNet/nnUNet_raw/${organ}/${type}/zzAMLART_${sample_name}.nii.gz"
             
             echo "[DEBUG]: copying files from"
-            echo "         ${source}"
-            echo "-------> ${destination}"
+            echo "[DEBUG]  ${source}"
+            echo "[DEBUG]  ${destination}"
 
             scp $source $destination
         done
@@ -64,7 +64,7 @@ function fetch_testings() {
         echo "-------> ${destination}"
 
         scp $source $destination
-    done    
+    done
 }
 
 while [[ "$#" -gt 0 ]]; do

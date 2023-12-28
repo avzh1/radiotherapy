@@ -1,15 +1,24 @@
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{listings}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{subcaption} % For subfigures
+\usepackage{float} % for H option in figures
 
 \title{Description of Source Data}
 \author{Anton Zhitomirsky}
+
+\setlength{\parindent}{0pt}
+
+\usepackage{biblatex} %Imports biblatex package
+\addbibresource{../../source/bibliography.bib} %Import the bibliography file
 
 \begin{document}
 
 \maketitle
 
-\section{The data}
+\section{Structure of source Data}
 
 Results are structured in the file:
 
@@ -32,7 +41,7 @@ drwxr-sr-x  11 bglocker biomedia  11 Dec 16 09:10 nnUNet_testing
 
 \section*{nnUNet\_raw}
 
-nnUNet\_raw has the original (training) images with manual annotations. Each Dataset below is treated as a binary segmentation problem. See section \ref{section:itksnap}
+nnUNet\_raw has the original (training) images with manual annotations. Each Dataset below is treated as a binary segmentation problem. See Section\ref{section:itksnap}
 
 \begin{lstlisting}[language=inform]
 drwxr-sr-x  4 bglocker biomedia   5 Sep 17 13:47 Dataset001_Anorectum
@@ -45,6 +54,33 @@ drwxr-sr-x  3 bglocker biomedia   5 Sep 17 20:29 Dataset005_Parametrium
 
 \subsection*{What is a Binary Segmentation Problem?}
 
-\section{Viewing the Data using ItkSnap} \label{section:itksnap}
+\section{Viewing the Data}\label{section:itksnap}
+
+\subsection*{ItkSnap}
+
+The viewing tool used is ItkSnap, which was developed as an open source tool for viewing medical imaging scans. The view (Figure\ref{fig:view}) shows how you would see input data.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics*[]{images/view.png}
+    \caption{view of all input data}\label{fig:view}
+\end{figure}
+
+With that we can use this tool to view input data. Here, the R and L stand for right and left respectively, and the A and P stand for Anterior and Posterior. We can provide a few other examples of viewing data displayed below in Figure\ref{fig:AnorectumImage}. We are further provided with manual annotation of the substructures. Figure\ref{fig:AnorectumLabel} shows an example of the annotation of the Anorectum. You can enable the 3D visual model through \texttt{Edit > 3D Panel > Toggle 3D view}.
+
+\begin{figure}[H]
+    \centering
+    \captionsetup{width=0.45\textwidth}
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/AnorectumImage.png}
+        \caption{ItkSnap view of the Anorectum Raw Image}\label{fig:AnorectumImage}
+    \end{minipage}%
+    \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{images/AnorectumLabel.png}
+        \caption{ItkSnap view of the Anorectum Raw Image}\label{fig:AnorectumLabel}
+    \end{minipage}%
+\end{figure} 
 
 \end{document}

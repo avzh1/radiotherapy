@@ -8,6 +8,10 @@
 *.log
 *.synctex.gz
 *.out
+*.bbl
+*.bcf
+*.blg
+*.run.xml
 
 # ignore anything that is stored in the temp directory
 
