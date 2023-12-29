@@ -1,0 +1,91 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{subcaption} % For subfigures
+\usepackage{float} % for H option in figures
+\usepackage{url}
+\usepackage{float}
+
+\usepackage{biblatex} %Imports biblatex package
+\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
+
+\setlength{\parindent}{0pt}
+
+\title{New target volume delineation and PTV strategies to further
+personalise radiotherapy}
+\author{Anton Zhitomirsky}
+
+\begin{document}
+
+\maketitle
+
+Review of paper \cite{personalised-PTV-strategies}.
+
+\section{Summary}
+
+In PTVs geometrical uncertainty is typically derived from a limited sample of patients, which conequently means that the resulting margins are not tailored to individual patients. Standard PTVs cannot account for arbitrary anisotrpic extensions (\ref{term:arbitrary-anisotropic-extensions}) of the target volume originalting from Delinieation uncertainty. Delineation uncertainty is currently estimated by measuring variations between contours produced by different observers (a limitation of current practice is that DU is only measured for samples of patients, whcih prevents margins from accounting for DU associated with each individual patient).
+
+\subsection{Method}
+
+\begin{enumerate}
+    \item Firstly, delineate two contour sets; one which bounds all voxels believed to have a probability of belonging to the GTV of 1, while the second includes all voxels with a probability greater than 0.
+    \item specify a PDF for the true GTV boundary position within the boundaries of the two countours
+    \item Create a patient-specific PTV, designed to account for all systematic erros using this information along with measurements of the other systematic errors.
+\end{enumerate}
+
+This method alegedly produces smaller PTVs than the van Herk margin recipe (\ref{term:herk-margin-recipe})
+
+\subsection{Type B delineation method}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{images/PDF-of-CTV.png}
+    \caption{Illustration of certainty within a CTV}
+    \label{fig:pdf-of-ctv}
+\end{figure}
+
+see original paper for formuals.
+
+\subsection{Hand-wavy explination of the formulas}
+
+From Figure\ref{fig:pdf-of-ctv} we have areas we are certian contain a tumour and an area that has a non-0 probability of it containing a tumour. 
+
+We then obtain a distribution of uncertainty and find numerical values for $\varphi$ (the PDF). For each point we have a perpendicualr distance between the boundary of uncertainty and certainty (RHS of Figure \ref{fig:pdf-of-ctv}). We then convince ourselves that the intergral sums to 1.
+
+We then incorporate systematic errors. See paper.
+
+\section{Terminology}
+
+\subsection{Arbitrary anisotropic extensions} \label{term:arbitrary-anisotropic-extensions}
+
+Isotropic and anisotropic are terms that describe whether or not the properties of materials depend on direction. When a property is the same in all directions, the material is isotropic. When a property varies according to direction, the material is anisotropic. The terms come from the Greek isos (equal) and tropos (way). The an in “anisotropic” means “not.” \cite{anisotropy}
+
+\subsection{Herk Margin Recipe} \label{term:herk-margin-recipe}
+
+\subsubsection{Will errors ever be zero?}
+
+One might consider that because of modern developments in image-guided radiotherapy, it is possible to eliminate all geometrical errors and it may become safe to reduce the margin to zero. However, in my opinion, it is impossible to completely eliminate all geometrical errors. For instance, even if the treatment is completely accurate, there will still be uncertainties in GTV and CTV definition. Then, online systems for imageguided radiotherapy will not be perfectly accurate because of detection or observer errors in the imaging system. Then there will always be some delay between imaging and treatment leading to uncertainties because of short-term organ movement. Then, there will be limits on the accuracy of correction procedures. Finally, when using indirect methods for detection of the tumor position, there will still be the possibility of relative movement of the structure of reference and the tumor. \cite{van-herk-margin-recipe}
+
+\subsubsection{Herk Margin Recipe}
+
+"The well-known Van Herk recipe for CTV-PTV margins \cite{van-herk-margin-recipe2} assumes treatment uncertainties to be normally distributed and then studies the population histogram to ensure that 90\% of patients receive 95\% of the prescribed dose" \cite{van-herk-margin-recipe3} \cite{van-herk-margin-recipe2}
+
+From \cite{personalised-PTV-strategies} (paper in question)
+
+\begin{equation}
+    m = \alpha \Sigma + \beta \sqrt{\sigma^2 + \sigma^2_p} - \beta \sigma_p
+\end{equation}
+
+where $\Sigma$ is the systematic uncertainty, $\sigma$ is the random uncertainty, $\sigma_p$ is the measure of penumbra width (An area in which something exists to a lesser or uncertain degree (from google)) and $\alpha$ and $\beta$ denote the confidence level that the CTV is covered by a specified isodose for a given fraction of the patient population. And $m$ is the isotropic PTV-margin.
+
+\subsubsection{Limitations}
+
+With respect to DU, the MvHMR is limited by two assumptions. First, it assumes that the patient population is sufﬁciently homogeneous such that $\Sigma$ adequately represent the whole population even when measured in only a small sample of patients.
+Second, the MvHMR assumes that all geometric uncertainties can be modelled by translations of the volume of interest (VOI). For target delineation, this implies that the clinician always delineates the target with the correct size and shape, but with errors simply being in its position. This is in conﬂict with the publications that show delineation error to be anisotropic, as described above. Therefore, the MvHMR is not designed to account for anisotropy which is known to exist for DU.
+
+\printbibliography
+
+\end{document}
