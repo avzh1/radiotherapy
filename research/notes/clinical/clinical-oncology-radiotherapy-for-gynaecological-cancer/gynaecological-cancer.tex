@@ -1,0 +1,71 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{subcaption} % For subfigures
+\usepackage{float} % for H option in figures
+\usepackage{url}
+
+\usepackage{biblatex} %Imports biblatex package
+\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
+
+\setlength{\parindent}{0pt}
+
+\title{Review of Gynaecological paper}
+\author{Anton Zhitomirsky}
+
+\begin{document}
+
+\maketitle
+
+An analysis of the paper for \cite{radiotehrapy-planning-gynaecological-cancer}
+
+\section{Summary}
+
+Target delineation (\ref{term:target-delineation}) is the largest source of gemoetric uncertainty (\ref{term:geometric-uncertainty}) in radiotherapy which also depend on the imaging modality (\ref{term:imaging-modality}). You can apply safety margins to garget to produce a planning target volume (\ref{term:planning-target-volume}) to which treatments are designed. We use delineation uncertainty to determin the margin. However, this isn't analysed for recurrent gynaecological cancers.
+
+\subsection{GTV}
+
+First, macroscopic disease is delineated on imaging as the gross demonstrable tumour mass, known as the gross tumour volume
+
+\subsection{CTV}
+
+From this, the CTV is derived, to account for potential microscipic spread, although we delivering external beam radiotherapy or brachytherapy boost for recurrent gynaecological caners, the CTV may be the same as the GTV.
+
+\subsection{PTV}
+
+Residual geometric uncertainties are then accounted for by
+adding safety margins to the CTV, resulting in the planning
+target volume (PTV), to which the treatment is planned.
+
+\subsection{Delineation Error}
+
+\begin{equation}
+    \Sigma_D(d) = \sqrt{\frac{1}{N_0-1}\sum^{N_0}_{i=1}{(d_i - \bar d)^2}} \label{equ:delineation-error}
+\end{equation}
+
+See paper for method of calculating (\ref{equ:delineation-error}) for each point in a patient.
+
+\section{Terminology}
+
+\subsection{Target delineation} \label{term:target-delineation}
+
+Delineation is synonymous with contouring of a target volume. The current stanadard is to define a gross tumour volume (GTV) and a clinical target volume (CTV) and a planning target volume (PTV). The GTV is the part of the tumour that is visible in 3D, however the clinical volume also accounts for microscopic transfer patterns which makes contains as its subset the GTV\cite{tumor-delineation}.
+
+\subsection{geometric uncertainty} \label{term:geometric-uncertainty}
+
+a common way to see if the deliniated area we predict compared to the true value is accurate. Returns a score based on the geometric pattern chosen\cite{review-metrics}.
+
+\subsection{imaging modality} \label{term:imaging-modality}
+
+techniques used to create images of the human body for diagnostic and therapeutic purposes. Includes X-Ray, Flouroscopy, CT Scan, MRI, Ultrasound, ...\cite{imaging-modality}
+
+\subsection{planning target volume} \label{term:planning-target-volume}
+
+The third volume, the planning target volume (PTV), allows for uncertainties in planning or treatment delivery. It is a geometric concept designed to ensure that the radiotherapy dose is actually delivered to the CTV. Radiotherapy planning must always consider critical normal tissue structures, known as organs at risk (ORs). In some specific circumstances, it is necessary to add a margin analogous to the PTV margin around an OR to ensure that the organ cannot receive a higher-than-safe dose; this gives a planning organ at risk volume. \cite{defining-target-volumes}
+
+\printbibliography
+
+\end{document}
