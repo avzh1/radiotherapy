@@ -1,21 +1,23 @@
 \documentclass[12pt,twoside]{report}
 
 % some definitions for the title page
-\newcommand{\reporttitle}{asdfasdf}
-\newcommand{\reportauthor}{Your name}
-\newcommand{\supervisor}{Name of supervisor}
-\newcommand{\reporttype}{Type of Report/Thesis}
-\newcommand{\degreetype}{Type of degree} 
+\newcommand{\reporttitle}{Deep learning for automatic contouring for radiotherapy planning}
+\newcommand{\reportauthor}{Anton Zhitomirsky}
+\newcommand{\supervisor}{Ben Glocker}
+\newcommand{\secondMarker}{TODO}
+\newcommand{\reporttype}{MEng Individual Project}
 
 % load some definitions and default packages
-\input{includes}
+\input{../includes}
 
 % load some macros
-\input{notation}
+\input{../notation}
+
+\addbibresource{../../../research/source/bibliography.bib}
 
 % load title page
 \begin{document}
-\input{titlepage}
+\input{../titlepage}
 
 
 % page numbering etc.
@@ -24,17 +26,12 @@
 \setcounter{page}{1}
 \pagestyle{fancy}
 
+% \cleardoublepage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{abstract}
-Your abstract.
-\end{abstract}
+% \section*{Acknowledgments}
+% Comment this out if not needed.
 
-\cleardoublepage
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Acknowledgments}
-Comment this out if not needed.
-
-\clearpage{\pagestyle{empty}\cleardoublepage}
+% \clearpage{\pagestyle{empty}\cleardoublepage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--- table of contents
@@ -49,13 +46,18 @@ Comment this out if not needed.
 \fancyhead[LO,RE]{\slshape \leftmark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Abstract}
+\begin{abstract}
+    Your abstract.
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Introduction}
 
 \begin{figure}[tb]
 \centering
 \includegraphics[width = 0.4\hsize]{./figures/imperial}
-\caption{Imperial College Logo. It's nice blue, and the font is quite stylish. But you can choose a different one if you don't like it.}
-\label{fig:logo}
+\caption{Imperial College Logo. It's nice blue, and the font is quite stylish. But you can choose a different one if you don't like it.} \label{fig:logo}
 \end{figure}
 
 Figure~\ref{fig:logo} is an example of a figure. 
@@ -78,7 +80,8 @@ Figure~\ref{fig:logo} is an example of a figure.
 
 
 %% bibliography
-\bibliographystyle{apa}
+% \bibliographystyle{apa}
 
+\printbibliography
 
 \end{document}
