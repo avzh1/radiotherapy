@@ -1,0 +1,53 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+
+\usepackage{hyperref}
+
+\usepackage{biblatex} %Imports biblatex package
+\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
+
+\setlength{\parindent}{0pt}
+
+\title{Ethical considerations of working with Medical data}
+\author{Anton Zhitomirsky}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+In this project many samples of woman's 3D anatomy is used to train a network to delineate structures within. Such tools are created to accelerate clinitian's abilities to accurately, algorithmically and automatically provide planning target volumes to administer radiotherapy treatment. On paper, this is a great cause for using the population's private information to fast track treatments for recurrent gynaecological cancers (RGC).
+
+However, the following document will detail the concerns on the flip side of this project which may jopardise the right to privacy of subjects and clinitian's apprihensive attitude towards assistant segmentation tools.
+
+\section{Why should medical data be private?}
+
+\subsection{General Anonymity}
+
+The right to privacy is referred to as a shared human right. This is much more prevalent in medical information as it often discloses the most intimate details of a person that should not be shared. `When personally identifiable health information, for example, is disclosed to an employer, insurer, or family member, it can result in stigma, embarrassment, and discrimination'\cite{health-privacy}. This extends further since people may be reluctant to provide candid and complete disclosures of their sensitive information, even to physicians which may prevent a full diagnosis if their data isn't maintained in an anonymous fashion.
+
+\subsection{Anonymity in AI}
+
+We will focus directly on the specific use case of people's data in our application for automatic contouring for radiotherapy planning to narrow down the scope of anonymity.
+
+The key takeaways from a publication regading use of clinical imaging data for AI in 2020 \cite{ethics-imaging-AI} can be summarised. `Sharing clinical data with outside entities is doesn't require specific customer consent as long as they are made aware of the ways their data may be used and as long as the external entities act as ethical data stweards'. Indeed, Royal Marsden Hospital mentions in their privacy policy that `Explicit consent may not be required if the information being used has been de-identified/anonymised. This means that it cannot be used to identify an individual person'\cite{royal-marsden-privacy-note}.
+
+\section{UK law for medical data}
+
+TODO
+
+\section{How the data has been anonymised}
+
+TODO
+
+\section{Is the new tool a gold standard?}
+
+When artificial intellgience tools are applied in the medical context there are several considerations that have to be discussed before the output of the model is taken as a final result. We should consider the worst-case-extreeme that the result of a radiotherpay planning application may mean for a patient. If an incorrect treatment area hilights a organ-at-risk (an organ which is at risk of being falsely subject to radiation) this may have life-threatening health implications for a patient. 
+
+Accuracy of state-of-the-art imaging techniques are yet to reach 100\% \cite{}. Therefore the result of assisting technologies must not be taken as gossbel, but instead be treated with precaution, making sure to diligently check the correctness of the predictions.
+
+\printbibliography
+
+\end{document}
