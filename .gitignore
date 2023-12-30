@@ -12,6 +12,7 @@
 *.bcf
 *.blg
 *.run.xml
+*.toc
 
 # ignore anything that is stored in the temp directory
 
