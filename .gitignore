@@ -14,6 +14,8 @@
 *.run.xml
 *.toc
 
-# ignore anything that is stored in the temp directory
-
+# just in-case, ignore any CT scans
 *.nii.gz
+
+# ignore anything that is stored in the temp directory
+/tmp
