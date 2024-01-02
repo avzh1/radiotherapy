@@ -11,6 +11,7 @@
 \usepackage{amsfonts}
 \usepackage{hyperref}
 \usepackage{wrapfig}
+\usepackage[htt]{hyphenat}
 
 \usepackage{biblatex} %Imports biblatex package
 \addbibresource{../../../source/bibliography.bib} %Import the bibliography file
@@ -81,6 +82,14 @@ Some patients had ribs missing, which a clinitian would typically count from top
 Texture, position and size relative to the body was found to cause problems, specifically `The colon's shape, size, texture and position in the abdomen can vary greatly and is sometimes difficult to distinguish from the small bowel'
 
 \section{GitHub}
+
+A script has been written at \texttt{radiotherapy/research/source/code/totalsegmentator/set-up-environment.sh} in order to set up a virtual environment (might be different on remote). 
+
+Then run the command (given is an example of data used to fetch bladder)
+
+\texttt{TotalSegmentator -i ../../../../project/tmp/nnUNet\_raw/Dataset002\_Bladder/imagesTr/ zzAMLART\_088\_0000.nii.gz -o segmentations --roi\_subset urinary\_bladder}
+
+for more flags and options consolidate \cite{totalsegmentor-git}
 
 
 

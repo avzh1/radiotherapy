@@ -24,5 +24,5 @@ pip install -r requirements.txt
 echo "================"
 echo "Enter the virtual environment with the following command:"
 echo "source ../tmp/totseg-env/bin/activate"
-echo "(exit with command 'disconnect')"
+echo "(exit with command 'deactivate')"
 echo "================"
