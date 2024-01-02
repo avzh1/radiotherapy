@@ -1,0 +1,87 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{subcaption} % For subfigures
+\usepackage{float} % for H option in figures
+\usepackage{url}
+\usepackage{float}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+
+\usepackage{biblatex} %Imports biblatex package
+\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
+
+\setlength{\parindent}{0pt}
+
+\title{A review of TotalSegmentator}
+\author{Anton Zhitomirsky}
+
+\begin{document}
+
+\maketitle 
+
+A review of the paper \cite{totalsegmentor-paper} with github link \cite{totalsegmentor-git}
+
+\section{Review of Paper}
+
+\begin{itemize}
+    \item Model used: nnU-Net segmentation algorithm
+    \item Performance measure: Dice similarity coefficient
+    \item Trained on 1204 CT examinations
+    \item Trained once more on 4004 whole-body CT examinations to investigate age dependent volume and attenuation changes.
+    \item segments most anatomically relevant structures
+    throughout the body
+\end{itemize}
+
+\subsection{Datasets}
+
+\subsubsection{Trianing dataset}
+
+1368 CT images randomly sampled with ($37 + 87 + 40$) samples excluded due to missing sections or human annotation missing were exluded leading to ($1368-164$) 1204.
+
+\begin{itemize}
+    \item Training set: 90\% lead to 1082 patients
+    \item Validation dataset: 5\% lead to 57 patients
+    \item Test dataset: 5\% lead to 65 patients
+\end{itemize}
+
+\subsubsection{Aging-study dataset}
+
+This dataset includes patients with polytrauma\footnote{Polytrauma and multiple trauma are medical terms describing the condition of a person who has been subjected to multiple traumatic injuries, such as a serious head injury in addition to a serious burn.} who received whole-body CT scans. 4102 CT images randomly sampled with ($30+33+35$) patients were excluded leaving ($4102-98$) 4004.
+
+\subsection{Annotation workflow}
+
+Iterative learning approach was used.
+
+\begin{wrapfigure}{L}{0.5\textwidth}
+    \centering
+    \includegraphics*[width=0.5\textwidth]{images/AnnotationWorkflow.png}
+\end{wrapfigure}
+
+(1) After manual segmentation of the first 5 patients was completed, (2) a preliminary nnU-Net was trained, (3) and its predictions were manually refined, if necessary. (4) Retraining of the nnU-Net was performed after (5) reviewing and refining 5 patients, 20 patients, and (6) 100 patients.
+
+In the end, all 1204 CT examinations had annotations that were manually reviewed and corrected whenever necessary. These final annotations served as the ground truth for training and testing. The model was trained on the dataset of 1082 patients, validated on the dataset of 57 patients and tested on the dataset of 65 patients. This final model was independent of the intermediate models trained during the annotation workflow, which reduced bias in the test set to a minimum. Using completely manual annotations in the test set would have introduced a distribution shift and thus greater bias.
+
+\subsection{Model}
+
+The nnU-Net was used because of its ability to automatically configure hyperparameters based on the dataset characteristics.
+
+\subsection{Problems they had}
+
+\subsubsection{Ribs}
+
+Some patients had ribs missing, which a clinitian would typically count from top/bottom to identify the individual ribs - However, on some scans only a subset is visible. This can extend to our case as some have missing kidneys or large abnormalities that aren't common to other cases.
+
+\subsubsection{Varying organ properties}
+
+Texture, position and size relative to the body was found to cause problems, specifically `The colon's shape, size, texture and position in the abdomen can vary greatly and is sometimes difficult to distinguish from the small bowel'
+
+\section{GitHub}
+
+\printbibliography
+
+\end{document}

@@ -1,0 +1,58 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{subcaption} % For subfigures
+\usepackage{float} % for H option in figures
+\usepackage{url}
+\usepackage{float}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+
+\usepackage{biblatex} %Imports biblatex package
+\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
+
+\setlength{\parindent}{0pt}
+
+\title{Evaluating Performance of a network}
+\author{Anton Zhitomirsky}
+
+\begin{document}
+
+\maketitle
+
+Review of the paper \cite{review-metrics}.
+
+\section{Goemetric}
+
+\begin{itemize}
+    \item Classification accuracy \begin{equation*}
+        Sensitivity = \frac{TP}{TP+FN}
+    \end{equation*}
+    \item Overlap Based \cite{3d-medical-metric-analysis-2015}
+    \begin{equation*}
+        Dice\ Similarity\ Coefficient = \frac{2TP}{2TP+FP+FN} = \frac{2|S_g^1 \cap S_t^1|}{|S_g^1| + |S^1_t|}
+    \end{equation*}
+    \item Volume Based \begin{equation*}
+        Volume\ A \div Volume\ B
+    \end{equation*}
+    \item Surface Based \begin{equation*}
+        Hausdorff\ distance = \max(h(A,B), h(B,a)), h(A,B) = \max_{a \in A} \min_{b \in B} || a - b ||
+    \end{equation*}
+    \item Moment Based - distance from centre in x y and z dimensions
+    \item Measures of estimated editing - Surface Dice
+\end{itemize}
+
+\section{Dosimetric}
+
+
+
+\section{Time-Based}
+
+\section{Qualitative}
+
+\printbibliography
+
+\end{document}
