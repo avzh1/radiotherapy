@@ -1,3 +1,0 @@
-Z. Jiang, H. Zhang, Y. Wang, and S.-B. Ko. Retinal blood vessel segmentation using fully convolutional network with transfer learning. Computerized Medical Imaging and Graphics, 68:1-15, 2018
-
-https://arxiv.org/pdf/2004.12352.pdf
