@@ -1,0 +1,35 @@
+Multi-task Learning. Multi-Task Learning (MTL) frame-
+works learn several tasks simultaneously [ 13, 21 , 86 ]. For
+medical imaging, this can involve multiple modalities [ 72],
+population centers [61], or anatomies [ 73 ]. However, the
+tasks are always pre-determined by design: once trained,
+each network can only solve tasks presented during training.
+UniverSeg overcomes this limitation, enabling tasks to be
+dynamically specified during inference.
+
+Rich Caruana. Multitask learning. Machine learning,
+28(1):41–75, 1997
+
+Theodoros Evgeniou and Massimiliano Pontil. Regular-
+ized multi–task learning. In Proceedings of the tenth ACM
+SIGKDD international conference on Knowledge discovery
+and data mining, pages 109–117, 2004. 
+
+Ozan Sener and Vladlen Koltun. Multi-task learning as
+multi-objective optimization. Advances in neural informa-
+tion processing systems, 31, 2018.
+
+Pim Moeskops, Jelmer M Wolterink, Bas HM van der
+Velden, Kenneth GA Gilhuijs, Tim Leiner, Max A Viergever,
+and Ivana Išgum. Deep learning for multi-task medical im-
+age segmentation in multiple modalities. In International
+Conference on Medical Image Computing and Computer-
+Assisted Intervention, pages 478–486. Springer, 2016. 
+
+Fernando Navarro, Suprosanna Shit, Ivan Ezhov, Johannes
+Paetzold, Andrei Gafita, Jan C Peeken, Stephanie E Combs,
+and Bjoern H Menze. Shape-aware complementary-task
+learning for multi-organ segmentation. In International
+Workshop on Machine Learning in Medical Imaging, pages
+620–627. Springer, 2019. 2
+

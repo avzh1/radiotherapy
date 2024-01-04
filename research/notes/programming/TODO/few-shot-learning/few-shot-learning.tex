@@ -1,0 +1,31 @@
+% Use https://builtin.com/machine-learning/few-shot-learning
+
+
+% See universeg for sources
+
+% Few-shot Semantic Segmentation. Few-shot (FS) meth-
+% ods adapt to new tasks from few training examples, often
+% by fine-tuning pretrained networks [ 22 , 75, 100 , 94 ]. Some
+% few-shot semantic segmentation models generate predic-
+% tions for new images (queries) containing unseen classes
+% from just a few labeled examples (support) without addi-
+% tional retraining. One strategy prevalent in both natural
+% image [74 , 87 , 102 ] and medical image [ 19 , 59, 77, 91] FS
+% segmentation methods is to employ large pre-trained models
+% to extract deep features from the query and support images.
+% These methods often involve learning meaningful prototyp-
+% ical representations for each label [ 101 ]. Another medical
+% FS segmentation strategy uses self-supervised learning to
+% make up for the lack of training data and tasks [29 , 76]. In
+% contrast to UniverSeg, these methods, focused on limited
+% data regimes, tackle specific tasks involving generalizing to
+% new classes in a particular subdomain, like abdominal CT or
+% MRI scans [29, 76, 84, 98].
+% In our work, we focus on avoiding any fine-tuning, even
+% when given many examples for a new task, to avoid requir-
+% ing the clinical or scientific user to have machine learning
+% expertise and compute resources. Our proposed framework
+% draws inspiration from ideas from some few-shot learning
+% solutions, but aims to generalize to a universally broad set of
+% anatomies, modalities, and datasets – even those completely
+% unseen during training

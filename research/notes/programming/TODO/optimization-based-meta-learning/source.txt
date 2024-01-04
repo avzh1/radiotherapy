@@ -1,0 +1,14 @@
+See universeg paper for sources
+
+Optimization-based Meta-Learning. Optimization-based
+meta-learning techniques often learn representations that
+minimize downstream fine-tuning steps by using a few ex-
+amples per task, sometimes referred to as few-shot learn-
+ing [ 22 , 75 , 100 , 94 ]. Meta-learning via fine-tuning has been
+studied in medical image segmentation to handle multiple im-
+age modalities [ 105 ], anatomies [ 103 ], and generalization to
+different targets [48, 49 , 93 ]. While these strategies reduce
+the amount of data and training required for downstream
+tasks [30 ], fine-tuning these models nevertheless requires
+machine learning expertise and computational resources,
+which are often not available to medical researchers.
