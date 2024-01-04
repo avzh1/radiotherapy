@@ -27,7 +27,7 @@
 
 \maketitle
 
-TODO: \cite{concise-review-of-transfer-learning,comprehensive-survey-on-transfer-learning,what-is-being-transferred,transfer-learning-tutorial,transfer-learning-medium,transfer-learning-for-medical-image-classification-review,transfer-learning-in-medical-imaging,transfusion-medical-imaging,supervised-transfer-learning-at-scale,3d-medical-metric-analysis-2015, survey-on-transfer-learning, computer-vision-book}
+TODO: \cite{concise-review-of-transfer-learning,comprehensive-survey-on-transfer-learning,what-is-being-transferred,transfer-learning-tutorial,transfer-learning-medium,transfer-learning-for-medical-image-classification-review,transfer-learning-in-medical-imaging,transfusion-medical-imaging,supervised-transfer-learning-at-scale,3d-medical-metric-analysis-2015, survey-on-transfer-learning}
 
 \section{What is Transfer Learning?}
 
@@ -35,7 +35,7 @@ We can use models that have been trained for one task, and use it as a starting 
 
 \vspace{1em}
 
-This task can be viewed as a regularization task; `The assumption of similarity between the tasks represents a more sophisticated form of inductive bias compared to simple regularization, and this explains the improved performance resulting from the use of the additional data' \cite{deep-learning-book}.
+This task can be viewed as a regularization task; `The assumption of similarity between the tasks represents a more sophisticated form of inductive bias compared to simple regularization, and this explains the improved performance resulting from the use of the additional data' \cite{deep-learning-book}. We can use the assumption of similarity especially when the distribution changes. Instead of rebuilding statistical models from scratch using newly collected training data (this may be impossible or expensive) we can transfer knowledge across domains \cite{survey-on-transfer-learning}.
 
 \vspace{1em}
 
@@ -43,7 +43,7 @@ It has been shown to work in medical contexts as well in \cite{liver-lesion-via-
 
 \subsection{Formally Defining the Problem}
 
-As inspired by \cite{concise-review-of-transfer-learning}.
+As inspired by \cite{concise-review-of-transfer-learning} and \cite{survey-on-transfer-learning}.
 
 Definition \ref{eq:domain}: A \textbf{domain} \begin{align}
     \mathcal{D} = \{\mathcal{X}, P(X)\}
@@ -65,13 +65,13 @@ composed of a label space $\mathcal{Y}$ and an objective predictive function $f(
 
 \vspace{1em}
 
-Definition \ref{eq:transfer-learning}: Given a domain $\mathcal{D}_S$ with corresponding source tasks $\mathcal{T}_S$, and a target domain $\mathcal{D}_T$ with corresponding target task $\mathcal{T}_T$, \textbf{transfer learning} aims to transfer the related knowledge to boost the performance of the target predictive function 
+Definition \ref{eq:transfer-learning}: Given a domain $\mathcal{D}_S$ with corresponding source tasks $\mathcal{T}_S$, and a target domain $\mathcal{D}_T$ with corresponding target task $\mathcal{T}_T$, \textbf{transfer learning} aims to transfer the related knowledge to boost the performance of the target predictive function
 
 \begin{equation}
     f_T(\cdot)
     \label{eq:transfer-learning}
 \end{equation}
-    
+
 \subsection{Advantages}
 
 \begin{itemize}
@@ -79,22 +79,22 @@ Definition \ref{eq:transfer-learning}: Given a domain $\mathcal{D}_S$ with corre
     \item can also help to prevent overfitting, as the model will have already learned general features that are likely to be useful in the second task \cite{geeks-transfer-learning}.
     \item When we look at convolutional networks we will see that many image processing tasks require similar low-level features corresponding to the early layers of a deep neural network, whereas later layers are more specialized to a particular task, making such networks well suited to transfer learning applications. \cite{deep-learning-book}
     \item Three measures can be analysed for improvements \cite{torrey-handbook};
-    
-    \begin{itemize}
-        \item The initial performance achievable in the target task using only the transferred knowledge, before any further learning is done, compared to the initial performance of an ignorant agent.
-        \item The amount of time it takes to fully learn the target task given the transferred knowledge compared to the amount of time to learn it from scratc
-        \item The final performance level achievable in the target task compared to the final level
-        without transfer
-    \end{itemize}
 
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.7\linewidth]{images/performance.png}
-        \caption{Figure taken from \cite{torrey-handbook} showing three ways in which transfer might improve learning}
-        \label{fig:performance}
-    \end{figure}
-    
-    
+          \begin{itemize}
+              \item The initial performance achievable in the target task using only the transferred knowledge, before any further learning is done, compared to the initial performance of an ignorant agent.
+              \item The amount of time it takes to fully learn the target task given the transferred knowledge compared to the amount of time to learn it from scratc
+              \item The final performance level achievable in the target task compared to the final level
+                    without transfer
+          \end{itemize}
+
+          \begin{figure}[H]
+              \centering
+              \includegraphics[width=0.7\linewidth]{images/performance.png}
+              \caption{Figure taken from \cite{torrey-handbook} showing three ways in which transfer might improve learning}
+              \label{fig:performance}
+          \end{figure}
+
+
 \end{itemize}
 
 \subsection{Disadvantages}
@@ -105,6 +105,12 @@ Definition \ref{eq:transfer-learning}: Given a domain $\mathcal{D}_S$ with corre
 \end{itemize}
 
 \subsection{General Approach}
+
+This boils down to three questions: (1) What to transfer, (2) How to transfer, and (3) When to transfer.
+
+Some knowledge may be common between different domains such that they may help improve performance for the target domain or task. When the source domain and target domain are not related to each other, brute-force transfer may be unsuccessful. In the worst case, it may even hurt the performance of learning in the target domain, a situation which is often referred to as negative transfer (see Section \ref{sec:negative-transfer}).
+
+\subsubsection{Strategy}
 
 \begin{enumerate}
     \item Obtain a pre-trained 'base' model. This model has been trained on extensive data and has identified general features and patterns relevant to numerous related jobs.
@@ -141,7 +147,7 @@ for layer in base_model.layers:
     \item \textbf{Don't use stochastic gradient descent algorithms to the whole network}; it is much more efficient to send the new training data once through the fixed pre-trained network so as to evaluate the training inputs in the new representation. Iterative gradient-based optimization can then be applied just to the smaller network consisting of the final     layers.
 \end{itemize}
 
-\section{Avoiding Negative Transfer}
+\section{Avoiding Negative Transfer} \label{sec:negative-transfer}
 
 If a transfer method actually decreases performance, then negative transfer has occurred. One of the major challenges in developing transfer methods is to produce positive transfer between appropriately related tasks while avoiding negative transfer between tasks that are less related \cite{torrey-handbook}.
 
@@ -163,7 +169,38 @@ Given multiple candidate source tasks, it may be beneficial to use several or al
 
 ``Ruckert and Kramer look at inductive transfer via kernel methods. They learn a meta-kernel that serves as a similarity function between tasks. Given this and a set of kernels that perform well in source tasks, they perform numerical optimization to construct a kernel for a target task. This approach determines the inductive bias in the target task (the kernel) by combining information from several source tasks whose relationships to the target are known'' \cite{torrey-handbook}.
 
-\section{Sources}
+\section{Transfer Learning Settings}
+
+\begin{figure}[H]
+    \centering
+    \subfigure[Relationship between Traditional Machine Learning and Various Transfer Learning Settings]{\includegraphics[width=\linewidth]{images/transfer-learning-settings.png}}
+
+    \subfigure[Different Settings of Transfer Learning]{\includegraphics[width=\linewidth]{images/transfer-learning-settings-2.png}}
+
+    \subfigure[An overview of different settings for transfer learning\label{fig:tree}]{\includegraphics[width=\linewidth]{images/transfer-learning-tree.png}}
+\end{figure}
+
+\begin{figure}[H]
+    \subfigure[Different Approaches to Transfer Learning]{\includegraphics[width=\linewidth]{images/Different Approaches to Transfer Learning.png}}
+
+    \subfigure[Different Approaches Used in Different Setings\label{fig:approaches}]{\includegraphics[width=\linewidth]{images/Different Approaches Used in Different Settings.png}}
+
+    \caption{Taken from \cite{survey-on-transfer-learning}}
+\end{figure}    
+
+\subsection{Inductive Transfer Learning}
+
+Relevant for our case is the branch from Figure \ref{fig:tree} is `Labeled data are avaialble in a target domain'. Therefore we lookup these cases only.
+
+\subsection{Instance-transfer Approach}
+
+From Figure \ref{fig:approaches} we have a source domain data which cannot be reused directly, however, there are certain parts of the data that can still be reused together with a few labeled data in the target domain. Note that there exist boosting algorithms TrAdaBoost (see \cite{transfer-learning-boosting} which details the algorithm for updating weight vectors).
+
+\vspace{1em}
+
+See further info at \cite{survey-on-transfer-learning}
+
+\section{Sources of pre-trained models}
 
 From \cite{gentle-introduction-to-transfer-learning} we have sources of pre-trained networks available at \href{https://github.com/BVLC/caffe/wiki/Model-Zoo}{Model-Zoo Github} as well as a \href{https://machinelearningmastery.com/how-to-use-transfer-learning-when-developing-convolutional-neural-network-models/}{walk-through}.
 
