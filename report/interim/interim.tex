@@ -35,7 +35,11 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
-    
+    Clinicians target cancerous tumours by studying 3D contrasting images of cancerous tumours and surrounding soft tissues to plan targets for radiation therapy. The Royal Marsden Hospital is a key contributor of data for this project, which uses this approach to delineate tumours for cervical cancers. Typically after a gross tumour volume (GTV) is extrapolated from the relevant imaging modality, clinicians append tailored safety margins to also account for the microscopic cancerous spreads not visible in the scan to generate the planned target volume (PTV). 
+
+    The PTV area has to be generous enough to attempt to treat the problem in one-shot, yet conservative enough to not harm surrounding healthy tissue with radiation over the course of the treatment. Compounded with small sample size of labelled data this proposes a significant challenge for developing deep-learning segmentation models to identify an optimal PTV.
+
+    Thus we propose a transfer learning strategy to utilize imaging models in similar domains to attempt to learn from the limited input size to provide clinicians with a faster and more accurate segmentation method.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -56,6 +60,32 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Background}
 
+\section{Clinical Context}
+
+\section{Vanilla Image Segmentation Models}
+
+\subsection{Convolutional Neural Networks (CNN)}
+
+\subsection{U-Net}
+
+\subsection{nnU-Net}
+
+\subsection{Traditional Limitations}
+
+\section{Pre-trained Image Segmentation Models}
+
+\subsection{TotalSegmentator}
+
+\subsection{UniverSeg}
+
+\subsection{SAM}
+
+\section{Evaluation Metrics}
+
+\subsection{Geometric}
+
+\subsection{Honorable mentions}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Contribution}
 
@@ -66,6 +96,11 @@
 \chapter{Conclusion}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Ethics}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
 \printbibliography
+\addcontentsline{toc}{chapter}{Bibliography}
 
 \end{document}
