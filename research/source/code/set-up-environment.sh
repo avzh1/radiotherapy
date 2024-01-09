@@ -3,6 +3,7 @@
 if [ $# != 1 ]
 then
     echo "Please provide the name of the directory from which you want to create a python venv for"
+    exit -1
 fi
 
 DIR=$1
@@ -29,7 +30,14 @@ pip install --upgrade pip
 pip install -r $DIR/requirements.txt
 
 echo "================"
-echo "Enter the virtual environment with the following command:"
-echo "source tmp/$DIR/bin/activate"
+
+if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
+    source tmp/$DIR/bin/activate
+    cd $DIR
+else
+    echo "Enter the virtual environment with the following command:"
+    echo "source tmp/${DIR}bin/activate"
+fi
+
 echo "(exit with command 'deactivate')"
 echo "================"
