@@ -1,4 +1,4 @@
-\documentclass[12pt,twoside]{report}
+\documentclass[11pt,twoside]{report}
 
 % some definitions for the title page
 \newcommand{\reporttitle}{Transfer Learning for bespoke automatic contouring of cervical cancer radiotherapy planning}
@@ -6,6 +6,15 @@
 \newcommand{\supervisor}{Ben Glocker}
 \newcommand{\secondMarker}{TODO}
 \newcommand{\reporttype}{MEng Individual Project}
+
+\setlength{\parskip}{.3em}
+
+\usepackage{pifont,mdframed}
+\newenvironment{warning}
+  {\par\begin{mdframed}[linewidth=1pt,linecolor=black]%
+    \begin{list}{}{\leftmargin=1cm
+                   \labelwidth=\leftmargin}\item[\Large\ding{43}]}
+  {\end{list}\end{mdframed}\par}
 
 % load some definitions and default packages
 \input{../includes}
@@ -34,7 +43,7 @@
 % \clearpage{\pagestyle{empty}\cleardoublepage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{abstract}
+\begin{abstract} \label{sect:abstract}
     Clinicians target cancerous tumours by studying 3D contrasting images of cancerous tumours and surrounding soft tissues to plan targets for radiation therapy. The Royal Marsden Hospital is a key contributor of data for this project, which uses this approach to delineate tumours for cervical cancers. Typically after a gross tumour volume (GTV) is extrapolated from the relevant imaging modality, clinicians append tailored safety margins to also account for the microscopic cancerous spreads not visible in the scan to generate the planned target volume (PTV). 
 
     The PTV area has to be generous enough to attempt to treat the problem in one-shot, yet conservative enough to not harm surrounding healthy tissue with radiation over the course of the treatment. Compounded with small sample size of labelled data this proposes a significant challenge for developing deep-learning segmentation models to identify an optimal PTV.
@@ -44,7 +53,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--- table of contents
-\fancyhead[RE,LO]{\sffamily {Table of Contents}}
+% \fancyhead[RE,LO]{\sffamily {Table of Contents}}
 \tableofcontents 
 
 
@@ -55,48 +64,107 @@
 \fancyhead[LO,RE]{\slshape \leftmark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Introduction}
+\chapter{Introduction} \label{sect:intro}
+
+\section{Clinical Context} \label{sect:clinical-context-summary}
+% the problem is not trivial of outlining a mass on a scan, there is also an area of non-zero probability that the tumour has spread around microscopically. Need to make sure 
+
+\section{Motivation}\label{sect:motivation}
+% 
+
+\section{Current Solutions}\label{sect:current-solutions}
+% 
+
+\section{Outline of Report}\label{sect:outline-of-report}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Background}
+\chapter{Background}\label{sect:background}
 
-\section{Clinical Context}
+\section{Clinical Context}\label{sect:clinical-context}
 
-\section{Vanilla Image Segmentation Models}
+\section{Vanilla Image Segmentation Models}\label{sect:vanilla-image-segmentation-models}
 
-\subsection{Convolutional Neural Networks (CNN)}
+\subsection{Convolutional Neural Networks (CNN)}\label{sect:CNNs}
 
-\subsection{U-Net}
+\subsection{U-Net}\label{sect:u-net}
 
-\subsection{nnU-Net}
+\subsection{nnU-Net}\label{sect:nnu-net}
 
-\subsection{Traditional Limitations}
+\subsection{Traditional Limitations}\label{sect:vanilla-limitations}
 
-\section{Pre-trained Image Segmentation Models}
+\section{Transfer Learning}\label{sect:transfer-learning}
 
-\subsection{TotalSegmentator}
+\subsection{Intuition}\label{sect:transfer-learning-intuition}
 
-\subsection{UniverSeg}
+\subsection{Total Segmentator}\label{sect:totalseg}
 
-\subsection{SAM}
+\subsection{UniverSeg}\label{sect:universeg}
 
-\section{Evaluation Metrics}
+\subsection{SAM}\label{sect:sam}
 
-\subsection{Geometric}
-
-\subsection{Honorable mentions}
+\section{Summary}\label{sect:background-summary}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Contribution}
+\chapter{Base Line and Data}\label{sect:baseline-and-data}
+
+\section{Data}\label{sect:data}
+
+\subsection{Available Data}\label{sect:available-data}
+
+% To contain details about data formatting
+
+\subsection{Data Cleaning}\label{sect:data-cleaning}
+
+\section{Evaluation Metrics}\label{sect:evaluation-metrics}
+
+\subsection{Geometric}\label{sect:geometric}
+
+\subsection{Honorable mentions}\label{sect:evaluation-metrics-honorable-mentions}
+
+\section{Baseline Results}\label{sect:baseline-results}
+
+\subsection{nnU-Net}\label{sect:results-nnu-net}
+
+\subsection{Total Segmentator}\label{sect:results-totalseg}
+
+\subsection{UinverSeg}\label{sect:results-universeg}
+
+\section{Summary}\label{sect:results-summary}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Experimental Results}
+\chapter{Proposal}\label{sect:proposal}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Conclusion}
+\chapter{Ethics}\label{sect:ethics}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Ethics}
+This project involves very intimate and personal information of many female patients with the end goal of learning to plot accurate contours for radiotherapy planning. Researchers should dedicate a large effort to anonymize data because the lack there-of may result in ``stigma, embarrassment, and discrimination'' \cite{health-privacy}. It is important in any setting that data used (for instance in a learning environment) cannot be reverse engineered.
+
+\section{Patient disclosures}\label{sect:patient-disclosures}
+
+Royal Marsden Hospital has the right to share their clinical data with outside entities if this is disclosed to the patient, and if formalities are arranged with external parties. With no specific customer consent, Royal Marsden is entitled to share data with outside entities as long as they are made aware of the ways their data may be used and as long as the external entities act as ``ethical data stewards'' \cite{ethics-imaging-AI}. As such Royal Marsden Hospital mentions in their privacy policy that ``explicit consent may not be required if the information being used has been de-identified/anonymized'' \cite{royal-marsden-privacy-note}. Without the anonymisation of data patients may be reluctant to provide candid and complete disclosures of their sensitive information, even to physicians which may prevent a full diagnosis if their data isn't maintained in an anonymous fashion.
+
+\section{Use in practice}\label{sect:use-in-practice}
+
+The MIRA team acts as responsible data stewards by storing anonymized data within a folder on the college network. This folder contains security measures which limit the availability of data only to those with specific access rights. Furthermore, operating on the pre-amble of de-identified data further reduces individual patient risk in the event that data is ever brought outside the confines of this folder.
+
+\begin{warning}
+How was the data transferred securely?
+\end{warning}
+
+\begin{warning}
+Data protection and deleting the data after a number of years?
+(we're not subject to data protection laws because it is anonymous)
+\end{warning}
+
+\section{Anonymisation of Medical Data}\label{sect:anonymisation}
+
+\begin{warning}
+Maybe refer back to section about describing the data [\ref{sect:available-data}] In progress to try and see the metadata.
+\end{warning}
+
+\section{Using the tool}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cleardoublepage
