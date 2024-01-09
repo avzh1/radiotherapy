@@ -48,7 +48,12 @@ def view_nii(numpy_nii):
 
     plt.show()
 
-# source = fetch_nii('../../../../../project/tmp/nnUNet_raw/Dataset001_Anorectum/imagesTr/zzAMLART_075_0000.nii.gz')
+# Care: selecting the training image will give you many random numbers, the label will be 
+source = fetch_nii('../../../../../project/tmp/nnUNet_raw/Dataset001_Anorectum/imagesTr/zzAMLART_075_0000.nii.gz')
 # print(source.shape)
 # view_nii(source)
 
+values, count = np.unique(source, return_counts=True)
+count_dict = dict(zip(values, count))
+
+print(count_dict)

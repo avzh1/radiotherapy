@@ -1,3 +1,5 @@
+.vscode
+
 # ignore large pdfs
 /research/source/**/*.pdf
 
@@ -19,3 +21,6 @@
 
 # ignore anything that is stored in the temp directory
 /tmp
+
+# python auxiliary files
+__pycache__

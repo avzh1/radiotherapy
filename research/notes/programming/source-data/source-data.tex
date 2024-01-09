@@ -7,6 +7,7 @@
 \usepackage{float} % for H option in figures
 \usepackage{hyperref}
 \usepackage[htt]{hyphenat} % for non-overflowing texttt
+\usepackage{amsmath}
 
 \usepackage{listings}
 
@@ -134,5 +135,176 @@ With that we can use this tool to view input data. Here, the R and L stand for r
         \caption{ItkSnap view of the Anorectum Raw Image}\label{fig:AnorectumLabel}
     \end{minipage}%
 \end{figure} 
+
+\section{Viewing the data in python}
+
+\subsection{Reading the data}
+
+Please view the script at \texttt{research/source/code/performance/geometric/fetch-and-pre-process-data.py}
+
+\subsection{What should a medical image contain as data?}
+
+``A medical image is the representation of the internal structure
+or function of an anatomic region in the form of an array of
+picture elements called pixels or voxels. It is a discrete repre-
+sentation resulting from a sampling/reconstruction process
+that maps numerical values to positions of the space. The
+number of pixels used to describe the field-of-view of a certain
+acquisition modality is an expression of the detail with which
+the anatomy or function can be depicted. What the numerical
+value of the pixel expresses depends on the imaging modality,
+the acquisition protocol, the reconstruction, and eventually,
+the post-processing.'' \cite{file-formats}
+
+\subsubsection{Components}
+
+\begin{itemize}
+    \item \textit{Pixel Depth}: ``number of bits used to encode the information of each pixel'' \cite{file-formats}
+    \item \textit{Photometric Interpretation}:  ``specifies how the pixel data
+    should be interpreted for the correct image display as a 
+    monochrome or color image. To specify if color information is or is
+    not stored in the image pixel values, we introduce the concept
+    of samples per pixel (also known as number of channels).
+    Monochrome images have one sample per pixel and no color
+    information stored in the image. A scale of shades of gray
+    from black to white is used to display the images. The number
+    of shades of gray depends clearly from the number of bits used
+    to store the sample that, in this case, coincide with the pixel
+    depth'' \cite{file-formats}
+
+    For our case, this will be grey scale 
+
+    \item \textit{Metadata}: information that describe the image
+    \item \textit{Pixel Data}: the section where the numerical values of the pixels are stored
+\end{itemize}
+
+\subsection{NIfTI file format}
+
+The files are stored in a \texttt{.nii} format. This is a NIfTI file format which has had more prominence than the dicom file format recently \cite{dicom-to-nifti-conversion}. 
+
+\begin{itemize}
+    \item ``NIfTI is simple and easy to support''
+    \item ``Neuroimaging Informatics Technology Initiativ''\cite{file-formats}
+    \item ``allows spatial orientation information to be stored more fully''\cite{dicom-to-nifti-conversion}. Therefore, NIfTI-compliant software should reduce the chance of making ``left–right ambiguity''\cite{file-formats,dicom-to-nifti-conversion}
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.75\linewidth]{images/dicom-nifti.png}
+    \caption{taken from \cite{dicom-to-nifti-conversion}}
+\end{figure}
+
+\subsection{Header File}
+
+One may observe the header of the file:
+
+\begin{lstlisting}[language=python]
+{
+    'ITK_FileNotes': ''
+    'ITK_original_direction': '[UNKNOWN_PRINT_CHARACTERISTICS]\n'
+    'ITK_original_spacing': '[UNKNOWN_PRINT_CHARACTERISTICS]\n'
+    'aux_file': ''
+    'bitpix': '32'
+    'cal_max': '0'
+    'cal_min': '0'
+    'datatype': '8'
+    'descrip': ''
+    'dim[0]': '3'
+    'dim[1]': '512'
+    'dim[2]': '512'
+    'dim[3]': '193'
+    'dim[4]': '1'
+    'dim[5]': '1'
+    'dim[6]': '1'
+    'dim[7]': '1'
+    'dim_info': '0'
+    'intent_code': '0'
+    'intent_name': ''
+    'intent_p1': '0'
+    'intent_p2': '0'
+    'intent_p3': '0'
+    'nifti_type': '1'
+    'pixdim[0]': '0'
+    'pixdim[1]': '1.26953'
+    'pixdim[2]': '1.26953'
+    'pixdim[3]': '2.5'
+    'pixdim[4]': '0'
+    'pixdim[5]': '0'
+    'pixdim[6]': '0'
+    'pixdim[7]': '0'
+    'qfac': '[UNKNOWN_PRINT_CHARACTERISTICS]\n'
+    'qform_code': '1'
+    'qform_code_name': 'NIFTI_XFORM_SCANNER_ANAT'
+    'qoffset_x': '325'
+    'qoffset_y': '325'
+    'qoffset_z': '-155'
+    'qto_xyz': '[UNKNOWN_PRINT_CHARACTERISTICS]\n'
+    'quatern_b': '0'
+    'quatern_c': '0'
+    'quatern_d': '1'
+    'scl_inter': '0'
+    'scl_slope': '1'
+    'sform_code': '1'
+    'sform_code_name': 'NIFTI_XFORM_SCANNER_ANAT'
+    'slice_code': '0'
+    'slice_duration': '0'
+    'slice_end': '0'
+    'slice_start': '0'
+    'srow_x': '-1.26953 0 0 325'
+    'srow_y': '0 -1.26953 0 325'
+    'srow_z': '0 0 2.5 -155'
+    'toffset': '0'
+    'vox_offset': '352'
+    'xyzt_units': '2'
+}
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.75\linewidth]{images/header-info.png}
+    \caption{taken from \cite{dicom-to-nifti-conversion} with further information available from \cite{nifti-headers}}
+\end{figure}
+
+\subsubsection{Dimension}
+
+Starting indexing at 0, we have: 
+
+\begin{equation*}
+    dim = \begin{bmatrix}3 \\ 512 \\ 512 \\ 193 \\ 1 \\ 1 \\ 1 \\ 1\end{bmatrix}
+\end{equation*}
+
+
+From Page 3 of \cite{nifti-data-format} 
+
+\begin{itemize}
+    \item dim[3] $\neq$ 1, therefore this is not a single slice. Instead, dim[3] $>$ 1, so there is several slices.
+    \item dim[5] $=$ 1, therefore, this is a statistical parameter stored in \texttt{intent\_p1/2/3}. These are all set to 0, therefore, this is a null dimension.
+\end{itemize}
+
+\subsubsection{PixDim}
+
+BitPix (32) is the ``number of bits per voxel [...], which MUST correspond with the datatype field'' \cite{nifti-headers}. PixDim is the grid spacing \cite{nifti-headers}. We indicate the units of pixdim with ``char xyzt\_units'' \cite{nifti-headers} which is 2 in our case. We have no temporal dimension because ``dimensions 1,2,3 are for x,y,z; dimension 4 is for time (t)'' \cite{nifti-headers}. A value of 2 means ``\#define NIFTI\_UNITS\_MM      2'' \cite{nifti-headers} where bits 0 .. 2 specify the units of our dimensions, so $2 \equiv 010_2$ hence we measure our dimensions in mm.
+
+\subsubsection{The Rest}
+
+The rest are not relevant to our cause - the library supposedly does everything else for us.
+
+\subsection{What do the pixels values mean in NIfTI}
+
+\subsubsection{ImagesTr}
+
+When you read in the data for the \texttt{.nii} then you get a list of 2658 unique values. This is not as simple as binary segmentation task of 0s and 1s, we have negatives from -1000 to positives up to 3140. Yeah duh, I mistakenly was analyzing the raw input which will have variable pixel strengths depending on the part of the body it is displaying.
+
+\subsubsection{LabelsTr}
+
+\begin{lstlisting}[language=python]
+>>> values, count = fetch.np.unique(itk_image, return_counts=True)
+>>> values
+array([0, 1], dtype=uint8)
+>>> count
+array([50579427,    14365])
+\end{lstlisting}
+
+\printbibliography
 
 \end{document}
