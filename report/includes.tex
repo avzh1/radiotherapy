@@ -34,6 +34,11 @@
 \usepackage{array}
 \usepackage{latexsym}
 \usepackage[pdftex,hypertexnames=false,colorlinks]{hyperref} % provide links in pdf (had pagebackref)
+\usepackage{booktabs}
+\usepackage{wrapfig}
+\usepackage{caption}  % Required for \captionof
+\usepackage{float} % for H option in figures
+
 
 \usepackage[nottoc]{tocbibind}
 
@@ -74,8 +79,9 @@
 
 %%% Default settings (page layout)
 \setlength{\parindent}{0em}  % indentation of paragraph
+\setlength{\parskip}{.3em}
 
-\setlength{\parindent}{0em}  % indentation of paragraph
+% \setlength{\parindent}{0em}  % indentation of paragraph
 
 \setlength{\headheight}{14.5pt}
 \pagestyle{fancy}

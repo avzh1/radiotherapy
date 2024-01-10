@@ -1,4 +1,5 @@
 .vscode
+.~lock.AMLART data.ods#
 
 # ignore large pdfs
 /research/source/**/*.pdf

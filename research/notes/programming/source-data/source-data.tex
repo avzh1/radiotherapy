@@ -21,6 +21,8 @@
 
 \maketitle
 
+\tableofcontents
+
 \section{Structure of source Data}
 
 Results are structured in the file:
@@ -42,7 +44,7 @@ drwxr-sr-x  11 bglocker biomedia  11 Dec 16 09:10 nnUNet_testing
 -rw-r--r--   1 bglocker biomedia 644 Oct 20 07:21 run_nnunet_4.sh
 \end{lstlisting}
 
-\section{nnUNet\_raw}\label{section:raw}
+\subsection{nnUNet\_raw}\label{section:raw}
 
 nnUNet\_raw has the original (training) images with manual annotations. Each Dataset below is treated as a binary segmentation problem. See Section\ref{section:itksnap}
 
@@ -55,13 +57,11 @@ drwxr-sr-x  3 bglocker biomedia   5 Sep 17 20:29 Dataset005_Parametrium
 -rw-r--r--  1 bglocker biomedia 135 Nov 25 10:50 note
 \end{lstlisting}
 
-\section{nnUNet\_results}
+\subsection{nnUNet\_results}
 
 The raw files from Section\ref{section:raw} are used to train an \href{https://github.com/MIC-DKFZ/nnUNet}{nnUNet model}. Which does a 5-fold cross validation, resulting in five models, each trained on 80 subjects and tested on 20 (there is a total of 100 subjects with manual annotations).
 
-\subsection{Script}
-
-\subsubsection*{Slurm script}
+\subsubsection{Slurm script}
 
 Each of the scripts are presented as bash scripts in \texttt{/vol/biomedic3/bglocker/nnUNet/run\_nnunet\_*.sh}. These are used to schedule the python program into the Slurm scheduler for running in the cloud.
 
@@ -101,15 +101,17 @@ nnUNetv2_train 1 3d_fullres 4 # where 4 refers to which dataset we're
     runs the script at \texttt{/vol/biomedic3/bglocker/coding/envs/nnunet}
 \end{itemize}
 
-\subsubsection*{Python script}
+\subsubsection{Python script}
 
 No access
 
-\section{nnUNet\_testing}
+\subsection{nnUNet\_testing}
 
 The models are then tested against 10 hold out manual semgentations with no manual segmentations.
 
-\section{Viewing the Data}\label{section:itksnap}
+\section{Viewing the Data}
+
+\subsection{Itksnap}\label{section:itksnap}
 
 The viewing tool used is ItkSnap, which was developed as an open source tool for viewing medical imaging scans. The view (Figure\ref{fig:view}) shows how you would see input data.
 
@@ -136,11 +138,11 @@ With that we can use this tool to view input data. Here, the R and L stand for r
     \end{minipage}%
 \end{figure} 
 
-\section{Viewing the data in python}
-
-\subsection{Reading the data}
+\subsection{Reading the data in Python}
 
 Please view the script at \texttt{research/source/code/performance/geometric/fetch-and-pre-process-data.py}
+
+\section{NIfTI}
 
 \subsection{What should a medical image contain as data?}
 
@@ -305,6 +307,23 @@ array([0, 1], dtype=uint8)
 array([50579427,    14365])
 \end{lstlisting}
 
+\section{What is CT}
+
+from \href{https://www.nhs.uk/conditions/ct-scan/}{NHS}
+
+\begin{itemize}
+    \item ``A CT scan is a test that takes detailed pictures of the inside of your body. It's usually used to diagnose conditions or check how well treatment is working''.
+\end{itemize}
+
+from \cite{ct-scan}
+
+\begin{itemize}
+    \item ``The CT scan is essentially an X-ray study, where a series of rays are rotated around a specified body part, and computer-generated cross-sectional images are produced. The advantage of these tomographic images compared to conventional X-rays is that they contain detailed information of a specified area in cross-section, eliminating the superimposition of images, which provides a tremendous advantage over plain films. ''
+    \item The CT scanner machine rotates the X-ray tube around the patient's body through a circular structure known as the gantry. Each time the machine rotates, computerized information is acquired. The patient is slowly moved up or down in the table, and different cross-section images are produced. In each rotation, a 2D image slice is constructed. Each subsequent image slice's thickness is decided on the operator and the physician/radiologist's request but usually ranges from 1 to 10 millimeters. The gantry can be moved at the desired angle to accommodate the best cross-sectional image. When the desired number of slices are obtained, a scan is reproduced into the computer image and can easily be reproduced and stored.
+    \item 
+\end{itemize}
+
 \printbibliography
+
 
 \end{document}
