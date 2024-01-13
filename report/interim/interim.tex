@@ -343,30 +343,74 @@ A standard measure of classification is accuracy. It measures the total amount o
   \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
 \end{equation*}
 
-Better measures are Precision and Recall scores. The Precision measures the proportion of predictions that were successfully correct. The Recall, on the other hand, is measuring the proportion of predictions where actual positives were identified correctly. These scores can be further combined into a more general score $F_\beta$.
+Better measures are Precision and Recall scores. The Precision (also known as the Positive Predictive Value \cite{evaluation-metrics}) measures the proportion of predictions that were successfully correct. The Recall (also known as True Positive Rate \cite{evaluation-metrics}), on the other hand, ``measures the portion of positive voxels in the ground truth that are also identified as positive by the segmentation being evaluated''.
 
 \begin{equation*}
-  \text{Precision} = \frac{TP}{TP+FP}, \quad \text{Recall} = \frac{TP}{TP+FN}, \quad \text{F}_\beta = (1+\beta^2)\cdot \frac{\text{Precision} \cdot \text{Recall}}{(\beta^2+\text{Precision})+\text{Recall}}
+  \text{Precision} = \frac{TP}{TP+FP}, \quad \text{Recall} = \frac{TP}{TP+FN}
 \end{equation*}
 
-\begin{warning}
-  Sources used: \textit{\href{https://developers.google.com/machine-learning/crash-course/classification/precision-and-recall}{Google MML crash course}}
-\end{warning}
+\section{Spatial Overlap Based}
 
-\section{Overlap Based}
+Similarly to Classification Based metrics, an Overlap Based metric measures the extent of overlap between an auto-contour and a reference structure \cite{review-metrics}. 
 
-Similarly to Classification Based metrics, an Overlap Based metric measures the extent of overlap between an auto-contour and a reference structure \cite{review-metrics}.
+The scores above can be combined into a more general score $F_\beta$ to give 
 
+\begin{equation*}
+  \text{F}_\beta = (1+\beta^2)\cdot \frac{\text{Precision} \cdot \text{Recall}}{\beta^2 \cdot \text{Precision}+\text{Recall}}
+\end{equation*}
+
+A specific case of this equation with $\beta=1$ is mathematically equivalent to the DICE Similarity Coefficient which was found to be the most popular evaluation metric amongst 2021 studies \cite{review-metrics,evaluation-metrics}. 
+
+\begin{align*}
+  F_1 = \text{DICE} & = \frac{2 \cdot \text{Precision} \cdot \text{Recall}} {\text{Precision} + \text{Recall}} \\ 
+  % & = \frac{2 \cdot \frac{TP}{TP + FP} \cdot \frac{TP}{TP + FN}}{\frac{TP}{TP + FP} + \frac{TP}{TP + FN}} \\
+  % & = \frac{2 \cdot TP \cdot TP}{TP(TP+FN)+TP(TP+FP)} \\ 
+  & = \frac{2 \cdot TP}{2TP + FP + FN} \\ 
+  & = \frac{2|S_g^1\cap S_t^1|}{|S_g^1|+|S_t^1|} , \text{where} \begin{cases}
+    S_g^1 & \text{ground truth} \\
+    S_t^1 & \text{segmentation}
+  \end{cases}
+\end{align*}
+
+From this relationship, the DICE score has found popularity in image segmentation for similar reasons that the $F_1$ score has found its popularity classical machine learning; it is able to provide a fair result for imbalanced datasets. This mentality is applicable in our scenario because a tumour will make up very little of the total volume of the domain space.
+
+Another popular related evaluation method is the Jaccard Index, which measures the intersection over the union of two sets:
+
+\begin{equation*}
+  \text{JAC} = \frac{TP}{TP+FP+FN} = \frac{|S_g^1\cap S_t^1|}{|S_g^1 \cup S_t^1|} \iff \frac{DICE}{2 - DICE}
+\end{equation*}
+
+Since the nuberator for the Jaccard Index is smaller (since we avoid the issue of counting the intersecting sections twice) the JAC is always larger than the DICE score.
 
 \section{Volume Based}
 
+Volume-based metrics consider only the volume of the segmentation \cite{evaluation-of-metrics-in-prostate,review-metrics, boundary-overlap-metrics}. However, due to its poor spatial descriptions it is more commonly used jointly with other metrics.
+
+\begin{equation*}
+  \text{Relative Volume Difference (RVD)} = \bigg| \frac{|S_g^1|-|S_t^1|}{|S_g^1|}\bigg|
+\end{equation*}
+
 \section{Surface Based}
+
+Also commonly known as Boundary-Distance-Based Methods \cite{boundary-overlap-metrics} compares the distance between two structure
+surfaces. These can be either maximum distance, average distance or distance at a set percentile of ordered distances \cite{evaluation-metrics}.
+
+A common example is the Haussdorf Distance. Here, a directed distance metric is defined as the maximum distance from a point in the first set to a nearest point in the other between two individual voxels \cite{boundary-overlap-metrics}. Here, the distance is taken by some norm, typically Euclidian distnace.
+
+\begin{equation*}
+  \text{HD}(A,B) = \max(h(A,B), h(B,A)), \quad \text{ and directed h}(A,B)=\max_{a\in A}\min_{b \in B} ||a-b||
+\end{equation*}
+
+The HD is generally sensitive to outliers. Because noise and outliers are common in medical segmentations, it is not recommended to use the HD directly \cite{boundary-overlap-metrics}.
+
 
 \section{Moment Based}
 
 \section{Measures of estimated editing}
 
-\section{Honorable mentions}\label{sect:evaluation-metrics-honorable-mentions}
+\section{Summary}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Proposal}\label{sect:proposal}
