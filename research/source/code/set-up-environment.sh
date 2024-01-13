@@ -10,9 +10,10 @@ DIR=$1
 
 # obtain path to temporary directory to hold python's virtual environment
 currPath=$(pwd)
-venvPath=$currPath/tmp/$DIR
-echo "DEBUG: creating venv path at ${venvPath}"
-mkdir -p $venvPath
+venvPath=$currPath/.venv
+# venvPath=$currPath/tmp/$DIR
+# echo "DEBUG: creating venv path at ${venvPath}"
+# mkdir -p $venvPath
 
 # create virtual environment
 export PENV=$venvPath
@@ -32,11 +33,13 @@ pip install -r $DIR/requirements.txt
 echo "================"
 
 if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
-    source tmp/$DIR/bin/activate
+    source .venv/bin/activate
+    # source tmp/$DIR/bin/activate
     cd $DIR
 else
     echo "Enter the virtual environment with the following command:"
-    echo "source tmp/${DIR}bin/activate"
+    echo "source .venv/bin/activate"
+    # echo "source tmp/${DIR}bin/activate"
 fi
 
 echo "(exit with command 'deactivate')"

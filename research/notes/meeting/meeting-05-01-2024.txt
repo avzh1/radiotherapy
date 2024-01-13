@@ -1,9 +1,8 @@
-overlapping structures on interim report (shall we keep them independent)
-nhs staff crisis
-read up the cancer? Cervical cancer? some summary stats
-Ethics: making cheaper isn't main goal - want to improve patient experience
-baseline script
++ nhs staff crisis
++ read up the cancer? Cervical cancer? some summary stats
++ Ethics: making cheaper isn't main goal - want to improve patient experience
 
-create template in a week and send for review
 
-Solution to resolution problem, down-sample all samples or think of average?
+! baseline script
+! Solution to resolution problem, down-sample all samples or think of average?
+! overlapping structures on interim report (shall we keep them independent)

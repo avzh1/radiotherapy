@@ -41,7 +41,15 @@
 % \clearpage{\pagestyle{empty}\cleardoublepage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 \begin{abstract} \label{sect:abstract}
+
+  \begin{warning}
+    First draft of abstract
+  \end{warning}
+  
   Clinicians target cancerous tumours by studying 3D contrasting images of cancerous tumours and surrounding soft tissues to plan targets for radiation therapy. The Royal Marsden Hospital is a key contributor of data for this project, which uses this approach to delineate tumours for cervical cancers. Typically after a gross tumour volume (GTV) is extrapolated from the relevant imaging modality, clinicians append tailored safety margins to also account for the microscopic cancerous spreads not visible in the scan to generate the planned target volume (PTV).
 
   The PTV area has to be generous enough to attempt to treat the problem in one-shot, yet conservative enough to not harm surrounding healthy tissue with radiation over the course of the treatment. Compounded with small sample size of labelled data this proposes a significant challenge for developing deep-learning segmentation models to identify an optimal PTV.
@@ -110,13 +118,11 @@ For the purpose of reproducibility, all scans in this training data have been la
 \section{Summary}\label{sect:background-summary}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Base Line and Data}\label{sect:baseline-and-data}
-
-\section{Data}\label{sect:data}
+\chapter{Data}\label{sect:data}
 
 The data is acquired during a CT scan (Section \ref{sec:data-ct-scan}) and presented as a set of \texttt{NIfTI} (Section \ref{sec:data-file-format}) files provided by the Royal Marsden Hospital. The data is of 100 patients each with a variant of cervical cancer. We have obtained from the hospital a spreadsheet with additional notes about each patient which may be useful in training and debugging (Section \ref{sec:data-notes}). Finally, this data is labelled into 5 different classes as a binary segmentation problem (Section \ref{sec:data-delineation-classes}). Included is a set of 10 hold-out data items, which are patients with only the raw CT scan with no labels.
 
-\subsection{CT scan}\label{sec:data-ct-scan}
+\section{CT scan}\label{sec:data-ct-scan}
 
 Before we consider other aspects of the data it is helpful to consider the context from which it was extracted and therefore what we might expect to see. This data is in CT scan, and so will be the focus, although there exist other imaging modalities such as Magnetic Resonance Imaging (MRI) and others.
 
@@ -124,7 +130,7 @@ A CT Scan is an X-ray study, where a series of rays are rotated around a specifi
  
 We therefore expect to receive a representation of the internal structure or functions of an atomic region in the form of an array of voxels. A voxel represents the value on a grid in three-dimensional space and is decided by the physician once they establish the slice thickness.
 
-\subsection{File Format}\label{sec:data-file-format}
+\section{File Format}\label{sec:data-file-format}
 
 The files are stored in a \texttt{.nii} file format which defines a style of image called the `Neuroimaging Informatics Technology Initiative' (NIfTI) \cite{file-formats}. It serves as a lightweight alternative to other formats such as DICOM and eliminates ambiguity from spatial orientation information \cite{dicom-to-nifti-conversion}.
 
@@ -146,7 +152,7 @@ The file has a fixed-size header which stores information about the data collect
   \label{tab:nifti-header}
 \end{table}
 
-\subsection{Notes}\label{sec:data-notes}
+\section{Notes}\label{sec:data-notes}
 
 The notes contain information about each of the 100 labelled data pairs \cite{AMLART-data}. This information can be helpful in debugging or troubleshooting. It also provides a good warning regarding the variability of the data. In particular some aspects to note are summarized in Table \ref{tab:notes-summary}.
 
@@ -173,11 +179,11 @@ The notes contain information about each of the 100 labelled data pairs \cite{AM
 
 There exist note entires for the majority of the 100 patients which weren't shown in Table \ref{tab:notes-summary}. Regardless, these notes are helpful to identify what type of pre-processing we must do in order to fully address some differences between patients. The concern is to not overfit on the 'normal' cases but also generalize and engineer a solution that is also open-minded to extreme or poorly captured cases; there is a vast variability in the anatomy of patients which makes computer vision tasks more challenging.
 
-\subsection{Delineation classes}\label{sec:data-delineation-classes}
+\section{Delineation classes}\label{sec:data-delineation-classes}
 
 The clinicians at the Royal Marsden Hospital have provided segmentation labels for 5 high-priority classes of interest. These are the Bladder, Anorectum, CTVn, CTVp, and Parametrium. 
 
-\subsubsection{Organs At Risk}\label{sec:data-organs-at-risk}
+\subsection{Organs At Risk}\label{sec:data-organs-at-risk}
 
 \begin{warning}
   Insert example figure for bladder and anorectum
@@ -187,7 +193,7 @@ An organ at risk is an organ which has a substantial probability of being within
 
 Many anatomies have been provided in the risk categories, however, in particular we have been supplied with contours for the Bladder (Figure \ref{fig:example-bladder}) and the Anorectum (Figure \ref{fig:example-anorectum}). In particular, clinicians have identified that the Bladder may overlap with the CTVn (Section \ref{sec:data-CTVn}) and the Parametrium (Section \ref{sec:data-Parametrium}). 
 
-\subsubsection{CTVp}\label{sec:data-CTVp}
+\subsection{CTVp}\label{sec:data-CTVp}
 
 \begin{warning}
   Find better figure for this
@@ -204,7 +210,7 @@ The CTVp stands for the Primary Clinical Target Volume, see the example at Figur
 
 This isn't by any means an organ in a body, but rather an area comprised of other components formed by joining other structures together. The CTVp is an area defined in Equation \ref{eq:ctvp}.
 
-\subsubsection{CTVn}\label{sec:data-CTVn}
+\subsection{CTVn}\label{sec:data-CTVn}
 
 \begin{warning}
   Find better figure for this
@@ -221,7 +227,7 @@ The CTVn stands for Nodal Clinical Target Volume, see the example at Figure \ref
 
 Similarly to CTVp, this is a compound area with three groups of lymph nodes. In clinical practice, the number of these groups included in the CTV varies in each patient, depending on how advanced the disease is. Pathological lymph nodes (GTVn) are also included. The CTVn is an area defined in Equation \ref{eq:ctvn}.
 
-\subsubsection{Parametrium}\label{sec:data-Parametrium}
+\subsection{Parametrium}\label{sec:data-Parametrium}
 
 \begin{warning}
   Find better figure for this
@@ -236,7 +242,7 @@ Similarly to CTVp, this is a compound area with three groups of lymph nodes. In 
 
 The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at risk of local spread, see Figure \ref{fig:example-parametrium}. Drawn as a complete structure and editing back to the level of vagina to be included \cite{AMLART-data}.
 
-\subsection{Establishing Rules for Structures}\label{sec:data-delineation-rules}
+\section{Establishing Rules for Structures}\label{sec:data-delineation-rules}
 
 \begin{minipage}{0.5\textwidth}
   \subsubsection{Notation of Structures}
@@ -262,7 +268,7 @@ The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at
   \item Let the Vagina be denoted with $V$
 \end{enumerate}
 
-\subsubsection{Relationship between Structures}
+\subsection{Relationship between Structures}
 
 \begin{enumerate}
   \item Let $O$ denote the set $O = \{B, A, C_n, C_p, P \}$ for a particular patient. If we want to talk about a specific patient, we should use the super-script notation to differentiate patients, e.g., $O^i = \{B^i, A^i, C_n^i, C_p^i, P^i\}$.
@@ -274,7 +280,7 @@ The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at
 
 \end{minipage}
 
-\subsubsection{Rules}
+\subsection{Rules}
 
 The top 5 priority structures have been selected to identify and plan an area where radiotherapy should be used. With these structures, there are rules that the clinicians have outlined, they are quoted for clarification (these structures only refer to each independent patient):
 
@@ -311,17 +317,59 @@ The top 5 priority structures have been selected to identify and plan an area wh
   
 \end{enumerate}
 
-\subsection{Data Cleaning}\label{sect:data-cleaning}
+\section{Data Cleaning}\label{sect:data-cleaning}
 
 \begin{warning}
   TODO
 \end{warning}
 
-\section{Evaluation Metrics}\label{sect:evaluation-metrics}
+\chapter{Evaluation Metrics}\label{sect:evaluation-metrics}
 
-\subsection{Geometric}\label{sect:geometric}
+To determine if a contour can be used in a clinical context, would be include calculating the difference between the provided labelled data. However, in a delineation context, we have different ways to evaluate this measure.
 
-\subsection{Honorable mentions}\label{sect:evaluation-metrics-honorable-mentions}
+Suppose we are writing a linear-regression model to match a line onto a set of points. To quantify the performance of our line we would measure the shortest distance between each point and the predicted line. This relies on the assumption of points in a known domain that a model is attempting to approximate. In this case we are fitting a 1-dimensional model onto 0-dimensional points in the grid space. 
+
+However, it is far harder to decide on a scoring system when in a delineation context. Consider a single slice of a CT-scan with a known contour around the perimeter of a tumour\footnote{Here we assume that the contour will hug the GTV tightly with no concern for microscopic spread around the remainder of the system}. A model like those mentioned in Section \ref{sect:vanilla-image-segmentation-models} would attempt to learn a function to closely replicate the contour. Here our domain, prediction and ground truth are all 2-dimensional objects. 
+
+Geometric measures are the most popular, a survey has found \cite{review-metrics}. These measures compare an auto-contour to a ground-truth contour and return a relative score based on its performance. 
+
+\section{Classification Based}
+
+Assesses if voxels within and outside the auto-contour have been correctly labelled \cite{review-metrics}. To begin, we define 'positive' to mean that the voxel selected is indeed in need of radiotherapy treatment, and 'negative' to mean that the voxel is classified as healthy.
+
+A standard measure of classification is accuracy. It measures the total amount of correct predictions vs the total predictions it made. However, this measure alone isn't enough to fully capture the bias of a model because it doesn't tell you the full story with class-imbalanced data when there isn't an even number between positive and negative labels.
+
+\begin{equation*}
+  \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation*}
+
+Better measures are Precision and Recall scores. The Precision measures the proportion of predictions that were successfully correct. The Recall, on the other hand, is measuring the proportion of predictions where actual positives were identified correctly. These scores can be further combined into a more general score $F_\beta$.
+
+\begin{equation*}
+  \text{Precision} = \frac{TP}{TP+FP}, \quad \text{Recall} = \frac{TP}{TP+FN}, \quad \text{F}_\beta = (1+\beta^2)\cdot \frac{\text{Precision} \cdot \text{Recall}}{(\beta^2+\text{Precision})+\text{Recall}}
+\end{equation*}
+
+\begin{warning}
+  Sources used: \textit{\href{https://developers.google.com/machine-learning/crash-course/classification/precision-and-recall}{Google MML crash course}}
+\end{warning}
+
+\section{Overlap Based}
+
+Similarly to Classification Based metrics, an Overlap Based metric measures the extent of overlap between an auto-contour and a reference structure \cite{review-metrics}.
+
+
+\section{Volume Based}
+
+\section{Surface Based}
+
+\section{Moment Based}
+
+\section{Measures of estimated editing}
+
+\section{Honorable mentions}\label{sect:evaluation-metrics-honorable-mentions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Proposal}\label{sect:proposal}
 
 \section{Baseline Results}\label{sect:baseline-results}
 
@@ -337,8 +385,6 @@ The top 5 priority structures have been selected to identify and plan an area wh
 
 \section{Summary}\label{sect:results-summary}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Proposal}\label{sect:proposal}
 
 \begin{warning}
   Should we keep labels individual and segment them separately or should we segment it all in one shot?
@@ -366,7 +412,7 @@ The applications of this tool bode well in the healthcare ecosystem as the commu
 
 Yet, it is too early to take result the medical tool as gospel. For current cervical radiotherapy delineation tools, only 90\% of the output is considered as acceptable for clinical use \cite{auto-delineation-cervical-cancer-development}. The remainder therefore has the potential to cause more harm than good if not checked properly. For example, overlap of a PTV onto an organ-at-risk may invoke a cascade of negative effects for the patient. A potential cause may be the lack of multivariate analysis, where an oncologist would need to consider a variety of data, whereas this model only considers a single point of evidence (results of an imaging modality).
 
-Therefore, a degree of supervision required from physicians has to be established if this tool is to be used in practice. Oncologists will be required to reverse-engineer results of the `black-box' to verify why a decision has been made. Secondly, the responsible party for incorrect decisions made by DL tools should also be determined \cite{AI-in-cancer-diagnosis-era}.
+Clinicians can fall into the trap of automation-bias as AI becomes more common place in clinical environments \cite{automation-bias}. However, many models of this age codify the existing bias in common cases, which often will fail those patients who do not fit the expectations of the majority. Therefore, a degree of supervision required from physicians has to be established if this tool is to be used in practice. Oncologists will be required to reverse-engineer results of the `black-box' to verify why a decision has been made. Secondly, the responsible party for incorrect decisions made by DL tools should also be determined \cite{AI-in-cancer-diagnosis-era}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printbibliography
