@@ -22,6 +22,7 @@
 
 \addbibresource{../../research/source/bibliography.bib}
 
+
 % load title page
 \begin{document}
 \input{../titlepage}
@@ -333,7 +334,7 @@ However, it is far harder to decide on a scoring system when in a delineation co
 
 Geometric measures are the most popular, a survey has found \cite{review-metrics}. These measures compare an auto-contour to a ground-truth contour and return a relative score based on its performance. 
 
-\section{Classification Based}
+\section{Classification Based}\label{sect:classification-based}
 
 Assesses if voxels within and outside the auto-contour have been correctly labelled \cite{review-metrics}. To begin, we define 'positive' to mean that the voxel selected is indeed in need of radiotherapy treatment, and 'negative' to mean that the voxel is classified as healthy.
 
@@ -349,15 +350,38 @@ Better measures are Precision and Recall scores. The Precision (also known as th
   \text{Precision} = \frac{TP}{TP+FP}, \quad \text{Recall} = \frac{TP}{TP+FN}
 \end{equation*}
 
+\section{Volume Based}
+
+Volume-based metrics consider only the volume of the segmentation \cite{evaluation-of-metrics-in-prostate,review-metrics, boundary-overlap-metrics}. However, due to its poor spatial descriptions it is more commonly used jointly with other metrics.
+
+\begin{equation*}
+  \text{Relative Volume Difference (RVD)} = \bigg| \frac{|S_g^1|-|S_t^1|}{|S_g^1|}\bigg|
+\end{equation*}
+
+\section{Surface Based}
+
+Also commonly known as Boundary-Distance-Based Methods \cite{boundary-overlap-metrics} compares the distance between two structure
+surfaces. These can be either maximum distance, average distance or distance at a set percentile of ordered distances \cite{evaluation-metrics}.
+
+A common example is the Haussdorf Distance. Here, a directed distance metric is defined as the maximum distance from a point in the first set to a nearest point in the other between two individual voxels \cite{boundary-overlap-metrics}. Therefore, the better the HD metric, the smaller the value it returns. Here, the distance is taken by some norm, typically Euclidian distnace.
+
+\begin{equation*}
+  \text{HD}(A,B) = \max(h(A,B), h(B,A)), \quad \text{ and directed h}(A,B)=\max_{a\in A}\min_{b \in B} ||a-b||
+\end{equation*}
+
+The HD is generally sensitive to outliers. Because noise and outliers are common in medical segmentations, it is not recommended to use the HD directly \cite{boundary-overlap-metrics}. Therefore, we can calculate the average directed Haussdorf Distance.
+
 \section{Spatial Overlap Based}
 
-Similarly to Classification Based metrics, an Overlap Based metric measures the extent of overlap between an auto-contour and a reference structure \cite{review-metrics}. 
+Similarly to Classification Based metrics in Section \ref{sect:classification-based}, an Overlap Based metric measures the extent of overlap between an auto-contour and a reference structure \cite{review-metrics}. 
 
 The scores above can be combined into a more general score $F_\beta$ to give 
 
 \begin{equation*}
   \text{F}_\beta = (1+\beta^2)\cdot \frac{\text{Precision} \cdot \text{Recall}}{\beta^2 \cdot \text{Precision}+\text{Recall}}
 \end{equation*}
+
+\subsection{DICE}
 
 A specific case of this equation with $\beta=1$ is mathematically equivalent to the DICE Similarity Coefficient which was found to be the most popular evaluation metric amongst 2021 studies \cite{review-metrics,evaluation-metrics}. 
 
@@ -382,35 +406,39 @@ Another popular related evaluation method is the Jaccard Index, which measures t
 
 Since the nuberator for the Jaccard Index is smaller (since we avoid the issue of counting the intersecting sections twice) the JAC is always larger than the DICE score.
 
-\section{Volume Based}
+\subsection{Surface DICE}
 
-Volume-based metrics consider only the volume of the segmentation \cite{evaluation-of-metrics-in-prostate,review-metrics, boundary-overlap-metrics}. However, due to its poor spatial descriptions it is more commonly used jointly with other metrics.
+Because of the clinical context of evaluating the segmentation by a machine, it may sometimes be helpful to define a performance metric as the ``fraction of the surface that needs to be redrawn'' \cite{Nikolov2021-xe} since models at this point require manual review to avoid automation bias (Section \ref{sect:using-the-tool}). For larger structures, this method is useful it doesn't assign a lot of weight on the large trivial internal volume which accounts for a much larger proportion of the score.
 
-\begin{equation*}
-  \text{Relative Volume Difference (RVD)} = \bigg| \frac{|S_g^1|-|S_t^1|}{|S_g^1|}\bigg|
-\end{equation*}
+The Surface DICE therefore assesses the specified tolerance instead of the overlap of the two volumes. 
 
-\section{Surface Based}
-
-Also commonly known as Boundary-Distance-Based Methods \cite{boundary-overlap-metrics} compares the distance between two structure
-surfaces. These can be either maximum distance, average distance or distance at a set percentile of ordered distances \cite{evaluation-metrics}.
-
-A common example is the Haussdorf Distance. Here, a directed distance metric is defined as the maximum distance from a point in the first set to a nearest point in the other between two individual voxels \cite{boundary-overlap-metrics}. Here, the distance is taken by some norm, typically Euclidian distnace.
-
-\begin{equation*}
-  \text{HD}(A,B) = \max(h(A,B), h(B,A)), \quad \text{ and directed h}(A,B)=\max_{a\in A}\min_{b \in B} ||a-b||
-\end{equation*}
-
-The HD is generally sensitive to outliers. Because noise and outliers are common in medical segmentations, it is not recommended to use the HD directly \cite{boundary-overlap-metrics}.
-
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\linewidth]{../figures/Surface-dice.png}
+  \caption{Taken from \cite{Nikolov2021-xe}. Compute the surface DICE, where the continuous line is the predicted surface and the dashed line is the ground truth. The black arrows show the maximum deviation tolerated without penalty; therefore, in pink is the unacceptable deviations and green otherwise.}
+\end{figure}
 
 \section{Moment Based}
 
 \section{Measures of estimated editing}
 
-\section{Summary}
+\section{Summary}\label{sect:summary-of-evaluation-methods}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../figures/segmentation-cases-1.png}
+  \caption{Figure from \cite{boundary-overlap-metrics} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics}
+  \label{fig:segmentation-cases-1}
+\end{figure}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../figures/segmentation-cases-2.png}
+  \caption{Figure from \cite{evaluation-of-metrics-in-prostate} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics}
+  \label{fig:segmentation-cases-2}
+\end{figure}
+
+``The standard volumetric DSC [91] is not well suited to this because it weighs all regions of misplaced delineation equally and independently of their distance from the surface. For example, two inaccurate segmentations could have a similar volumetric DSC score if one were to deviate from the correct surface boundary by a small amount in many places, whereas the other had a large deviation at a single point. Correcting the former would likely take a considerable amount of time as it would require redrawing almost all of the boundary, whereas the latter could be corrected much faster, potentially with a single edit action.'' \cite{Nikolov2021-xe}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Proposal}\label{sect:proposal}
@@ -450,7 +478,7 @@ The Royal Marsden Hospital doesn't require ``explicit consent'' for sharing coll
 
 The MIRA team acts as responsible data stewards by storing anonymized data within a folder on the college network. All provided data was anonymized by the Royal Marsden Hospital and sent to team MIRA in the \texttt{NIfTI} file format which discloses no personal identifiable information, as defined by GOV website \cite{gov-gdpr}. This folder contains security measures which limit the availability of data only to those with specific access rights. Furthermore, operating on the preamble of de-identified data further reduces individual patient risk in the event that data is ever brought outside the confines of this folder.
 
-\section{Using the tool}
+\section{Using the tool}\label{sect:using-the-tool}
 
 The applications of this tool bode well in the healthcare ecosystem as the community slowly realizes the importance of AI-powered tools for the next generation of medical technology. Radiology has been one application that has been most welcoming of the new advances in technology as there is potential for substantial aid by reducing manual labor, increasing precision and freeing up the primary care physician's time \cite{overview-of-ai-medicine}.
 
