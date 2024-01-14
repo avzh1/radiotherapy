@@ -186,26 +186,59 @@ The clinicians at the Royal Marsden Hospital have provided segmentation labels f
 
 \subsection{Organs At Risk}\label{sec:data-organs-at-risk}
 
-\begin{warning}
-  Insert example figure for bladder and anorectum
-\end{warning}
+\begin{figure}[H]
+  \centering
+  \subfigure[Axial]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Axial.png}
+    \label{fig:example-anorectum-axial}
+  }
+  \subfigure[Coronal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Coronal.png}
+    \label{fig:example-anorectum-coronal}
+  }
+  \subfigure[Sagittal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Sagittal.png}
+    \label{fig:example-anorectum-sagittal}
+  }
+  \vspace{1em}
+  \subfigure[Axial]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Axial.png}
+    \label{fig:example-bladder-axial}
+  }
+  \subfigure[Coronal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Coronal.png}
+    \label{fig:example-bladder-coronal}
+  }
+  \subfigure[Sagittal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Sagittal.png}
+    \label{fig:example-bladder-sagittal}
+  }
+  \caption{Views of a segmented (in red) Anorectum (\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}) and Bladder (\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}) of an arbitrary patient}
+\end{figure}
 
 An organ at risk is an organ which has a substantial probability of being within the PTV despite being healthy. Any areas that are created around the area should actively avoid these organs because by overlapping with them we risk complicating the treatment and compromising the health of functioning organs.
 
-Many anatomies have been provided in the risk categories, however, in particular we have been supplied with contours for the Bladder (Figure \ref{fig:example-bladder}) and the Anorectum (Figure \ref{fig:example-anorectum}). In particular, clinicians have identified that the Bladder may overlap with the CTVn (Section \ref{sec:data-CTVn}) and the Parametrium (Section \ref{sec:data-Parametrium}). 
+Many anatomies have been provided in the risk categories, however, in particular we have been supplied with contours for the Bladder (Figure \ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}) and the Anorectum (Figure \ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}). In particular, clinicians have identified that the Bladder may overlap with the CTVn (Section \ref{sec:data-CTVn}) and the Parametrium (Section \ref{sec:data-Parametrium}). 
 
 \subsection{CTVp}\label{sec:data-CTVp}
 
-\begin{warning}
-  Find better figure for this
-\end{warning}
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[width=0.7\linewidth]{../figures/CTVp.png}
-%   \captionof{figure}{The CTVp of an arbitrary patient}
-%   \label{fig:example-CTVp}
-% \end{figure}
+\begin{figure}[H]
+  \centering
+  \subfigure[Axial]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Axial.png}
+    \label{fig:example-CTVp-axial}
+  }
+  \subfigure[Coronal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Coronal.png}
+    \label{fig:example-CTVp-coronal}
+  }
+  \subfigure[Sagittal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Sagittal.png}
+    \label{fig:example-CTVp-sagittal}
+  }
+  \caption{Views of a segmented (in red) CTVp of an arbitrary patient}
+  \label{fig:example-CTVp}
+\end{figure}
 
 The CTVp stands for the Primary Clinical Target Volume, see the example at Figure \ref{fig:example-CTVp}. This is the CTV where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour) \cite{AMLART-data}. This is the area that contains the tumour.
 
@@ -213,16 +246,23 @@ This isn't by any means an organ in a body, but rather an area comprised of othe
 
 \subsection{CTVn}\label{sec:data-CTVn}
 
-\begin{warning}
-  Find better figure for this
-\end{warning}
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[width=0.7\linewidth]{../figures/CTVn.png}
-%   \captionof{figure}{The CTVn of an arbitrary patient}
-%   \label{fig:example-CTVn}
-% \end{figure}
+\begin{figure}[H]
+  \centering
+  \subfigure[Axial]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Axial.png}
+    \label{fig:example-CTVn-axial}
+  }
+  \subfigure[Coronal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Coronal.png}
+    \label{fig:example-CTVn-coronal}
+  }
+  \subfigure[Sagittal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Sagittal.png}
+    \label{fig:example-CTVn-sagittal}
+  }
+  \caption{Views of a segmented (in red) CTVn of an arbitrary patient}
+  \label{fig:example-CTVn}
+\end{figure}
 
 The CTVn stands for Nodal Clinical Target Volume, see the example at Figure \ref{fig:example-CTVn}. This is the CTV where there may be microscopic spread to lymph nodes. It is drawn based on set margins around pelvic blood vessels and includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes \cite{AMLART-data}. 
 
@@ -230,18 +270,24 @@ Similarly to CTVp, this is a compound area with three groups of lymph nodes. In 
 
 \subsection{Parametrium}\label{sec:data-Parametrium}
 
-\begin{warning}
-  Find better figure for this
-\end{warning}
+\begin{figure}[H]
+  \subfigure[Axial]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Axial.png}
+    \label{fig:example-Parametrium-axial}
+  }
+  \subfigure[Coronal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Coronal.png}
+    \label{fig:example-Parametrium-coronal}
+  }
+  \subfigure[Sagittal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Sagittal.png}
+    \label{fig:example-Parametrium-saggital}
+  }
+  \caption{Views of a segmented (in red) Parametrium of an arbitrary patient}
+  \label{fig:example-Parametrium}
+\end{figure}
 
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[width=0.7\linewidth]{../figures/Parametrium.png}
-%   \captionof{figure}{The Parametrium of an arbitrary patient}
-%   \label{fig:example-parametrium}
-% \end{figure}
-
-The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at risk of local spread, see Figure \ref{fig:example-parametrium}. Drawn as a complete structure and editing back to the level of vagina to be included \cite{AMLART-data}.
+The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at risk of local spread, see Figure \ref{fig:example-Parametrium}. Drawn as a complete structure and editing back to the level of vagina to be included \cite{AMLART-data}.
 
 \section{Establishing Rules for Structures}\label{sec:data-delineation-rules}
 
@@ -301,7 +347,7 @@ The top 5 priority structures have been selected to identify and plan an area wh
   \item The Bladder may overlap with the CTVn.
   
   \begin{equation}
-    B \cap C_n \neq \emptyset \vee B \cap C_n = \emptyset
+    B \cap C_n \neq \emptyset \vee B \cap C_n = \emptyset\label{eq:ctvn}
   \end{equation}
 
   \item The CTVp is defined as a compound structure containing:
