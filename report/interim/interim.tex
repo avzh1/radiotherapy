@@ -412,22 +412,22 @@ A specific case of this equation with $\beta=1$ is mathematically equivalent to 
 %   F_1 = \text{DICE} & = \frac{2 \cdot \text{Precision} \cdot \text{Recall}} {\text{Precision} + \text{Recall}} & \\ 
 %   % & = \frac{2 \cdot \frac{TP}{TP + FP} \cdot \frac{TP}{TP + FN}}{\frac{TP}{TP + FP} + \frac{TP}{TP + FN}} \\
 %   % & = \frac{2 \cdot TP \cdot TP}{TP(TP+FN)+TP(TP+FP)} \\ 
-%   & = \frac{2 \cdot TP}{2TP + FP + FN} \quad = \quad \frac{2|S_g^1\cap S_t^1|}{|S_g^1|+|S_t^1|} , \text{where} \begin{cases}
+%   & = \frac{2 \cdot TP}{2TP + FP + FN} \quad = \quad \frac{2|S_g^1\cap S_p^1|}{|S_g^1|+|S_p^1|} , \text{where} \begin{cases}
 %     S_g^1 & \text{ground truth} \\
-%     S_t^1 & \text{segmentation}
+%     S_p^1 & \text{segmentation}
 %   \end{cases}
 % \end{align*}
 
 \begin{equation*}
-  F_1 = \text{DICE} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}} {\text{Precision} + \text{Recall}} = \frac{2 \cdot TP}{2TP + FP + FN} \quad = \quad \frac{2|S_g^1\cap S_t^1|}{|S_g^1|+|S_t^1|}
+  F_1 = \text{DICE} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}} {\text{Precision} + \text{Recall}} = \frac{2 \cdot TP}{2TP + FP + FN} \quad = \quad \frac{2|S_g\cap S_p|}{|S_g|+|S_p|}
 \end{equation*}
 
-Where $S_g^1$ is the ground truth and $S_t^1$ is the automatic segmentation. From this relationship, the DICE score has found popularity in image segmentation for similar reasons that the $F_1$ score has found its popularity classical machine learning; it is able to provide a fair result for imbalanced datasets. This mentality is applicable in our scenario because a tumour will make up very little of the total volume of the domain space.
+Where $S_g$ is the ground truth segmentation and $S_p$ is the predicted segmentation. From this relationship, the DICE score has found popularity in image segmentation for similar reasons that the $F_1$ score has found its popularity classical machine learning; it is able to provide a fair result for imbalanced datasets. This mentality is applicable in our scenario because a tumour will make up very little of the total volume of the domain space. This can be extended to a Volumetric DSC by considering the above in all 3-dimensions \cite{APL}.
 
 Another popular related evaluation method is the Jaccard Index, which measures the intersection over the union of two sets:
 
 \begin{equation*}
-  \text{JAC} = \frac{TP}{TP+FP+FN} = \frac{|S_g^1\cap S_t^1|}{|S_g^1 \cup S_t^1|} \iff \frac{DICE}{2 - DICE}
+  \text{JAC} = \frac{TP}{TP+FP+FN} = \frac{|S_g\cap S_p|}{|S_g \cup S_p|} \iff \frac{DICE}{2 - DICE}
 \end{equation*}
 
 Since the numerator for the Jaccard Index is smaller (since we avoid the issue of counting the intersecting sections twice) the JAC is always larger than the DICE score.
@@ -451,7 +451,7 @@ The HD is generally sensitive to outliers. Because noise and outliers are common
 Volume-based metrics consider only the volume of the segmentation \cite{evaluation-of-metrics-in-prostate,review-metrics, boundary-overlap-metrics}. However, due to its poor spatial descriptions it is more commonly used jointly with other metrics.
 
 \begin{equation*}
-  \text{Relative Volume Difference (RVD)} = \bigg| \frac{|S_g^1|-|S_t^1|}{|S_g^1|}\bigg|
+  \text{Relative Volume Difference (RVD)} = \bigg| \frac{|S_g|-|S_p|}{|S_g|}\bigg|
 \end{equation*}
 
 \section{Evaluation}\label{sect:evaluation-of-evaluation-methods}
@@ -481,6 +481,8 @@ It is difficult to select a measurement which can reflect a clinicians acceptabi
 
 Because of the clinical context of evaluating the segmentation by a machine, it may sometimes be helpful to define a performance metric as the ``fraction of the surface that needs to be redrawn'' \cite{Nikolov2021-xe} since models at this point require manual review to avoid automation bias (Section \ref{sect:using-the-tool}). For larger structures, this method is useful it doesn't assign a lot of weight on the large trivial internal volume which accounts for a much larger proportion of the score.
 
+\subsection{Surface DSC} \label{sect:surface-DSC}
+
 The study at \cite{Sherer2021-le} helped drive an initiative to combine aspects of Surface Based evaluation (Section \ref{sect:surface-based}) and Spatial Overlap Based evaluation (Section \ref{sect:spatial-overlap-based}) into a Surface DICE. This assesses the specified tolerance instead of the overlap of the two volumes. 
 
 \begin{figure}[H]
@@ -489,16 +491,27 @@ The study at \cite{Sherer2021-le} helped drive an initiative to combine aspects 
   \caption{Taken from \cite{Nikolov2021-xe}. Illustrates the computation of the surface DICE, where the continuous line is the predicted surface and the dashed line is the ground truth. The black arrows show the maximum deviation tolerated without penalty; therefore, in pink is the unacceptable deviations and green otherwise.}
 \end{figure}
 
-We can formulate the Surface DICE score in a mathematical definition \cite{Sherer2021-le}.
+We can formulate the Surface DSC score in a mathematical definition \cite{Sherer2021-le}.
 
 \begin{equation*}
-  \text{Surface DICE} = \frac{|S_1 \cap B_{2,\tau}| + |S_2 \cap B_{1,\tau}|}{|S_1| + |S_2|}
+  \text{Surface DSC} = \frac{|S_p \cap B_{g,\tau}| + |S_g \cap B_{p,\tau}|}{|S_p| + |S_g|}
 \end{equation*}
 
+Which provides a measure of the agreement between just the surfaces of two structures above a clinically determined tolerance parameter, $\tau$. Here, $B_{p,\tau}$ represents the  boundary region of the predicted surface within a maximum margin of deviation $\tau$ and similarly for $B_{g,\tau}$ for the ground truth.
+
+\subsection{Added Path Length}
+
+In a similar spirit, the APL was proposed as a score to predict ``the path length of a contour that has to be added'' \cite{APL}. This is achieved similarly by considering the number of added voxels required between the prediction and the gold standard with no regard to tolerance as a pose to Surface DSC (Section \ref{sect:surface-DSC})
+
+\begin{warning}
+  For future reference, \textit{\href{https://stackoverflow.com/questions/73286639/how-to-calculate-added-path-length-apl-image-segmentation-metric}{stack overflow discussion}}
+
+  Implementation of surface DSC and APL: \textit{\href{https://github.com/pyplati/platipy/blob/master/platipy/imaging/label/comparison.py}{source code}}
+\end{warning}
 
 \section{Summary}
 
-This is why we settle at the Surface DICE (Section \ref{sect:surface-dice}) which prioritizes deviation along boundary to a certain degree while measuring the fraction of the surface that needs to be redrawn, thus favouring a more conservative prediction of Figure \ref{fig:segmentation-cases-1}(d) instead of (e).
+This is why we settle at the Surface DSC (Section \ref{sect:surface-dice}) which prioritizes deviation along boundary to a certain degree while measuring the fraction of the surface that needs to be redrawn, thus favouring a more conservative prediction of Figure \ref{fig:segmentation-cases-1}(d) instead of (e).
 
 For the purpose of this project, we shall select a evaluation measurement which is more bias towards conservative boundary estimates to not touch the organs at risk. This choice was in-part influenced by the clinician's review pipeline; it would easier to correct Figure \ref{fig:segmentation-cases-1}(d) instead of (e) because correcting the latter would likely take a considerable amount of time as it would require redrawing almost all of the boundary, whereas the former could be corrected much faster \cite{Nikolov2021-xe}.
 
