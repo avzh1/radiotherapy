@@ -10,3 +10,4 @@ find . -type f -name "*.bbl" | xargs rm
 find . -type f -name "*.bcf" | xargs rm
 find . -type f -name "*.blg" | xargs rm
 find . -type f -name "*.run.xml" | xargs rm
+find . -type f -name "*.toc" | xargs rm

@@ -40,21 +40,22 @@
 \usepackage{float} % for H option in figures
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{csquotes}
 
 
 \usepackage[nottoc]{tocbibind}
 
 \hypersetup{pdftitle={},
-  pdfsubject={}, 
+  pdfsubject={},
   pdfauthor={},
-  pdfkeywords={}, 
+  pdfkeywords={},
   pdfstartview=FitH,
   pdfpagemode={UseOutlines},% None, FullScreen, UseOutlines
   bookmarksnumbered=true, bookmarksopen=true, colorlinks,
-    citecolor=black,%
-    filecolor=black,%
-    linkcolor=black,%
-    urlcolor=black}
+  citecolor=black,%
+  filecolor=black,%
+  linkcolor=black,%
+  urlcolor=black}
 
 \usepackage[all]{hypcap}
 
@@ -87,12 +88,12 @@
 
 \setlength{\headheight}{14.5pt}
 \pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter.\ #1}{}} 
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter.\ #1}{}}
 %\fancyhead[RO]{\sffamily \textbf{\thepage}} %Page no.in the right on even pages
 %\fancyhead[LE]{\sffamily \textbf{\thepage}} %Page no. in the left on odd pages
 
 \fancyfoot[ER,OL]{\thepage}%Page no. in the left on
-                                %odd pages and on right on even pages
+%odd pages and on right on even pages
 \fancyfoot[OC,EC]{\sffamily }
 \renewcommand{\headrulewidth}{0.1pt}
 \renewcommand{\footrulewidth}{0.1pt}
@@ -114,11 +115,11 @@
 \def\@makechapterhead#1{%
   \vspace*{10\p@}%
   {\parindent \z@ \raggedright \sffamily
-        %{\Large \MakeUppercase{\@chapapp} \space \thechapter}
-        %\\
-        %\hrulefill
-        %\par\nobreak
-        %\vskip 10\p@
+    %{\Large \MakeUppercase{\@chapapp} \space \thechapter}
+    %\\
+    %\hrulefill
+    %\par\nobreak
+    %\vskip 10\p@
     \interlinepenalty\@M
     \Huge\bfseries \thechapter \space\space #1\par\nobreak
     \vskip 30\p@
@@ -132,5 +133,5 @@
     \interlinepenalty\@M
     \Huge \bfseries  #1\par\nobreak
     \vskip 30\p@
-  }}	
+  }}
 \allowdisplaybreaks

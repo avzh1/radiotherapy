@@ -33,7 +33,7 @@ The architecture would typically thrive on contextual information, but we are li
 
 While the 2D and 3D U-Nets generate segmentations at full resolution, the cascade first generates low resolution segmentations and subsequently refines them.
 
-This addresses the shortcoming in Section \ref{sec:3d-u-net} because we first train the 3D U-Net on downsampled images (which compresses the amount of contextual information you need) (stage 1) and then upsamples to the original voxel spacing and passed as additional (one hot encoded) input channels to a second 3D U-Net, which is trained on patches at full resolution (stage 2).
+This addresses the shortcoming in Section~\ref{sec:3d-u-net} because we first train the 3D U-Net on downsampled images (which compresses the amount of contextual information you need) (stage 1) and then upsamples to the original voxel spacing and passed as additional (one hot encoded) input channels to a second 3D U-Net, which is trained on patches at full resolution (stage 2).
 
 \begin{figure}[H]
     \includegraphics[width=\linewidth]{images/nnunet-diagram.png}

@@ -35,7 +35,7 @@ It has been shown to work in medical contexts as well in~\cite{liver-lesion-via-
 
 As inspired by~\cite{concise-review-of-transfer-learning} and~\cite{survey-on-transfer-learning}.
 
-Definition \ref{eq:domain}: A \textbf{domain} \begin{align}
+Definition~\ref{eq:domain}: A \textbf{domain} \begin{align}
     \mathcal{D} = \{\mathcal{X}, P(X)\}
     \label{eq:domain}
 \end{align}
@@ -44,7 +44,7 @@ With feature space $\mathcal{X}$ and a marginal probability distribution $P(X)$ 
 
 \vspace{1em}
 
-Definition \ref{eq:task}: A \textbf{task}
+Definition~\ref{eq:task}: A \textbf{task}
 
 \begin{align}
     \mathcal{T} = \{\mathcal{Y}, f(\cdot)\}
@@ -55,7 +55,7 @@ composed of a label space $\mathcal{Y}$ and an objective predictive function $f(
 
 \vspace{1em}
 
-Definition \ref{eq:transfer-learning}: Given a domain $\mathcal{D}_S$ with corresponding source tasks $\mathcal{T}_S$, and a target domain $\mathcal{D}_T$ with corresponding target task $\mathcal{T}_T$, \textbf{transfer learning} aims to transfer the related knowledge to boost the performance of the target predictive function
+Definition~\ref{eq:transfer-learning}: Given a domain $\mathcal{D}_S$ with corresponding source tasks $\mathcal{T}_S$, and a target domain $\mathcal{D}_T$ with corresponding target task $\mathcal{T}_T$, \textbf{transfer learning} aims to transfer the related knowledge to boost the performance of the target predictive function
 
 \begin{equation}
     f_T(\cdot)
@@ -98,13 +98,13 @@ Definition \ref{eq:transfer-learning}: Given a domain $\mathcal{D}_S$ with corre
 
 This boils down to three questions: (1) What to transfer, (2) How to transfer, and (3) When to transfer.
 
-Some knowledge may be common between different domains such that they may help improve performance for the target domain or task. When the source domain and target domain are not related to each other, brute-force transfer may be unsuccessful. In the worst case, it may even hurt the performance of learning in the target domain, a situation which is often referred to as negative transfer (see Section \ref{sec:negative-transfer}).
+Some knowledge may be common between different domains such that they may help improve performance for the target domain or task. When the source domain and target domain are not related to each other, brute-force transfer may be unsuccessful. In the worst case, it may even hurt the performance of learning in the target domain, a situation which is often referred to as negative transfer (see Section~\ref{sec:negative-transfer}).
 
 \subsubsection{Strategy}
 
 \begin{enumerate}
     \item Obtain a pre-trained 'base' model. This model has been trained on extensive data and has identified general features and patterns relevant to numerous related jobs.
-    \item Identify the transfer-layers. These capture generic information relevant to the new task as well as the previous one. These are 'frozen' in the final deliverable (see Figure \ref{fig:frozen-layers}) as we want to preserve the low-level learnt features. A layer is frozen or 'fixed' when it is no longer avaialble for training, hence the weights of these layers will not be avaialble for updates.
+    \item Identify the transfer-layers. These capture generic information relevant to the new task as well as the previous one. These are 'frozen' in the final deliverable (see Figure~\ref{fig:frozen-layers}) as we want to preserve the low-level learnt features. A layer is frozen or 'fixed' when it is no longer avaialble for training, hence the weights of these layers will not be avaialble for updates.
     \item Fine-tune and retrain the remaining layers. The goal is to preserve the knowledge from the pre-training while enabling the model to modify its parameters to better suit the demands of the current assignment. We can either
           \begin{itemize}
               \item freeze a few layers of the pre-trained model and train other layers on our new dataset for the new task
@@ -180,11 +180,11 @@ Given multiple candidate source tasks, it may be beneficial to use several or al
 
 \subsection{Inductive Transfer Learning}
 
-Relevant for our case is the branch from Figure \ref{fig:tree} is `Labeled data are avaialble in a target domain'. Therefore we lookup these cases only.
+Relevant for our case is the branch from Figure~\ref{fig:tree} is `Labeled data are avaialble in a target domain'. Therefore we lookup these cases only.
 
 \subsection{Instance-transfer Approach}
 
-From Figure \ref{fig:approaches} we have a source domain data which cannot be reused directly, however, there are certain parts of the data that can still be reused together with a few labeled data in the target domain. Note that there exist boosting algorithms TrAdaBoost (see~\cite{transfer-learning-boosting} which details the algorithm for updating weight vectors).
+From Figure~\ref{fig:approaches} we have a source domain data which cannot be reused directly, however, there are certain parts of the data that can still be reused together with a few labeled data in the target domain. Note that there exist boosting algorithms TrAdaBoost (see~\cite{transfer-learning-boosting} which details the algorithm for updating weight vectors).
 
 \vspace{1em}
 

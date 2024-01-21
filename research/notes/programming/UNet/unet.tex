@@ -28,11 +28,11 @@ This is a sumamry of the contents of the file~\cite{U-Net} and example of its im
     \label{fig:u-net-architecture}
 \end{figure}
 
-The U-Net is an adaption of another network~\cite{fully-CNNs-for-semantic-segmentation}. We first discuss the architecture of the approach which is shown in Figure \ref{fig:u-net-architecture}.
+The U-Net is an adaption of another network~\cite{fully-CNNs-for-semantic-segmentation}. We first discuss the architecture of the approach which is shown in Figure~\ref{fig:u-net-architecture}.
 
 \subsection{Method}
 
-Most of the method can be seen by referencing the Legend of Figure \ref{fig:u-net-architecture}. It's worth noting that when we expand our features out we concatenate it with the correspondingly cropped feature map from the contracting path, and two 3x3 convolutions. The cropping is required due to the loss of border pixels in every convolution. At the final layer a 1x1 convolution is used to map each 64-component feature vector to the desired number of classes.
+Most of the method can be seen by referencing the Legend of Figure~\ref{fig:u-net-architecture}. It's worth noting that when we expand our features out we concatenate it with the correspondingly cropped feature map from the contracting path, and two 3x3 convolutions. The cropping is required due to the loss of border pixels in every convolution. At the final layer a 1x1 convolution is used to map each 64-component feature vector to the desired number of classes.
 
 It is advised that you choose dimensions of an image that are even so that there is seamless tiling of the output segmentation map.
 
@@ -75,7 +75,7 @@ The resulting architecture is symmetric in its expansive path as it is to its co
     \label{fig:overlap-tile}
 \end{figure}
 
-It takes advantage of the overlap-tile strategy (Figure \ref{fig:overlap-tile}). This is result of passing through the features received at each level and passing it horizontally through to the upsampled level on the opposite side of the network.
+It takes advantage of the overlap-tile strategy (Figure~\ref{fig:overlap-tile}). This is result of passing through the features received at each level and passing it horizontally through to the upsampled level on the opposite side of the network.
 
 \subsection{Considerations}
 
@@ -102,7 +102,7 @@ This paper suggests that the forward and backward signals can be directly propag
     \label{residual-architecture}
 \end{figure}
 
-The typical residual network as in Figure \ref{residual-architecture} makes training very deep networks easier than previous iterations. The formula typically follows 
+The typical residual network as in Figure~\ref{residual-architecture} makes training very deep networks easier than previous iterations. The formula typically follows 
 
 \begin{align}
     \textbf{y}_l &= h(\textbf{x}_l) + F(\textbf{x}_l, W_l) \\
