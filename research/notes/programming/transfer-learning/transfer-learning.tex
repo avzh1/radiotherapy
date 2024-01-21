@@ -37,7 +37,7 @@ As inspired by~\cite{concise-review-of-transfer-learning} and~\cite{survey-on-tr
 
 Definition~\ref{eq:domain}: A \textbf{domain} \begin{align}
     \mathcal{D} = \{\mathcal{X}, P(X)\}
-    \label{eq:domain}
+   \label{eq:domain}
 \end{align}
 
 With feature space $\mathcal{X}$ and a marginal probability distribution $P(X)$ where $X$ is defined as an instance set, and $X = \{x_1, x_2, \cdots, x_n\} \in \mathcal{X}$.
@@ -48,7 +48,7 @@ Definition~\ref{eq:task}: A \textbf{task}
 
 \begin{align}
     \mathcal{T} = \{\mathcal{Y}, f(\cdot)\}
-    \label{eq:task}
+   \label{eq:task}
 \end{align}
 
 composed of a label space $\mathcal{Y}$ and an objective predictive function $f(\cdot)$. Given a domain $\mathcal{D} = \{\mathcal{X}, P(X)\}$ the sample data consists of pairs $\{x_i, y_i\}$ where $x_i \in X$ and $y_i \in \mathcal{Y}$. The objective function $f$ is supposed to learn from sample data to predict the corresponding label for the new instances. $f$ can be rewritten as $f(x)=P(y|x)$.
@@ -59,7 +59,7 @@ Definition~\ref{eq:transfer-learning}: Given a domain $\mathcal{D}_S$ with corre
 
 \begin{equation}
     f_T(\cdot)
-    \label{eq:transfer-learning}
+   \label{eq:transfer-learning}
 \end{equation}
 
 \subsection{Advantages}
@@ -81,7 +81,7 @@ Definition~\ref{eq:transfer-learning}: Given a domain $\mathcal{D}_S$ with corre
               \centering
               \includegraphics[width=0.7\linewidth]{images/performance.png}
               \caption{Figure taken from~\cite{torrey-handbook} showing three ways in which transfer might improve learning}
-              \label{fig:performance}
+             \label{fig:performance}
           \end{figure}
 
 
@@ -125,7 +125,7 @@ for layer in base_model.layers:
     \centering
     \includegraphics[width=0.7\linewidth]{images/Frozen-layers.jpg}
     \caption{Figure taken from~\cite{geeks-transfer-learning} illustrating frozen and trainable layers from pre-trained and fine-tuned network.}
-    \label{fig:frozen-layers}
+   \label{fig:frozen-layers}
 \end{figure}
 
 \subsection{Recommendations}
@@ -137,7 +137,7 @@ for layer in base_model.layers:
     \item \textbf{Don't use stochastic gradient descent algorithms to the whole network}; it is much more efficient to send the new training data once through the fixed pre-trained network so as to evaluate the training inputs in the new representation. Iterative gradient-based optimization can then be applied just to the smaller network consisting of the final     layers.
 \end{itemize}
 
-\section{Avoiding Negative Transfer} \label{sec:negative-transfer}
+\section{Avoiding Negative Transfer}\label{sec:negative-transfer}
 
 If a transfer method actually decreases performance, then negative transfer has occurred. One of the major challenges in developing transfer methods is to produce positive transfer between appropriately related tasks while avoiding negative transfer between tasks that are less related~\cite{torrey-handbook}.
 

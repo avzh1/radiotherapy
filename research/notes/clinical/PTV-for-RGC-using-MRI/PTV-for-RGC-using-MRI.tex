@@ -38,26 +38,26 @@ target volume (PTV), to which the treatment is planned.
 \subsection{Delineation Error}
 
 \begin{equation}
-    \Sigma_D(d) = \sqrt{\frac{1}{N_0-1}\sum^{N_0}_{i=1}{(d_i - \bar d)^2}} \label{equ:delineation-error}
+    \Sigma_D(d) = \sqrt{\frac{1}{N_0-1}\sum^{N_0}_{i=1}{(d_i - \bar d)^2}}\label{equ:delineation-error}
 \end{equation}
 
 See paper for method of calculating (\ref{equ:delineation-error}) for each point in a patient.
 
 \section{Terminology}
 
-\subsection{Target delineation} \label{term:target-delineation}
+\subsection{Target delineation}\label{term:target-delineation}
 
 Delineation is synonymous with contouring of a target volume. The current stanadard is to define a gross tumour volume (GTV) and a clinical target volume (CTV) and a planning target volume (PTV). The GTV is the part of the tumour that is visible in 3D, however the clinical volume also accounts for microscopic transfer patterns which makes contains as its subset the GTV~\cite{tumor-delineation}.
 
-\subsection{geometric uncertainty} \label{term:geometric-uncertainty}
+\subsection{geometric uncertainty}\label{term:geometric-uncertainty}
 
 a common way to see if the deliniated area we predict compared to the true value is accurate. Returns a score based on the geometric pattern chosen~\cite{review-metrics}.
 
-\subsection{imaging modality} \label{term:imaging-modality}
+\subsection{imaging modality}\label{term:imaging-modality}
 
 techniques used to create images of the human body for diagnostic and therapeutic purposes. Includes X-Ray, Flouroscopy, CT Scan, MRI, Ultrasound, ...~\cite{imaging-modality}
 
-\subsection{planning target volume} \label{term:planning-target-volume}
+\subsection{planning target volume}\label{term:planning-target-volume}
 
 The third volume, the planning target volume (PTV), allows for uncertainties in planning or treatment delivery. It is a geometric concept designed to ensure that the radiotherapy dose is actually delivered to the CTV. Radiotherapy planning must always consider critical normal tissue structures, known as organs at risk (ORs). In some specific circumstances, it is necessary to add a margin analogous to the PTV margin around an OR to ensure that the organ cannot receive a higher-than-safe dose; this gives a planning organ at risk volume.~\cite{defining-target-volumes}
 

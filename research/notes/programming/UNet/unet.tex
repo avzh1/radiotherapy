@@ -25,7 +25,7 @@ This is a sumamry of the contents of the file~\cite{U-Net} and example of its im
     \centering
     \includegraphics[width=\linewidth]{images/u-net.png}
     \caption{U-Net architecture taken from~\cite{U-Net}}
-    \label{fig:u-net-architecture}
+   \label{fig:u-net-architecture}
 \end{figure}
 
 The U-Net is an adaption of another network~\cite{fully-CNNs-for-semantic-segmentation}. We first discuss the architecture of the approach which is shown in Figure~\ref{fig:u-net-architecture}.
@@ -45,7 +45,7 @@ This network favours large input tiles over a large batch size and hence they ha
 The energy function is computed by a pixel-wise soft-max (\ref{eq:soft-max}) over the final feature map combined with the cross entropy loss function (\ref{eq:cross-entropy}). 
 
 \begin{equation}
-    p_k(\textbf{x}) = \frac{\exp(a_k(\textbf{x}))}{\sum^K_{k'=1}\exp(a_{k'}(\textbf{x}))} \label{eq:soft-max}
+    p_k(\textbf{x}) = \frac{\exp(a_k(\textbf{x}))}{\sum^K_{k'=1}\exp(a_{k'}(\textbf{x}))}\label{eq:soft-max}
 \end{equation}
 
 \begin{itemize}
@@ -55,7 +55,7 @@ The energy function is computed by a pixel-wise soft-max (\ref{eq:soft-max}) ove
 \end{itemize}
 
 \begin{equation}
-    E = \sum_{\textbf{x} \in \Omega} w(\textbf{x})\log(p_{l(\textbf{x})}(\textbf{x})) \label{eq:cross-entropy}
+    E = \sum_{\textbf{x} \in \Omega} w(\textbf{x})\log(p_{l(\textbf{x})}(\textbf{x}))\label{eq:cross-entropy}
 \end{equation}
 
 \begin{itemize}
@@ -72,7 +72,7 @@ The resulting architecture is symmetric in its expansive path as it is to its co
     \centering
     \includegraphics[width=\linewidth]{images/overlap-tile.png}
     \caption{Overlap figure taken from~\cite{U-Net}}
-    \label{fig:overlap-tile}
+   \label{fig:overlap-tile}
 \end{figure}
 
 It takes advantage of the overlap-tile strategy (Figure~\ref{fig:overlap-tile}). This is result of passing through the features received at each level and passing it horizontally through to the upsampled level on the opposite side of the network.
@@ -99,7 +99,7 @@ This paper suggests that the forward and backward signals can be directly propag
     \centering
     \includegraphics[width=0.4\linewidth]{images/residualArchitecture.png}
     \caption{Typic resudial network taken from~\cite{drn-for-image-recognition}}
-    \label{residual-architecture}
+   \label{residual-architecture}
 \end{figure}
 
 The typical residual network as in Figure~\ref{residual-architecture} makes training very deep networks easier than previous iterations. The formula typically follows 

@@ -11,7 +11,7 @@
 \newenvironment{warning}
   {\par\begin{mdframed}[linewidth=1pt,linecolor=black]%
     \begin{list}{}{\leftmargin=1cm
-                   \labelwidth=\leftmargin}\item[\Large\ding{43}]}
+                  \labelwidth=\leftmargin}\item[\Large\ding{43}]}
   {\end{list}\end{mdframed}\par}
 
 % load some definitions and default packages
@@ -43,9 +43,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
-\begin{abstract} \label{sect:abstract}
+\begin{abstract}\label{sect:abstract}
 
   \begin{warning}
     First draft of abstract
@@ -64,18 +62,18 @@
 \tableofcontents
 
 
-\clearpage{\pagestyle{empty}\cleardoublepage}
+% \clearpage{\pagestyle{empty}\cleardoublepage}
 \pagenumbering{arabic}
 \setcounter{page}{1}
 \fancyhead[LE,RO]{\slshape \rightmark}
 \fancyhead[LO,RE]{\slshape \leftmark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Introduction} \label{sect:intro}
+\chapter{Introduction}\label{sect:intro}
 
 
 
-\section{Clinical Context} \label{sect:clinical-context-summary}
+\section{Clinical Context}\label{sect:clinical-context-summary}
 
 
 
@@ -106,12 +104,12 @@ Finally, Chapter~\ref{sect:proposal} contains details surrounding the propositio
 
 \section{Clinical Context}\label{sect:clinical-context}
 
-``To administer radiotherapy we need to identify target structures and structures we want to protect (organs-at-risk). These all need to be delineated on each slice of a CT scan, so the amount of radiation planned to reach each area can be calculated and checked.
+% ``To administer radiotherapy we need to identify target structures and structures we want to protect (organs-at-risk). These all need to be delineated on each slice of a CT scan, so the amount of radiation planned to reach each area can be calculated and checked.
 
-The clinical target volume is the area where there is likely microscopic cancer and this area needs to receive sufficient radiation doses to achieve cancer cure. As microscopic cancer cannot be seen on CT, the clinical target volume is not an obvious structure that can be drawn around. The CTV is however constructed based on an Oncologist's knowledge of where each particular cancer is likely to spread to. It is drawn based on guidelines, atlases and clinical information. There are currently no internationally agreed guidelines for exactly how the clinical target volume should be drawn for cervix cancer and practice varies. Practice varies based on how the individual components of the CTV are labelled and this in theory could make it difficult for an AI model to learn patterns (or to generate large quantities of similar quality training data).
+% The clinical target volume is the area where there is likely microscopic cancer and this area needs to receive sufficient radiation doses to achieve cancer cure. As microscopic cancer cannot be seen on CT, the clinical target volume is not an obvious structure that can be drawn around. The CTV is however constructed based on an Oncologist's knowledge of where each particular cancer is likely to spread to. It is drawn based on guidelines, atlases and clinical information. There are currently no internationally agreed guidelines for exactly how the clinical target volume should be drawn for cervix cancer and practice varies. Practice varies based on how the individual components of the CTV are labelled and this in theory could make it difficult for an AI model to learn patterns (or to generate large quantities of similar quality training data).
 
-For the purpose of reproducibility, all scans in this training data have been labelled consistently, to see if an AI model can learn cervical cancer CTV pattern detection. Clinical decisions also affect how many structures are included in the CTV and an AI model is not likely to be able to make these decisions. An AI model is therefore unlikely to be able to produce a perfect CTV for treatment and a clinician will have to select which components of the CTV are required. Training models capable of producing the substructures needed within the CTV that a clinician can select from could still overall save time and improve consistency within the radiotherapy planning process.
-''
+% For the purpose of reproducibility, all scans in this training data have been labelled consistently, to see if an AI model can learn cervical cancer CTV pattern detection. Clinical decisions also affect how many structures are included in the CTV and an AI model is not likely to be able to make these decisions. An AI model is therefore unlikely to be able to produce a perfect CTV for treatment and a clinician will have to select which components of the CTV are required. Training models capable of producing the substructures needed within the CTV that a clinician can select from could still overall save time and improve consistency within the radiotherapy planning process.
+% ''
 
 \section{Vanilla Image Segmentation Models}\label{sect:vanilla-image-segmentation-models}
 
@@ -121,8 +119,6 @@ For the purpose of reproducibility, all scans in this training data have been la
 
 \subsection{nnU-Net}\label{sect:nnu-net}
 
-\subsection{Traditional Limitations}\label{sect:vanilla-limitations}
-
 \section{Existing Auto-Segmentation Methods}\label{sect:existing-auto-segmentation-methods}
 
 \subsection{Total Segmentator}\label{sect:totalseg}
@@ -131,11 +127,34 @@ For the purpose of reproducibility, all scans in this training data have been la
 
 \subsection{SAM}\label{sect:sam}
 
+\section{Current Limitations}\label{sect:limitations}
+
+The approaches listed in Section~\ref{sect:vanilla-image-segmentation-models} and models discussed in Section~\ref{sect:existing-auto-segmentation-methods} are great approaches for most image segmentation applications. We've seen the advancements of CNNs to tackle the intractable nature of fully connected neural network, and the advancements in segmentation models in the U-Net. Furthermore, these techniques have been used to train robust models in medicine such as those presented in Section~\ref{sect:existing-auto-segmentation-methods}. 
+
+However, our problem is not accurately solved with the methods mentioned. This is due to a handful of independent details which require more careful planning and engineering.
+
+\subsection{Data Size}\label{sect:solving-the-problem-data-size}
+
+The data quantity supplied is a limiting factor for creating a robust model. We are given 100 labeled data elements across 5 classes. Without vast collection of knowledge, it is hard for an application to create a model which generalizes well to the total population, especially in a very specific and bespoke use case as radiotherapy planning for cervical cancer.
+
+\subsection{Bespoke Application}\label{sect:solving-the-problem-bespoke-application}
+
+Another issue lies in the bespoke nature of this application. Most pre-trained networks currently run segmentation on structures are that are more obvious in a given image modality. For instance, TotalSegmentator has learnt a robust model for delineating 117 classes of objects in the human body, such as bones, a large subset of significant organs and veins~\cite{totalsegmentor-git}.
+
 \section{Transfer Learning}\label{sect:transfer-learning}
 
-\subsection{Intuition}\label{sect:transfer-learning-intuition}
+Transfer Learning uses knowledge that has been obtained from one task, and uses it as a starting point for learning a new task. It is therefore a useful solution to the problems identified in Section~\ref{sect:limitations} because of the transferable knowledge features for similar domains  and its proven success in generalizing features is trained properly.
+
+The intuitive reason why transfer learning works is because in the early layers of deep learning, the model learns very low-level features. At this scale, the initial data-set or the cost function doesn't matter because a model working on the same problem but with different initialization will learn similar low-level features. This allows transferral because the (large/sufficiently sized) input dataset is abstracted in the set low-level features which can instead be transferred. Then, the later layers are more specialized to a particular task~\cite{deep-learning-book}. It is similar to seeing the distribution in the training data change and transferring knowledge across domains~\cite{survey-on-transfer-learning}.
+
+Transfer Learning has the potential to: improve initial performance using only the transferred knowledge before nay further learning is done, improve the time it takes to fully learn the target task given the transferred knowledge, and improve the final performance all when compared to initial benchmarks without transfer~\cite{torrey-handbook}. It has also been found to work in medical contexts as well, where, for 332 abdominal liver CT scans, transfer learning generally improved weight initialization and resulted in faster convergence providing stronger and more robust representation~\cite{liver-lesion-via-transfer-learning}
+
+Transfer Learning has been seen to prevent overfitting in domains where data volume is low and where generality without overfitting is hard to come by. This is because the model has already learnt features that are likely to be useful in the second task~\cite{geeks-transfer-learning}. 
+
+However, generalization is not a guarantee, as overfitting is still possible if the model is fine-tuned too much on the second task, as it may `learn task-specific features that do not generalize well to new data'~\cite{geeks-transfer-learning}. In our case, our target dataset is small, but similar to the base network dataset. Here, we may overfit because fine-tune the pre-trained network with the target dataset may not generalize to the global population. If instead we attempt to transfer a task with different base network dataset, then using high-level features of the pre-trained model will not be useful~\cite{geeks-transfer-learning}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \chapter{Data}\label{sect:data}
 
 The data is acquired during a CT scan (Section~\ref{sec:data-ct-scan}) and presented as a set of \texttt{NIfTI} (Section~\ref{sec:data-file-format}) files provided by the Royal Marsden Hospital. The data is of 100 patients each with a variant of cervical cancer. We have obtained from the hospital a spreadsheet with additional notes about each patient which may be useful in training and debugging (Section~\ref{sec:data-notes}). Finally, this data is labelled into 5 different classes as a binary segmentation problem (Section~\ref{sec:data-delineation-classes}). Included is a set of 10 hold-out data items, which are patients with only the raw CT scan with no labels.
@@ -167,7 +186,7 @@ The file has a fixed-size header which stores information about the data collect
     \bottomrule
   \end{tabular}
   \caption{Description of NIfTI header parameters relevant to this project~\cite{dicom-to-nifti-conversion, nifti-headers, nifti-data-format}. Example values are taken from patient id:075.}
-  \label{tab:nifti-header}
+ \label{tab:nifti-header}
 \end{table}
 
 \section{Notes}\label{sec:data-notes}
@@ -192,7 +211,7 @@ The notes contain information about each of the 100 labelled data pairs~\cite{AM
     \bottomrule
   \end{tabular}
   \caption{A few captivating notes about each patient and why it might be concerning}
-  \label{tab:notes-summary}
+ \label{tab:notes-summary}
 \end{table}
 
 There exist note entires for the majority of the 100 patients which weren't shown in Table~\ref{tab:notes-summary}. Regardless, these notes are helpful to identify what type of pre-processing we must do in order to fully address some differences between patients. The concern is to not overfit on the 'normal' cases but also generalize and engineer a solution that is also open-minded to extreme or poorly captured cases; there is a vast variability in the anatomy of patients which makes computer vision tasks more challenging.
@@ -207,28 +226,28 @@ The clinicians at the Royal Marsden Hospital have provided segmentation labels f
   \centering
   \subfigure[Axial]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Axial.png}
-    \label{fig:example-anorectum-axial}
+   \label{fig:example-anorectum-axial}
   }
   \subfigure[Coronal]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Coronal.png}
-    \label{fig:example-anorectum-coronal}
+   \label{fig:example-anorectum-coronal}
   }
   \subfigure[Sagittal]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Sagittal.png}
-    \label{fig:example-anorectum-sagittal}
+   \label{fig:example-anorectum-sagittal}
   }
   \vspace{1em}
   \subfigure[Axial]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Axial.png}
-    \label{fig:example-bladder-axial}
+   \label{fig:example-bladder-axial}
   }
   \subfigure[Coronal]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Coronal.png}
-    \label{fig:example-bladder-coronal}
+   \label{fig:example-bladder-coronal}
   }
   \subfigure[Sagittal]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Sagittal.png}
-    \label{fig:example-bladder-sagittal}
+   \label{fig:example-bladder-sagittal}
   }
   \caption{Views of a segmented (in red) Anorectum (\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}) and Bladder (\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}) of an arbitrary patient}
 \end{figure}
@@ -243,18 +262,18 @@ Many anatomies have been provided in the risk categories, however, in particular
   \centering
   \subfigure[Axial]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Axial.png}
-    \label{fig:example-CTVp-axial}
+   \label{fig:example-CTVp-axial}
   }
   \subfigure[Coronal]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Coronal.png}
-    \label{fig:example-CTVp-coronal}
+   \label{fig:example-CTVp-coronal}
   }
   \subfigure[Sagittal]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Sagittal.png}
-    \label{fig:example-CTVp-sagittal}
+   \label{fig:example-CTVp-sagittal}
   }
   \caption{Views of a segmented (in red) CTVp of an arbitrary patient}
-  \label{fig:example-CTVp}
+ \label{fig:example-CTVp}
 \end{figure}
 
 The CTVp stands for the Primary Clinical Target Volume, see the example at Figure~\ref{fig:example-CTVp}. This is the CTV where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour)~\cite{AMLART-data}. This is the area that contains the tumour.
@@ -267,18 +286,18 @@ This isn't by any means an organ in a body, but rather an area comprised of othe
   \centering
   \subfigure[Axial]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Axial.png}
-    \label{fig:example-CTVn-axial}
+   \label{fig:example-CTVn-axial}
   }
   \subfigure[Coronal]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Coronal.png}
-    \label{fig:example-CTVn-coronal}
+   \label{fig:example-CTVn-coronal}
   }
   \subfigure[Sagittal]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Sagittal.png}
-    \label{fig:example-CTVn-sagittal}
+   \label{fig:example-CTVn-sagittal}
   }
   \caption{Views of a segmented (in red) CTVn of an arbitrary patient}
-  \label{fig:example-CTVn}
+ \label{fig:example-CTVn}
 \end{figure}
 
 The CTVn stands for Nodal Clinical Target Volume, see the example at Figure~\ref{fig:example-CTVn}. This is the CTV where there may be microscopic spread to lymph nodes. It is drawn based on set margins around pelvic blood vessels and includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes~\cite{AMLART-data}.
@@ -290,18 +309,18 @@ Similarly to CTVp, this is a compound area with three groups of lymph nodes. In 
 \begin{figure}[H]
   \subfigure[Axial]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Axial.png}
-    \label{fig:example-Parametrium-axial}
+   \label{fig:example-Parametrium-axial}
   }
   \subfigure[Coronal]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Coronal.png}
-    \label{fig:example-Parametrium-coronal}
+   \label{fig:example-Parametrium-coronal}
   }
   \subfigure[Sagittal]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Sagittal.png}
-    \label{fig:example-Parametrium-saggital}
+   \label{fig:example-Parametrium-saggital}
   }
   \caption{Views of a segmented (in red) Parametrium of an arbitrary patient}
-  \label{fig:example-Parametrium}
+ \label{fig:example-Parametrium}
 \end{figure}
 
 The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at risk of local spread, see Figure~\ref{fig:example-Parametrium}. Drawn as a complete structure and editing back to the level of vagina to be included~\cite{AMLART-data}.
@@ -413,7 +432,7 @@ Better measures are Precision and Recall scores. The Precision (also known as th
   \text{Precision} = \frac{TP}{TP+FP}, \quad \text{Recall} = \frac{TP}{TP+FN}
 \end{equation*}
 
-\section{Spatial Overlap Based} \label{sect:spatial-overlap-based}
+\section{Spatial Overlap Based}\label{sect:spatial-overlap-based}
 
 Similarly to Classification Based metrics in Section~\ref{sect:classification-based}, an Overlap Based metric measures the extent of overlap between an auto-contour and a reference structure~\cite{review-metrics}.
 
@@ -449,7 +468,7 @@ Another popular related evaluation method is the Jaccard Index, which measures t
 
 Since the numerator for the Jaccard Index is smaller (since we avoid the issue of counting the intersecting sections twice) the JAC is always larger than the DICE score.
 
-\section{Surface Based} \label{sect:surface-based}
+\section{Surface Based}\label{sect:surface-based}
 
 Also commonly known as Boundary-Distance-Based Methods~\cite{boundary-overlap-metrics} compares the distance between two structure
 surfaces. These can be either maximum distance, average distance or distance at a set percentile of ordered distances~\cite{evaluation-metrics}.
@@ -479,7 +498,7 @@ All these methods can be advantageous in some places rather than other. We can b
   \centering
   \includegraphics[width=\linewidth]{../figures/segmentation-cases-1.png}
   \caption{Figure from~\cite{boundary-overlap-metrics} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics}
-  \label{fig:segmentation-cases-1}
+ \label{fig:segmentation-cases-1}
 \end{figure}
 
 \begin{itemize}
@@ -498,7 +517,7 @@ It is difficult to select a measurement which can reflect a clinicians acceptabi
 
 Because of the clinical context of evaluating the segmentation by a machine, it may sometimes be helpful to define a performance metric as the ``fraction of the surface that needs to be redrawn''~\cite{Nikolov2021-xe} since models at this point require manual review to avoid automation bias (Section~\ref{sect:using-the-tool}). For larger structures, this method is useful it doesn't assign a lot of weight on the large trivial internal volume which accounts for a much larger proportion of the score.
 
-\subsection{Surface DSC} \label{sect:surface-DSC}
+\subsection{Surface DSC}\label{sect:surface-DSC}
 
 The study at~\cite{Sherer2021-le} helped drive an initiative to combine aspects of Surface Based evaluation (Section~\ref{sect:surface-based}) and Spatial Overlap Based evaluation (Section~\ref{sect:spatial-overlap-based}) into a Surface DICE. This assesses the specified tolerance instead of the overlap of the two volumes.
 
@@ -536,7 +555,7 @@ For the purpose of this project, we shall select a evaluation measurement which 
 %   \centering
 %   \includegraphics[width=\linewidth]{../figures/segmentation-cases-2.png}
 %   \caption{Figure from~\cite{evaluation-of-metrics-in-prostate} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics}
-%   \label{fig:segmentation-cases-2}
+%  \label{fig:segmentation-cases-2}
 % \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -556,6 +575,26 @@ For the purpose of this project, we shall select a evaluation measurement which 
 
 \section{Summary}\label{sect:results-summary}
 
+% Advice for Transfer Learning tasks to consider:
+% \begin{enumerate}
+%   \item Obtain a pre-trained 'base' model. This model has been trained on extensive data and has identified general features and patterns relevant to numerous related jobs.
+%   \item Identify the transfer-layers. These capture generic information relevant to the new task as well as the previous one. These are 'frozen' in the final deliverable (see Figure~) as we want to preserve the low-level learnt features. A layer is frozen or 'fixed' when it is no longer avaialble for training, hence the weights of these layers will not be avaialble for updates.
+%   \item Fine-tune and retrain the remaining layers. The goal is to preserve the knowledge from the pre-training while enabling the model to modify its parameters to better suit the demands of the current assignment. We can either
+%       \begin{itemize}
+%           \item freeze a few layers of the pre-trained model and train other layers on our new dataset for the new task
+%           \item or make a new model, but also take out some features from the layers in the pre-trained model and use them in a newly created model
+%       \end{itemize}
+%   \item The number of frozen layers depend on how much you want to inherit from the pre-trained model. If the networks are significantly different (i.e. use a human face detector to detect cars) selecting many layers for freezing will not only give low level features but also give high-level features like nose, eyes, etc which are useless for new dataset (car detection). Therefore, in this case you only copy the low level features~\cite{geeks-transfer-learning}.
+
+%   \item \textbf{Set the learning rate to be low}: It is essential to utilize a lower learning rate when compiling the new model because you are training a much larger model and want to readjust the pretrained weights. If not, your model may rapidly become overfit~\cite{geeks-transfer-learning}. Furthermore, this is done for a low number of iterations for the same reasons~\cite{deep-learning-book}.
+%   \item \textbf{Don't use stochastic gradient descent algorithms to the whole network}; it is much more efficient to send the new training data once through the fixed pre-trained network so as to evaluate the training inputs in the new representation. Iterative gradient-based optimization can then be applied just to the smaller network consisting of the final     layers.
+%   \item If a transfer method actually decreases performance, then negative transfer has occurred.
+%   \item Eaton and DesJardins ``propose choosing from among candidate solutions to a source task rather than from among candidate source tasks. Their setting is multi-resolution learning, where a classification task is solved by an ensemble of models that vary in complexity. Low-resolution models are simple and coarse, while higher-resolution models are more complex and detailed''~\cite{torrey-handbook}.
+%   \item Given multiple candidate source tasks, it may be beneficial to use several or all of them rather than to choose just one.
+
+%   ``Ruckert and Kramer look at inductive transfer via kernel methods. They learn a meta-kernel that serves as a similarity function between tasks. Given this and a set of kernels that perform well in source tasks, they perform numerical optimization to construct a kernel for a target task. This approach determines the inductive bias in the target task (the kernel) by combining information from several source tasks whose relationships to the target are known''~\cite{torrey-handbook}.
+%   \item 
+% \end{enumerate}
 
 \begin{warning}
   Should we keep labels individual and segment them separately or should we segment it all in one shot?
