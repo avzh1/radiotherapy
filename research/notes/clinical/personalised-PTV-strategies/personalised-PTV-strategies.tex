@@ -1,29 +1,22 @@
 \documentclass[11pt]{article}
 
-\usepackage[margin=1in]{geometry}
-\usepackage{listings}
-\usepackage{graphicx}
-\usepackage{subfigure}
-\usepackage{subcaption} % For subfigures
-\usepackage{float} % for H option in figures
-\usepackage{url}
-\usepackage{float}
-\usepackage{hyperref}
-
-\usepackage{biblatex} %Imports biblatex package
-\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
-
-\setlength{\parindent}{0pt}
-
-\title{New target volume delineation and PTV strategies to further
+% some definitions for the title page
+\newcommand{\reporttitle}{New target volume delineation and PTV strategies to further
 personalise radiotherapy}
-\author{Anton Zhitomirsky}
+\newcommand{\reportdescription}{Review of paper~\cite{personalised-PTV-strategies}}
+
+% load some definitions and default packages
+\input{../../.latex-templates/includes}
+\input{../../.latex-templates/notation}
 
 \begin{document}
 
-\maketitle
+% Include the title page
+\input{../../.latex-templates/titlepage}
 
-Review of paper \cite{personalised-PTV-strategies}.
+\tableofcontents
+
+\clearpage
 
 \section{Summary}
 
@@ -62,19 +55,19 @@ We then incorporate systematic errors. See paper.
 
 \subsection{Arbitrary anisotropic extensions} \label{term:arbitrary-anisotropic-extensions}
 
-Isotropic and anisotropic are terms that describe whether or not the properties of materials depend on direction. When a property is the same in all directions, the material is isotropic. When a property varies according to direction, the material is anisotropic. The terms come from the Greek isos (equal) and tropos (way). The an in “anisotropic” means “not.” \cite{anisotropy}
+Isotropic and anisotropic are terms that describe whether or not the properties of materials depend on direction. When a property is the same in all directions, the material is isotropic. When a property varies according to direction, the material is anisotropic. The terms come from the Greek isos (equal) and tropos (way). The an in “anisotropic” means “not.”~\cite{anisotropy}
 
 \subsection{Herk Margin Recipe} \label{term:herk-margin-recipe}
 
 \subsubsection{Will errors ever be zero?}
 
-One might consider that because of modern developments in image-guided radiotherapy, it is possible to eliminate all geometrical errors and it may become safe to reduce the margin to zero. However, in my opinion, it is impossible to completely eliminate all geometrical errors. For instance, even if the treatment is completely accurate, there will still be uncertainties in GTV and CTV definition. Then, online systems for imageguided radiotherapy will not be perfectly accurate because of detection or observer errors in the imaging system. Then there will always be some delay between imaging and treatment leading to uncertainties because of short-term organ movement. Then, there will be limits on the accuracy of correction procedures. Finally, when using indirect methods for detection of the tumor position, there will still be the possibility of relative movement of the structure of reference and the tumor. \cite{van-herk-margin-recipe}
+One might consider that because of modern developments in image-guided radiotherapy, it is possible to eliminate all geometrical errors and it may become safe to reduce the margin to zero. However, in my opinion, it is impossible to completely eliminate all geometrical errors. For instance, even if the treatment is completely accurate, there will still be uncertainties in GTV and CTV definition. Then, online systems for imageguided radiotherapy will not be perfectly accurate because of detection or observer errors in the imaging system. Then there will always be some delay between imaging and treatment leading to uncertainties because of short-term organ movement. Then, there will be limits on the accuracy of correction procedures. Finally, when using indirect methods for detection of the tumor position, there will still be the possibility of relative movement of the structure of reference and the tumor.~\cite{van-herk-margin-recipe}
 
 \subsubsection{Herk Margin Recipe}
 
-"The well-known Van Herk recipe for CTV-PTV margins \cite{van-herk-margin-recipe2} assumes treatment uncertainties to be normally distributed and then studies the population histogram to ensure that 90\% of patients receive 95\% of the prescribed dose" \cite{van-herk-margin-recipe3} \cite{van-herk-margin-recipe2}
+"The well-known Van Herk recipe for CTV-PTV margins~\cite{van-herk-margin-recipe2} assumes treatment uncertainties to be normally distributed and then studies the population histogram to ensure that 90\% of patients receive 95\% of the prescribed dose"~\cite{van-herk-margin-recipe3}~\cite{van-herk-margin-recipe2}
 
-From \cite{personalised-PTV-strategies} (paper in question)
+From~\cite{personalised-PTV-strategies} (paper in question)
 
 \begin{equation}
     m = \alpha \Sigma + \beta \sqrt{\sigma^2 + \sigma^2_p} - \beta \sigma_p

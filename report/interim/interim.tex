@@ -1,7 +1,7 @@
 \documentclass[11pt,twoside]{report}
 
 % some definitions for the title page
-\newcommand{\reporttitle}{Transfer Learning for bespoke automatic contouring of cervical cancer radiotherapy planning}
+\newcommand{\reporttitle}{Transfer Learning for Deep Learning Radiotherapy Planning applied to Cervical Cancer}
 \newcommand{\reportauthor}{Anton Zhitomirsky}
 \newcommand{\supervisor}{Ben Glocker}
 \newcommand{\secondMarker}{TODO}
@@ -15,17 +15,17 @@
   {\end{list}\end{mdframed}\par}
 
 % load some definitions and default packages
-\input{../includes}
+\input{../.latex-templates/includes}
 
 % load some macros
-\input{../notation}
+\input{../.latex-templates/notation}
 
 \addbibresource{../../research/source/bibliography.bib}
 
 
 % load title page
 \begin{document}
-\input{../titlepage}
+\input{../.latex-templates/titlepage}
 
 
 % page numbering etc.
@@ -77,7 +77,7 @@
 % the problem is not trivial of outlining a mass on a scan, there is also an area of non-zero probability that the tumour has spread around microscopically. Need to make sure 
 
 \section{Motivation}\label{sect:motivation}
-% 
+% Auto contouring vs Auto Segmentation?
 
 \section{Current Solutions}\label{sect:current-solutions}
 % 
@@ -106,9 +106,7 @@ For the purpose of reproducibility, all scans in this training data have been la
 
 \subsection{Traditional Limitations}\label{sect:vanilla-limitations}
 
-\section{Transfer Learning}\label{sect:transfer-learning}
-
-\subsection{Intuition}\label{sect:transfer-learning-intuition}
+\section{Existing Auto-Segmentation Methods}\label{sect:existing-auto-segmentation-methods}
 
 \subsection{Total Segmentator}\label{sect:totalseg}
 
@@ -116,7 +114,9 @@ For the purpose of reproducibility, all scans in this training data have been la
 
 \subsection{SAM}\label{sect:sam}
 
-\section{Summary}\label{sect:background-summary}
+\section{Transfer Learning}\label{sect:transfer-learning}
+
+\subsection{Intuition}\label{sect:transfer-learning-intuition}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Data}\label{sect:data}
@@ -127,15 +127,15 @@ The data is acquired during a CT scan (Section \ref{sec:data-ct-scan}) and prese
 
 Before we consider other aspects of the data it is helpful to consider the context from which it was extracted and therefore what we might expect to see. This data is in CT scan, and so will be the focus, although there exist other imaging modalities such as Magnetic Resonance Imaging (MRI) and others.
 
-A CT Scan is an X-ray study, where a series of rays are rotated around a specified body part, and computer-generated cross-sectional images are produced \cite{file-formats}. The granularity or image slice thickness is decided by the operator or physician and ranges from 1mm to 10mm. Whilst the scanner rotates the X-ray tube the patient is slowly moved up or down in the table to produce different cross-section images. 
+A CT Scan is an X-ray study, where a series of rays are rotated around a specified body part, and computer-generated cross-sectional images are produced~\cite{file-formats}. The granularity or image slice thickness is decided by the operator or physician and ranges from 1mm to 10mm. Whilst the scanner rotates the X-ray tube the patient is slowly moved up or down in the table to produce different cross-section images. 
  
 We therefore expect to receive a representation of the internal structure or functions of an atomic region in the form of an array of voxels. A voxel represents the value on a grid in three-dimensional space and is decided by the physician once they establish the slice thickness.
 
 \section{File Format}\label{sec:data-file-format}
 
-The files are stored in a \texttt{.nii} file format which defines a style of image called the `Neuroimaging Informatics Technology Initiative' (NIfTI) \cite{file-formats}. It serves as a lightweight alternative to other formats such as DICOM and eliminates ambiguity from spatial orientation information \cite{dicom-to-nifti-conversion}.
+The files are stored in a \texttt{.nii} file format which defines a style of image called the `Neuroimaging Informatics Technology Initiative' (NIfTI)~\cite{file-formats}. It serves as a lightweight alternative to other formats such as DICOM and eliminates ambiguity from spatial orientation information~\cite{dicom-to-nifti-conversion}.
 
-The file has a fixed-size header which stores information about the data collected. Table \ref{tab:nifti-header} summarizes some key attributes of the header. All other attributes not listed are handled by the SimpleITK library \cite{SimpleITK-paper} which we use to read and manipulate the data in this project. The library defines the image as a set of points in a grid occupying a physical region in space as defined by this metadata, and therefore is influenced by the origin, size, spacing and so on. 
+The file has a fixed-size header which stores information about the data collected. Table \ref{tab:nifti-header} summarizes some key attributes of the header. All other attributes not listed are handled by the SimpleITK library~\cite{SimpleITK-paper} which we use to read and manipulate the data in this project. The library defines the image as a set of points in a grid occupying a physical region in space as defined by this metadata, and therefore is influenced by the origin, size, spacing and so on. 
 
 \begin{table}[ht]
   \centering
@@ -149,13 +149,13 @@ The file has a fixed-size header which stores information about the data collect
       xyzt\_units & indicates units of pixdim and defined in the C header, e.g. \texttt{NIFTI\_UNITS\_MM = 2} & 2 \\
       \bottomrule
   \end{tabular}
-  \caption{Description of NIfTI header parameters relevant to this project \cite{dicom-to-nifti-conversion, nifti-headers, nifti-data-format}. Example values are taken from patient id:075.}
+  \caption{Description of NIfTI header parameters relevant to this project~\cite{dicom-to-nifti-conversion, nifti-headers, nifti-data-format}. Example values are taken from patient id:075.}
   \label{tab:nifti-header}
 \end{table}
 
 \section{Notes}\label{sec:data-notes}
 
-The notes contain information about each of the 100 labelled data pairs \cite{AMLART-data}. This information can be helpful in debugging or troubleshooting. It also provides a good warning regarding the variability of the data. In particular some aspects to note are summarized in Table \ref{tab:notes-summary}.
+The notes contain information about each of the 100 labelled data pairs~\cite{AMLART-data}. This information can be helpful in debugging or troubleshooting. It also provides a good warning regarding the variability of the data. In particular some aspects to note are summarized in Table \ref{tab:notes-summary}.
 
 \begin{table}[ht]
   \centering
@@ -240,7 +240,7 @@ Many anatomies have been provided in the risk categories, however, in particular
   \label{fig:example-CTVp}
 \end{figure}
 
-The CTVp stands for the Primary Clinical Target Volume, see the example at Figure \ref{fig:example-CTVp}. This is the CTV where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour) \cite{AMLART-data}. This is the area that contains the tumour.
+The CTVp stands for the Primary Clinical Target Volume, see the example at Figure \ref{fig:example-CTVp}. This is the CTV where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour)~\cite{AMLART-data}. This is the area that contains the tumour.
 
 This isn't by any means an organ in a body, but rather an area comprised of other components formed by joining other structures together. The CTVp is an area defined in Equation \ref{eq:ctvp}.
 
@@ -264,7 +264,7 @@ This isn't by any means an organ in a body, but rather an area comprised of othe
   \label{fig:example-CTVn}
 \end{figure}
 
-The CTVn stands for Nodal Clinical Target Volume, see the example at Figure \ref{fig:example-CTVn}. This is the CTV where there may be microscopic spread to lymph nodes. It is drawn based on set margins around pelvic blood vessels and includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes \cite{AMLART-data}. 
+The CTVn stands for Nodal Clinical Target Volume, see the example at Figure \ref{fig:example-CTVn}. This is the CTV where there may be microscopic spread to lymph nodes. It is drawn based on set margins around pelvic blood vessels and includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes~\cite{AMLART-data}. 
 
 Similarly to CTVp, this is a compound area with three groups of lymph nodes. In clinical practice, the number of these groups included in the CTV varies in each patient, depending on how advanced the disease is. Pathological lymph nodes (GTVn) are also included. The CTVn is an area defined in Equation \ref{eq:ctvn}.
 
@@ -287,7 +287,7 @@ Similarly to CTVp, this is a compound area with three groups of lymph nodes. In 
   \label{fig:example-Parametrium}
 \end{figure}
 
-The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at risk of local spread, see Figure \ref{fig:example-Parametrium}. Drawn as a complete structure and editing back to the level of vagina to be included \cite{AMLART-data}.
+The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at risk of local spread, see Figure \ref{fig:example-Parametrium}. Drawn as a complete structure and editing back to the level of vagina to be included~\cite{AMLART-data}.
 
 \section{Establishing Rules for Structures}\label{sec:data-delineation-rules}
 
@@ -378,11 +378,11 @@ Suppose we are writing a linear-regression model to match a line onto a set of p
 
 However, it is far harder to decide on a scoring system when in a delineation context. Consider a single slice of a CT-scan with a known contour around the perimeter of a tumour\footnote{Here we assume that the contour will hug the GTV tightly with no concern for microscopic spread around the remainder of the system}. A model like those mentioned in Section \ref{sect:vanilla-image-segmentation-models} would attempt to learn a function to closely replicate the contour. Here our domain, prediction and ground truth are all 2-dimensional objects. 
 
-Geometric measures are the most popular, a survey has found \cite{review-metrics}. These measures compare an auto-contour to a ground-truth contour and return a relative score based on its performance. 
+Geometric measures are the most popular, a survey has found~\cite{review-metrics}. These measures compare an auto-contour to a ground-truth contour and return a relative score based on its performance. 
 
 \section{Classification Based}\label{sect:classification-based}
 
-Assesses if voxels within and outside the auto-contour have been correctly labelled \cite{review-metrics}. To begin, we define 'positive' to mean that the voxel selected is indeed in need of radiotherapy treatment, and 'negative' to mean that the voxel is classified as healthy.
+Assesses if voxels within and outside the auto-contour have been correctly labelled~\cite{review-metrics}. To begin, we define 'positive' to mean that the voxel selected is indeed in need of radiotherapy treatment, and 'negative' to mean that the voxel is classified as healthy.
 
 A standard measure of classification is accuracy. It measures the total amount of correct predictions vs the total predictions it made. However, this measure alone isn't enough to fully capture the bias of a model because it doesn't tell you the full story with class-imbalanced data when there isn't an even number between positive and negative labels.
 
@@ -390,7 +390,7 @@ A standard measure of classification is accuracy. It measures the total amount o
   \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
 \end{equation*}
 
-Better measures are Precision and Recall scores. The Precision (also known as the Positive Predictive Value \cite{evaluation-metrics}) measures the proportion of predictions that were successfully correct. The Recall (also known as True Positive Rate \cite{evaluation-metrics}), on the other hand, ``measures the portion of positive voxels in the ground truth that are also identified as positive by the segmentation being evaluated''.
+Better measures are Precision and Recall scores. The Precision (also known as the Positive Predictive Value~\cite{evaluation-metrics}) measures the proportion of predictions that were successfully correct. The Recall (also known as True Positive Rate~\cite{evaluation-metrics}), on the other hand, ``measures the portion of positive voxels in the ground truth that are also identified as positive by the segmentation being evaluated''.
 
 \begin{equation*}
   \text{Precision} = \frac{TP}{TP+FP}, \quad \text{Recall} = \frac{TP}{TP+FN}
@@ -398,7 +398,7 @@ Better measures are Precision and Recall scores. The Precision (also known as th
 
 \section{Spatial Overlap Based} \label{sect:spatial-overlap-based}
 
-Similarly to Classification Based metrics in Section \ref{sect:classification-based}, an Overlap Based metric measures the extent of overlap between an auto-contour and a reference structure \cite{review-metrics}. 
+Similarly to Classification Based metrics in Section \ref{sect:classification-based}, an Overlap Based metric measures the extent of overlap between an auto-contour and a reference structure~\cite{review-metrics}. 
 
 The scores above can be combined into a more general score $F_\beta$ to give 
 
@@ -406,7 +406,7 @@ The scores above can be combined into a more general score $F_\beta$ to give
   \text{F}_\beta = (1+\beta^2)\cdot \frac{\text{Precision} \cdot \text{Recall}}{\beta^2 \cdot \text{Precision}+\text{Recall}}
 \end{equation*}
 
-A specific case of this equation with $\beta=1$ is mathematically equivalent to the DICE Similarity Coefficient which was found to be the most popular evaluation metric amongst 2021 studies \cite{review-metrics,evaluation-metrics, Sherer2021-le}. 
+A specific case of this equation with $\beta=1$ is mathematically equivalent to the DICE Similarity Coefficient which was found to be the most popular evaluation metric amongst 2021 studies~\cite{review-metrics,evaluation-metrics, Sherer2021-le}. 
 
 % \begin{align*}
 %   F_1 = \text{DICE} & = \frac{2 \cdot \text{Precision} \cdot \text{Recall}} {\text{Precision} + \text{Recall}} & \\ 
@@ -422,7 +422,7 @@ A specific case of this equation with $\beta=1$ is mathematically equivalent to 
   F_1 = \text{DICE} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}} {\text{Precision} + \text{Recall}} = \frac{2 \cdot TP}{2TP + FP + FN} \quad = \quad \frac{2|S_g\cap S_p|}{|S_g|+|S_p|}
 \end{equation*}
 
-Where $S_g$ is the ground truth segmentation and $S_p$ is the predicted segmentation. From this relationship, the DICE score has found popularity in image segmentation for similar reasons that the $F_1$ score has found its popularity classical machine learning; it is able to provide a fair result for imbalanced datasets. This mentality is applicable in our scenario because a tumour will make up very little of the total volume of the domain space. This can be extended to a Volumetric DSC by considering the above in all 3-dimensions \cite{APL}.
+Where $S_g$ is the ground truth segmentation and $S_p$ is the predicted segmentation. From this relationship, the DICE score has found popularity in image segmentation for similar reasons that the $F_1$ score has found its popularity classical machine learning; it is able to provide a fair result for imbalanced datasets. This mentality is applicable in our scenario because a tumour will make up very little of the total volume of the domain space. This can be extended to a Volumetric DSC by considering the above in all 3-dimensions~\cite{APL}.
 
 Another popular related evaluation method is the Jaccard Index, which measures the intersection over the union of two sets:
 
@@ -434,21 +434,21 @@ Since the numerator for the Jaccard Index is smaller (since we avoid the issue o
 
 \section{Surface Based} \label{sect:surface-based}
 
-Also commonly known as Boundary-Distance-Based Methods \cite{boundary-overlap-metrics} compares the distance between two structure
-surfaces. These can be either maximum distance, average distance or distance at a set percentile of ordered distances \cite{evaluation-metrics}.
+Also commonly known as Boundary-Distance-Based Methods~\cite{boundary-overlap-metrics} compares the distance between two structure
+surfaces. These can be either maximum distance, average distance or distance at a set percentile of ordered distances~\cite{evaluation-metrics}.
 
-A common example is the Haussdorf Distance. Here, a directed distance metric is defined as the maximum distance from a point in the first set to a nearest point in the other between two individual voxels \cite{boundary-overlap-metrics}. Therefore, the better the HD metric, the smaller the value it returns. Here, the distance is taken by some norm, typically Euclidian distnace.
+A common example is the Haussdorf Distance. Here, a directed distance metric is defined as the maximum distance from a point in the first set to a nearest point in the other between two individual voxels~\cite{boundary-overlap-metrics}. Therefore, the better the HD metric, the smaller the value it returns. Here, the distance is taken by some norm, typically Euclidian distnace.
 
 \begin{equation*}
   \text{HD}(A,B) = \max(h(A,B), h(B,A)), \quad \text{ and directed h}(A,B)=\max_{a\in A}\min_{b \in B} ||a-b||
 \end{equation*}
 
-The HD is generally sensitive to outliers. Because noise and outliers are common in medical segmentations, it is not recommended to use the HD directly \cite{boundary-overlap-metrics}. Therefore, we can calculate the average directed Haussdorf Distance.
+The HD is generally sensitive to outliers. Because noise and outliers are common in medical segmentations, it is not recommended to use the HD directly~\cite{boundary-overlap-metrics}. Therefore, we can calculate the average directed Haussdorf Distance.
 
 
 \section{Volume Based}
 
-Volume-based metrics consider only the volume of the segmentation \cite{evaluation-of-metrics-in-prostate,review-metrics, boundary-overlap-metrics}. However, due to its poor spatial descriptions it is more commonly used jointly with other metrics.
+Volume-based metrics consider only the volume of the segmentation~\cite{evaluation-of-metrics-in-prostate,review-metrics, boundary-overlap-metrics}. However, due to its poor spatial descriptions it is more commonly used jointly with other metrics.
 
 \begin{equation*}
   \text{Relative Volume Difference (RVD)} = \bigg| \frac{|S_g|-|S_p|}{|S_g|}\bigg|
@@ -461,7 +461,7 @@ All these methods can be advantageous in some places rather than other. We can b
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{../figures/segmentation-cases-1.png}
-  \caption{Figure from \cite{boundary-overlap-metrics} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics}
+  \caption{Figure from~\cite{boundary-overlap-metrics} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics}
   \label{fig:segmentation-cases-1}
 \end{figure}
 
@@ -474,24 +474,24 @@ All these methods can be advantageous in some places rather than other. We can b
 \section{Estimated Editing Based}\label{sect:surface-dice}
 
 \begin{warning}
-  This is a quotation from this paper, \cite{Sherer2021-le}, however, it is referencing a paper of its own. Shall I reference the original paper or are 'linked' references OK?
+  This is a quotation from this paper,~\cite{Sherer2021-le}, however, it is referencing a paper of its own. Shall I reference the original paper or are 'linked' references OK?
 \end{warning}
 
-It is difficult to select a measurement which can reflect a clinicians acceptability score. A study found that there was a lack of correlation between a geometric index and expert evaluation, with the JAC score having a 13\% False Positive Rate. The conclusion of the study summarised that scores such as JSC and volumetric DSC, ``provide limited clinical context and correlation with clinical or dosimetric quality'' \cite{Sherer2021-le}.
+It is difficult to select a measurement which can reflect a clinicians acceptability score. A study found that there was a lack of correlation between a geometric index and expert evaluation, with the JAC score having a 13\% False Positive Rate. The conclusion of the study summarised that scores such as JSC and volumetric DSC, ``provide limited clinical context and correlation with clinical or dosimetric quality''~\cite{Sherer2021-le}.
 
-Because of the clinical context of evaluating the segmentation by a machine, it may sometimes be helpful to define a performance metric as the ``fraction of the surface that needs to be redrawn'' \cite{Nikolov2021-xe} since models at this point require manual review to avoid automation bias (Section \ref{sect:using-the-tool}). For larger structures, this method is useful it doesn't assign a lot of weight on the large trivial internal volume which accounts for a much larger proportion of the score.
+Because of the clinical context of evaluating the segmentation by a machine, it may sometimes be helpful to define a performance metric as the ``fraction of the surface that needs to be redrawn''~\cite{Nikolov2021-xe} since models at this point require manual review to avoid automation bias (Section \ref{sect:using-the-tool}). For larger structures, this method is useful it doesn't assign a lot of weight on the large trivial internal volume which accounts for a much larger proportion of the score.
 
 \subsection{Surface DSC} \label{sect:surface-DSC}
 
-The study at \cite{Sherer2021-le} helped drive an initiative to combine aspects of Surface Based evaluation (Section \ref{sect:surface-based}) and Spatial Overlap Based evaluation (Section \ref{sect:spatial-overlap-based}) into a Surface DICE. This assesses the specified tolerance instead of the overlap of the two volumes. 
+The study at~\cite{Sherer2021-le} helped drive an initiative to combine aspects of Surface Based evaluation (Section \ref{sect:surface-based}) and Spatial Overlap Based evaluation (Section \ref{sect:spatial-overlap-based}) into a Surface DICE. This assesses the specified tolerance instead of the overlap of the two volumes. 
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.3\linewidth]{../figures/Surface-dice.png}
-  \caption{Taken from \cite{Nikolov2021-xe}. Illustrates the computation of the surface DICE, where the continuous line is the predicted surface and the dashed line is the ground truth. The black arrows show the maximum deviation tolerated without penalty; therefore, in pink is the unacceptable deviations and green otherwise.}
+  \caption{Taken from~\cite{Nikolov2021-xe}. Illustrates the computation of the surface DICE, where the continuous line is the predicted surface and the dashed line is the ground truth. The black arrows show the maximum deviation tolerated without penalty; therefore, in pink is the unacceptable deviations and green otherwise.}
 \end{figure}
 
-We can formulate the Surface DSC score in a mathematical definition \cite{Sherer2021-le}.
+We can formulate the Surface DSC score in a mathematical definition~\cite{Sherer2021-le}.
 
 \begin{equation*}
   \text{Surface DSC} = \frac{|S_p \cap B_{g,\tau}| + |S_g \cap B_{p,\tau}|}{|S_p| + |S_g|}
@@ -501,7 +501,7 @@ Which provides a measure of the agreement between just the surfaces of two struc
 
 \subsection{Added Path Length}
 
-In a similar spirit, the APL was proposed as a score to predict ``the path length of a contour that has to be added'' \cite{APL}. This is achieved similarly by considering the number of added voxels required between the prediction and the gold standard with no regard to tolerance as a pose to Surface DSC (Section \ref{sect:surface-DSC})
+In a similar spirit, the APL was proposed as a score to predict ``the path length of a contour that has to be added''~\cite{APL}. This is achieved similarly by considering the number of added voxels required between the prediction and the gold standard with no regard to tolerance as a pose to Surface DSC (Section \ref{sect:surface-DSC})
 
 \begin{warning}
   For future reference, \textit{\href{https://stackoverflow.com/questions/73286639/how-to-calculate-added-path-length-apl-image-segmentation-metric}{stack overflow discussion}}
@@ -513,12 +513,12 @@ In a similar spirit, the APL was proposed as a score to predict ``the path lengt
 
 This is why we settle at the Surface DSC (Section \ref{sect:surface-dice}) which prioritizes deviation along boundary to a certain degree while measuring the fraction of the surface that needs to be redrawn, thus favouring a more conservative prediction of Figure \ref{fig:segmentation-cases-1}(d) instead of (e).
 
-For the purpose of this project, we shall select a evaluation measurement which is more bias towards conservative boundary estimates to not touch the organs at risk. This choice was in-part influenced by the clinician's review pipeline; it would easier to correct Figure \ref{fig:segmentation-cases-1}(d) instead of (e) because correcting the latter would likely take a considerable amount of time as it would require redrawing almost all of the boundary, whereas the former could be corrected much faster \cite{Nikolov2021-xe}.
+For the purpose of this project, we shall select a evaluation measurement which is more bias towards conservative boundary estimates to not touch the organs at risk. This choice was in-part influenced by the clinician's review pipeline; it would easier to correct Figure \ref{fig:segmentation-cases-1}(d) instead of (e) because correcting the latter would likely take a considerable amount of time as it would require redrawing almost all of the boundary, whereas the former could be corrected much faster~\cite{Nikolov2021-xe}.
 
 % \begin{figure}[H]
 %   \centering
 %   \includegraphics[width=\linewidth]{../figures/segmentation-cases-2.png}
-%   \caption{Figure from \cite{evaluation-of-metrics-in-prostate} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics}
+%   \caption{Figure from~\cite{evaluation-of-metrics-in-prostate} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics}
 %   \label{fig:segmentation-cases-2}
 % \end{figure}
 
@@ -552,21 +552,21 @@ For the purpose of this project, we shall select a evaluation measurement which 
 \chapter{Ethics}\label{sect:ethics}
 
 This project involves very intimate and personal information of many female patients. Researchers may collaborate with third-parties by providing anonymized data which may not be reverse engineered back to the patient.
-The lack of this effort may result in ``stigma, embarrassment, and discrimination'' \cite{health-privacy} if the data is misused.
+The lack of this effort may result in ``stigma, embarrassment, and discrimination''~\cite{health-privacy} if the data is misused.
 
 \section{Patient disclosures}\label{sect:patient-disclosures}
 
-The Royal Marsden Hospital doesn't require ``explicit consent'' for sharing collected clinical data with outside entities as long as the patient is made aware of the ways their ``de-identified/anonymized'' data may be used  \cite{royal-marsden-privacy-note}. Formalities are also arranged with Imperial Collage's Medical Imaging team such as acting as ``ethical data stewards'' \cite{ethics-imaging-AI}. Without such disclosure and anonymisation of data, patients may be reluctant to provide candid and complete disclosures of their sensitive information, even to physicians, which may prevent a full diagnosis if their data isn't maintained in an anonymous fashion.
+The Royal Marsden Hospital doesn't require ``explicit consent'' for sharing collected clinical data with outside entities as long as the patient is made aware of the ways their ``de-identified/anonymized'' data may be used ~\cite{royal-marsden-privacy-note}. Formalities are also arranged with Imperial Collage's Medical Imaging team such as acting as ``ethical data stewards''~\cite{ethics-imaging-AI}. Without such disclosure and anonymisation of data, patients may be reluctant to provide candid and complete disclosures of their sensitive information, even to physicians, which may prevent a full diagnosis if their data isn't maintained in an anonymous fashion.
 
-The MIRA team acts as responsible data stewards by storing anonymized data within a folder on the college network. All provided data was anonymized by the Royal Marsden Hospital and sent to team MIRA in the \texttt{NIfTI} file format which discloses no personal identifiable information, as defined by GOV website \cite{gov-gdpr}. This folder contains security measures which limit the availability of data only to those with specific access rights. Furthermore, operating on the preamble of de-identified data further reduces individual patient risk in the event that data is ever brought outside the confines of this folder.
+The MIRA team acts as responsible data stewards by storing anonymized data within a folder on the college network. All provided data was anonymized by the Royal Marsden Hospital and sent to team MIRA in the \texttt{NIfTI} file format which discloses no personal identifiable information, as defined by GOV website~\cite{gov-gdpr}. This folder contains security measures which limit the availability of data only to those with specific access rights. Furthermore, operating on the preamble of de-identified data further reduces individual patient risk in the event that data is ever brought outside the confines of this folder.
 
 \section{Using the tool}\label{sect:using-the-tool}
 
-The applications of this tool bode well in the healthcare ecosystem as the community slowly realizes the importance of AI-powered tools for the next generation of medical technology. Radiology has been one application that has been most welcoming of the new advances in technology as there is potential for substantial aid by reducing manual labor, increasing precision and freeing up the primary care physician's time \cite{overview-of-ai-medicine}.
+The applications of this tool bode well in the healthcare ecosystem as the community slowly realizes the importance of AI-powered tools for the next generation of medical technology. Radiology has been one application that has been most welcoming of the new advances in technology as there is potential for substantial aid by reducing manual labor, increasing precision and freeing up the primary care physician's time~\cite{overview-of-ai-medicine}.
 
-Yet, it is too early to take result the medical tool as gospel. For current cervical radiotherapy delineation tools, only 90\% of the output is considered as acceptable for clinical use \cite{auto-delineation-cervical-cancer-development}. The remainder therefore has the potential to cause more harm than good if not checked properly. For example, overlap of a PTV onto an organ-at-risk may invoke a cascade of negative effects for the patient. A potential cause may be the lack of multivariate analysis, where an oncologist would need to consider a variety of data, whereas this model only considers a single point of evidence (results of an imaging modality).
+Yet, it is too early to take result the medical tool as gospel. For current cervical radiotherapy delineation tools, only 90\% of the output is considered as acceptable for clinical use~\cite{auto-delineation-cervical-cancer-development}. The remainder therefore has the potential to cause more harm than good if not checked properly. For example, overlap of a PTV onto an organ-at-risk may invoke a cascade of negative effects for the patient. A potential cause may be the lack of multivariate analysis, where an oncologist would need to consider a variety of data, whereas this model only considers a single point of evidence (results of an imaging modality).
 
-Clinicians can fall into the trap of automation-bias as AI becomes more common place in clinical environments \cite{automation-bias}. However, many models of this age codify the existing bias in common cases, which often will fail those patients who do not fit the expectations of the majority. Therefore, a degree of supervision required from physicians has to be established if this tool is to be used in practice. Oncologists will be required to reverse-engineer results of the `black-box' to verify why a decision has been made. Secondly, the responsible party for incorrect decisions made by DL tools should also be determined \cite{AI-in-cancer-diagnosis-era}.
+Clinicians can fall into the trap of automation-bias as AI becomes more common place in clinical environments~\cite{automation-bias}. However, many models of this age codify the existing bias in common cases, which often will fail those patients who do not fit the expectations of the majority. Therefore, a degree of supervision required from physicians has to be established if this tool is to be used in practice. Oncologists will be required to reverse-engineer results of the `black-box' to verify why a decision has been made. Secondly, the responsible party for incorrect decisions made by DL tools should also be determined~\cite{AI-in-cancer-diagnosis-era}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printbibliography

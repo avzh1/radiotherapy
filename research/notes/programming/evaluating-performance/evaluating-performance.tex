@@ -1,30 +1,21 @@
 \documentclass[11pt]{article}
 
-\usepackage[margin=1in]{geometry}
-\usepackage{listings}
-\usepackage{graphicx}
-\usepackage{subfigure}
-\usepackage{subcaption} % For subfigures
-\usepackage{float} % for H option in figures
-\usepackage{url}
-\usepackage{float}
-\usepackage{amsfonts}
-\usepackage{amsmath}
-\usepackage{hyperref}
+% some definitions for the title page
+\newcommand{\reporttitle}{Evaluating Performance of a network}
+\newcommand{\reportdescription}{Review of the paper~\cite{review-metrics}.}
 
-\usepackage{biblatex} %Imports biblatex package
-\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
-
-\setlength{\parindent}{0pt}
-
-\title{Evaluating Performance of a network}
-\author{Anton Zhitomirsky}
+% load some definitions and default packages
+\input{../../.latex-templates/includes}
+\input{../../.latex-templates/notation}
 
 \begin{document}
 
-\maketitle
+% Include the title page
+\input{../../.latex-templates/titlepage}
 
-Review of the paper \cite{review-metrics}.
+\tableofcontents
+
+\clearpage
 
 \section{Goemetric}
 
@@ -32,7 +23,7 @@ Review of the paper \cite{review-metrics}.
     \item Classification accuracy \begin{equation*}
         Sensitivity = \frac{TP}{TP+FN}
     \end{equation*}
-    \item Overlap Based \cite{3d-medical-metric-analysis-2015}
+    \item Overlap Based~\cite{3d-medical-metric-analysis-2015}
     \begin{equation*}
         Dice\ Similarity\ Coefficient = \frac{2TP}{2TP+FP+FN} = \frac{2|S_g^1 \cap S_t^1|}{|S_g^1| + |S^1_t|}
     \end{equation*}

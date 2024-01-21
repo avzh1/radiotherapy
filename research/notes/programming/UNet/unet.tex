@@ -1,41 +1,34 @@
 \documentclass[11pt]{article}
 
-\usepackage[margin=1in]{geometry}
-\usepackage{listings}
-\usepackage{graphicx}
-\usepackage{subfigure}
-\usepackage{subcaption} % For subfigures
-\usepackage{float} % for H option in figures
-\usepackage{url}
-\usepackage{float}
-\usepackage{amsfonts}
-\usepackage{hyperref}
-\usepackage{amsmath}
+% some definitions for the title page
+\newcommand{\reporttitle}{What is a U-Net?}
+\newcommand{\reportdescription}{}
 
-\usepackage{biblatex} %Imports biblatex package
-\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
-
-\setlength{\parindent}{0pt}
-
-\title{What is a U-Net?}
-\author{Anton Zhitomirsky}
+% load some definitions and default packages
+\input{../../.latex-templates/includes}
+\input{../../.latex-templates/notation}
 
 \begin{document}
 
-\maketitle
+% Include the title page
+\input{../../.latex-templates/titlepage}
 
-This is a sumamry of the contents of the file \cite{U-Net} and example of its implementation (from scratch and from the github)
+\tableofcontents
+
+\clearpage
+
+This is a sumamry of the contents of the file~\cite{U-Net} and example of its implementation (from scratch and from the github)
 
 \section{The architectural background} 
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{images/u-net.png}
-    \caption{U-Net architecture taken from \cite{U-Net}}
+    \caption{U-Net architecture taken from~\cite{U-Net}}
     \label{fig:u-net-architecture}
 \end{figure}
 
-The U-Net is an adaption of another network \cite{fully-CNNs-for-semantic-segmentation}. We first discuss the architecture of the approach which is shown in Figure \ref{fig:u-net-architecture}.
+The U-Net is an adaption of another network~\cite{fully-CNNs-for-semantic-segmentation}. We first discuss the architecture of the approach which is shown in Figure \ref{fig:u-net-architecture}.
 
 \subsection{Method}
 
@@ -78,7 +71,7 @@ The resulting architecture is symmetric in its expansive path as it is to its co
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{images/overlap-tile.png}
-    \caption{Overlap figure taken from \cite{U-Net}}
+    \caption{Overlap figure taken from~\cite{U-Net}}
     \label{fig:overlap-tile}
 \end{figure}
 
@@ -98,14 +91,14 @@ This section has been left as a TODO.
 
 \subsection{Residual connections}
 
-\subsubsection{\cite{identity-mappings-drns}}
+\subsubsection{~\cite{identity-mappings-drns}}
 
 This paper suggests that the forward and backward signals can be directly propagated from one block to any other block when using identity mappings as the skip conenctions and after-addition activation. code available at \href{https://github.com/KaimingHe/resnet-1k-layers/blob/master/resnet-pre-act.lua}{GitHub}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.4\linewidth]{images/residualArchitecture.png}
-    \caption{Typic resudial network taken from \cite{drn-for-image-recognition}}
+    \caption{Typic resudial network taken from~\cite{drn-for-image-recognition}}
     \label{residual-architecture}
 \end{figure}
 
@@ -119,15 +112,15 @@ The typical residual network as in Figure \ref{residual-architecture} makes trai
 $\textbf{x}_l$ and $\textbf{x}_{l+1}$ are input and output of the $l$-th unit, and F is a residual function. Above, 
 $h(x_l)=x_l$ is an identity funciton. 
 
-\subsubsection{\cite{v-net}}
+\subsubsection{~\cite{v-net}}
 
 \subsection{Dense connections}
 
-\cite{tiramisu-densenet}
+~\cite{tiramisu-densenet}
 
 \subsection{Attention Mechanisms}
 
-\cite{attention-u-net}
+~\cite{attention-u-net}
 
 \printbibliography
 

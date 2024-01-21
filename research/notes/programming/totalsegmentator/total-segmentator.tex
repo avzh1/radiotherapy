@@ -1,31 +1,21 @@
 \documentclass[11pt]{article}
 
-\usepackage[margin=1in]{geometry}
-\usepackage{listings}
-\usepackage{graphicx}
-\usepackage{subfigure}
-\usepackage{subcaption} % For subfigures
-\usepackage{float} % for H option in figures
-\usepackage{url}
-\usepackage{float}
-\usepackage{amsfonts}
-\usepackage{hyperref}
-\usepackage{wrapfig}
-\usepackage[htt]{hyphenat}
+% some definitions for the title page
+\newcommand{\reporttitle}{A Review of TotalSegmentator}
+\newcommand{\reportdescription}{A review of the paper~\cite{totalsegmentor-paper} with github link~\cite{totalsegmentor-git}}
 
-\usepackage{biblatex} %Imports biblatex package
-\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
-
-\setlength{\parindent}{0pt}
-
-\title{A review of TotalSegmentator}
-\author{Anton Zhitomirsky}
+% load some definitions and default packages
+\input{../../.latex-templates/includes}
+\input{../../.latex-templates/notation}
 
 \begin{document}
 
-\maketitle 
+% Include the title page
+\input{../../.latex-templates/titlepage}
 
-A review of the paper \cite{totalsegmentor-paper} with github link \cite{totalsegmentor-git}
+\tableofcontents
+
+\clearpage
 
 \section{Review of Paper}
 
@@ -89,7 +79,7 @@ Then run the command (given is an example of data used to fetch bladder)
 
 \texttt{TotalSegmentator -i ../../../../project/tmp/nnUNet\_raw/Dataset002\_Bladder/imagesTr/ zzAMLART\_088\_0000.nii.gz -o segmentations --roi\_subset urinary\_bladder}
 
-for more flags and options consolidate \cite{totalsegmentor-git}
+for more flags and options consolidate~\cite{totalsegmentor-git}
 
 \printbibliography
 

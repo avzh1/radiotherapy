@@ -1,44 +1,43 @@
 \documentclass[11pt]{article}
 
-\usepackage[margin=1in]{geometry}
-\usepackage{listings}
-\usepackage{hyperref}
-\usepackage[htt]{hyphenat}
+% some definitions for the title page
+\newcommand{\reporttitle}{What is Radiotherapy?}
+\newcommand{\reportdescription}{}
 
-\usepackage{biblatex}
-\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
-
-
-\title{What is radiotherapy?}
-\author{Anton Zhitomirsky}
-
-\setlength{\parindent}{0pt}
+% load some definitions and default packages
+\input{../../.latex-templates/includes}
+\input{../../.latex-templates/notation}
 
 \begin{document}
 
-\maketitle
+% Include the title page
+\input{../../.latex-templates/titlepage}
+
+\tableofcontents
+
+\clearpage
 
 \section{What is Radiotherapy?}
 
-Clinicians use a system that uses high-resolution X-rays to produce contrasting images of cancerous tumours and surrounding soft tissue. Physicians then can target the cancerous tumour more precisely and decreasing radiation expsoure of healthy tissues \cite{radiotherapy-basic-concepts}.
+Clinicians use a system that uses high-resolution X-rays to produce contrasting images of cancerous tumours and surrounding soft tissue. Physicians then can target the cancerous tumour more precisely and decreasing radiation expsoure of healthy tissues~\cite{radiotherapy-basic-concepts}.
 
-Radiation therapy (radiotherapy) remains an improtant component of cancer treatment. In 2012 approximately 50\% of all cancer patients received radiation therapy, with an additional 40\% involving curative treatment \cite{radiotherapy-advances}.
+Radiation therapy (radiotherapy) remains an improtant component of cancer treatment. In 2012 approximately 50\% of all cancer patients received radiation therapy, with an additional 40\% involving curative treatment~\cite{radiotherapy-advances}.
 
 \subsection{Cell Dealth}
 
-Radiation-induced cell death is typically classified as interphase or proliferative death. Importantly, there is a consensus that cellular effects, including cell death, depend not only on radiation dose but cell type and a place in cell cycle \cite{cell-death}.
+Radiation-induced cell death is typically classified as interphase or proliferative death. Importantly, there is a consensus that cellular effects, including cell death, depend not only on radiation dose but cell type and a place in cell cycle~\cite{cell-death}.
 
 \subsubsection{Interphase death}
 
-Cells cease to divide after radiation exposure and begin to die within hours. ``This is attributed to the damage of intercellular molecules and the activation of nuclease and proteolytic enzymes etc., after high doses of radiation, which leads to degradation [...]. Factors such as disruption of membrane structure and disorder of cell energy metabolism after irradiation are also important contributors to interphase death''\cite{cell-death}.
+Cells cease to divide after radiation exposure and begin to die within hours. ``This is attributed to the damage of intercellular molecules and the activation of nuclease and proteolytic enzymes etc., after high doses of radiation, which leads to degradation [...]. Factors such as disruption of membrane structure and disorder of cell energy metabolism after irradiation are also important contributors to interphase death''~\cite{cell-death}.
 
 \subsubsection{Proliferative death}
 
-Most cells undergo proliferative death after radiation. This results from ``mitotic catastrophe caused by accumulation of chromosomal aberrations and erroneous repair after radiation induces a DNA double-strand break [...] cells lose their ability to proliferate and begin to die.''\cite{cell-death}.
+Most cells undergo proliferative death after radiation. This results from ``mitotic catastrophe caused by accumulation of chromosomal aberrations and erroneous repair after radiation induces a DNA double-strand break [...] cells lose their ability to proliferate and begin to die.''~\cite{cell-death}.
 
 \subsection{Using Radiotherapy for Cancer}
 
-Physicians use high-energy radiation to damage genetic material (deoxyribonucleic acid, DNA) of cells and thus block their ability to divide and proliferate further \cite{radiotherapy-advances}.
+Physicians use high-energy radiation to damage genetic material (deoxyribonucleic acid, DNA) of cells and thus block their ability to divide and proliferate further~\cite{radiotherapy-advances}.
 
 \subsection{The need for Radiotherapy}
 
@@ -48,14 +47,14 @@ Physicians use high-energy radiation to damage genetic material (deoxyribonuclei
  
 \section{Cervical Cancer}
 
-In 2017, Cervical Cancer was the fourth most common malignancy diagnosed in women world wide \cite{cervical-cancer-epidemic}.
+In 2017, Cervical Cancer was the fourth most common malignancy diagnosed in women world wide~\cite{cervical-cancer-epidemic}.
 
 \begin{itemize}
-    \item There are 530,000 new cases annaully, with 270,000 deaths \cite{cervical-cancer-epidemic}.
-    \item approximately 85\% of cases occurr in underdeveloped or developing countries \cite{cervical-cancer-epidemic}
-    \item The median age for diagnosis is 47 \cite{cervical-cancer-epidemic} which is by no means an end-of-life diagnosis, and many victims will still have a lot of time remaining after proper treatment.
-    \item `The standard management of individuals with locally advanced cervical cancer includes external beam radiotherapy' \cite{cervical-cancer-epidemic}.
-    \item `Scale-up of radiotherapy capacity in 2015-35 from current levels could lead to saving of 26.9 million life-years in low-income and middle-income countries over the lifetime of the patients who received treatment' \cite{expanding-global-access-to-radiotherapy}
+    \item There are 530,000 new cases annaully, with 270,000 deaths~\cite{cervical-cancer-epidemic}.
+    \item approximately 85\% of cases occurr in underdeveloped or developing countries~\cite{cervical-cancer-epidemic}
+    \item The median age for diagnosis is 47~\cite{cervical-cancer-epidemic} which is by no means an end-of-life diagnosis, and many victims will still have a lot of time remaining after proper treatment.
+    \item `The standard management of individuals with locally advanced cervical cancer includes external beam radiotherapy'~\cite{cervical-cancer-epidemic}.
+    \item `Scale-up of radiotherapy capacity in 2015-35 from current levels could lead to saving of 26.9 million life-years in low-income and middle-income countries over the lifetime of the patients who received treatment'~\cite{expanding-global-access-to-radiotherapy}
 \end{itemize}
 
 \printbibliography

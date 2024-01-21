@@ -1,30 +1,28 @@
 \documentclass[11pt]{article}
-\usepackage[margin=1in]{geometry}
-\usepackage{listings}
-\usepackage{graphicx}
-\usepackage{subfigure}
-\usepackage{subcaption} % For subfigures
-\usepackage{float} % for H option in figures
-\usepackage{hyperref}
 
-\usepackage{biblatex} %Imports biblatex package
-\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
+% some definitions for the title page
+\newcommand{\reporttitle}{Aim of the Project}
+\newcommand{\reportdescription}{}
 
-\setlength{\parindent}{0pt}
-
-\title{Aim of the Project}
-\author{Anton Zhitomirsky}
+% load some definitions and default packages
+\input{../../.latex-templates/includes}
+\input{../../.latex-templates/notation}
 
 \begin{document}
 
-\maketitle
+% Include the title page
+\input{../../.latex-templates/titlepage}
+
+\tableofcontents
+
+\clearpage
 
 \section{Aim}
 
-A patient with a cancerous area needs treatment. A way to treat them is to obtain a 3d CT scan and analyse the data to obtain a segmented area across each slice which hilights the area that is cancerous and requires radiation in order to treat the issue.
+A patient with a cancerous area needs treatment. A way to treat them is to obtain a 3D CT scan and analyze the data to obtain a segmented area across each slice which highlights the area that is cancerous and requires radiation in order to treat the issue.
 
 \begin{quote}
-    The clinical target volume is the area where there is likely microscopic cancer and this area needs to receive sufficient radiation doses to achieve cancer cure. As microscopic cancer cannot be seen on CT, the clinical target volume is not an obvious structure that can be drawn around. The CTV is however constructed based on an Oncologist's knowledge of where each particular cancer is likely to spread to. It is drawn based on guidelines, atlases and clinical information. There are currently no internationally agreed guidelines for exactly how the clinical target volume should be drawn for cervix cancer and practice varies. Practice varies based on how the individual components of the CTV are labelled and this in theory could make it difficult for an AI model to learn patterns (or to generate large quantities of similar quality training data).\cite{AMLART-data}
+    The clinical target volume is the area where there is likely microscopic cancer and this area needs to receive sufficient radiation doses to achieve cancer cure. As microscopic cancer cannot be seen on CT, the clinical target volume is not an obvious structure that can be drawn around. The CTV is however constructed based on an Oncologist's knowledge of where each particular cancer is likely to spread to. It is drawn based on guidelines, atlases and clinical information. There are currently no internationally agreed guidelines for exactly how the clinical target volume should be drawn for cervix cancer and practice varies. Practice varies based on how the individual components of the CTV are labelled and this in theory could make it difficult for an AI model to learn patterns (or to generate large quantities of similar quality training data)~\cite{AMLART-data}.
 \end{quote}
 
 We have 5 structures given to us as the source data, however, the areas that are cancerous are only the CTVn, CTVp and Parametrium. 
@@ -78,7 +76,7 @@ We have 5 organs that we aim to develop segmentation models for. These are: Anor
     \caption{ItkSnap view of the CTVp}\label{fig:CTVn}
 \end{figure}
 
-\textbf{CTVp} stands for Primary Clinical Target Volume. Clinical Target volume covering area where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour) \cite{AMLART-data}. This is the area that contains the tumour.
+\textbf{CTVp} stands for Primary Clinical Target Volume. Clinical Target volume covering area where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour)~\cite{AMLART-data}. This is the area that contains the tumour.
 
 It is made from the following structures:
 
@@ -101,7 +99,7 @@ We also have that $High\ risk\ CTV + Uterus + vagina\ for\ CTV = CTVp$
     \caption{ItkSnap view of the CTVn}\label{fig:CTVn}
 \end{figure}
 
-\textbf{CTVn} stands for Nodal Clinical Target Volume. Clinical Target volume covering area where there may be microscopic spread to lymph nodes. Drawn based on set margins around pelvic blood vessels. Includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes \cite{AMLART-data}.
+\textbf{CTVn} stands for Nodal Clinical Target Volume. Clinical Target volume covering area where there may be microscopic spread to lymph nodes. Drawn based on set margins around pelvic blood vessels. Includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes~\cite{AMLART-data}.
 
 There are three groups of lymph nodes. In clinical practice, the number of these groups included in the CTV varies in each patient, depending on how advanced the disease is. Pathological lymph nodes (GTVn) are also included
 
@@ -122,7 +120,7 @@ We have that $GTVn + Common\ iliac + pelvic + para-aortics = Nodal\ CTV$
     \caption{ItkSnap view of the Parametrium}\label{fig:CTVn}
 \end{figure}
 
-\textbf{Parametrium/ Paravagina} is the tissue surrounding the cervix/vagina - at risk of local spread. Drawn as a complete structure, then also to the level of the vagina included in the CTVp \cite{AMLART-data}.
+\textbf{Parametrium/ Paravagina} is the tissue surrounding the cervix/vagina - at risk of local spread. Drawn as a complete structure, then also to the level of the vagina included in the CTVp~\cite{AMLART-data}.
 
 Parametrium and Paravagina (whole and for CTV)  Contour whole Parametrium and Paravagina. Parametrium and Paravagina for CTV can be made by copying the whole paravagina and editing back to the level of vagina to be included
 

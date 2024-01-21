@@ -1,27 +1,21 @@
 \documentclass[11pt]{article}
-\usepackage[margin=1in]{geometry}
-\usepackage{listings}
-\usepackage{graphicx}
-\usepackage{subfigure}
-\usepackage{subcaption} % For subfigures
-\usepackage{float} % for H option in figures
-\usepackage{hyperref}
-\usepackage[htt]{hyphenat} % for non-overflowing texttt
-\usepackage{amsmath}
 
-\usepackage{listings}
+% some definitions for the title page
+\newcommand{\reporttitle}{Description of Source Data}
+\newcommand{\reportdescription}{}
 
-\title{Description of Source Data}
-\author{Anton Zhitomirsky}
-
-\usepackage{biblatex} %Imports biblatex package
-\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
+% load some definitions and default packages
+\input{../../.latex-templates/includes}
+\input{../../.latex-templates/notation}
 
 \begin{document}
 
-\maketitle
+% Include the title page
+\input{../../.latex-templates/titlepage}
 
 \tableofcontents
+
+\clearpage
 
 \section{Structure of source Data}
 
@@ -156,12 +150,12 @@ acquisition modality is an expression of the detail with which
 the anatomy or function can be depicted. What the numerical
 value of the pixel expresses depends on the imaging modality,
 the acquisition protocol, the reconstruction, and eventually,
-the post-processing.'' \cite{file-formats}
+the post-processing.''~\cite{file-formats}
 
 \subsubsection{Components}
 
 \begin{itemize}
-    \item \textit{Pixel Depth}: ``number of bits used to encode the information of each pixel'' \cite{file-formats}
+    \item \textit{Pixel Depth}: ``number of bits used to encode the information of each pixel''~\cite{file-formats}
     \item \textit{Photometric Interpretation}:  ``specifies how the pixel data
     should be interpreted for the correct image display as a 
     monochrome or color image. To specify if color information is or is
@@ -172,7 +166,7 @@ the post-processing.'' \cite{file-formats}
     from black to white is used to display the images. The number
     of shades of gray depends clearly from the number of bits used
     to store the sample that, in this case, coincide with the pixel
-    depth'' \cite{file-formats}
+    depth''~\cite{file-formats}
 
     For our case, this will be grey scale 
 
@@ -182,18 +176,18 @@ the post-processing.'' \cite{file-formats}
 
 \subsection{NIfTI file format}
 
-The files are stored in a \texttt{.nii} format. This is a NIfTI file format which has had more prominence than the dicom file format recently \cite{dicom-to-nifti-conversion}. 
+The files are stored in a \texttt{.nii} format. This is a NIfTI file format which has had more prominence than the dicom file format recently~\cite{dicom-to-nifti-conversion}. 
 
 \begin{itemize}
     \item ``NIfTI is simple and easy to support''
-    \item ``Neuroimaging Informatics Technology Initiativ''\cite{file-formats}
-    \item ``allows spatial orientation information to be stored more fully''\cite{dicom-to-nifti-conversion}. Therefore, NIfTI-compliant software should reduce the chance of making ``left–right ambiguity''\cite{file-formats,dicom-to-nifti-conversion}
+    \item ``Neuroimaging Informatics Technology Initiativ''~\cite{file-formats}
+    \item ``allows spatial orientation information to be stored more fully''~\cite{dicom-to-nifti-conversion}. Therefore, NIfTI-compliant software should reduce the chance of making ``left–right ambiguity''~\cite{file-formats,dicom-to-nifti-conversion}
 \end{itemize}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=.75\linewidth]{images/dicom-nifti.png}
-    \caption{taken from \cite{dicom-to-nifti-conversion}}
+    \caption{taken from~\cite{dicom-to-nifti-conversion}}
 \end{figure}
 
 \subsection{Header File}
@@ -264,7 +258,7 @@ One may observe the header of the file:
 \begin{figure}[H]
     \centering
     \includegraphics[width=.75\linewidth]{images/header-info.png}
-    \caption{taken from \cite{dicom-to-nifti-conversion} with further information available from \cite{nifti-headers}}
+    \caption{taken from~\cite{dicom-to-nifti-conversion} with further information available from~\cite{nifti-headers}}
 \end{figure}
 
 \subsubsection{Dimension}
@@ -276,7 +270,7 @@ Starting indexing at 0, we have:
 \end{equation*}
 
 
-From Page 3 of \cite{nifti-data-format} 
+From Page 3 of~\cite{nifti-data-format} 
 
 \begin{itemize}
     \item dim[3] $\neq$ 1, therefore this is not a single slice. Instead, dim[3] $>$ 1, so there is several slices.
@@ -285,7 +279,7 @@ From Page 3 of \cite{nifti-data-format}
 
 \subsubsection{PixDim}
 
-BitPix (32) is the ``number of bits per voxel [...], which MUST correspond with the datatype field'' \cite{nifti-headers}. PixDim is the grid spacing \cite{nifti-headers}. We indicate the units of pixdim with ``char xyzt\_units'' \cite{nifti-headers} which is 2 in our case. We have no temporal dimension because ``dimensions 1,2,3 are for x,y,z; dimension 4 is for time (t)'' \cite{nifti-headers}. A value of 2 means ``\#define NIFTI\_UNITS\_MM      2'' \cite{nifti-headers} where bits 0 .. 2 specify the units of our dimensions, so $2 \equiv 010_2$ hence we measure our dimensions in mm.
+BitPix (32) is the ``number of bits per voxel [...], which MUST correspond with the datatype field''~\cite{nifti-headers}. PixDim is the grid spacing~\cite{nifti-headers}. We indicate the units of pixdim with ``char xyzt\_units''~\cite{nifti-headers} which is 2 in our case. We have no temporal dimension because ``dimensions 1,2,3 are for x,y,z; dimension 4 is for time (t)''~\cite{nifti-headers}. A value of 2 means ``\#define NIFTI\_UNITS\_MM      2''~\cite{nifti-headers} where bits 0 .. 2 specify the units of our dimensions, so $2 \equiv 010_2$ hence we measure our dimensions in mm.
 
 \subsubsection{The Rest}
 
@@ -315,7 +309,7 @@ from \href{https://www.nhs.uk/conditions/ct-scan/}{NHS}
     \item ``A CT scan is a test that takes detailed pictures of the inside of your body. It's usually used to diagnose conditions or check how well treatment is working''.
 \end{itemize}
 
-from \cite{ct-scan}
+from~\cite{ct-scan}
 
 \begin{itemize}
     \item ``The CT scan is essentially an X-ray study, where a series of rays are rotated around a specified body part, and computer-generated cross-sectional images are produced. The advantage of these tomographic images compared to conventional X-rays is that they contain detailed information of a specified area in cross-section, eliminating the superimposition of images, which provides a tremendous advantage over plain films. ''

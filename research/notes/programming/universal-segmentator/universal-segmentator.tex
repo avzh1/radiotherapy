@@ -1,33 +1,21 @@
 \documentclass[11pt]{article}
 
-\usepackage[margin=1in]{geometry}
-\usepackage{listings}
-\usepackage{graphicx}
-\usepackage{subfigure}
-\usepackage{subcaption} % For subfigures
-\usepackage{float} % for H option in figures
-\usepackage{url}
-\usepackage{float}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{hyperref}
-\usepackage{wrapfig}
-\usepackage[htt]{hyphenat}
-\usepackage{mathrsfs} % https://www.ctan.org/pkg/mathrsfs
-    
-\usepackage{biblatex} %Imports biblatex package
-\addbibresource{../../../source/bibliography.bib} %Import the bibliography file
+% some definitions for the title page
+\newcommand{\reporttitle}{Universal Segmentator}
+\newcommand{\reportdescription}{\href{https://universeg.csail.mit.edu/}{Home page} and paper at~\cite{universeg}.}
 
-\setlength{\parindent}{0pt}
-
-\title{Universal Segmentator}
-\author{Anton Zhitomirsky}
+% load some definitions and default packages
+\input{../../.latex-templates/includes}
+\input{../../.latex-templates/notation}
 
 \begin{document}
 
-\maketitle
+% Include the title page
+\input{../../.latex-templates/titlepage}
 
-\href{https://universeg.csail.mit.edu/}{Home page} and paper at \cite{universeg}.
+\tableofcontents
+
+\clearpage
 
 \section{Aim}
 
@@ -43,7 +31,7 @@ Therefore, UniSeg is a model that can solve unseen medical segmentation tasks wi
     \centering
     \subfigure[Comparison between traditional architectures and proposed architecture for UniverSeg]{\includegraphics[width=\linewidth]{images/universeg-comparison.png}}
     \subfigure[Zoomed in view of the UniverSeg architecture]{\includegraphics[width=\linewidth]{images/universeg-arch.png}}
-    \caption{Taken from \cite{universeg}}\label{fig:arch-comparison}
+    \caption{Taken from~\cite{universeg}}\label{fig:arch-comparison}
 \end{figure}
 
 
