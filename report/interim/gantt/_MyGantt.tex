@@ -1,0 +1,67 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CODE OBTAINED FROM https://www.overleaf.com/latex/templates/gantt-chart-template/htdwvcszmgwy %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{mygantt}
+\def\mystartdate{2024-1-24}%starting date of the calendar
+\def\myenddate{2024-6-30}%ending date of the calendar
+\begin{document}
+
+\begin{ganttchart}[
+%today={2022-03-6},
+%today={\the\year-\the\month-\the\day},
+%today offset=0,
+today rule/.style={
+      draw=red!80,
+      dash pattern=on 3.5pt off 4.5pt,
+      line width=1.5pt
+    },
+    today label font=\bfseries\small,
+    today label=Today,
+%canvas/.append style={fill=none, draw=black, line width=.75pt},
+hgrid style/.style={draw=black!70, line width=.1pt},
+vgrid={*1{draw=black!30, line width=.1pt}},
+x unit=\myxunit,
+inline,
+title height=1,y unit title=6mm,
+milestone inline label node/.style={right=5.5cm}, 
+bar inline label node/.style={right=5.5cm}, %label text padding adjustment
+newline shortcut=true,
+bar label font=\mdseries\color{black!70},
+bar label node/.append style={right=-9cm},
+bar/.append style={draw=none, fill=barblue!200}, 
+bar incomplete/.append style={fill=barblue!100}, 
+bar progress label font=\mdseries\footnotesize\color{black!70},
+group incomplete/.append style={fill=barprogress!50},
+group/.append style={fill=barprogress!100}, % this suppresses percentage done labels
+group left shift=0,
+group right shift=0,
+group height=.5,
+group peaks tip position=0,
+group label node/.append style={left=.6cm},
+group progress label font=\bfseries\small,
+bar progress label node/.append style={right=7pt},
+milestone progress label node/.append style={right=8pt},
+link/.style={-latex, thick, ->, red, rounded corners=1mm},
+link label font=\scriptsize\bfseries,
+link label node/.append style={below right=-2pt and 0pt},
+milestone/.append style={fill=red, rounded corners=1pt},
+time slot format=isodate
+]{\mystartdate}{\myenddate}
+\gantttitlecalendar{week, weekday=letter, day,} \\
+%WBS Add
+
+\input{report}
+\\[grid]
+
+\input{software}
+\\[grid]
+
+\input{presentation}
+
+%to add current day \the\year-\the\month-\the\day
+
+% \drawline{Today}{red}{2022-03-05}
+% \drawline{Meeting}{blue}{\the\year-3-28}
+
+\end{ganttchart}
+\end{document}
