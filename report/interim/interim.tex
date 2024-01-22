@@ -71,7 +71,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Introduction}\label{sect:intro}
 
-
+% What is the problem, why is it interesting and what’s your main idea for solving it?
 
 \section{Clinical Context}\label{sect:clinical-context-summary}
 
@@ -139,7 +139,7 @@ The data quantity supplied is a limiting factor for creating a robust model. We 
 
 \subsection{Bespoke Application}\label{sect:solving-the-problem-bespoke-application}
 
-Another issue lies in the bespoke nature of this application. Most pre-trained networks currently run segmentation on structures are that are more obvious in a given image modality. For instance, TotalSegmentator has learnt a robust model for delineating 117 classes of objects in the human body, such as bones, a large subset of significant organs and veins~\cite{totalsegmentor-git}.
+Another issue lies in the bespoke nature of this application. Most pre-trained networks currently run segmentation on structures are that are more obvious in a given image modality. For instance, TotalSegmentator has learnt a robust model for delineating 117 classes of objects in the human body, such as bones, a large subset of significant organs and veins~\cite{totalsegmentor-git}. Our application is unique because the PTV often includes a margin surrounding the visible tumour on the scan, which is different to other approaches which outline the boundaries of structures.
 
 \section{Transfer Learning}\label{sect:transfer-learning}
 
@@ -604,17 +604,6 @@ For the purpose of this project, we shall select a evaluation measurement which 
   Solution to resolution problem, down-sample all samples or think of average?
 \end{warning}
 
-%%%%%%%%%%%%%%%%%%
-\chapter{Interim Deliverables}
-
-\section{Project Plan}
-
-You should explain what needs to be done in order to complete the project and roughly what you expect the timetable to be. Don't forget to include the project write-up (the final report), as this is a major part of the exercise. It's important to identify key milestones and also fall-back positions, in case you run out of time.  You should also identify what extensions could be added if time permits.  The plan should be complete and should include those parts that you have already addressed (make it clear how far you have progressed at the time of writing).  This material will not appear in the final report.
-
-\section{Evaluation Plan}
-
-Project evaluation is very important, so it's important to think now about how you plan to measure success. For example, what functionality do you need to demonstrate?  What experiments to you need to undertake and what outcome(s) would constitute success?  What benchmarks should you use? How has your project extended the state of the art?  How do you measure qualitative aspects, such as ease of use?  These are the sort of questions that your project evaluation should address; this section should outline your plan.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Ethics}\label{sect:ethics}
 
@@ -634,6 +623,25 @@ The applications of this tool bode well in the healthcare ecosystem as the commu
 Yet, it is too early to take result the medical tool as gospel. For current cervical radiotherapy delineation tools, only 90\% of the output is considered as acceptable for clinical use~\cite{auto-delineation-cervical-cancer-development}. The remainder therefore has the potential to cause more harm than good if not checked properly. For example, overlap of a PTV onto an organ-at-risk may invoke a cascade of negative effects for the patient. A potential cause may be the lack of multivariate analysis, where an oncologist would need to consider a variety of data, whereas this model only considers a single point of evidence (results of an imaging modality).
 
 Clinicians can fall into the trap of automation-bias as AI becomes more common place in clinical environments~\cite{automation-bias}. However, many models of this age codify the existing bias in common cases, which often will fail those patients who do not fit the expectations of the majority. Therefore, a degree of supervision required from physicians has to be established if this tool is to be used in practice. Oncologists will be required to reverse-engineer results of the `black-box' to verify why a decision has been made. Secondly, the responsible party for incorrect decisions made by DL tools should also be determined~\cite{AI-in-cancer-diagnosis-era}.
+
+%%%%%%%%%%%%%%%%%%
+\chapter{Interim Deliverables}
+
+\section{Project Plan}
+
+\begin{figure}[H]
+  \centering
+  % [trim={left bottom right top},clip]
+  \includegraphics[trim={0 0 9900 0}, clip, width=\textwidth]{gantt/_MyGantt.pdf}
+  \caption{Your caption goes here}
+  \label{fig:gantt}
+\end{figure}
+
+You should explain what needs to be done in order to complete the project and roughly what you expect the timetable to be. Don't forget to include the project write-up (the final report), as this is a major part of the exercise. It's important to identify key milestones and also fall-back positions, in case you run out of time.  You should also identify what extensions could be added if time permits.  The plan should be complete and should include those parts that you have already addressed (make it clear how far you have progressed at the time of writing).  This material will not appear in the final report.
+
+\section{Evaluation Plan}
+
+Project evaluation is very important, so it's important to think now about how you plan to measure success. For example, what functionality do you need to demonstrate?  What experiments to you need to undertake and what outcome(s) would constitute success?  What benchmarks should you use? How has your project extended the state of the art?  How do you measure qualitative aspects, such as ease of use?  These are the sort of questions that your project evaluation should address; this section should outline your plan.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printbibliography
