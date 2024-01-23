@@ -1,0 +1,164 @@
+\documentclass[11pt]{article}
+
+% some definitions for the title page
+\newcommand{\reporttitle}{Existing radiotherapy planning models}
+\newcommand{\reportdescription}{this follows the papers that have been published on current radiotherapy planning specifically in the cervical cancer area}
+
+% load some definitions and default packages
+\input{../../.latex-templates/includes}
+\input{../../.latex-templates/notation}
+
+\begin{document}
+
+% Include the title page
+\input{../../.latex-templates/titlepage}
+
+\tableofcontents
+
+\clearpage
+
+\section{Survey on radiotherapy segmentation models}
+
+Key points from: \cite{Samarasinghe2021-ps}
+
+\begin{itemize}
+    \item Radiation therapy is heavily reliant on imaging for staging of patients to ensure radiotherapy is an appropriate treatment option, delineating volumes for radiotherapy planning and in follow-up care to assess outcomes of treatment
+    \item Radiotherapy planning is a time-consuming process involving the optimization of radiotherapy beam placement to ensure comprehensive dose coverage of the tumour whilst respecting doses to surrounding normal tissues (organs-at-risk)
+    \item Successful FCNs also introduce skip connections which allow features from the downsampling path to be concatenated with features in the upsampling path, thereby allowing multi-resolution learning, in addition to producing output dimensions that match the input.
+    \item However, there is notable use of established medical image segmentation architectures with or without architectural modifications. While in-depth technical details are not discussed in this article, some of the noteworthy popular architectures include 2D and 3D U-Net,10 V-Net17 and DeepMedic.
+    \item A range of CNN architectures were used, with U-net the most common approach across the clinical sites
+\end{itemize}
+
+\section{Review of deep learning in target volume segmentation}
+
+Key points from: \cite{Lin2021-oz}
+
+\begin{itemize}
+    \item e treatment planning starts
+    with the target volumes and Organs-At-Risks (OAR)
+    contouring on computed tomography (CT), magnetic
+    resonance (MR) or positron emission tomography (PET),
+    which lays the foundation of the precision of the entire
+    workflow moving forward.
+    \item he target volume contouring
+    is manually delineated by radiation oncologists, which is
+    taken as the golden standard in the clinical practice but a
+    time-consuming process and may suffer from substantial
+    inter- and intra-observer variability
+    \item Good figure: in 2020 there were 3653 papers on auto-segmentation of radiotherapy planning in deep learning
+    \item Convolutional neural networks (ConvNets): Convolutional layers, Pooling layers and Fully Connected
+    layers.
+    \item Major drawbacks associated with this sliding window method include (I) redundant computation caused by repetitive convolutions of highly overlapped patches
+    and (II) inability for ConvNets to learn global features due
+    to the small patch size and (III) being applicable only for
+    binary segmentation task while fully connected layers exist.
+    \item U-Net is an improvement on the FCN
+    \item oss entropy (CE)
+    is one of the most common loss functions being used in
+    many studies.
+    \item Hybrid loss
+    Another problem that may limit the target delineation
+    performance in both 2D and 3D FCNs is that they are
+    typically only trained with pixel-wise loss functions, such
+    as Cross Entropy and soft-Dice loss. These pixel-wise
+    loss functions may not be sufficient to learn features that
+    represent the underlying anatomical structures. Several
+    approaches therefore focus on designing combined loss
+    functions to address class imbalance issues and improve the
+    predictive accuracy and robustness of the network. The
+    anatomical constraints are represented as regularization
+    terms to take into account the shape information (46)
+    or contour and region information (45), encouraging
+    the network to generate more anatomically plausible
+    segmentations.
+    \item None considered transfer learning
+\end{itemize}
+
+\section{Auto-segmentations by CNN}
+
+Key points from: \cite{Sartor2020-et}
+
+\begin{itemize}
+    \item It is time-consuming for oncologists to delineate volumes for radiotherapy treatment in
+    computer tomography (CT) images. Automatic delineation based on image processing exists, but with
+    varied accuracy and moderate time savings
+\end{itemize}
+
+\section{Segmentation of organs-at-risk using CNN}
+
+Key points from: \cite{LIU2020184}
+
+\begin{itemize}
+    \item We introduced and evaluated an end-to-end organs-at-risk (OARs) segmentation model that can pro-
+    vide accurate and consistent OARs segmentation results in much less time.
+    \item Our proposed method can help reduce the inter-observer and intra-observer variability of manual
+    OARs delineation and lessen oncologists’ efforts. 
+    \item Cervical cancer is one of the most commonly diagnosed diseases for
+    women worldwide
+    \item radiation therapy is a major clinical treatment
+    for cervical cancer
+    \item ccurate segmentation of organs-at-risk (OARs)
+    is critical for minimising radiation toxicities to these normal structures
+    during irradiation. Manual delineation of the OARs regions is con-
+    sidered the gold standard in current clinical practice. However, OARs
+    delineation is time-consuming and labour-intensive work for radiation
+    oncologists. It is estimated that an oncologist needs 90–120 min to
+    delineate the OARs in a cervical cancer Patient
+    \item CNN based models in deep learning methods have become domi-
+    nant solutions for natural image semantic segmentation problems
+    \item Cervical cancer OARs segmentation is a challenging task since these
+    organs have various sizes, shapes, and locations and some of them may
+    have several isolated regions and unclear boundaries
+    \item Despite
+    the simple architecture of U-Net, many studies have demonstrated the
+    effectiveness of U-Net in medical image segmentation
+    \item while the convolutional layers in the U-Net are replaced
+    by Context Aggregation Blocks.
+    \item The Context Aggregation Block, which is shown in Fig. 2, uses di-
+    lated convolutions with different dilated rates and normal convolution
+    layers with different kernel sizes.
+\end{itemize}
+
+Dilated convolutions: Dilated Convolution: It is a technique that expands the kernel (input) by inserting holes between its consecutive elements. In simpler terms, it is the same as convolution but it involves pixel skipping, so as to cover a larger area of the input. 
+
+\section{Auto-contouring systems for cervical cancer using CNNs}
+
+Key points from: \cite{Rhee2020-ms}
+
+\begin{itemize}
+    \item “Wrong or inaccurate”con-tours drawn by physicians and dosimetrists constitute thehighest and seventh-highest risk factors for failure of photon/electron external beam radiation treatment, respectively.
+    \item Although these approaches have generally been very suc-cessful, they are not yet accessible to cancer treatment centerswhere they would be most useful—those with limitedresources that see a large number of cervical cancer patients,such as in South Africa and other low- and middle-incomecountries (LMICs). In fact, cervical cancer is the second mostcommon cancer in women in Africa
+    \item 2254 female pelvicCT scans
+    \item the classification and the segmentation models were trainedindependently for each structure to avoid the class imbalanceproblem,49the imbalance in the number of training data foreach structure did not influence the model accuracy.
+    \item her structures (theorgans-at-risk and the primary and the nodal CTVs) were contoured as demonstrated in Fig 2
+    \item Fig 2: FIG. 2. Segmentation using cropped three-dimensional images for better accuracy. (a) Resize the computed tomography (CT) from 5129512 to 2569256 pix-els and then segment the organ of interest and find the center of mass, (b) crop the region around the segmented organ on the original 5129512 CT scan, and(c) resegment the organ of interest on the cropped image.
+\end{itemize}
+
+\section{Validation of Deep Learning for auto-delineation}
+
+Key points from: \cite{LIU2020172}
+
+\begin{itemize}
+    \item DpnUNet,
+    which was inspired by U-Net and a dual path network (DPN) [33],
+    that aims to perform high-level semantic feature extraction and
+    high-quality CTV delineation.
+    \item n U-Net, the encoder part aggregates semantic information by
+    reducing spatial information to learn features from part to whole.
+    The decoder part receives semantic information from the bottom.
+    Thus, feature extraction ability of the encoder part is extremely
+    important. However, the U-net simple convolution layer has diffi-
+    culty learning complicated features efficiently.
+    \item We replaced the whole U-Net encoder part with the DPN archi-
+    tecture. The DPN encodes the input image to a large number of
+    advanced abstract features and parameters. The micro-block is
+    the core of the DPN. It combines the Residual [34] block and Dense
+    [35] block into a dual path architecture, thereby deriving benefits
+    from both.
+    \item he mean DSCs for the CTV from U-Net, CabUNet and
+    DpnUNet were 0.79, 0.83 and 0.86 (not the best we've seen)
+\end{itemize}
+
+\printbibliography
+
+\end{document}

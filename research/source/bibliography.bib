@@ -27,12 +27,62 @@
   title        = {AMLART data}
 }
 
-@journal{PTV-for-RGC-using-MRI,
-  title       = {An Inter-observer Study to Determine Radiotherapy Planning Target Volumes for Recurrent Gynaecological Cancer Comparing Magnetic Resonance Imaging Only With Computed Tomography-Magnetic Resonance Imaging},
-  author      = {D. Bernstein and A. Taylor and S. Nill and G. Imseeh and G. Kothari and M. Llewelyn and K.N. De Paepe and A. Rockall and A.-M. Shiarli and U. Oelfke},
-  year        = {2021},
-  journal     = {Clinical Oncology}
+@article{PTV-for-RGC-using-MRI,
+  title    = "An Inter-observer Study to Determine Radiotherapy Planning Target
+              Volumes for Recurrent Gynaecological Cancer Comparing Magnetic
+              Resonance Imaging Only With Computed {Tomography-Magnetic}
+              Resonance Imaging",
+  author   = "Bernstein, D and Taylor, A and Nill, S and Imseeh, G and Kothari,
+              G and Llewelyn, M and De Paepe, K N and Rockall, A and Shiarli,
+              A-M and Oelfke, U",
+  abstract = "AIMS: Target delineation uncertainty is arguably the largest
+              source of geometric uncertainty in radiotherapy. Several factors
+              can affect it, including the imaging modality used for
+              delineation. It is accounted for by applying safety margins to
+              the target to produce a planning target volume (PTV), to which
+              treatments are designed. To determine the margin, the delineation
+              uncertainty is measured as the delineation error, and then a
+              margin recipe used. However, there is no published evidence of
+              such analysis for recurrent gynaecological cancers (RGC). The
+              aims of this study were first to quantify the delineation
+              uncertainty for RGC gross tumour volumes (GTVs) and to calculate
+              the associated PTV margins and then to quantify the difference in
+              GTV, delineation uncertainty and PTV margin, between a computed
+              tomography-magnetic resonance imaging (CT-MRI) and MRI workflow.
+              MATERIALS AND METHODS: Seven clinicians delineated the GTV for 20
+              RGC tumours on co-registered CT and MRI datasets (CT-MRI) and on
+              MRI alone. The delineation error, the standard deviation of
+              distances from each clinician's outline to a reference, was
+              measured and the required PTV margin determined. Differences
+              between using CT-MRI and MRI alone were assessed. RESULTS: The
+              overall delineation error and the resulting margin were 3.1 mm
+              and 8.5 mm, respectively, for CT-MRI, reducing to 2.5 mm and 7.1
+              mm, respectively, for MRI alone. Delineation errors and therefore
+              the theoretical margins, varied widely between patients. MRI
+              tumour volumes were on average 15\% smaller than CT-MRI tumour
+              volumes. DISCUSSION: This study is the first to quantify
+              delineation error for RGC tumours and to calculate the
+              corresponding PTV margin. The determined margins were larger than
+              those reported in the literature for similar patients, bringing
+              into question both current margins and margin calculation
+              methods. The wide variation in delineation error between these
+              patients suggests that applying a single population-based margin
+              may result in PTVs that are suboptimal for many. Finally, the
+              reduced tumour volumes and safety margins suggest that patients
+              with RGC may benefit from an MRI-only treatment workflow.",
+  journal  = "Clin Oncol (R Coll Radiol)",
+  volume   =  33,
+  number   =  5,
+  pages    = "307--313",
+  month    =  feb,
+  year     =  2021,
+  address  = "England",
+  keywords = "Delineation uncertainty; planning target volume; radiotherapy;
+              recurrent gynaecological cancer",
+  language = "en",
+  url      = {https://pubmed.ncbi.nlm.nih.gov/33640196/},
 }
+
 
 @paper{personalised-PTV-strategies,
   title = {New target volume delineation and PTV strategies to further
@@ -769,4 +819,232 @@ abstract = {Nine previously proposed segmentation evaluation metrics, targeting 
               similarity coefficient; Hausdorff distance; Radiotherapy; Surface
               DSC; Time-saving",
   language = "en"
+}
+
+@article{Samarasinghe2021-ps,
+  title    = "Deep learning for segmentation in radiation therapy planning: a
+              review",
+  author   = "Samarasinghe, Gihan and Jameson, Michael and Vinod, Shalini and
+              Field, Matthew and Dowling, Jason and Sowmya, Arcot and Holloway,
+              Lois",
+  abstract = "Segmentation of organs and structures, as either targets or
+              organs-at-risk, has a significant influence on the success of
+              radiation therapy. Manual segmentation is a tedious and
+              time-consuming task for clinicians, and inter-observer
+              variability can affect the outcomes of radiation therapy. The
+              recent hype over deep neural networks has added many powerful
+              auto-segmentation methods as variations of convolutional neural
+              networks (CNN). This paper presents a descriptive review of the
+              literature on deep learning techniques for segmentation in
+              radiation therapy planning. The most common CNN architecture
+              across the four clinical sub sites considered was U-net, with the
+              majority of deep learning segmentation articles focussed on head
+              and neck normal tissue structures. The most common data sets were
+              CT images from an inhouse source, along with some public data
+              sets. N-fold cross-validation was commonly employed; however, not
+              all work separated training, test and validation data sets. This
+              area of research is expanding rapidly. To facilitate comparisons
+              of proposed methods and benchmarking, consistent use of
+              appropriate metrics and independent validation should be
+              carefully considered.",
+  journal  = "J Med Imaging Radiat Oncol",
+  volume   =  65,
+  number   =  5,
+  pages    = "578--595",
+  month    =  jul,
+  year     =  2021,
+  address  = "Australia",
+  keywords = "contouring; deep learning; radiation therapy; segmentation",
+  language = "en",
+  url             = {https://pubmed.ncbi.nlm.nih.gov/34313006/},
+}
+
+
+@article{Sartor2020-et,
+  title    = "Auto-segmentations by convolutional neural network in cervical
+              and anorectal cancer with clinical structure sets as the ground
+              truth",
+  author   = "Sartor, Hanna and Minarik, David and Enqvist, Olof and Ul{\'e}n,
+              Johannes and Wittrup, Anders and Bjurberg, Maria and
+              Tr{\"a}g{\aa}rdh, Elin",
+  abstract = "BACKGROUND: It is time-consuming for oncologists to delineate
+              volumes for radiotherapy treatment in computer tomography (CT)
+              images. Automatic delineation based on image processing exists,
+              but with varied accuracy and moderate time savings. Using
+              convolutional neural network (CNN), delineations of volumes are
+              faster and more accurate. We have used CTs with the annotated
+              structure sets to train and evaluate a CNN. MATERIAL AND METHODS:
+              The CNN is a standard segmentation network modified to minimize
+              memory usage. We used CTs and structure sets from 75 cervical
+              cancers and 191 anorectal cancers receiving radiation therapy at
+              Sk{\aa}ne University Hospital 2014-2018. Five structures were
+              investigated: left/right femoral heads, bladder, bowel bag, and
+              clinical target volume of lymph nodes (CTVNs). Dice score and
+              mean surface distance (MSD) (mm) evaluated accuracy, and one
+              oncologist qualitatively evaluated auto-segmentations. RESULTS:
+              Median Dice/MSD scores for anorectal cancer: 0.91-0.92/1.93-1.86
+              femoral heads, 0.94/2.07 bladder, and 0.83/6.80 bowel bag. Median
+              Dice scores for cervical cancer were 0.93-0.94/1.42-1.49 femoral
+              heads, 0.84/3.51 bladder, 0.88/5.80 bowel bag, and 0.82/3.89
+              CTVNs. With qualitative evaluation, performance on femoral heads
+              and bladder auto-segmentations was mostly excellent, but CTVN
+              auto-segmentations were not acceptable to a larger extent.
+              DISCUSSION: It is possible to train a CNN with high overlap using
+              structure sets as ground truth. Manually delineated pelvic
+              volumes from structure sets do not always strictly follow volume
+              boundaries and are sometimes inaccurately defined, which leads to
+              similar inaccuracies in the CNN output. More data that is
+              consistently annotated is needed to achieve higher CNN accuracy
+              and to enable future clinical implementation.",
+  journal  = "Clin Transl Radiat Oncol",
+  volume   =  25,
+  pages    = "37--45",
+  month    =  sep,
+  year     =  2020,
+  address  = "Ireland",
+  keywords = "AI, artificial intelligence; Automatic segmentation; CNN,
+              convolutional neural network; CT, computer tomography; CTVN,
+              clinical target volume nodes; Cervical cancer radiotherapy;
+              Clinical Target Volume; Convolutional neural network; MSD, mean
+              surface distance; OAR, organs at risk; Organs-at-risk; PET-CT,
+              positron emission tomography/computer tomography",
+  language = "en",
+  url             = {https://pubmed.ncbi.nlm.nih.gov/33005756/},
+}
+
+@article{LIU2020184,
+title = {Segmentation of organs-at-risk in cervical cancer CT images with a convolutional neural network},
+journal = {Physica Medica},
+volume = {69},
+pages = {184-191},
+year = {2020},
+issn = {1120-1797},
+doi = {https://doi.org/10.1016/j.ejmp.2019.12.008},
+url = {https://www.sciencedirect.com/science/article/pii/S1120179719305290},
+author = {Zhikai Liu and Xia Liu and Bin Xiao and Shaobin Wang and Zheng Miao and Yuliang Sun and Fuquan Zhang},
+keywords = {Cervical cancer radiotherapy, Automatic segmentation, Organs-at-risk, Convolutional neural network},
+abstract = {Purpose
+We introduced and evaluated an end-to-end organs-at-risk (OARs) segmentation model that can provide accurate and consistent OARs segmentation results in much less time.
+Methods
+We collected 105 patients’ Computed Tomography (CT) scans that diagnosed locally advanced cervical cancer and treated with radiotherapy in one hospital. Seven organs, including the bladder, bone marrow, left femoral head, right femoral head, rectum, small intestine and spinal cord were defined as OARs. The annotated contours of the OARs previously delineated manually by the patient’s radiotherapy oncologist and confirmed by the professional committee consisted of eight experienced oncologists before the radiotherapy were used as the ground truth masks. A multi-class segmentation model based on U-Net was designed to fulfil the OARs segmentation task. The Dice Similarity Coefficient (DSC) and 95th Hausdorff Distance (HD) are used as quantitative evaluation metrics to evaluate the proposed method.
+Results
+The mean DSC values of the proposed method are 0.924, 0.854, 0.906, 0.900, 0.791, 0.833 and 0.827 for the bladder, bone marrow, femoral head left, femoral head right, rectum, small intestine, and spinal cord, respectively. The mean HD values are 5.098, 1.993, 1.390, 1.435, 5.949, 5.281 and 3.269 for the above OARs respectively.
+Conclusions
+Our proposed method can help reduce the inter-observer and intra-observer variability of manual OARs delineation and lessen oncologists’ efforts. The experimental results demonstrate that our model outperforms the benchmark U-Net model and the oncologists’ evaluations show that the segmentation results are highly acceptable to be used in radiation therapy planning.},
+url             = {https://www.sciencedirect.com/science/article/pii/S1120179719305290},
+}
+
+@ARTICLE{Rhee2020-ms,
+  title    = "Automatic contouring system for cervical cancer using
+              convolutional neural networks",
+  author   = "Rhee, Dong Joo and Jhingran, Anuja and Rigaud, Bastien and
+              Netherton, Tucker and Cardenas, Carlos E and Zhang, Lifei and
+              Vedam, Sastry and Kry, Stephen and Brock, Kristy K and Shaw,
+              William and O'Reilly, Frederika and Parkes, Jeannette and Burger,
+              Hester and Fakie, Nazia and Trauernicht, Chris and Simonds,
+              Hannah and Court, Laurence E",
+  abstract = "PURPOSE: To develop a tool for the automatic contouring of
+              clinical treatment volumes (CTVs) and normal tissues for
+              radiotherapy treatment planning in cervical cancer patients.
+              METHODS: An auto-contouring tool based on convolutional neural
+              networks (CNN) was developed to delineate three cervical CTVs and
+              11 normal structures (seven OARs, four bony structures) in
+              cervical cancer treatment for use with the Radiation Planning
+              Assistant, a web-based automatic plan generation system. A total
+              of 2254 retrospective clinical computed tomography (CT) scans
+              from a single cancer center and 210 CT scans from a segmentation
+              challenge were used to train and validate the CNN-based
+              auto-contouring tool. The accuracy of the tool was evaluated by
+              calculating the S{\o}rensen-dice similarity coefficient (DSC) and
+              mean surface and Hausdorff distances between the automatically
+              generated contours and physician-drawn contours on 140 internal
+              CT scans. A radiation oncologist scored the automatically
+              generated contours on 30 external CT scans from three South
+              African hospitals. RESULTS: The average DSC, mean surface
+              distance, and Hausdorff distance of our CNN-based tool were
+              0.86/0.19 cm/2.02 cm for the primary CTV, 0.81/0.21 cm/2.09 cm
+              for the nodal CTV, 0.76/0.27 cm/2.00 cm for the PAN CTV,
+              0.89/0.11 cm/1.07 cm for the bladder, 0.81/0.18 cm/1.66 cm for
+              the rectum, 0.90/0.06 cm/0.65 cm for the spinal cord, 0.94/0.06
+              cm/0.60 cm for the left femur, 0.93/0.07 cm/0.66 cm for the right
+              femur, 0.94/0.08 cm/0.76 cm for the left kidney, 0.95/0.07
+              cm/0.84 cm for the right kidney, 0.93/0.05 cm/1.06 cm for the
+              pelvic bone, 0.91/0.07 cm/1.25 cm for the sacrum, 0.91/0.07
+              cm/0.53 cm for the L4 vertebral body, and 0.90/0.08 cm/0.68 cm
+              for the L5 vertebral bodies. On average, 80\% of the CTVs, 97\%
+              of the organ at risk, and 98\% of the bony structure contours in
+              the external test dataset were clinically acceptable based on
+              physician review. CONCLUSIONS: Our CNN-based auto-contouring tool
+              performed well on both internal and external datasets and had a
+              high rate of clinical acceptability.",
+  journal  = "Med Phys",
+  volume   =  47,
+  number   =  11,
+  pages    = "5648--5658",
+  month    =  oct,
+  year     =  2020,
+  address  = "United States",
+  keywords = "auto-contouring; cervical cancer; convolutional neural network;
+              deep learning",
+  language = "en",
+  url             = {https://pubmed.ncbi.nlm.nih.gov/32964477/},
+}
+
+@ARTICLE{Lin2021-oz,
+  title    = "Deep learning for automatic target volume segmentation in
+              radiation therapy: a review",
+  author   = "Lin, Hui and Xiao, Haonan and Dong, Lei and Teo, Kevin Boon-Keng
+              and Zou, Wei and Cai, Jing and Li, Taoran",
+  abstract = "Deep learning, a new branch of machine learning algorithm, has
+              emerged as a fast growing trend in medical imaging and become the
+              state-of-the-art method in various clinical applications such as
+              Radiology, Histo-pathology and Radiation Oncology. Specifically
+              in radiation oncology, deep learning has shown its power in
+              performing automatic segmentation tasks in radiation therapy for
+              Organs-At-Risks (OAR), given its potential in improving the
+              efficiency of OAR contouring and reducing the inter- and
+              intra-observer variabilities. The similar interests were shared
+              for target volume segmentation, an essential step of radiation
+              therapy treatment planning, where the gross tumor volume is
+              defined and microscopic spread is encompassed. The deep
+              learning-based automatic segmentation method has recently been
+              expanded into target volume automatic segmentation. In this
+              paper, the authors summarized the major deep learning
+              architectures of supervised learning fashion related to target
+              volume segmentation, reviewed the mechanism of each
+              infrastructure, surveyed the use of these models in various
+              imaging domains (including Computational Tomography with and
+              without contrast, Magnetic Resonant Imaging and Positron Emission
+              Tomography) and multiple clinical sites, and compared the
+              performance of different models using standard geometric
+              evaluation metrics. The paper concluded with a discussion of open
+              challenges and potential paths of future research in target
+              volume automatic segmentation and how it may benefit the clinical
+              practice.",
+  journal  = "Quant Imaging Med Surg",
+  volume   =  11,
+  number   =  12,
+  pages    = "4847--4858",
+  month    =  dec,
+  year     =  2021,
+  address  = "China",
+  keywords = "Deep learning; auto segmentation; radiation therapy; target
+              volume delineation",
+  language = "en",
+  url             = {https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8611469/},
+}
+
+
+@article{LIU2020172,
+  title = {Development and validation of a deep learning algorithm for auto-delineation of clinical target volume and organs at risk in cervical cancer radiotherapy},
+  journal = {Radiotherapy and Oncology},
+  volume = {153},
+  pages = {172-179},
+  year = {2020},
+  note = {Physics Special Issue: ESTRO Physics Research Workshops on Science in Development},
+  issn = {0167-8140},
+  doi = {https://doi.org/10.1016/j.radonc.2020.09.060},
+  url = {https://www.sciencedirect.com/science/article/pii/S0167814020308355},
+  author = {Zhikai Liu and Xia Liu and Hui Guan and Hongan Zhen and Yuliang Sun and Qi Chen and Yu Chen and Shaobin Wang and Jie Qiu},
+  keywords = {Clinical target volume, Cervical cancer radiotherapy, Deep learning, Auto-delineation},
 }
