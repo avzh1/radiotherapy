@@ -7,13 +7,6 @@
 \newcommand{\secondMarker}{TODO}
 \newcommand{\reporttype}{MEng Individual Project}
 
-\usepackage{pifont,mdframed}
-\newenvironment{warning}
-  {\par\begin{mdframed}[linewidth=1pt,linecolor=black]%
-    \begin{list}{}{\leftmargin=1cm
-                  \labelwidth=\leftmargin}\item[\Large\ding{43}]}
-  {\end{list}\end{mdframed}\par}
-
 % load some definitions and default packages
 \input{../.latex-templates/includes}
 
@@ -95,7 +88,7 @@ The structure of this report will take the reader of a reasonable scientific bac
 
 Firstly Chapter~\ref{sect:background} discusses the clinical context (Section~\ref{sect:clinical-context}) from which the idea for this project originates. We further construct the background knowledge for the current Computer Vision methodologies which exist to solve segmentation based issues (Section~\ref{sect:vanilla-image-segmentation-models}). This will lead into currently pre-trained models (Section~\ref{sect:existing-auto-segmentation-methods}) and their application in a Transfer Learning setting (Section~\ref{sect:transfer-learning}).
 
-With collaboration from the Royal Marsden Hospital they have provided this project with a set of data (Chapter~\ref{sect:data}) with which the remainder of this project is trained upon, the usage concerns have been evaluated through the Ethics chapter (Chapter~\ref{sect:ethics}). We discuss what constitutes an accurate segmentation and reason about evaluation metrics to provide an outlook on the models performance (Chapter~\ref{chapter:evaluation-metrics}).
+With collaboration from the Royal Marsden Hospital they have provided this project with a set of data (Chapter~\ref{sect:data}) with which the remainder of this project is trained upon, the usage concerns have been evaluated through the Ethics chapter (Chapter~\ref{sect:ethics}). We discuss what constitutes an accurate segmentation and reason about evaluation metrics to provide an outlook on the models performance (Chapter~\ref{sect:evaluation-metrics}).
 
 Finally, Chapter~\ref{sect:proposal} contains details surrounding the proposition of this project. We establish base-line results (Section~\ref{sect:baseline-results}) such that we may see that our future implementation will supersede the common implementation. Currently, for the interim report the proposition lays bare, but will be slowly added throughout the course of the project. 
 
@@ -406,7 +399,7 @@ The top 5 priority structures have been selected to identify and plan an area wh
   TODO
 \end{warning}
 
-\chapter{Evaluation Metrics}\label{chapter:evaluation-metrics}
+\chapter{Evaluation Metrics}\label{sect:evaluation-metrics}
 
 To determine if a contour can be used in a clinical context, would be include calculating the difference between the provided labelled data. However, in a delineation context, we have different ways to evaluate this measure.
 
@@ -629,25 +622,44 @@ Clinicians can fall into the trap of automation-bias as AI becomes more common p
 
 \section{Project Plan}
 
-\begin{itemize}
-  \item What needs to be done
-  \item what you expect the timetable to be
-  \item key milestones
-  \item fall-back positions
-  \item extensions?
-  \item how far you have progressed at the time of writing
-\end{itemize}
+The current state of the project has provided me with a very strong foundation for the next 5 months. I have completed detailed research on large foundational concepts with respect to Transfer Learning (TL) principles. I am anxious to include more research however, because TL is only one solution, as a fall-back device it would be beneficial to discuss other techniques as well as provide some quantitative evidence to show shortcomings or strengths.
+
+Figure~\ref{fig:plan-pre-exam}, \ref{fig:plan-post-exam-a}, \ref{fig:plan-post-exam-b} is a Gantt chart of the planned progress of the key milestones of the project for the future. I have split tasks into 3 categories: Source code for the programming of the project, Report for the write-up, and the presentation at the end of the project life expectancy. 
+
+I expect to consistently document my progress in my final report so that the repository stays most up-to-date with the progress. Furthermore, because of a busy term, I have given ample time to work on the project to get the first phase done: the transfer learning. I will have the time after the exam to consider alternative solutions such as `shall I delineate classes independently' or `are there better data optimizations or image segmentation approaches'?
+
+Furthermore, I will be attending the weekly meetings to keep the supervisor (Ben Glocker) informed on the progress and receive the most up-to-date guidance on next steps. In addition to supervisor meetings, I must plan an opportunity to meet with staff from the Royal Marsden Hospital in order to discuss clinical details and project expectations as they are the expected primary stake-holders.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth, trim={0 7.25cm 0.1cm 0}, clip]{gantt/plan-pre-exam.png}
+  \caption{Plan for project before exams}
+  \label{fig:plan-pre-exam}
+\end{figure}
+
+\begin{figure}[H]\ContinuedFloat
+  \centering
+
+  \subfigure[Plan for project after exams]{
+    \includegraphics[width=\linewidth, trim={0 6.75cm 0 0}, clip]{gantt/plan-post-exam-a.png}
+    \label{fig:plan-post-exam-a}
+  }
+
+  \subfigure[Plan for project after exams, the third entry is timeline for the project]{
+    \includegraphics[width=\linewidth, trim={0 0 0 0}, clip]{gantt/plan-post-exam-b.png}
+    \label{fig:plan-post-exam-b}
+  }
+  \caption{Gantt chart for the file expectancy of this project}
+  \label{fig:gantt}
+\end{figure}
 
 \section{Evaluation Plan}
 
-\begin{itemize}
-  \item how you plan to measure success
-  \item what functionality you need to demonstrate
-  \item what experiments do you need to undertake/what outcomes constitute success
-  \item benchmarks
-  \item how much has it extended the state of art?
-  \item measure qualitative aspects such as ease of use?
-\end{itemize}
+This project has a convenient way to measure performance metrics of the algorithm; these have been defined in Chapter~\ref{sect:evaluation-metrics}. The project will be considered a success if the proposed solution beats the performance of vanilla network implementations or we can propose reasons for the model's poor performance. Further evaluation will be peer-reviewed by clinicians at the Royal Marsden Hospital, thus reinforcing or alternatively contradicting performance metrics provided.
+
+We will be demonstrating high scoring segmentations according to the provided labelled data from the Royal Marsden Hospital. Current project direction seems to be aimed at reducing the extremities of editing contour lines form the model to predictions that will be used in clinical contexts. These models will be produced as an consequence of several experiments for fine-tuning the network to have better performance, but yet not generalizing on the data too much.
+
+Finally, the model will be offered as an agent to advise clinicians (not replacing) on radiotherapy contour outlines. The tool should be easy to use, as a simple plug-and-play for the intended stake-holders. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printbibliography
