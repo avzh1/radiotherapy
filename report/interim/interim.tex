@@ -3,8 +3,8 @@
 % some definitions for the title page
 \newcommand{\reporttitle}{[INTERIM]: Transfer Learning for Deep Learning Radiotherapy Planning}
 \newcommand{\reportauthor}{Anton Zhitomirsky}
-\newcommand{\supervisor}{Ben Glocker}
-\newcommand{\secondMarker}{TODO}
+\newcommand{\supervisor}{Prof Ben Glocker}
+\newcommand{\secondMarker}{Dr Thomas Heinis}
 \newcommand{\reporttype}{MEng Individual Project}
 
 % load some definitions and default packages
@@ -139,6 +139,13 @@ Another issue lies in the bespoke nature of this application. Most pre-trained n
 Transfer Learning uses knowledge that has been obtained from one task, and uses it as a starting point for learning a new task. It is therefore a useful solution to the problems identified in Section~\ref{sect:limitations} because of the transferable knowledge features for similar domains  and its proven success in generalizing features is trained properly.
 
 The intuitive reason why transfer learning works is because in the early layers of deep learning, the model learns very low-level features. At this scale, the initial data-set or the cost function doesn't matter because a model working on the same problem but with different initialization will learn similar low-level features. This allows transferral because the (large/sufficiently sized) input dataset is abstracted in the set low-level features which can instead be transferred. Then, the later layers are more specialized to a particular task~\cite{deep-learning-book}. It is similar to seeing the distribution in the training data change and transferring knowledge across domains~\cite{survey-on-transfer-learning}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\linewidth]{../figures/Frozen-layers.jpg}
+  \caption{Early layers learn low-level features for similar domains, and during transfer of knowledge, these layers are frozen and the trainable layers are appended and weights are only updated for this layer~\cite{geeks-transfer-learning}}
+ \label{fig:frozen-layers}
+\end{figure}
 
 Transfer Learning has the potential to: improve initial performance using only the transferred knowledge before nay further learning is done, improve the time it takes to fully learn the target task given the transferred knowledge, and improve the final performance all when compared to initial benchmarks without transfer~\cite{torrey-handbook}. It has also been found to work in medical contexts as well, where, for 332 abdominal liver CT scans, transfer learning generally improved weight initialization and resulted in faster convergence providing stronger and more robust representation~\cite{liver-lesion-via-transfer-learning}
 
@@ -393,11 +400,11 @@ The top 5 priority structures have been selected to identify and plan an area wh
 
 \end{enumerate}
 
-\section{Data Pre-Processing}\label{sect:data-cleaning}
+% \section{Data Pre-Processing}\label{sect:data-cleaning}
 
-\begin{warning}
-  TODO
-\end{warning}
+% \begin{warning}
+%   TODO
+% \end{warning}
 
 \chapter{Evaluation Metrics}\label{sect:evaluation-metrics}
 
