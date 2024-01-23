@@ -70,13 +70,22 @@
 
 
 
-% the problem is not trivial of outlining a mass on a scan, there is also an area of non-zero probability that the tumour has spread around microscopically. Need to make sure 
+% the problem is not trivial of outlining a mass on a scan, there is also an area of non-zero probability that the tumour has spread around microscopically. Need to make sure
+
+\section{Current Solutions}\label{sect:current-solutions}
+
+The problem of automatic delineation of tumours in a patient is not a new concept unfamiliar to the scientific community. From 2016 to 2020 the number of deep-learning in radiotherapy publications has grown from 1,001 to 3,653~\cite{Lin2021-oz}. Therefore, there exist many proposals and solutions to this problem for cancerous tumours across the body. This also includes research projects focused specifically on cervical cancer and radiotherapy auto-contour planning. By conducting a accrual of literature across PubMed with the search string
+
+\begin{lstlisting}
+  ``radiotherapy'' AND ``contour'' AND (``cervix'' OR ``cervical'') AND ``cancer'' AND (``Deep Learning'' OR ``DeepLearning'' OR ``Machine Learning'' OR ``ML'' OR ``Artificial Intelligence'' OR ``AI'' OR ``Computer assisted'')  
+\end{lstlisting}
+
+6 key papers published between the span of 2020 to 2021 were selected as most relevant for this project~\cite{Samarasinghe2021-ps,Lin2021-oz,Sartor2020-et,LIU2020184,Rhee2020-ms,LIU2020172}. These papers proposed novel ideas on how to solve image segmentation problems. Some noteworthy networks included Convolutional Neural Networks (Section~\ref{sect:CNNs}), 2D and 3D U-Net adaptations (Section ~\ref{sect:u-net} and~\ref{sect:nnu-net}), V-Nets and DeepMedic models, with the most common approach being the U-Net approach according to a clinical survey on the topic in 2021~\cite{Samarasinghe2021-ps}. The methods in these papers will be further discussed in Chapter~\ref{sect:background}.
 
 \section{Motivation}\label{sect:motivation}
 % Auto contouring vs Auto Segmentation?
 
-\section{Current Solutions}\label{sect:current-solutions}
-% 
+The current literature makes great use of modern concepts stemming from the discovery of CNN models. However, all papers assume a good sample size which represents the overall population of people under the same conditions. This is not practical in a general case, for instance: hospitals may only have the data for their in-house patients, teams operate on a niche areas and therefore have a smaller sample size, affected area scans are not standardized and vary between organizations which may promote the `garbage in, garbage out' philosophy, and finally varying degrees of catastrophe levels pertaining to the sensitivity of the organs at risk\footnote{see Section TODOTODO} surrounding the tumour (radiotherapy in the pelvis vs radiotherapy in the brain).
 
 \section{Outline of Report}\label{sect:outline-of-report}
 
@@ -84,7 +93,7 @@
   This interim report will not contain implementation details yet.
 \end{warning}
 
-The structure of this report will take the reader of a reasonable scientific background through the project such that they might be able to reconstruct the outcome themselves. It is expected of the reader to understand the concept of Machine Learning and an intuition surrounding Computer Vision.
+The structure of this report will take the reader of a reasonable programming background through the project such that they might be able to reconstruct the outcome themselves. It is expected of the reader to understand the concept of Machine Learning and an intuition surrounding Computer Vision.
 
 Firstly Chapter~\ref{sect:background} discusses the clinical context (Section~\ref{sect:clinical-context}) from which the idea for this project originates. We further construct the background knowledge for the current Computer Vision methodologies which exist to solve segmentation based issues (Section~\ref{sect:vanilla-image-segmentation-models}). This will lead into currently pre-trained models (Section~\ref{sect:existing-auto-segmentation-methods}) and their application in a Transfer Learning setting (Section~\ref{sect:transfer-learning}).
 
@@ -612,7 +621,6 @@ For the purpose of this project, we shall select a evaluation measurement which 
   Solution to resolution problem, down-sample all samples or think of average?
 \end{warning}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Ethics}\label{sect:ethics}
 
 This project involves very intimate and personal information of many female patients. Researchers may collaborate with third-parties by providing anonymized data which may not be reverse engineered back to the patient.
@@ -632,7 +640,7 @@ Yet, it is too early to take result the medical tool as gospel. For current cerv
 
 Clinicians can fall into the trap of automation-bias as AI becomes more common place in clinical environments~\cite{automation-bias}. However, many models of this age codify the existing bias in common cases, which often will fail those patients who do not fit the expectations of the majority. Therefore, a degree of supervision required from physicians has to be established if this tool is to be used in practice. Oncologists will be required to reverse-engineer results of the `black-box' to verify why a decision has been made. Secondly, the responsible party for incorrect decisions made by DL tools should also be determined~\cite{AI-in-cancer-diagnosis-era}.
 
-%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Interim Deliverables}
 
 \section{Project Plan}
