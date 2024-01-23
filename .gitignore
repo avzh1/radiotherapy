@@ -1,5 +1,5 @@
 .vscode
-.~lock.AMLART data.ods#
+.~lock.**.ods#
 
 # ignore large pdfs
 /research/source/**/*.pdf
@@ -22,6 +22,7 @@
 
 # ignore anything that is stored in the temp directory
 /tmp
+tmp
 
 # python auxiliary files
 __pycache__
