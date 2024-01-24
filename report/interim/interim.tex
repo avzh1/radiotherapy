@@ -68,7 +68,7 @@ Radiotherapy has become a great option due to high resolution X-ray or CT scans 
 
 Areas are therefore constructed based on an Oncologist knowledge about the particular cancer to determine target structures, structures we need to protect (organs-at-risk), and areas where each particular cancer is likely to spread to~\cite{AMLART-data}. These areas are delineated onto a patient scan and used as a radiotherapy target used for treatment.
 
-Accurate scans have been provided to see if an AI model can learn cervical cancer CTV patterns adjacent to clinical knowledge and oncologist prior knowledge on cancerous spreads. Training models capable of producing the substructures needed within the CTV that a clinician can select from could still overall save time and improve consistency within the radiotherapy planning process~\cite{AMLART-data}.
+Accurate scans have been provided to see if an AI model can learn cervical cancer CTV patterns adjacent to clinical knowledge and oncologist prior knowledge. Training models which produce substructures required for radiotherapy target volumes would overall save time and improve consistency within the radiotherapy planning process~\cite{AMLART-data}.
 
 \section{Current Solutions}\label{sect:current-solutions}
 
@@ -84,9 +84,9 @@ The problem of automatic delineation of tumours in a patient is not a new concep
 
 \subsubsection{Healthcare Crisis}
 
-Healthcare centres are experiencing high demand with low availability for all types of cancer. In England, waiting times are getting worse each month, with over a third of cancer patients (60,000) waiting beyond the 62-day target, and 10,000 patients waiting over 104 days according to a radiotherapy manifesto in 2022 \href{https://radiotherapy.org.uk/wp-content/uploads/2022/11/APPGRadiotherapy_Manifesto-Update_2022.pdf}{Manifesto link (shall i put in bibliography?)}. 
+Healthcare centres are experiencing high demand with low availability for all types of cancer. In England, waiting times are getting worse each month, with over a third of cancer patients (60,000) waiting beyond the 62-day target, and 10,000 patients waiting over 104 days according to a radiotherapy manifesto in 2022 \href{https://radiotherapy.org.uk/wp-content/uploads/2022/11/APPGRadiotherapy_Manifesto-Update_2022.pdf}{\textit{Manifesto link (shall i put in bibliography?)}}. 
 
-This wait is partially due to the time consuming nature of treatment plans, with manual segmentation performed by a professional oncologist taking 90-120 minutes\cite{LIU2020184,Sartor2020-et}. It simultaneous requires optimization of radiotherapy placement to avoid oragns-at-risk~\cite{Samarasinghe2021-ps}.
+This wait is partially due to the time consuming nature of treatment plans, with manual segmentation performed by a professional oncologist taking 90-120 minutes~\cite{LIU2020184,Sartor2020-et} while always requiring optimization of radiotherapy placement to avoid oragns-at-risk~\cite{Samarasinghe2021-ps}.
 
 Furthermore, more resources can be partitioned into other departments by developing software to aid with cancer treatments. A study found that the scale-up of radiotherapy capacity in 2015-35 from current levels `could lead to saving of 26.9 million life-years in low-income and middle-income countries over the lifetime of the patients who received treatment'~\cite{expanding-global-access-to-radiotherapy}.
 
@@ -102,7 +102,7 @@ The current literature makes great use of modern concepts stemming from the disc
 
 \subsubsection{Summary}
 
-We therefore propose a solution that can be applied to groups with specific niche rules and small sample sizes. This Transfer Learning approach (Section \ref{sect:transfer-learning}) aims to leverage other trained models with great performance and lift low-level features to use in our case. This will also fill the literature gap which hasn't considered solving the auto-contouring for radiotherapy planning volumes, as a PubMed search querying publications with mentions of transfer learning was unsuccessful.
+We therefore propose a solution that can be applied to groups with specific niche rules and small sample sizes. This Transfer Learning approach (Section \ref{sect:transfer-learning}) aims to leverage other trained models with great performance and lift low-level features to use in our case. This will also fill the literature gap which hasn't considered solving the auto-contouring for radiotherapy planning volumes, as a PubMed search querying publications with mentions of transfer learning returned no relevant matches.
 
 \section{Outline of Report}\label{sect:outline-of-report}
 
@@ -135,7 +135,7 @@ This time consuming nature of studying each patient makes treating cancers a tim
 
 Radiation therapy is a treatment option for cancer treatment. In 2012, approximately 50\% of all cancer patients received radiation therapy, with an additional 40\% involving curative treatment~\cite{radiotherapy-advances}. 
 
-Physicians abuse the physical properties of radiation to damage the genetic material of cells and block their ability to cause further damage to a patient~cite{radiotherapy-advances}. Importantly for our cause, radiation damages intercellular molecules leading to degradation and stopping a cells ability to divide, leading to interphase death. Alternatively, radiation may cause a ``mitotic catastrophe'' causing a cell to die of a proliferative death~\cite{cell-death}. 
+Physicians abuse the physical properties of radiation to damage the genetic material of cells and block their ability to cause further damage to a patient~\cite{radiotherapy-advances}. Importantly for our cause, radiation damages intercellular molecules leading to degradation and stopping a cells ability to divide, leading to interphase death. Alternatively, radiation may cause a ``mitotic catastrophe'' causing a cell to die of a proliferative death~\cite{cell-death}. 
 
 \subsection{Contour Planning}\label{sect:contour-planning}
 
@@ -154,6 +154,26 @@ The CTV volumes may vary between clinicians as there is no internationally agree
 The PTV volume is an additional step which provides a margin of protection surrounding the CTV. One might think that a CTV step is the final step in clinical trials as it defines the most tight volume surrounding the cancerous site, however, geometric errors are impossible to eliminate. This includes short-term organ movement, voxel size and slice resolution, and possibility of relative movement of structure of reference and the tumour~\cite{VANHERK200452}
 
 \section{Vanilla Image Segmentation Models}\label{sect:vanilla-image-segmentation-models}
+
+\subsubsection{Neural Networks}
+
+Early deep learning models began by defining neurons. These mimicked biological neurons in the brain specifically by producing a set of outputs given a set of inputs. Neurons were then connected with each other to form connections. The components of this neuron would contain a set of inputs, an algebraic transformation on the inputs, an optional bias term, an activation function and then a set of outputs. By connecting individual neurons like in Figure~\ref{fig:neuron} we create a connected neural network in Figure~\ref{fig:neural-network} to mimic the structure of the brain.
+
+\begin{figure*}
+  \centering
+  \subfigure[Basic building block of a neural network: The Neuron. Here, the notation $i_k$ denotes input $k$, $w_k$ denotes the weight associated with input $k$.]{
+    \includegraphics[width=.5\linewidth]{../figures/neuron.png}\label{fig:neuron}
+  }
+  ~
+  \subfigure[A neural network comprised of individaul neurons like in Figure \ref{fig:neuron}]{
+    \includegraphics[width=.4\linewidth]{../figures/network.drawio.png}\label{fig:neural-network}
+  }
+  \caption{}
+\end{figure*}
+
+A supervised network is a network which works with labelled data. In a supervised pet classification task, an image of a cat would come with a corresponding label of `cat'. Training the network would involve iterating on the data-set and tweaking the weights of the connections between the neurons in order to get closer to the intended result. This result is achieved by first doing a forward pass on a batch of data, obtaining the result and calculating a score. In the backpropagation step the weights are tweaked in the direction that would improve the overall performance of the network (by observing the derivative of the score for the current batch) by a certain amount (dictated by a learning rate).
+
+The  architecture in Figure~\ref{fig:neural-network} can be expanded to contain within it any type of complexity, both in width (height of neuron stack in Figure~\ref{fig:neural-network}) and depth (number of vertical neuron stacks in Figure~\ref{fig:neural-network}) at the cost of complexity. For instance, it is rational to think that given an input image, we could assign each pixel in the image to a neuron, and in this way, construct a fully connected network to learn patterns in the image. However, this is very computationally expensive, given that the number of parameters will be astronomical, and to update them all would be an intractable and inefficient solution.
 
 \subsection{Convolutional Neural Networks (CNN)}\label{sect:CNNs}
 
@@ -189,7 +209,7 @@ Transfer Learning uses knowledge that has been obtained from one task, and uses 
 
 The intuitive reason why transfer learning works is because in the early layers of deep learning, the model learns very low-level features. At this scale, the initial data-set or the cost function doesn't matter because a model working on the same problem but with different initialization will learn similar low-level features. This allows transferral because the (large/sufficiently sized) input dataset is abstracted in the set low-level features which can instead be transferred. Then, the later layers are more specialized to a particular task~\cite{deep-learning-book}. It is similar to seeing the distribution in the training data change and transferring knowledge across domains~\cite{survey-on-transfer-learning}.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.7\linewidth]{../figures/Frozen-layers.jpg}
   \caption{Early layers learn low-level features for similar domains, and during transfer of knowledge, these layers are frozen and the trainable layers are appended and weights are only updated for this layer~\cite{geeks-transfer-learning}}
