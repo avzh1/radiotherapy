@@ -37,32 +37,28 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{abstract}\label{sect:abstract}
+  Cervical cancer remains as one of the top cancerous diseases to affect women. To treat it, Oncologists plan a contour for therapy after obtaining 3D contrasting images of soft-tissue organs at risk and tumorous areas. 
 
-  \begin{warning}
-    First draft of abstract
-  \end{warning}
-
-  Clinicians target cancerous tumours by studying 3D contrasting images of cancerous tumours and surrounding soft tissues to plan targets for radiation therapy. The Royal Marsden Hospital is a key contributor of data for this project, which uses this approach to delineate tumours for cervical cancers. Typically after a gross tumour volume (GTV) is extrapolated from the relevant imaging modality, clinicians append tailored safety margins to also account for the microscopic cancerous spreads not visible in the scan to generate the planned target volume (PTV).
-
-  The PTV area has to be generous enough to attempt to treat the problem in one-shot, yet conservative enough to not harm surrounding healthy tissue with radiation over the course of the treatment. Compounded with small sample size of labelled data this proposes a significant challenge for developing deep-learning segmentation models to identify an optimal PTV.
-
-  Thus we propose a transfer learning strategy to utilize imaging models in similar domains to attempt to learn from the limited input size to provide clinicians with a faster and more accurate segmentation method.
+  Auto-segmentation differs from Auto-contouring tasks due to lacking clinical knowledge surrounding the location of the cancer and biological spreading patterns. Instead of trivially contouring visible macroscopic tumour masses on a scanned patient, a clinician requires also to adjust for microscopic spreads and finally error margin spreads. This target volume should aim to treat the disease in one-shot and not affect any organs-at-risk.
+  
+  The scientific community has tried to automate this task using current architectural standards such as CNNs or U-Net based algorithms. However, no studies yet consider Transfer Learning as an approach to solving this issue. This report investigates this architectural challenge to contribute to the total pool of deep learning auto-segmentation models in a communal effort to save resources of medical institutions.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--- table of contents
-% \fancyhead[RE,LO]{\sffamily {Table of Contents}}
+\fancyhead[RE,LO]{\sffamily {Table of Contents}}
 \tableofcontents
 
 
 % \clearpage{\pagestyle{empty}\cleardoublepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Introduction}\label{sect:intro}
+
 \pagenumbering{arabic}
 \setcounter{page}{1}
 \fancyhead[LE,RO]{\slshape \rightmark}
 \fancyhead[LO,RE]{\slshape \leftmark}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Introduction}\label{sect:intro}
 
 \section{Clinical Context}
 
@@ -614,21 +610,30 @@ For the purpose of this project, we shall select a evaluation measurement which 
 % \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Proposal}\label{sect:proposal}
+% \chapter{Proposal}\label{sect:proposal}
 
-\section{Baseline Results}\label{sect:baseline-results}
+% \section{Baseline Results}\label{sect:baseline-results}
 
-\begin{warning}
-  TODO for all
-\end{warning}
+% \begin{warning}
+%   TODO for all
+% \end{warning}
 
-\subsection{nnU-Net}\label{sect:results-nnu-net}
+% \subsection{nnU-Net}\label{sect:results-nnu-net}
 
-\subsection{Total Segmentator}\label{sect:results-totalseg}
+% \subsection{Total Segmentator}\label{sect:results-totalseg}
 
-\subsection{UinverSeg}\label{sect:results-universeg}
+% \subsection{UinverSeg}\label{sect:results-universeg}
 
-\section{Summary}\label{sect:results-summary}
+% \section{Summary}\label{sect:results-summary}
+
+
+% \begin{warning}
+%   Should we keep labels individual and segment them separately or should we segment it all in one shot?
+% \end{warning}
+
+% \begin{warning}
+%   Solution to resolution problem, down-sample all samples or think of average?
+% \end{warning}
 
 % Advice for Transfer Learning tasks to consider:
 % \begin{enumerate}
@@ -651,13 +656,6 @@ For the purpose of this project, we shall select a evaluation measurement which 
 %   \item 
 % \end{enumerate}
 
-\begin{warning}
-  Should we keep labels individual and segment them separately or should we segment it all in one shot?
-\end{warning}
-
-\begin{warning}
-  Solution to resolution problem, down-sample all samples or think of average?
-\end{warning}
 
 \chapter{Ethics}\label{sect:ethics}
 
