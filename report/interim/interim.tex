@@ -42,6 +42,9 @@
   Auto-segmentation differs from Auto-contouring tasks due to lacking clinical knowledge surrounding the location of the cancer and biological spreading patterns. Instead of trivially contouring visible macroscopic tumour masses on a scanned patient, a clinician requires also to adjust for microscopic spreads and finally error margin spreads. This target volume should aim to treat the disease in one-shot and not affect any organs-at-risk.
   
   The scientific community has tried to automate this task using current architectural standards such as CNNs or U-Net based algorithms. However, no studies yet consider Transfer Learning as an approach to solving this issue. This report investigates this architectural challenge to contribute to the total pool of deep learning auto-segmentation models in a communal effort to save resources of medical institutions.
+
+  You can find the most up-to-date version of the report \href{https://github.com/AntonZhitomirsky/radiotherapy/blob/main/report/interim/interim.pdf}{\textit{here}}.
+
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -155,8 +158,6 @@ The PTV volume is an additional step which provides a margin of protection surro
 
 \section{Vanilla Image Segmentation Models}\label{sect:vanilla-image-segmentation-models}
 
-\subsubsection{Neural Networks}
-
 Early deep learning models began by defining neurons. These mimicked biological neurons in the brain specifically by producing a set of outputs given a set of inputs. Neurons were then connected with each other to form connections. The components of this neuron would contain a set of inputs, an algebraic transformation on the inputs, an optional bias term, an activation function and then a set of outputs. By connecting individual neurons like in Figure~\ref{fig:neuron} we create a connected neural network in Figure~\ref{fig:neural-network} to mimic the structure of the brain.
 
 \begin{figure*}
@@ -177,7 +178,18 @@ The  architecture in Figure~\ref{fig:neural-network} can be expanded to contain 
 
 \subsection{Convolutional Neural Networks (CNN)}\label{sect:CNNs}
 
+Work in progress. Some of my research can be seen at \href{https://github.com/AntonZhitomirsky/radiotherapy/blob/main/research/notes/programming}{\textit{here}}.
+
 \subsection{U-Net}\label{sect:u-net}
+
+\begin{figure}
+  \includegraphics[width=\linewidth,trim={0 7cm 0 0},clip]{../figures/u-net.png}
+  \caption{Figure of the U-Net architecture taken from~\cite{U-Net}.}\label{fig:u-net}
+\end{figure}
+
+% One of the more common architectures referenced in the auto-segmentation papers were U-Net architectures. 
+
+% It is advised that the dimensions of the image are even so that there is seamless tiling of the output segmentation map.
 
 \subsection{nnU-Net}\label{sect:nnu-net}
 
@@ -185,9 +197,13 @@ The  architecture in Figure~\ref{fig:neural-network} can be expanded to contain 
 
 \subsection{Total Segmentator}\label{sect:totalseg}
 
+
+
 \subsection{UniverSeg}\label{sect:universeg}
 
 \subsection{SAM}\label{sect:sam}
+
+TODO: maybe replace with medical SAM paper.
 
 \section{Current Limitations}\label{sect:limitations}
 
@@ -705,14 +721,15 @@ The current state of the project has provided me with a very strong foundation f
 
 Figure~\ref{fig:plan-pre-exam}, \ref{fig:plan-post-exam-a}, \ref{fig:plan-post-exam-b} is a Gantt chart of the planned progress of the key milestones of the project for the future. I have split tasks into 3 categories: Source code for the programming of the project, Report for the write-up, and the presentation at the end of the project life expectancy. 
 
-I expect to consistently document my progress in my final report so that the repository stays most up-to-date with the progress. Furthermore, because of a busy term, I have given ample time to work on the project to get the first phase done: the transfer learning. I will have the time after the exam to consider alternative solutions such as `shall I delineate classes independently' or `are there better data optimizations or image segmentation approaches'?
+I expect to consistently document my progress in my final report so that the repository stays most up-to-date with the progress. Furthermore, because of a busy term, I must we aware of slower progress. I will continue pushing with the Transfer Learning approach, and plan to get the bulk work done after the exam period to consider alternative solutions such as `shall I delineate classes independently' or `are there better data optimizations or image segmentation approaches'?
 
 Furthermore, I will be attending the weekly meetings to keep the supervisor (Ben Glocker) informed on the progress and receive the most up-to-date guidance on next steps. In addition to supervisor meetings, I must plan an opportunity to meet with staff from the Royal Marsden Hospital in order to discuss clinical details and project expectations as they are the expected primary stake-holders.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth, trim={0 7.25cm 0.1cm 0}, clip]{gantt/plan-pre-exam.png}
-  \caption{Plan for project before exams. TODO: include advice editing of report from the interim meeting}
+  % left bottom right top
+  \includegraphics[width=\linewidth, trim={1px 0cm 0.28cm 0}, clip]{gantt/plan-pre-exam.png}
+  \caption{Plan for project before exams}
   \label{fig:plan-pre-exam}
 \end{figure}
 
@@ -720,12 +737,13 @@ Furthermore, I will be attending the weekly meetings to keep the supervisor (Ben
   \centering
 
   \subfigure[Plan for project after exams]{
-    \includegraphics[width=\linewidth, trim={0 6.75cm 0 0}, clip]{gantt/plan-post-exam-a.png}
+    % left bottom right top
+    \includegraphics[width=\linewidth, trim={0 0 0.2cm 0}, clip]{gantt/plan-post-exam-a.png}
     \label{fig:plan-post-exam-a}
   }
 
   \subfigure[Plan for project after exams, the third entry is timeline for the project]{
-    \includegraphics[width=\linewidth, trim={0 0 0 0}, clip]{gantt/plan-post-exam-b.png}
+    \includegraphics[width=\linewidth, trim={0.1cm 0 0 0}, clip]{gantt/plan-post-exam-b.png}
     \label{fig:plan-post-exam-b}
   }
   \caption{Gantt chart for the file expectancy of this project}
