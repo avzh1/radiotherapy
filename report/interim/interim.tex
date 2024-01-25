@@ -182,7 +182,7 @@ Work in progress. Some of my research can be seen at \href{https://github.com/An
 
 \subsection{U-Net}\label{sect:u-net}
 
-\begin{figure}
+\begin{figure}[H]
   \includegraphics[width=\linewidth,trim={0 7cm 0 0},clip]{../figures/u-net.png}
   \caption{Figure of the U-Net architecture taken from~\cite{U-Net}.}\label{fig:u-net}
 \end{figure}
@@ -197,9 +197,26 @@ Work in progress. Some of my research can be seen at \href{https://github.com/An
 
 \subsection{Total Segmentator}\label{sect:totalseg}
 
+TotalSegmentator~\cite{totalsegmentor-paper} is a model that was developed be a very robust segmentation tool. It has been trained on 1204 CT examinations and once more on 4004 whole-body CT examinations to investigate age dependent volume and attenuation changes. TotalSegmentator has learnt a robust model for delineating 117 classes of objects in the human body, such as bones, a large subset of significant organs and veins~\cite{totalsegmentor-git}
 
+\begin{wrapfigure}{L}{0.5\textwidth}
+  \centering
+  \includegraphics*[width=0.5\textwidth]{../figures/AnnotationWorkflow.png}
+\end{wrapfigure} 
+
+It uses an iterative learning approach.
+
+(1) After manual segmentation of the first 5 patients was completed, (2) a preliminary nnU-Net was trained, (3) and its predictions were manually refined, if necessary. (4) Retraining of the nnU-Net was performed after (5) reviewing and refining 5 patients, 20 patients, and (6) 100 patients.
+
+In the end, all 1204 CT examinations had annotations that were manually reviewed and corrected whenever necessary. These final annotations served as the ground truth for training and testing. The model was trained on the dataset of 1082 patients, validated on the dataset of 57 patients and tested on the dataset of 65 patients. This final model was independent of the intermediate models trained during the annotation workflow, which reduced bias in the test set to a minimum. Using completely manual annotations in the test set would have introduced a distribution shift and thus greater bias~\cite{totalsegmentor-paper}.
+
+The model uses an nnU-Net (Section~\ref{sect:nnu-net}) because of its ability yo automatically configure hyperparameters based on the dataset characteristics. 
+
+TotalSegmentator is a model which encountered some issues with the dataset that may have impeded its performance. Firstly, some patients had ribs missing, which a clinician would typically count from top/bottom to identify them; however, on some scans these weren't visible, much like in our case, we are missing overies. These have been attributed to reasons for low performance for these structures, which warns us; our dataset contains many abnormalities according to the descriptions of each patient (Section~\ref{sec:data-notes}).
 
 \subsection{UniverSeg}\label{sect:universeg}
+
+
 
 \subsection{SAM}\label{sect:sam}
 
