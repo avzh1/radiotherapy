@@ -26,3 +26,9 @@ tmp
 
 # python auxiliary files
 __pycache__
+
+# Ignore data directory 
+data/
+
+# Ignore models
+models/nnUNet/nnUNet
