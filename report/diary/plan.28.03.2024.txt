@@ -1,0 +1,10 @@
+28.03.2024
+- refresh memory on task and approaches
+- gain access to data
+- load data into tensors
+- view each slice with python
+- start writing the nnU-Net architecture
+
+29.03.2024
+- write the nnU-Net architecture
+- get it to work    
