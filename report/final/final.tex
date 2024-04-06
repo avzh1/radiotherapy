@@ -267,6 +267,8 @@ A CT Scan is an X-ray study, where a series of rays are rotated around a specifi
 
 We therefore expect to receive a representation of the internal structure or functions of an atomic region in the form of an array of voxels. A voxel represents the value on a grid in three-dimensional space and is decided by the physician once they establish the slice thickness.
 
+This data format is contrary to natural images, where the pixel values vary from 0 to 255. In a CT scan, readings are represented by the Hounsfield Scale~\cite{diagnostic-radiology-physics}. This scale is a quantitative scale for describing radiodensity where the image intensity reflects tissue type; each voxel intensity refers to specific tissue composition. This means for our purposes data normalization is not necessary, becuase intensities are not relative, and the model would not suffer from reading raw unnormalized data.
+
 \section{File Format}\label{sec:data-file-format}
 
 The files are stored in a \texttt{.nii} file format which defines a style of image called the `Neuroimaging Informatics Technology Initiative' (NIfTI)~\cite{file-formats}. It serves as a lightweight alternative to other formats such as DICOM and eliminates ambiguity from spatial orientation information~\cite{dicom-to-nifti-conversion}.
