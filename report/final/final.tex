@@ -111,7 +111,7 @@ We therefore propose a solution that can be applied to groups with specific nich
 
 The structure of this report will take the reader of a reasonable programming background through the project such that they might be able to reconstruct the outcome themselves. It is expected of the reader to understand the concept of Machine Learning and an intuition surrounding Computer Vision.
 
-Firstly Chapter~\ref{sect:background} discusses the clinical context (Section~\ref{sect:clinical-context}) from which the idea for this project originates. We further construct the background knowledge for the current Computer Vision methodologies which exist to solve segmentation based issues (Section~\ref{sect:vanilla-image-segmentation-models}). This will lead into currently pre-trained models (Section~\ref{sect:existing-auto-segmentation-methods}) and their application in a Transfer Learning setting (Section~\ref{sect:transfer-learning}).
+Firstly Chapter~\ref{sect:background} discusses the clinical context (Section~\ref{sect:clinical-context}) from which the idea for this project originates. We further construct the background knowledge for the current Computer Vision methodologies which exist to solve segmentation based issues (Section~\ref{sect:image-segmentation}). This will lead into currently pre-trained models (Section~\ref{sect:existing-auto-segmentation-methods}) and their application in a Transfer Learning setting (Section~\ref{sect:transfer-learning}).
 
 With collaboration from the Royal Marsden Hospital they have provided this project with a set of data (Chapter~\ref{sect:data}) with which the remainder of this project is trained upon, the usage concerns have been evaluated through the Ethics chapter (Chapter~\ref{sect:ethics}). We discuss what constitutes an accurate segmentation and reason about evaluation metrics to provide an outlook on the models performance (Chapter~\ref{sect:evaluation-metrics}).
 
@@ -152,36 +152,34 @@ The CTV volumes may vary between clinicians as there is no internationally agree
 
 The PTV volume is an additional step which provides a margin of protection surrounding the CTV. One might think that a CTV step is the final step in clinical trials as it defines the most tight volume surrounding the cancerous site, however, geometric errors are impossible to eliminate. This includes short-term organ movement, voxel size and slice resolution, and possibility of relative movement of structure of reference and the tumour~\cite{VANHERK200452}
 
-\section{Vanilla Image Segmentation Models}\label{sect:vanilla-image-segmentation-models}
+\section{Image Segmentation}\label{sect:image-segmentation}
 
-Early deep learning models began by defining neurons. These mimicked biological neurons in the brain specifically by producing a set of outputs given a set of inputs. Neurons were then connected with each other to form connections. The components of this neuron would contain a set of inputs, an algebraic transformation on the inputs, an optional bias term, an activation function and then a set of outputs. By connecting individual neurons like in Figure~\ref{fig:neuron} we create a connected neural network in Figure~\ref{fig:neural-network} to mimic the structure of the brain.
+In semantic segmentation each pixel is classified into a class. This assigns each pixel to a pre-defined semantic meaning in the image which outputs a labelmap. In the interest of radiotherapy planning, this would be the binary classification task of delineating the tumour area in the scan and the surrounding areas.
 
-\begin{figure*}
-  \centering
-  \subfigure[Basic building block of a neural network: The Neuron. Here, the notation $i_k$ denotes input $k$, $w_k$ denotes the weight associated with input $k$.]{
-    \includegraphics[width=.5\linewidth]{../figures/neuron.png}\label{fig:neuron}
-  }
-  ~
-  \subfigure[A neural network comprised of individaul neurons like in Figure \ref{fig:neuron}]{
-    \includegraphics[width=.4\linewidth]{../figures/network.drawio.png}\label{fig:neural-network}
-  }
-  \caption{}
-\end{figure*}
+\subsection{The U-Net Architecture}\label{sect:u-net}
 
-A supervised network is a network which works with labelled data. In a supervised pet classification task, an image of a cat would come with a corresponding label of `cat'. Training the network would involve iterating on the data-set and tweaking the weights of the connections between the neurons in order to get closer to the intended result. This result is achieved by first doing a forward pass on a batch of data, obtaining the result and calculating a score. In the backpropagation step the weights are tweaked in the direction that would improve the overall performance of the network (by observing the derivative of the score for the current batch) by a certain amount (dictated by a learning rate).
+Segmentation is achieved by considering contextual information in surrounding parts of an image within a certain viewing window. By only considering small parts of an image captured by this window, this simplifies the task into a dynamic programming approach where instead of considering the whole image, we consider the image in small parts and build up a solution. This is the basis for Convolutional Neural Networks (CNNs).
 
-The  architecture in Figure~\ref{fig:neural-network} can be expanded to contain within it any type of complexity, both in width (height of neuron stack in Figure~\ref{fig:neural-network}) and depth (number of vertical neuron stacks in Figure~\ref{fig:neural-network}) at the cost of complexity. For instance, it is rational to think that given an input image, we could assign each pixel in the image to a neuron, and in this way, construct a fully connected network to learn patterns in the image. However, this is very computationally expensive, given that the number of parameters will be astronomical, and to update them all would be an intractable and inefficient solution.
+CNNs consist of many learnable windows, called kernels, which learn transformation operations on the input image to form an output, referred to as feature maps. As we pass through the architecture of the network, many different kernels compound the transformation effect into a final feature map which is a high-level representation of the input.
 
-\subsection{Convolutional Neural Networks (CNN)}\label{sect:CNNs}
+The contracting operations of the kernels contribute to object localisation within an image, which can be reverse engineered back into the original resolution of the image with additional segmentation information, such as a class a pixel belongs to and the overall position of the segmentated object.
 
-Work in progress. Some of my research can be seen at \href{https://github.com/AntonZhitomirsky/radiotherapy/blob/main/research/notes/programming}{\textit{here}}.
+\begin{warning}
+  TODO: add a figure illustrating the convolutional heat map that we then learn to upsample.
+\end{warning}
 
-\subsection{U-Net}\label{sect:u-net}
+% The  architecture in Figure~\ref{fig:neural-network} can be expanded to contain within it any type of complexity, both in width (height of neuron stack in Figure~\ref{fig:neural-network}) and depth (number of vertical neuron stacks in Figure~\ref{fig:neural-network}) at the cost of complexity. For instance, it is rational to think that given an input image, we could assign each pixel in the image to a neuron, and in this way, construct a fully connected network to learn patterns in the image. However, this is very computationally expensive, given that the number of parameters will be astronomical, and to update them all would be an intractable and inefficient solution.
 
-\begin{figure}[H]
-  \includegraphics[width=\linewidth,trim={0 7cm 0 0},clip]{../figures/u-net.png}
-  \caption{Figure of the U-Net architecture taken from~\cite{U-Net}.}\label{fig:u-net}
-\end{figure}
+% \subsection{Convolutional Neural Networks (CNN)}\label{sect:CNNs}
+
+% Work in progress. Some of my research can be seen at \href{https://github.com/AntonZhitomirsky/radiotherapy/blob/main/research/notes/programming}{\textit{here}}.
+
+% \subsection{U-Net}\label{sect:u-net}
+
+% \begin{figure}[H]
+%   \includegraphics[width=\linewidth,trim={0 7cm 0 0},clip]{../figures/u-net.png}
+%   \caption{Figure of the U-Net architecture taken from~\cite{U-Net}.}\label{fig:u-net}
+% \end{figure}
 
 % One of the more common architectures referenced in the auto-segmentation papers were U-Net architectures. 
 
@@ -220,7 +218,7 @@ TODO: maybe replace with medical SAM paper.
 
 \section{Current Limitations}\label{sect:limitations}
 
-The approaches listed in Section~\ref{sect:vanilla-image-segmentation-models} and models discussed in Section~\ref{sect:existing-auto-segmentation-methods} are great approaches for most image segmentation applications. We've seen the advancements of CNNs to tackle the intractable nature of fully connected neural network, and the advancements in segmentation models in the U-Net. Furthermore, these techniques have been used to train robust models in medicine such as those presented in Section~\ref{sect:existing-auto-segmentation-methods}. 
+The approaches listed in Section~\ref{sect:image-segmentation} and models discussed in Section~\ref{sect:existing-auto-segmentation-methods} are great approaches for most image segmentation applications. We've seen the advancements of CNNs to tackle the intractable nature of fully connected neural network, and the advancements in segmentation models in the U-Net. Furthermore, these techniques have been used to train robust models in medicine such as those presented in Section~\ref{sect:existing-auto-segmentation-methods}. 
 
 However, our problem is not accurately solved with the methods mentioned. This is due to a handful of independent details which require more careful planning and engineering.
 
@@ -514,7 +512,7 @@ To determine if a contour can be used in a clinical context, would be include ca
 
 Suppose we are writing a linear-regression model to match a line onto a set of points. To quantify the performance of our line we would measure the shortest distance between each point and the predicted line. This relies on the assumption of points in a known domain that a model is attempting to approximate. In this case we are fitting a 1-dimensional model onto 0-dimensional points in the grid space.
 
-However, it is far harder to decide on a scoring system when in a delineation context. Consider a single slice of a CT-scan with a known contour around the perimeter of a tumour\footnote{Here we assume that the contour will hug the GTV tightly with no concern for microscopic spread around the remainder of the system}. A model like those mentioned in Section~\ref{sect:vanilla-image-segmentation-models} would attempt to learn a function to closely replicate the contour. Here our domain, prediction and ground truth are all 2-dimensional objects.
+However, it is far harder to decide on a scoring system when in a delineation context. Consider a single slice of a CT-scan with a known contour around the perimeter of a tumour\footnote{Here we assume that the contour will hug the GTV tightly with no concern for microscopic spread around the remainder of the system}. A model like those mentioned in Section~\ref{sect:image-segmentation} would attempt to learn a function to closely replicate the contour. Here our domain, prediction and ground truth are all 2-dimensional objects.
 
 Geometric measures are the most popular, a survey has found~\cite{review-metrics}. These measures compare an auto-contour to a ground-truth contour and return a relative score based on its performance.
 
