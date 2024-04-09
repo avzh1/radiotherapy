@@ -17,33 +17,32 @@
 
 \clearpage
 
-\section{Summary of~\cite{nnunet}}
+\section{From~\cite{nnunet-git-paper}}
 
-Similarly to the original U-Net architecture they don't change much, but since they are now dealing with 3D data, they consider a pool of basic U-Net architectures: 2D U-Net (\ref{sec:2d-u-net}), a 3D U-Net (\ref{sec:3d-u-net}) and a U-Net Cascade (\ref{sec:u-net-cascade}).
+\begin{itemize}
+    \item ``Especially in three-dimensional (3D) biomedical imaging, for which dataset properties such as imaging modality, image size, (anisotropic) voxel spacing and class ratio vary drastically, this process can be cumbersome and successful configurations from one dataset rarely translate to another''.
+\end{itemize}
 
-\subsection{2D U-Net}\label{sec:2d-u-net}
+\subsection{Recipe for getting parameters}
 
-Contrary to belief that using a 2D network in the context of a 3D network may be counter-intuitive, the paper found that 3D segmentation methods deteriorate in performance if the dataset is anisotropic~\cite{nnunet} (when the property varies according to direction~\cite{anisotropy}).
+Previously, applications have been influenced by ``expert-driven configurations''. nnU-Net is a ``primarily data-driven AutoML approache''. Specifically, the paper outlines a recipe that systematizes the configuration process on a task-agnostic level and drastically reduces the search space for empirical design choices when given a new task.
 
-\subsection{3D U-Net}\label{sec:3d-u-net}
+These are quoted below from the paper verbatim
 
-The architecture would typically thrive on contextual information, but we are limited by GPU memory, which allows us to train this architecture only on image patches. This may pose a problem for generating PTV areas because of the large structures, which, in size, may be compared to a Liver which has been cited as `large images such as Liver, may impede training'~\cite{nnunet}.
+\begin{enumerate}
+    \item Collect design decisions that do not require adaptation between datasets and identify a robust common configuration ('fixed parameters').
+    \item For as many of the remaining decisions as possible, formulate explicit dependencies between specific dataset properties ('dataset fingerprint') and design choices ('pipeline fingerprint') in the form of heuristic rules to allow for almost-instant adaptation on application ('rule-based parameters').
+    \item Learn only the remaining decisions empirically from the data ('empirical parameters').
+\end{enumerate}
 
-\subsection{U-Net Cascade}\label{sec:u-net-cascade}
-
-While the 2D and 3D U-Nets generate segmentations at full resolution, the cascade first generates low resolution segmentations and subsequently refines them.
-
-This addresses the shortcoming in Section~\ref{sec:3d-u-net} because we first train the 3D U-Net on downsampled images (which compresses the amount of contextual information you need) (stage 1) and then upsamples to the original voxel spacing and passed as additional (one hot encoded) input channels to a second 3D U-Net, which is trained on patches at full resolution (stage 2).
-
-\begin{figure}[H]
-    \includegraphics[width=\linewidth]{images/nnunet-diagram.png}
-\end{figure}
-
-\section{Summary of~\cite{nnunet-git-paper}}
-
-This paper focuses more on the out-of-the-box aspect of training a neural network on a dataset.
+It ``automatically configures itself, including preprocessing, network architecture, training and post-processing for any new task in the biomedical domain''.
 
 We have a three step recipe to follow to allow for no intervention from the user when it comes to defining custom parameters based on the structure the u-net is analysing:
+
+\begin{figure}[H]
+    \includegraphics[width=\linewidth]{images/nnunet-recipe.png}
+    \caption{Parameter choices and descriptions}
+\end{figure}
 
 \subsection{Fixed Parameters}
 
@@ -91,6 +90,28 @@ trial-and-error. For example the selection of the best U-net configuration for t
         \item as well as mean and std of all voxels
     \end{itemize}
 \end{itemize}
+
+\section{Summary of~\cite{nnunet}}
+
+Similarly to the original U-Net architecture they don't change much, but since they are now dealing with 3D data, they consider a pool of basic U-Net architectures: 2D U-Net (\ref{sec:2d-u-net}), a 3D U-Net (\ref{sec:3d-u-net}) and a U-Net Cascade (\ref{sec:u-net-cascade}).
+
+\subsection{2D U-Net}\label{sec:2d-u-net}
+
+Contrary to belief that using a 2D network in the context of a 3D network may be counter-intuitive, the paper found that 3D segmentation methods deteriorate in performance if the dataset is anisotropic~\cite{nnunet} (when the property varies according to direction~\cite{anisotropy}).
+
+\subsection{3D U-Net}\label{sec:3d-u-net}
+
+The architecture would typically thrive on contextual information, but we are limited by GPU memory, which allows us to train this architecture only on image patches. This may pose a problem for generating PTV areas because of the large structures, which, in size, may be compared to a Liver which has been cited as `large images such as Liver, may impede training'~\cite{nnunet}.
+
+\subsection{U-Net Cascade}\label{sec:u-net-cascade}
+
+While the 2D and 3D U-Nets generate segmentations at full resolution, the cascade first generates low resolution segmentations and subsequently refines them.
+
+This addresses the shortcoming in Section~\ref{sec:3d-u-net} because we first train the 3D U-Net on downsampled images (which compresses the amount of contextual information you need) (stage 1) and then upsamples to the original voxel spacing and passed as additional (one hot encoded) input channels to a second 3D U-Net, which is trained on patches at full resolution (stage 2).
+
+\begin{figure}[H]
+    \includegraphics[width=\linewidth]{images/nnunet-diagram.png}
+\end{figure}
 
 \printbibliography
 
