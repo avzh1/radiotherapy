@@ -28,7 +28,7 @@ tmp
 __pycache__
 
 # Ignore data directory 
-data/
+/data/
 
 # Ignore models
-models/nnUNet/nnUNet
+/models/nnUNet/nnUNet
