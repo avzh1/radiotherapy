@@ -31,4 +31,6 @@ __pycache__
 /data/
 
 # Ignore models
-/models/nnUNet/nnUNet
+/models/
+/research/source/code/data/metrics/
+/research/source/code/data/reports/
