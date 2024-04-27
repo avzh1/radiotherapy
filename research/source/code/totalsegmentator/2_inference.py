@@ -6,7 +6,7 @@
 # Assuming that the pre-processed data is available, and the model has been trained for a
 # fold
 
-# In[2]:
+# In[1]:
 
 
 import os 
@@ -63,7 +63,7 @@ def setup_data_vars(mine = True, overwrite = True):
 Please run the data_vars.sh script in the data folder."
 
 
-# In[3]:
+# In[2]:
 
 
 def get_raw_and_gt_data_paths():
@@ -84,7 +84,7 @@ def get_raw_and_gt_data_paths():
     return classes, raw_data, gt_labels
 
 
-# In[4]:
+# In[3]:
 
 
 def initialise_predictor(model_path, fold, device):
@@ -112,7 +112,7 @@ def initialise_predictor(model_path, fold, device):
     return predictor
 
 
-# In[7]:
+# In[5]:
 
 
 import sys
@@ -143,7 +143,6 @@ if __name__ == '__main__':
     sys.argv = ['2_inference.py', '1', '0']
     args = parser.parse_args()
     
-
     assert args.dataset is not None, "Please provide the dataset to fine tune on"
     assert args.dataset in range(1, len(classes) + 1), "Please provide a valid dataset to fine tune on"
 
@@ -154,11 +153,21 @@ if __name__ == '__main__':
     FOLD = tuple(range(0, args.fold + 1))
     CONFIG = '3d_fullres'
 
+    TARGET_DATASET = 2
+    FOLD = tuple(range(0, 0 + 1))
+
     # Run inference
     model_name = 'nnUNetTrainer_50epochs__totseg_nnUNetPlans__3d_fullres'
     input_file = os.path.join(os.environ.get('nnUNet_raw'), classes[TARGET_DATASET - 1], os.environ.get('data_trainingImages'))
     model_path = os.path.join(os.environ.get('nnUNet_results'), classes[TARGET_DATASET - 1], model_name) 
     output_file = os.path.join(os.environ.get('nnUNet_raw'), '..', 'TotalSegmentator_inference', classes[TARGET_DATASET - 1], model_name)
+
+    print('I am predicting on the dataset:', classes[TARGET_DATASET - 1])
+    print('The Fold is:', FOLD)
+    print('The config I\'m using is:', CONFIG)
+    print('The model path is:', model_path)
+    print('The input file is:', input_file)
+    print('The output file is:', output_file)
 
     predictor = initialise_predictor(model_path, FOLD, device)
     predictor.predict_from_files(input_file,
