@@ -25,5 +25,5 @@ source /vol/bitbucket/az620/radiotherapy/.venv/bin/activate
 
 # source /vol/bitbucket/az620/radiotherapy/data/data_vars.sh
 
-jupyter nbconvert --to script '1_fine_tune_structures.ipynb'
-python3 1_fine_tune_structures.py $1 $2
+jupyter nbconvert --to script '2_inference.ipynb'
+python3 2_inference.py $1 $2

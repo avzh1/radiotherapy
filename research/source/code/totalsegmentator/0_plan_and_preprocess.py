@@ -10,7 +10,7 @@
 # 
 # 
 
-# In[2]:
+# In[ ]:
 
 
 import os 
@@ -67,7 +67,7 @@ def setup_data_vars(mine = True, overwrite = True):
 Please run the data_vars.sh script in the data folder."
 
 
-# In[3]:
+# In[ ]:
 
 
 def get_raw_and_gt_data_paths():
@@ -88,7 +88,7 @@ def get_raw_and_gt_data_paths():
     return classes, raw_data, gt_labels
 
 
-# In[4]:
+# In[ ]:
 
 
 from totalsegmentator.config import setup_nnunet, setup_totalseg
@@ -119,7 +119,7 @@ def fetch_pretrained_totalsegmentator_model():
     download_pretrained_weights(task_id)
 
 
-# In[5]:
+# In[ ]:
 
 
 import sys
@@ -157,7 +157,7 @@ if __name__ == '__main__':
 
     from nnunetv2.experiment_planning.plans_for_pretraining.move_plans_between_datasets import move_plans_between_datasets
 
-    starting_class = 5
+    starting_class = 7
     end_class = len(classes)
 
     for i in range(starting_class, end_class + 1):

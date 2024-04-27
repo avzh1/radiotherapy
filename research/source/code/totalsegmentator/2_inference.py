@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Fine-tune Structures
+# # Run inference on the nnUNet Model we have fine-tuned
 # 
-# Assuming that the pre-processed data is available, run the fine-tuning process on the data
-# we have for 50 epochs so that we may see it afterwards in due corse. We can increase the
-# number of epochs later.
+# Assuming that the pre-processed data is available, and the model has been trained for a
+# fold
 
-# In[ ]:
+# In[2]:
 
 
 import os 
@@ -64,7 +63,7 @@ def setup_data_vars(mine = True, overwrite = True):
 Please run the data_vars.sh script in the data folder."
 
 
-# In[ ]:
+# In[3]:
 
 
 def get_raw_and_gt_data_paths():
@@ -85,48 +84,51 @@ def get_raw_and_gt_data_paths():
     return classes, raw_data, gt_labels
 
 
-# In[ ]:
+# In[4]:
 
 
-from totalsegmentator.config import setup_nnunet, setup_totalseg
-from totalsegmentator.libs import download_pretrained_weights
+def initialise_predictor(model_path, fold, device):
 
-def fetch_pretrained_totalsegmentator_model():
-    """
-    Fetch the pretrained TotalSegmentator model.
+    from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
+    import torch
 
-    The total segmentator model loads a separately trained nnUNet model for each new class
-    However, it is not trained on the parametrium case. Therefore, we load the general
-    model and attempt to finetune it on my case.
-    """
+    predictor = nnUNetPredictor(
+            tile_step_size=0.5,
+            use_gaussian=True,
+            use_mirroring=True,
+            perform_everything_on_device=True,
+            device=device,
+            verbose=False,
+            verbose_preprocessing=False,
+            allow_tqdm=True
+        )
 
-    os.environ['TOTALSEG_HOME_DIR'] = '/vol/bitbucket/az620/radiotherapy/models/TotalSegmentator/.weights'
+    predictor.initialize_from_trained_model_folder(
+        model_path,
+        use_folds=fold,
+        checkpoint_name='checkpoint_final.pth',
+    )
 
-    setup_nnunet()
-    setup_totalseg()
-
-    # We assume that the model we are running will be finetuned with the 'total' task from
-    # the original TotalSegmentator model because this contains the most information about
-    # soft organ classification, most of which happens in the abdomen region, which
-    # intuitively seems like the most logical knowledge to transfer into this task
-
-    # From the totalsegmentator.python_api this task ID corresponds with the model trained
-    # for organ segmentation. Note there is also potential for cropping the image.
-    task_id = 291
-    download_pretrained_weights(task_id)
+    return predictor
 
 
-# In[ ]:
+# In[7]:
 
 
 import sys
+import torch
 import argparse
+import multiprocessing
+
 
 if __name__ == '__main__':
-    # Download the weights from TotalSegmentator
-    fetch_pretrained_totalsegmentator_model()
+    multiprocessing.freeze_support()
 
-    # Something in the fetch_pretrained_totalsegmentator_model overwrites the global variables
+    if torch.cuda.is_available():
+        device = torch.device('cuda')
+    else:
+        device = torch.device('cpu')   
+
     setup_data_vars()
     classes, raw_data, gt_labels = get_raw_and_gt_data_paths()
 
@@ -135,51 +137,33 @@ if __name__ == '__main__':
     print(f'nnUNet_preprocessed: {os.environ.get("nnUNet_preprocessed")}')
     print(f'nnUNet_results: {os.environ.get("nnUNet_results")}')
 
-    # Set the data to pre-train on the fingerprint of the training data.
-    
-    """
-    TARGET_DATASET = the one you wish to fine tune on, Radiotherapy data
-    SOURCE_DATASET = dataset you intend to run the pretraining on, TotalSegmentator
-
-    1. nnUNetv2_plan_and_preprocess -d TARGET_DATASET (this has been done already)
-    2. nnUNetv2_extract_fingerprint -d SOURCE_DATASET (this has been achieved by creating a dummy dataset id into which I copied the .json files obtained from the downloaded model)
-
-    Path to the plans.json for TotalSegmentator:
-    /vol/bitbucket/az620/radiotherapy/models/TotalSegmentator/.weights/nnunet/results/Dataset291_TotalSegmentator_part1_organs_1559subj/nnUNetTrainerNoMirroring__nnUNetPlans__3d_fullres/plans.json
-
-    3. Now I need to move the plans from the dummy dataset to the Radiotherapy dataset. Need to do this one at a time for each class
-
-    """
-
     parser = argparse.ArgumentParser()
-    parser.add_argument('dataset', type=int, help='The dataset to fine tune on')
-    parser.add_argument('fold', type=int, help='The fold to fine tune on')
+    parser.add_argument('dataset', type=int, help='The dataset to run inference on')
+    parser.add_argument('fold', type=int, help='The max number of nodes that were trained')
+    sys.argv = ['2_inference.py', '1', '0']
     args = parser.parse_args()
+    
 
     assert args.dataset is not None, "Please provide the dataset to fine tune on"
     assert args.dataset in range(1, len(classes) + 1), "Please provide a valid dataset to fine tune on"
 
-    assert args.fold is not None, "Please provide the fold to fine tune on"
-    assert args.fold in range(5), "Please provide a valid fold to fine tune on"
+    assert args.fold is not None, "Please provide the fold to run inference on"
+    assert args.fold in range(5), "Please provide a valid fold to run inference on"
 
     TARGET_DATASET = args.dataset
-    PATH_TO_CHECKPOINT = '/vol/bitbucket/az620/radiotherapy/models/TotalSegmentator/.weights/nnunet/results/Dataset291_TotalSegmentator_part1_organs_1559subj/nnUNetTrainerNoMirroring__nnUNetPlans__3d_fullres/fold_0/checkpoint_final.pth'
-    FOLD = args.fold
+    FOLD = tuple(range(0, args.fold + 1))
     CONFIG = '3d_fullres'
 
-    # Run the training on the target dataset
+    # Run inference
+    model_name = 'nnUNetTrainer_50epochs__totseg_nnUNetPlans__3d_fullres'
+    input_file = os.path.join(os.environ.get('nnUNet_raw'), classes[TARGET_DATASET - 1], os.environ.get('data_trainingImages'))
+    model_path = os.path.join(os.environ.get('nnUNet_results'), classes[TARGET_DATASET - 1], model_name) 
+    output_file = os.path.join(os.environ.get('nnUNet_raw'), '..', 'TotalSegmentator_inference', classes[TARGET_DATASET - 1], model_name)
 
-    from nnunetv2.run.run_training import run_training_entry
-
-    original_sys_argv = sys.argv
-
-    print('-----------')
-    print(f'FOLD: {FOLD}')
-    print('-----------')
-
-    # !nnUNetv2_train TARGET_DATASET CONFIG FOLD -pretrained_weights PATH_TO_CHECKPOINT
-    sys.argv = [original_sys_argv[0], str(TARGET_DATASET), CONFIG, str(FOLD), '-pretrained_weights', PATH_TO_CHECKPOINT, '-tr', 'nnUNetTrainer_50epochs', '--npz', '-p', 'totseg_nnUNetPlans']
-    run_training_entry()
-
-    sys.argv = original_sys_argv
+    predictor = initialise_predictor(model_path, FOLD, device)
+    predictor.predict_from_files(input_file,
+                                 output_file,
+                                 save_probabilities=False, overwrite=False,
+                                 num_processes_preprocessing=2, num_processes_segmentation_export=2,
+                                 folder_with_segs_from_prev_stage=None, num_parts=1, part_id=0)
 
