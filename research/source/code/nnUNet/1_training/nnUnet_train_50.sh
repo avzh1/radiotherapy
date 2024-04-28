@@ -5,6 +5,7 @@
 #SBATCH -p gpus                     # Partition (queue)
 #SBATCH --gres gpu:1                # gpu:n, where n = number of GPUs
 #SBATCH --mem 12288                 # memory pool for all cores
+#SBATCH --nodelist loki          	# SLURM node
 #SBATCH --output=slurm.%N.%j.log    # Standard output and error log
 
 # Check if $1 variable is empty

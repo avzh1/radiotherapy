@@ -27,3 +27,5 @@ nnUNetv2_plan_and_preprocess -d 6 --verify_dataset_integrity
 echo '---------------'
 nnUNetv2_plan_and_preprocess -d 7 --verify_dataset_integrity
 echo '---------------'
+
+# NOTE that this is pretty redundant, they are all the same dataset

@@ -112,7 +112,7 @@ def initialise_predictor(model_path, fold, device):
     return predictor
 
 
-# In[5]:
+# In[6]:
 
 
 import sys
@@ -140,7 +140,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('dataset', type=int, help='The dataset to run inference on')
     parser.add_argument('fold', type=int, help='The max number of nodes that were trained')
-    sys.argv = ['2_inference.py', '1', '0']
     args = parser.parse_args()
     
     assert args.dataset is not None, "Please provide the dataset to fine tune on"
@@ -153,8 +152,8 @@ if __name__ == '__main__':
     FOLD = tuple(range(0, args.fold + 1))
     CONFIG = '3d_fullres'
 
-    TARGET_DATASET = 2
-    FOLD = tuple(range(0, 0 + 1))
+    # TARGET_DATASET = 2
+    # FOLD = tuple(range(0, 0 + 1))
 
     # Run inference
     model_name = 'nnUNetTrainer_50epochs__totseg_nnUNetPlans__3d_fullres'
