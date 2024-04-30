@@ -32,5 +32,5 @@ __pycache__
 
 # Ignore models
 /models/
-/research/source/code/data/metrics/
-/research/source/code/data/reports/
+/research/source/code/data/metrics/old/
+/research/source/code/data/reports/old/
