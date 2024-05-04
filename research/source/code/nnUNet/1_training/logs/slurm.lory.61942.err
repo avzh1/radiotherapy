@@ -1,0 +1,85 @@
+Traceback (most recent call last):
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 54, in get_trainer_from_args
+    dataset_name_or_id = int(dataset_name_or_id)
+ValueError: invalid literal for int() with base 10: '%x'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/vol/bitbucket/az620/radiotherapy/.venv/bin/nnUNetv2_train", line 8, in <module>
+    sys.exit(run_training_entry())
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 268, in run_training_entry
+    run_training(args.dataset_name_or_id, args.configuration, args.fold, args.tr, args.p, args.pretrained_weights,
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 189, in run_training
+    nnunet_trainer = get_trainer_from_args(dataset_name_or_id, configuration, fold, trainer_class_name,
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 56, in get_trainer_from_args
+    raise ValueError(f'dataset_name_or_id must either be an integer or a valid dataset name with the pattern '
+ValueError: dataset_name_or_id must either be an integer or a valid dataset name with the pattern DatasetXXX_YYY where XXX are the three(!) task ID digits. Your input: %x
+Traceback (most recent call last):
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 54, in get_trainer_from_args
+    dataset_name_or_id = int(dataset_name_or_id)
+ValueError: invalid literal for int() with base 10: '%x'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/vol/bitbucket/az620/radiotherapy/.venv/bin/nnUNetv2_train", line 8, in <module>
+    sys.exit(run_training_entry())
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 268, in run_training_entry
+    run_training(args.dataset_name_or_id, args.configuration, args.fold, args.tr, args.p, args.pretrained_weights,
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 189, in run_training
+    nnunet_trainer = get_trainer_from_args(dataset_name_or_id, configuration, fold, trainer_class_name,
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 56, in get_trainer_from_args
+    raise ValueError(f'dataset_name_or_id must either be an integer or a valid dataset name with the pattern '
+ValueError: dataset_name_or_id must either be an integer or a valid dataset name with the pattern DatasetXXX_YYY where XXX are the three(!) task ID digits. Your input: %x
+Traceback (most recent call last):
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 54, in get_trainer_from_args
+    dataset_name_or_id = int(dataset_name_or_id)
+ValueError: invalid literal for int() with base 10: '%x'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/vol/bitbucket/az620/radiotherapy/.venv/bin/nnUNetv2_train", line 8, in <module>
+    sys.exit(run_training_entry())
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 268, in run_training_entry
+    run_training(args.dataset_name_or_id, args.configuration, args.fold, args.tr, args.p, args.pretrained_weights,
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 189, in run_training
+    nnunet_trainer = get_trainer_from_args(dataset_name_or_id, configuration, fold, trainer_class_name,
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 56, in get_trainer_from_args
+    raise ValueError(f'dataset_name_or_id must either be an integer or a valid dataset name with the pattern '
+ValueError: dataset_name_or_id must either be an integer or a valid dataset name with the pattern DatasetXXX_YYY where XXX are the three(!) task ID digits. Your input: %x
+Traceback (most recent call last):
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 54, in get_trainer_from_args
+    dataset_name_or_id = int(dataset_name_or_id)
+ValueError: invalid literal for int() with base 10: '%x'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/vol/bitbucket/az620/radiotherapy/.venv/bin/nnUNetv2_train", line 8, in <module>
+    sys.exit(run_training_entry())
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 268, in run_training_entry
+    run_training(args.dataset_name_or_id, args.configuration, args.fold, args.tr, args.p, args.pretrained_weights,
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 189, in run_training
+    nnunet_trainer = get_trainer_from_args(dataset_name_or_id, configuration, fold, trainer_class_name,
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 56, in get_trainer_from_args
+    raise ValueError(f'dataset_name_or_id must either be an integer or a valid dataset name with the pattern '
+ValueError: dataset_name_or_id must either be an integer or a valid dataset name with the pattern DatasetXXX_YYY where XXX are the three(!) task ID digits. Your input: %x
+Traceback (most recent call last):
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 54, in get_trainer_from_args
+    dataset_name_or_id = int(dataset_name_or_id)
+ValueError: invalid literal for int() with base 10: '%x'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/vol/bitbucket/az620/radiotherapy/.venv/bin/nnUNetv2_train", line 8, in <module>
+    sys.exit(run_training_entry())
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 268, in run_training_entry
+    run_training(args.dataset_name_or_id, args.configuration, args.fold, args.tr, args.p, args.pretrained_weights,
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 189, in run_training
+    nnunet_trainer = get_trainer_from_args(dataset_name_or_id, configuration, fold, trainer_class_name,
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 56, in get_trainer_from_args
+    raise ValueError(f'dataset_name_or_id must either be an integer or a valid dataset name with the pattern '
+ValueError: dataset_name_or_id must either be an integer or a valid dataset name with the pattern DatasetXXX_YYY where XXX are the three(!) task ID digits. Your input: %x

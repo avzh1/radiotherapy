@@ -1,0 +1,42 @@
+/vol/bitbucket/az620/radiotherapy/.venv/lib/python3.10/site-packages/torch/optim/lr_scheduler.py:28: UserWarning: The verbose parameter is deprecated. Please use get_last_lr() to access the learning rate.
+  warnings.warn("The verbose parameter is deprecated. Please use get_last_lr() "
+/vol/bitbucket/az620/radiotherapy/.venv/lib/python3.10/site-packages/torch/onnx/symbolic_helper.py:1515: UserWarning: ONNX export mode is set to TrainingMode.EVAL, but operator 'instance_norm' is set to train=True. Exporting with train=True.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/vol/bitbucket/az620/radiotherapy/.venv/bin/nnUNetv2_train", line 8, in <module>
+    sys.exit(run_training_entry())
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 268, in run_training_entry
+    run_training(args.dataset_name_or_id, args.configuration, args.fold, args.tr, args.p, args.pretrained_weights,
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/run/run_training.py", line 204, in run_training
+    nnunet_trainer.run_training()
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/training/nnUNetTrainer/nnUNetTrainer.py", line 1298, in run_training
+    self.on_epoch_end()
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/training/nnUNetTrainer/nnUNetTrainer.py", line 1065, in on_epoch_end
+    self.save_checkpoint(join(self.output_folder, 'checkpoint_best.pth'))
+  File "/vol/bitbucket/az620/radiotherapy/models/nnUNet/nnunetv2/training/nnUNetTrainer/nnUNetTrainer.py", line 1093, in save_checkpoint
+    torch.save(checkpoint, filename)
+  File "/vol/bitbucket/az620/radiotherapy/.venv/lib/python3.10/site-packages/torch/serialization.py", line 628, in save
+    with _open_zipfile_writer(f) as opened_zipfile:
+  File "/vol/bitbucket/az620/radiotherapy/.venv/lib/python3.10/site-packages/torch/serialization.py", line 502, in _open_zipfile_writer
+    return container(name_or_buffer)
+  File "/vol/bitbucket/az620/radiotherapy/.venv/lib/python3.10/site-packages/torch/serialization.py", line 473, in __init__
+    super().__init__(torch._C.PyTorchFileWriter(self.name))
+RuntimeError: Parent directory /vol/bitbucket/az620/radiotherapy/data/nnUNet_results/Dataset005_Parametrium/nnUNetTrainer_500epochs__nnUNetPlans__3d_fullres/fold_0 does not exist.
+Exception in thread Thread-4 (results_loop):
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/vol/bitbucket/az620/radiotherapy/.venv/lib/python3.10/site-packages/batchgenerators/dataloading/nondet_multi_threaded_augmenter.py", line 125, in results_loop
+Exception in thread Thread-5 (results_loop):
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/vol/bitbucket/az620/radiotherapy/.venv/lib/python3.10/site-packages/batchgenerators/dataloading/nondet_multi_threaded_augmenter.py", line 125, in results_loop
+/vol/bitbucket/az620/radiotherapy/.venv/lib/python3.10/site-packages/torch/optim/lr_scheduler.py:28: UserWarning: The verbose parameter is deprecated. Please use get_last_lr() to access the learning rate.
+  warnings.warn("The verbose parameter is deprecated. Please use get_last_lr() "
+/vol/bitbucket/az620/radiotherapy/.venv/lib/python3.10/site-packages/torch/onnx/symbolic_helper.py:1515: UserWarning: ONNX export mode is set to TrainingMode.EVAL, but operator 'instance_norm' is set to train=True. Exporting with train=True.
+  warnings.warn(

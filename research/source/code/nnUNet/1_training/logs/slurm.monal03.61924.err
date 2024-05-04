@@ -1,0 +1,4 @@
+/vol/bitbucket/az620/radiotherapy/.venv/lib/python3.10/site-packages/torch/optim/lr_scheduler.py:28: UserWarning: The verbose parameter is deprecated. Please use get_last_lr() to access the learning rate.
+  warnings.warn("The verbose parameter is deprecated. Please use get_last_lr() "
+/vol/bitbucket/az620/radiotherapy/.venv/lib/python3.10/site-packages/torch/onnx/symbolic_helper.py:1515: UserWarning: ONNX export mode is set to TrainingMode.EVAL, but operator 'instance_norm' is set to train=True. Exporting with train=True.
+  warnings.warn(
