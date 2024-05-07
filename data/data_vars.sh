@@ -2,11 +2,16 @@
 
 # run with . data_vars.sh
 
+PROJECT_DIR=$(git rev-parse --show-toplevel)
+
 # get the directory of the script
 DATA_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # Create an empty array to store the new environment variables
 new_env_vars=()
+
+export PROJECT_DIR=$PROJECT_DIR
+new_env_vars+=(PROJECT_DIR)
 
 # Get names of all directories present in DATA_DIR and export them
 for dir in $(find $DATA_DIR -maxdepth 1 -type d ! -name "$(basename $DATA_DIR)"); do
@@ -19,7 +24,7 @@ done
 for dir in $(find $nnUNet_raw -maxdepth 1 -type d ! -name "$(basename $nnUNet_raw)"); do
     IFS="_" read -ra parts <<< "$(basename $dir)"
     # access the parts of the string using ${parts[index]}
-    export ${parts[1]}=$dir
+    export ${parts[1]}="$(basename $dir)"
     # add new environment variable to list
     new_env_vars+=(${parts[1]})
 done
