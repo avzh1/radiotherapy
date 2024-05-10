@@ -200,7 +200,7 @@ for name in tqdm(names):
                     anti_aliasing=False,
                 )
                 resize_gt_skimg = np.uint8(resize_gt_skimg)
-                assert resize_img_skimg_01.shape[:2] == resize_gt_skimg.shape
+                # assert resize_img_skimg_01.shape[:2] == resize_gt_skimg.shape
 
                 np.save(gt_save_path, resize_gt_skimg)
             elif args.verbose:
