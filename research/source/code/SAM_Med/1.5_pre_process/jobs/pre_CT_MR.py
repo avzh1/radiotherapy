@@ -59,9 +59,9 @@ parser.add_argument('--verbose', action='store_true', help='print more informati
 # %%
 args = parser.parse_args()
 
-if args.verbose:
-    for arg in vars(args):
-        print(f"{arg}: {getattr(args, arg)}")
+# if args.verbose:
+#     for arg in vars(args):
+#         print(f"{arg}: {getattr(args, arg)}")
 
 # %%
 modality = args.modality
