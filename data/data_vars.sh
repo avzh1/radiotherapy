@@ -3,6 +3,7 @@
 # run with . data_vars.sh
 
 PROJECT_DIR=$(git rev-parse --show-toplevel)
+OLD_DIR='/vol/bitbucket/az620/radiotherapy/'
 
 # get the directory of the script
 DATA_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
@@ -11,7 +12,9 @@ DATA_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 new_env_vars=()
 
 export PROJECT_DIR=$PROJECT_DIR
+export OLD_DIR=$OLD_DIR
 new_env_vars+=(PROJECT_DIR)
+new_env_vars+=(OLD_DIR)
 
 # Get names of all directories present in DATA_DIR and export them
 for dir in $(find $DATA_DIR -maxdepth 1 -type d ! -name "$(basename $DATA_DIR)"); do

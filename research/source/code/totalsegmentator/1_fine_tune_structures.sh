@@ -21,9 +21,12 @@ if [ -z "$2" ]; then
     exit -1
 fi
 
-source /vol/bitbucket/az620/radiotherapy/.venv/bin/activate
+# Get the directory of the script
+SOURCE_DIR=$(git rev-parse --show-toplevel)
 
-# source /vol/bitbucket/az620/radiotherapy/data/data_vars.sh
+# Load the virtual environment
+source ${SOURCE_DIR}/.venv/bin/activate
+source ${SOURCE_DIR}/data/data_vars.sh
 
 jupyter nbconvert --to script '1_fine_tune_structures.ipynb'
 python3 1_fine_tune_structures.py $1 $2

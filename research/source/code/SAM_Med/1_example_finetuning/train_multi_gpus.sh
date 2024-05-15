@@ -22,6 +22,13 @@
 # --time=20-00:00:00
 # --exclude=gpu101,gpu113
 
+# Get the directory of the script
+SOURCE_DIR=$(git rev-parse --show-toplevel)
+
+# Load the virtual environment
+source ${SOURCE_DIR}/.venv/bin/activate
+source ${SOURCE_DIR}/data/data_vars.sh
+
 set -x -e
 
 # log the sbatch environment
@@ -73,7 +80,7 @@ echo "SLURM_SUBMIT_DIR"=$SLURM_SUBMIT_DIR
 echo SLURM_NTASKS=$SLURM_NTASKS
 
 echo pwd
-cd /vol/bitbucket/az620/radiotherapy/models/MedSAM/
+cd $SOURCE_DIR/models/MedSAM/
 echo pwd
 
 for (( i=0; i<$SLURM_NTASKS; ++i ))

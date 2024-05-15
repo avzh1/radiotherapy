@@ -14,5 +14,5 @@ SOURCE_DIR=$(git rev-parse --show-toplevel)
 source ${SOURCE_DIR}/.venv/bin/activate
 source ${SOURCE_DIR}/data/data_vars.sh
 
-jupyter nbconvert --to script '0_plan_and_preprocess.ipynb'
-ipython3 0_plan_and_preprocess.py 
+jupyter nbconvert --to script '2_inference_per_anatomy.ipynb'
+ipython3 2_inference_per_anatomy.py 
