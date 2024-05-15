@@ -203,17 +203,17 @@ for i in range(batch_size):
 
 
 import logging 
-logging.basicConfig(filename='results/dice_scores_axis_2.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+from tqdm import tqdm
+logging.basicConfig(filename='results/dice_scores_axis_2.1.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 save_dir = os.path.join(os.environ.get('MedSAM_results'))
 
 for axis in [2] : # [0,1,2]:
-    for anatomy in ['Bladder', 'Anorectum', 'CTVn', 'CTVp', 'Parametrium', 'Vagina', 'Uterus']:
+    for anatomy in tqdm(['Bladder', 'Anorectum', 'CTVn', 'CTVp', 'Parametrium', 'Vagina', 'Uterus'], desc=f'Running predictions for axis 2 across all anatomies'):
 
         save_path = os.path.join(save_dir, anatomy, f'axis{axis}')
         os.makedirs(save_path, exist_ok=True)
-
-        batch_size = 4
+        batch_size = 8
         box_limit = 2
 
         dataset = SAM_Dataset(axis=axis, anatomy=anatomy, box_limit=box_limit, box_padding=0)
@@ -259,23 +259,23 @@ for axis in [2] : # [0,1,2]:
 # In[22]:
 
 
-# Make sure that the saved predictions are being saved ok
-# From my check, these seem ok.
+# # Make sure that the saved predictions are being saved ok
+# # From my check, these seem ok.
 
-# I'll pick id = 1, slice = 92
-img_id = [1,2,3,3,4,4,5,6,6,6]
-slice_num = [92,72,82,92,76,79,55,67,68,93]
-anatomy = 'Bladder'
-axis = 0
+# # I'll pick id = 1, slice = 92
+# img_id = [1,2,3,3,4,4,5,6,6,6]
+# slice_num = [92,72,82,92,76,79,55,67,68,93]
+# anatomy = 'Bladder'
+# axis = 0
 
-for ii, sn in zip(img_id, slice_num):
-    gt_slice_path = os.path.join(os.environ.get('MedSAM_preprocessed'), 'gts', anatomy, f'axis{axis}', f'CT_{anatomy}_zzAMLART_{str(ii).zfill(3)}-{str(sn).zfill(3)}.npy')
-    img_slice_path = os.path.join(pre_processed_imgs, f'CT_zzAMLART_{str(ii).zfill(3)}-{str(sn).zfill(3)}.npy')
-    pred_path = os.path.join(save_dir, anatomy, f'axis{axis}', f'{ii}-{sn}.npy')
+# for ii, sn in zip(img_id, slice_num):
+#     gt_slice_path = os.path.join(os.environ.get('MedSAM_preprocessed'), 'gts', anatomy, f'axis{axis}', f'CT_{anatomy}_zzAMLART_{str(ii).zfill(3)}-{str(sn).zfill(3)}.npy')
+#     img_slice_path = os.path.join(pre_processed_imgs, f'CT_zzAMLART_{str(ii).zfill(3)}-{str(sn).zfill(3)}.npy')
+#     pred_path = os.path.join(save_dir, anatomy, f'axis{axis}', f'{ii}-{sn}.npy')
 
-    gt_array = np.load(gt_slice_path)
-    img_array = np.load(img_slice_path)
-    pred_array = np.load(pred_path)
+#     gt_array = np.load(gt_slice_path)
+#     img_array = np.load(img_slice_path)
+#     pred_array = np.load(pred_path)
 
-    visualise_bounding_box_with_prediction(img_array, gt_array, predicted_mask=pred_array)
+#     visualise_bounding_box_with_prediction(img_array, gt_array, predicted_mask=pred_array)
 
