@@ -25,10 +25,15 @@ def show_box(box, ax):
     ax.add_patch(plt.Rectangle((x0, y0), w, h, edgecolor='blue', facecolor=(0,0,0,0), lw=2))
 
 @torch.no_grad()
-def medsam_inference(medsam_model, img_embed, box_1024, H, W, include_points = None, exclude_points = None):
-    box_torch = torch.as_tensor(box_1024, dtype=torch.float, device=img_embed.device)
-    if len(box_torch.shape) == 2:
-        box_torch = box_torch[:, None, :] # (B, 1, 4)
+def medsam_inference(medsam_model, img_embed, H, W, box_1024 = None, include_points = None, exclude_points = None):
+    assert box_1024 is not None or include_points is not None or exclude_points is not None, "At least one of box_1024, include_points or exclude_points must be provided"
+
+    box_torch = None
+
+    if box_1024 is not None:
+        box_torch = torch.as_tensor(box_1024, dtype=torch.float, device=img_embed.device)
+        if len(box_torch.shape) == 2:
+            box_torch = box_torch[:, None, :] # (B, 1, 4)
 
     points = None
     labels = None
@@ -39,22 +44,26 @@ def medsam_inference(medsam_model, img_embed, box_1024, H, W, include_points = N
             include_points = include_points[None, :, :] # (B, P, 2)
 
         points = include_points
-        labels = torch.ones_like(include_points[:, :, 0:1]) 
+        labels = torch.ones((include_points.shape[0], include_points.shape[1]))
 
     if exclude_points is not None:
         exclude_points = torch.as_tensor(exclude_points, dtype=torch.float, device=img_embed.device)
         if len(exclude_points.shape) == 2:
             exclude_points = exclude_points[None, :, :] # (B, P, 2)
 
+        _points = exclude_points
+        _labels = torch.zeros((exclude_points.shape[0], exclude_points.shape[1]))
+
         if points is None:
-            points = exclude_points
-            labels = torch.zeros_like(exclude_points[:, :, 0:1])
+            points = _points
+            labels = _labels
+            # labels = torch.zeros_like(exclude_points[:, :])
         else:
-            points = torch.cat([points, exclude_points], dim=1)
-            labels = torch.cat([labels, torch.zeros_like(exclude_points[:, :, 0:1])], dim=1)    
+            points = torch.cat([points, _points], dim=1)
+            labels = torch.cat([labels, _labels], dim=1)    
 
     sparse_embeddings, dense_embeddings = medsam_model.prompt_encoder(
-        points=(points, labels),
+        points=None if points is None else (points, labels),
         boxes=box_torch,
         masks=None,
     )
@@ -79,6 +88,7 @@ def medsam_inference(medsam_model, img_embed, box_1024, H, W, include_points = N
     medsam_seg = (low_res_pred > 0.5).astype(np.uint8)
     return medsam_seg
 
+
 import cv2
 
 def get_bounding_boxes(resized_gt, padding=10):
@@ -99,9 +109,9 @@ def get_bounding_boxes(resized_gt, padding=10):
 def visualise_bounding_box_with_prediction(array_image
                                            , array_gt_label
                                            , bounding_boxes=None
+                                           , predicted_mask=None
                                            , exclude_points = None
                                            , include_points = None
-                                           , predicted_mask=None
                                            , show_boxes_of_predictions=False
                                            , save_title = None
                                            , sup_title = None):
