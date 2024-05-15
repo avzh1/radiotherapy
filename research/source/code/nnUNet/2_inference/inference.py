@@ -1,75 +1,33 @@
-# %% [markdown]
+#!/usr/bin/env python
+# coding: utf-8
+
 # # Performance of nnUNet architecture
 
-# %% [markdown]
 # Given a checkpoint of a model for a given class, evaluate the different metrics of the 
 # model by performing forward inference on the model and extracting the different
 # evaluation metrics on the data, such as DICE, Haussdorff distance, Jaccard etc.
 
-# %% [markdown]
 # ## Setup env variables
 
-# %%
-import os 
-import subprocess
+# In[1]:
 
-def setup_data_vars(mine = False, overwrite = False):
-    """
-    From within any directory related to radiotherapy with backtrack into the data folder
-    and execute the data_vars script. The assumption is that the datavars script will
-    output the list of environment variables that need to be set. This function will set
-    the environment variables for the current session.
 
-    For the mean while, my model hasn't completely finished training, therefore, to get
-    this task done, I will use Ben's pretrained nnUNet and then once mine has finished
-    training I will use my own. For the mean while, this means that we can choose between
-    using Ben's pretrained model or my own.
-    """
+import os, sys
+dir1 = os.path.abspath(os.path.join(os.path.abspath(''), '..', '..'))
+if not dir1 in sys.path: sys.path.append(dir1)
 
-    # If the environment variables are not set, assume that either a custom one has been
-    # provided or resetting them again is a redundant task
-    if os.environ.get('nnUNet_raw') is None or overwrite is True:
-        # run the script in the data folder for specifying the environment variables
-        if mine:
-            cwd = os.getcwd().split('/')
-            data_dir = os.path.join('/'.join(cwd[:cwd.index('radiotherapy') + 1]), 'data')
 
-            # Assuming the data_vars.sh script echoes the environment variables
-            script = os.path.join(data_dir, 'data_vars.sh')
-            output = subprocess.run([script], capture_output=True)
-            
-            assert len(output.stdout) != 0, f"Please check {script} and make sure it echoes \
-    the environment variables."
+# In[2]:
 
-            output = output.stdout.decode('utf-8')
-        else:
-            data_dir = '/vol/biomedic3/bglocker/nnUNet'
 
-            # Assuming this script won't change, it contains hard coded exports
-            script = os.path.join(data_dir, 'exports')
+from utils.environment import setup_data_vars
 
-            with open(script, 'r') as file:
-                output = file.read()
-        
-        for line in output.split('\n'):
-            if line != '':
-                if mine:
-                    line = line.split(': ')
-                    os.environ[line[0]] = line[1]
-                else:
-                    line = line.split('=')
-                    os.environ[line[0].split(' ')[1]] = line[1]
 
-    assert os.environ.get('nnUNet_raw') is not None, "Environemnt variables not set. \
-Please run the data_vars.sh script in the data folder."
-
-# %% [markdown]
 # ## Setup Inference Pipeline
 
-# %%
-model_path = 'Dataset001_Anorectum/nnUNetTrainer_50epochs__nnUNetPlans__3d_fullres/'
+# In[3]:
 
-# %%
+
 import torch
 
 if torch.cuda.is_available():
@@ -79,8 +37,11 @@ else:
 
 device
 
-# %%
-def initialise_predictor():
+
+# In[4]:
+
+
+def initialise_predictor(model_path, fold):
 
     from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
     import torch
@@ -98,14 +59,16 @@ def initialise_predictor():
 
     predictor.initialize_from_trained_model_folder(
         os.path.join(os.environ.get('nnUNet_results'), model_path),
-        # use_folds=(0,1,2,3,4),
-        use_folds=(0,1),
-        checkpoint_name='checkpoint_final.pth',
+        use_folds=fold,
+        checkpoint_name='checkpoint_best.pth',
     )
 
     return predictor
 
-# %%
+
+# In[5]:
+
+
 def predict_file(input_file, output_file, predictor):
     """
     Predict the segmentation of a single file and save it to the output location.
@@ -129,22 +92,74 @@ def predict_file(input_file, output_file, predictor):
     #                             num_processes_preprocessing=2, num_processes_segmentation_export=2,
     #                             folder_with_segs_from_prev_stage=None, num_parts=1, part_id=0)
 
-# %%
+
+# Running inference on inputs: https://github.com/MIC-DKFZ/nnUNet/blob/master/nnunetv2/inference/readme.md
+# 
+# Running on slurm requires freezing: https://stackoverflow.com/questions/24374288/where-to-put-freeze-support-in-a-python-script
+
+# In[7]:
+
+
 import multiprocessing
+import argparse
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()
 
-    input_location = os.path.join(os.environ.get('nnUNet_raw'), 'Dataset001_Anorectum/imagesTr')
-    output_location = os.path.join('/vol/bitbucket/az620/radiotherapy/data/nnUNet_inference/', 'Dataset001_Anorectum/imagesTr_3dhighres')
+    setup_data_vars()
 
-    # join = os.path.join
+    classes = [os.environ.get('Anorectum')
+             , os.environ.get('Bladder')
+             , os.environ.get('CTVn')
+             , os.environ.get('CTVp')
+             , os.environ.get('Parametrium')
+             , os.environ.get('Uterus')
+             , os.environ.get('Vagina')]
 
-    # file_path = join(input_location, 'zzAMLART_001_0000.nii.gz')
-    # output_path = join(output_location, 'zzAMLART_001.nii.gz')
+    input_data_path = [os.path.join(os.environ.get('nnUNet_raw'), c, os.environ.get('data_trainingImages')) for c in classes]
+    output_path = [os.path.join(os.environ.get('nnUNet_inference'), f'{c}_3dhighres') for c in classes]
+    model_paths = [os.path.join(c, 'nnUNetTrainer_500epochs__nnUNetResEncUNetLPlans__3d_fullres') for c in classes]
+    
+    # for each model path, get the list of folds that contain checkpoints in them
+    folds_per_model = [set() for _ in model_paths]
 
-    setup_data_vars(mine=True, overwrite=True)
-    predictor = initialise_predictor()
+    for i,m in enumerate(model_paths):
+        full_path = os.path.join(os.environ.get('nnUNet_results'), m)
+        print(f'searching for folds for {classes[i]},', end=' ')
+        _, subdirs, _ = next(os.walk(full_path))
+        for folds in sorted(subdirs):
+            for checkpoints in os.listdir(os.path.join(full_path, folds)):
+                if '.pth' in checkpoints:
+                    folds_per_model[i].add(folds.split('_')[1])
+        print(f'found folds {folds_per_model[i]}')
+    
+    folds_per_model = [tuple(x) for x in folds_per_model]
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('dataset_id', type=int, help='The dataset id to fine tune on')
+    
+    # import sys
+    # original_args = sys.argv
+    # sys.argv = [original_args[0], '3']
+    
+    args = parser.parse_args()
+
+    input_class = input_data_path[args.dataset_id - 1]
+    model_path = model_paths[args.dataset_id - 1]
+    fold = folds_per_model[args.dataset_id - 1]
+
+    input_location = os.path.join(os.environ.get('nnUNet_raw'), input_class)
+    output_location = os.path.join(os.environ.get('nnUNet_inference'), f'{input_class}_3dhighres')
+    
+    print(f'initialising predictor with class {classes[args.dataset_id - 1]}, and folds {fold}')
+    predictor = initialise_predictor(model_path, fold)
+    
+    print(f'predicting from {input_location} to {output_location}')
     predict_file(input_location, output_location, predictor)
+
+
+# In[ ]:
+
+
 
 

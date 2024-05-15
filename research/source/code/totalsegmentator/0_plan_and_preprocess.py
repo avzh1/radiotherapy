@@ -10,77 +10,35 @@
 # 
 # 
 
-# In[ ]:
+# In[8]:
 
 
-import os 
-import subprocess
-
-def setup_data_vars(mine = True, overwrite = True):
-    """
-    From within any directory related to radiotherapy with backtrack into the data folder
-    and execute the data_vars script. The assumption is that the datavars script will
-    output the list of environment variables that need to be set. This function will set
-    the environment variables for the current session.
-
-    For the mean while, my model hasn't completely finished training, therefore, to get
-    this task done, I will use Ben's pretrained nnUNet and then once mine has finished
-    training I will use my own. For the mean while, this means that we can choose between
-    using Ben's pretrained model or my own.
-    """
-
-    # If the environment variables are not set, assume that either a custom one has been
-    # provided or resetting them again is a redundant task
-    if os.environ.get('nnUNet_raw') is None or overwrite is True:
-        # run the script in the data folder for specifying the environment variables
-        if mine:
-            cwd = os.getcwd().split('/')
-            data_dir = os.path.join('/'.join(cwd[:cwd.index('radiotherapy') + 1]), 'data')
-
-            # Assuming the data_vars.sh script echoes the environment variables
-            script = os.path.join(data_dir, 'data_vars.sh')
-            output = subprocess.run([script], capture_output=True)
-            
-            assert len(output.stdout) != 0, f"Please check {script} and make sure it echoes \
-    the environment variables."
-
-            output = output.stdout.decode('utf-8')
-        else:
-            data_dir = '/vol/biomedic3/bglocker/nnUNet'
-
-            # Assuming this script won't change, it contains hard coded exports
-            script = os.path.join(data_dir, 'exports')
-
-            with open(script, 'r') as file:
-                output = file.read()
-        
-        for line in output.split('\n'):
-            if line != '':
-                if mine:
-                    line = line.split(': ')
-                    os.environ[line[0]] = line[1]
-                else:
-                    line = line.split('=')
-                    os.environ[line[0].split(' ')[1]] = line[1]
-
-    assert os.environ.get('nnUNet_raw') is not None, "Environemnt variables not set. \
-Please run the data_vars.sh script in the data folder."
+import os, sys
+dir1 = os.path.abspath(os.path.join(os.path.abspath(''), '..'))
+if not dir1 in sys.path: sys.path.append(dir1)
 
 
-# In[ ]:
+# In[9]:
+
+
+from utils.environment import setup_data_vars
+setup_data_vars()
+
+
+# In[10]:
 
 
 def get_raw_and_gt_data_paths():
     
     setup_data_vars()
 
-    classes = [os.environ.get('data_Anorectum'), 
-        os.environ.get('data_Bladder'), 
-        os.environ.get('data_CTVn'), 
-        os.environ.get('data_CTVp'), 
-        os.environ.get('data_Parametrium'), 
-        os.environ.get('data_Uterus'), 
-        os.environ.get('data_Vagina')]
+    classes = [os.environ.get('Anorectum')
+             , os.environ.get('Bladder') 
+             , os.environ.get('CTVn') 
+             , os.environ.get('CTVp') 
+             , os.environ.get('Parametrium') 
+             , os.environ.get('Uterus') 
+             , os.environ.get('Vagina')]
 
     raw_data = [os.path.join(os.environ.get('nnUNet_raw'), x, os.environ.get('data_trainingImages')) for x in classes]
     gt_labels = [os.path.join(os.environ.get('nnUNet_raw'), x, os.environ.get('data_trainingLabels')) for x in classes]
@@ -88,7 +46,7 @@ def get_raw_and_gt_data_paths():
     return classes, raw_data, gt_labels
 
 
-# In[ ]:
+# In[11]:
 
 
 from totalsegmentator.config import setup_nnunet, setup_totalseg
@@ -103,7 +61,7 @@ def fetch_pretrained_totalsegmentator_model():
     model and attempt to finetune it on my case.
     """
 
-    os.environ['TOTALSEG_HOME_DIR'] = '/vol/bitbucket/az620/radiotherapy/models/TotalSegmentator/.weights'
+    os.environ['TOTALSEG_HOME_DIR'] = os.path.join(os.environ.get('PROJECT_DIR'), 'models', 'TotalSegmentator', '.weights')
 
     setup_nnunet()
     setup_totalseg()
@@ -119,9 +77,10 @@ def fetch_pretrained_totalsegmentator_model():
     download_pretrained_weights(task_id)
 
 
-# In[ ]:
+# In[15]:
 
 
+import shutil
 import sys
 
 if __name__ == '__main__':
@@ -129,8 +88,13 @@ if __name__ == '__main__':
     fetch_pretrained_totalsegmentator_model()
 
     # Something in the fetch_pretrained_totalsegmentator_model overwrites the global variables
-    setup_data_vars()
     classes, raw_data, gt_labels = get_raw_and_gt_data_paths()
+    
+    source_file = os.path.join(os.environ.get('TOTALSEG_HOME_DIR'), 'nnunet', 'results', 'Dataset291_TotalSegmentator_part1_organs_1559subj', 'nnUNetTrainerNoMirroring__nnUNetPlans__3d_fullres', 'plans.json')
+    destination_file = os.path.join(os.environ.get('nnUNet_preprocessed'), 'Dataset008_TotalSegmentator', 'nnUNetPlans.json')
+
+    assert os.path.exists(source_file), "The source file does not exist"
+    shutil.copy(source_file, destination_file)
 
     print('[DEBUG]: Obtained the environment variables. These are:')
     print(f'nnUNet_raw: {os.environ.get("nnUNet_raw")}')
@@ -157,8 +121,8 @@ if __name__ == '__main__':
 
     from nnunetv2.experiment_planning.plans_for_pretraining.move_plans_between_datasets import move_plans_between_datasets
 
-    starting_class = 7
-    end_class = len(classes)
+    starting_class = 1
+    end_class = 7 # len(classes)
 
     for i in range(starting_class, end_class + 1):
         print(f'Transferring for {i}')
