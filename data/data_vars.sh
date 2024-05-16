@@ -13,8 +13,11 @@ new_env_vars=()
 
 export PROJECT_DIR=$PROJECT_DIR
 export OLD_DIR=$OLD_DIR
+export DATA_DIR=$DATA_DIR
+
 new_env_vars+=(PROJECT_DIR)
 new_env_vars+=(OLD_DIR)
+new_env_vars+=(DATA_DIR)
 
 # Get names of all directories present in DATA_DIR and export them
 for dir in $(find $DATA_DIR -maxdepth 1 -type d ! -name "$(basename $DATA_DIR)"); do
