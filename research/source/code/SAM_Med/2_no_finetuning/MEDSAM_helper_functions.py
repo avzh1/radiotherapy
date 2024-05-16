@@ -145,7 +145,7 @@ def visualise_bounding_box_with_prediction(array_image
                 axes[2].scatter(point[0], point[1], c='red', s=10)
         
         if include_points is not None:
-            for point in include_points.squeeze():
+            for point in include_points[0] if len(include_points.shape) == 3 else include_points:
                 axes[2].scatter(point[0], point[1], c='lawngreen', s=10)
         
         axes[2].set_title('Bounding Box From Segmentation')
