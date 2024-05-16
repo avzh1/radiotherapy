@@ -97,7 +97,7 @@ def predict_file(input_file, output_file, predictor):
 # 
 # Running on slurm requires freezing: https://stackoverflow.com/questions/24374288/where-to-put-freeze-support-in-a-python-script
 
-# In[7]:
+# In[8]:
 
 
 import multiprocessing
@@ -117,7 +117,7 @@ if __name__ == '__main__':
              , os.environ.get('Vagina')]
 
     input_data_path = [os.path.join(os.environ.get('nnUNet_raw'), c, os.environ.get('data_trainingImages')) for c in classes]
-    output_path = [os.path.join(os.environ.get('nnUNet_inference'), f'{c}_3dhighres') for c in classes]
+    output_path = [os.path.join(os.environ.get('nnUNet_inference'), c) for c in classes]
     model_paths = [os.path.join(c, 'nnUNetTrainer_500epochs__nnUNetResEncUNetLPlans__3d_fullres') for c in classes]
     
     # for each model path, get the list of folds that contain checkpoints in them
@@ -125,13 +125,13 @@ if __name__ == '__main__':
 
     for i,m in enumerate(model_paths):
         full_path = os.path.join(os.environ.get('nnUNet_results'), m)
-        print(f'searching for folds for {classes[i]},', end=' ')
+        # print(f'searching for folds for {classes[i]},', end=' ')
         _, subdirs, _ = next(os.walk(full_path))
         for folds in sorted(subdirs):
             for checkpoints in os.listdir(os.path.join(full_path, folds)):
                 if '.pth' in checkpoints:
                     folds_per_model[i].add(folds.split('_')[1])
-        print(f'found folds {folds_per_model[i]}')
+        # print(f'found folds {folds_per_model[i]}')
     
     folds_per_model = [tuple(x) for x in folds_per_model]
 
@@ -144,15 +144,17 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
 
-    input_class = input_data_path[args.dataset_id - 1]
+    input_class = classes[args.dataset_id - 1]
     model_path = model_paths[args.dataset_id - 1]
     fold = folds_per_model[args.dataset_id - 1]
-
-    input_location = os.path.join(os.environ.get('nnUNet_raw'), input_class)
-    output_location = os.path.join(os.environ.get('nnUNet_inference'), f'{input_class}_3dhighres')
     
-    print(f'initialising predictor with class {classes[args.dataset_id - 1]}, and folds {fold}')
+    print(f'initialising predictor with class {input_class}, and folds {fold}')
     predictor = initialise_predictor(model_path, fold)
+
+    setup_data_vars()
+
+    input_location = input_data_path[args.dataset_id - 1]
+    output_location = os.path.join(output_path[args.dataset_id - 1], 'nnUNetTrainer_500epochs__nnUNetResEncUNetLPlans__3d_fullres')
     
     print(f'predicting from {input_location} to {output_location}')
     predict_file(input_location, output_location, predictor)
