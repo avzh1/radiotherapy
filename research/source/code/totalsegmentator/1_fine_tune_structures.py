@@ -120,6 +120,8 @@ if __name__ == '__main__':
     FOLD = args.fold
     CONFIG = '3d_fullres'
 
+    os.environ['nnUNet_results'] = os.path.join(os.environ.get('DATA_DIR'), 'TotalSegmentator_results')
+
     # Run the training on the target dataset
 
     from nnunetv2.run.run_training import run_training_entry
@@ -131,7 +133,7 @@ if __name__ == '__main__':
     print('-----------')
 
     # !nnUNetv2_train TARGET_DATASET CONFIG FOLD -pretrained_weights PATH_TO_CHECKPOINT
-    sys.argv = [original_sys_argv[0], str(TARGET_DATASET), CONFIG, str(FOLD), '-pretrained_weights', PATH_TO_CHECKPOINT, '-tr', 'nnUNetTrainer_100epochs', '--npz', '-p', 'totseg_nnUNetPlans']
+    sys.argv = [original_sys_argv[0], str(TARGET_DATASET), CONFIG, str(FOLD), '-pretrained_weights', PATH_TO_CHECKPOINT, '-tr', 'nnUNetTrainer_250epochs', '--npz', '-p', 'totseg_nnUNetPlans']
     run_training_entry()
 
     sys.argv = original_sys_argv
