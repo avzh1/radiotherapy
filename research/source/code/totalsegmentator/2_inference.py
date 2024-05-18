@@ -109,9 +109,9 @@ if __name__ == '__main__':
     # FOLD = tuple(range(0, 0 + 1))
 
     # Run inference
-    model_name = 'nnUNetTrainer_500epochs__nnUNetResEncUNetLPlans__3d_fullres'
+    model_name = 'nnUNetTrainer_250epochs__totseg_nnUNetPlans__3d_fullres'
     input_file = os.path.join(os.environ.get('nnUNet_raw'), classes[TARGET_DATASET - 1], os.environ.get('data_trainingImages'))
-    model_path = os.path.join(os.environ.get('nnUNet_results'), classes[TARGET_DATASET - 1], model_name) 
+    model_path = os.path.join(os.environ.get('TotalSegmentator_results'), classes[TARGET_DATASET - 1], model_name) 
     output_file = os.path.join(os.environ.get('TotalSegmentator_inference'), classes[TARGET_DATASET - 1], model_name)
 
     print('I am predicting on the dataset:', classes[TARGET_DATASET - 1])
