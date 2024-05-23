@@ -9,36 +9,1079 @@ This consists of a list of all the books, articles, manuals etc. used in the pro
     URLs and DOIs are optional for published work but preferred.
 
 
-@article{einstein,
-    author =       "Albert Einstein",
-    title =        "{Zur Elektrodynamik bewegter K{\"o}rper}. ({German})
-        [{On} the electrodynamics of moving bodies]",
-    journal =      "Annalen der Physik",
-    volume =       "322",
-    number =       "10",
-    pages =        "891--921",
-    year =         "1905",
-    DOI =          "http://dx.doi.org/10.1002/andp.19053221004"
-}
-
-@book{latexcompanion,
-    author    = "Michel Goossens and Frank Mittelbach and Alexander Samarin",
-    title     = "The \LaTeX\ Companion",
-    year      = "1993",
-    publisher = "Addison-Wesley",
-    address   = "Reading, Massachusetts"
-}
-
-@misc{knuthwebsite,
-    author    = "Donald Knuth",
-    title     = "Knuth: Computers and Typesetting",
-    url       = "http://www-cs-faculty.stanford.edu/\~{}uno/abcde.html"
-}
-
 @techreport{SAM,
   author      = {Alexander Kirillov and Eric Mintun and Nikila Ravi and Hanzi Mao and Chloe Rolland and Laura Gustafson and Tete Xiao and Spencer Whitehead and Alexander C. Berg and Wan-Yen Lo and Piotr Dollar and Ross Girshick},
   institution = {Meta AI Research},
   title       = {Segment Anything},
   year        = {2023},
   url         = {https://arxiv.org/abs/2304.02643}
+}
+
+@misc{SAMsite,
+  author       = {Meta},
+  howpublished = {},
+  title        = {Segment Anything},
+  year         = {},
+  url          = {https://segment-anything.com/}
+}
+
+@misc{SAMgit,
+  author       = {ericmintun and nikhilaravi and HannaMao and SpencerWhitehead and lmmx and calebrob6 and anh-vunguyen and pierizvi and triple-Mu and derekray311511 and jp-x-g and Xrenya and EndingCredits and Elm-Forest and eltociear and advaybot},
+  howpublished = {GitHub},
+  title        = {Segment-Anythin},
+  year         = {2023},
+  url          = {https://github.com/facebookresearch/segment-anything}
+}
+
+@misc{AMLART-data,
+  author       = {Institute of Cancer Research and The Royal Marsden Hospital},
+  title        = {AMLART data}
+}
+
+@article{PTV-for-RGC-using-MRI,
+  title    = "An Inter-observer Study to Determine Radiotherapy Planning Target
+              Volumes for Recurrent Gynaecological Cancer Comparing Magnetic
+              Resonance Imaging Only With Computed {Tomography-Magnetic}
+              Resonance Imaging",
+  author   = "Bernstein, D and Taylor, A and Nill, S and Imseeh, G and Kothari,
+              G and Llewelyn, M and De Paepe, K N and Rockall, A and Shiarli,
+              A-M and Oelfke, U",
+  abstract = "AIMS: Target delineation uncertainty is arguably the largest
+              source of geometric uncertainty in radiotherapy. Several factors
+              can affect it, including the imaging modality used for
+              delineation. It is accounted for by applying safety margins to
+              the target to produce a planning target volume (PTV), to which
+              treatments are designed. To determine the margin, the delineation
+              uncertainty is measured as the delineation error, and then a
+              margin recipe used. However, there is no published evidence of
+              such analysis for recurrent gynaecological cancers (RGC). The
+              aims of this study were first to quantify the delineation
+              uncertainty for RGC gross tumour volumes (GTVs) and to calculate
+              the associated PTV margins and then to quantify the difference in
+              GTV, delineation uncertainty and PTV margin, between a computed
+              tomography-magnetic resonance imaging (CT-MRI) and MRI workflow.
+              MATERIALS AND METHODS: Seven clinicians delineated the GTV for 20
+              RGC tumours on co-registered CT and MRI datasets (CT-MRI) and on
+              MRI alone. The delineation error, the standard deviation of
+              distances from each clinician's outline to a reference, was
+              measured and the required PTV margin determined. Differences
+              between using CT-MRI and MRI alone were assessed. RESULTS: The
+              overall delineation error and the resulting margin were 3.1 mm
+              and 8.5 mm, respectively, for CT-MRI, reducing to 2.5 mm and 7.1
+              mm, respectively, for MRI alone. Delineation errors and therefore
+              the theoretical margins, varied widely between patients. MRI
+              tumour volumes were on average 15\% smaller than CT-MRI tumour
+              volumes. DISCUSSION: This study is the first to quantify
+              delineation error for RGC tumours and to calculate the
+              corresponding PTV margin. The determined margins were larger than
+              those reported in the literature for similar patients, bringing
+              into question both current margins and margin calculation
+              methods. The wide variation in delineation error between these
+              patients suggests that applying a single population-based margin
+              may result in PTVs that are suboptimal for many. Finally, the
+              reduced tumour volumes and safety margins suggest that patients
+              with RGC may benefit from an MRI-only treatment workflow.",
+  journal  = "Clin Oncol (R Coll Radiol)",
+  volume   =  33,
+  number   =  5,
+  pages    = "307--313",
+  month    =  feb,
+  year     =  2021,
+  address  = "England",
+  keywords = "Delineation uncertainty; planning target volume; radiotherapy;
+              recurrent gynaecological cancer",
+  language = "en",
+  url      = {https://pubmed.ncbi.nlm.nih.gov/33640196/},
+}
+
+
+@paper{personalised-PTV-strategies,
+  title = {New target volume delineation and PTV strategies to further
+personalise radiotherapy},
+  author = {David Bernstein and Alexandra Taylor and Simeon Nill and Uwe Oelfke},
+  year = 2021
+}
+
+@paper{tumor-delineation,
+  url = {https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2772050/},
+  title = {Tumor delineation: The weakest link in the search for accuracy in radiotherapy},
+  author = {C. F. Njeh},
+  year = 2008
+}
+
+@paper{review-metrics,
+  url = {https://www.clinicaloncologyonline.net/action/showPdf?pii=S0936-6555(23)00021-3},
+  title = {A Review of the Metrics Used to Assess Auto-Contouring Systems in Radiotherapy},
+  author = {K. Mackay and D. Bernstein and B. Glocker and K. Kamnitsas, A. Taylor},
+  year = {2023}
+}
+
+@article{evaluation-metrics,
+  author={Taha, Abdel Aziz
+  and Hanbury, Allan},
+  title={Metrics for evaluating 3D medical image segmentation: analysis, selection, and tool},
+  journal={BMC Medical Imaging},
+  year={2015},
+  month={Aug},
+  day={12},
+  volume={15},
+  number={1},
+  pages={29},
+  abstract={Medical Image segmentation is an important image processing step. Comparing images to evaluate the quality of segmentation is an essential part of measuring progress in this research area. Some of the challenges in evaluating medical segmentation are: metric selection, the use in the literature of multiple definitions for certain metrics, inefficiency of the metric calculation implementations leading to difficulties with large volumes, and lack of support for fuzzy segmentation by existing metrics.},
+  issn={1471-2342},
+  doi={10.1186/s12880-015-0068-x},
+  url={https://doi.org/10.1186/s12880-015-0068-x}
+}
+
+
+
+@article{3d-medical-metric-analysis-2015,
+  author          = {Abdel Aziz Taha and Allan Hanbury},
+  journal         = {},
+  number          = {},
+  title           = {Metrics for evaluating 3D medical image segmentation: analysis, selection, and tool},
+  volume          = {},
+  year            = {2015},
+  url             = {https://ncbi.nlm.nih.gov/pmc/articles/PMC4533825/},
+}
+
+@cite{imaging-modality,
+  url = {https://www.ccdcare.com/resource-center/radiology-modalities},
+  date = 2023
+}
+
+@cite{defining-target-volumes,
+  url = {https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1434601/pdf/ci040153.pdf},
+  title = {Defining the tumour and target volumes for radiotherapy},
+  author = {Neil G Burnet and Simon J Thomas and Kate E Burton and Sarah J Jefferies},
+  year = 2004
+}
+
+@online{anisotropy,
+  url = {https://sciencenotes.org/isotropic-vs-anisotropic-definition-and-examples/}
+}
+
+@article{VANHERK200452,
+title = {Errors and margins in radiotherapy},
+journal = {Seminars in Radiation Oncology},
+volume = {14},
+number = {1},
+pages = {52-64},
+year = {2004},
+note = {High-Precision Radiation Therapy of Moving Targets},
+issn = {1053-4296},
+doi = {https://doi.org/10.1053/j.semradonc.2003.10.003},
+url = {https://www.sciencedirect.com/science/article/pii/S1053429603000845},
+author = {Marcel {van Herk}},
+abstract = {Clinical radiotherapy procedures aim at high accuracy. However, there are many error sources that act during treatment preparation and execution that limit the accuracy. As a consequence, a safety margin is required to ensure that the planned dose is actually delivered to the target for (almost) all patients. Before treatment planning, a planning computed tomography scan is made. In particular, motion of skin with respect to the internal anatomy limits the reproducibility of this step, introducing a systematic setup error. The second important error source is organ motion. The tumor is imaged in an arbitrary position, leading to a systematic organ motion error. The image may also be distorted because of the interference of the scanning process and organ motion. A further systematic error introduced during treatment planning is caused by the delineation process. During treatment, the most important errors are setup error and organ motion leading to day-to-day variations. There are many ways to define the margins required for these errors. In this article, an overview is given of errors in radiotherapy and margin recipes, based on physical and biological considerations. Respiration motion is treated separately.}
+}
+
+@article{VANHERK20001121,
+title = {The probability of correct target dosage: dose-population histograms for deriving treatment margins in radiotherapy},
+journal = {International Journal of Radiation Oncology*Biology*Physics},
+volume = {47},
+number = {4},
+pages = {1121-1135},
+year = {2000},
+issn = {0360-3016},
+doi = {https://doi.org/10.1016/S0360-3016(00)00518-6},
+url = {https://www.sciencedirect.com/science/article/pii/S0360301600005186},
+author = {Marcel {van Herk} and Peter Remeijer and Coen Rasch and Joos V. Lebesque},
+keywords = {Radiotherapy, Margins, Setup error, Organ motion, Delineation variation},
+url             = {https://www.sciencedirect.com/science/article/pii/S0360301600005186}
+}
+
+@ARTICLE{Janssen2022-lr,
+  title    = "A margin recipe for the management of intra-fraction target
+              motion in radiotherapy",
+  author   = "Janssen, Tomas M and van der Heide, Uulke A and Remeijer, Peter
+              and Sonke, Jan-Jakob and van der Bijl, Erik",
+  journal  = "Phys Imaging Radiat Oncol",
+  volume   =  24,
+  pages    = "159--166",
+  month    =  nov,
+  year     =  2022,
+  address  = "Netherlands",
+  keywords = "Intra-fraction motion; Margin recipe; Motion management;
+              Treatment margins",
+  language = "en"
+}
+
+
+
+
+@article{U-Net,
+  author       = {Olaf Ronneberger and
+                  Philipp Fischer and
+                  Thomas Brox},
+  title        = {U-Net: Convolutional Networks for Biomedical Image Segmentation},
+  journal      = {CoRR},
+  volume       = {abs/1505.04597},
+  year         = {2015},
+  url          = {http://arxiv.org/abs/1505.04597},
+  eprinttype    = {arXiv},
+  eprint       = {1505.04597},
+  timestamp    = {Mon, 13 Aug 2018 16:46:52 +0200},
+  biburl       = {https://dblp.org/rec/journals/corr/RonnebergerFB15.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
+
+
+@techreport{fully-CNNs-for-semantic-segmentation,
+  author      = {Jonathan Long and Evan Shelhamer and Trevor Darrell},
+  institution = {Berkley},
+  title       = {Fully Convolutional Networks for Semantic Segmentation},
+  year        = {2015},
+  url         = {https://arxiv.org/pdf/1411.4038.pdf}
+}
+
+@article{nnunet,
+  author          = {Fabian Isensee and Jens Petersen and Andre Klein and David Zimmerer and Paul F. Jaeger and Simon Kohl and Jakob Wasserthal and Gregor Köhler and Tobias Norajitra and Sebastian Wirkert and Klaus H. Maier-Hein},
+  title           = {nnU-Net: Self-adapting Framework for U-Net-Based Medical Image Segmentation},
+  year            = {2018},
+  url             = {https://arxiv.org/pdf/1809.10486.pdf},
+}
+
+@article{nnunet-git-paper,
+  author          = {Fabian Isensee and Paul F. Jaeger and Simon A. A. Kohl and Jens Petersen and Klaus H. Maier-Hein},
+  journal         = {},
+  number          = {},
+  title           = {nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation},
+  volume          = {},
+  year            = {2021},
+  url             = {https://www.nature.com/articles/s41592-020-01008-z},
+}
+
+@article{identity-mappings-drns,
+  author          = {Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian Sun},
+  journal         = {},
+  number          = {},
+  title           = {Identity Mappings in Deep Residual Networks},
+  volume          = {},
+  year            = {2016},
+  url             = {https://arxiv.org/pdf/1603.05027.pdf}
+}
+
+@article{v-net,
+  author          = {Fausto Milletari1 and Nassir Navab and Seyed-Ahmad Ahmadi},
+  journal         = {},
+  number          = {},
+  title           = {V-Net: Fully Convolutional Neural Networks for
+Volumetric Medical Image Segmentation},
+  volume          = {},
+  year            = {2016},
+  url             = {https://arxiv.org/pdf/1606.04797.pdf}
+}
+
+@article{tiramisu-densenet,
+  author          = {Simon Jegou1 and Michal Drozdzal and David Vazquez and Adriana Romero},
+  journal         = {},
+  number          = {},
+  title           = {The One Hundred Layers Tiramisu:
+Fully Convolutional DenseNets for Semantic Segmentation},
+  volume          = {},
+  year            = {2017},
+  url             = {https://arxiv.org/pdf/1611.09326.pdf}
+}
+
+@article{attention-u-net,
+  author          = {Ozan Oktay and Jo Schlemper and Loic Le Folgoc},
+  journal         = {},
+  number          = {},
+  title           = {Attention U-Net: Learning Where to Look for the Pancreas},
+  volume          = {},
+  year            = {2018},
+  url             = {https://arxiv.org/pdf/1804.03999.pdf}
+}
+
+@article{drn-for-image-recognition,
+  author          = {Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian Sun},
+  title           = {Deep Residual Learning for Image Recognition},
+  year            = {2015},
+  url             = {https://arxiv.org/pdf/1512.03385.pdf},
+}
+
+@article{health-privacy,
+  author          = {Nass SJ and Levit LA and Gostin LO},
+  journal         = {},
+  number          = {},
+  title           = {The Value and Importance of Health Information Privacy},
+  volume          = {},
+  year            = {2009},
+  url             = {https://www.ncbi.nlm.nih.gov/books/NBK9579/},
+}
+
+@article{ethics-imaging-AI,
+  author          = {David B. Larson and David C. Magnus and Matthew P. Lungren and Nigam H. Shah and Curtis P. Langlotz},
+  journal         = {},
+  number          = {},
+  title           = {Ethics of Using and Sharing Clinical Imaging Data for Artificial Intelligence: A Proposed Framework},
+  volume          = {},
+  year            = {2020},
+  url             = {https://pubs.rsna.org/doi/full/10.1148/radiol.2020192536},
+}
+
+@article{royal-marsden-privacy-note,
+  author          = {The Royal Marsden NHS Foundation Trust},
+  journal         = {},
+  number          = {},
+  title           = {Privacy Note},
+  volume          = {},
+  year            = {2023},
+  url             = {https://rm-d8-live.s3.eu-west-1.amazonaws.com/d8live.royalmarsden.nhs.uk/s3fs-public/2023-10/T22020ac_Revised%20privacy%20policy_V1_AW_WEB.pdf},
+}
+
+@article{evaluation-of-dl-radiotherapy,
+  author          = {Ozan Oktay and Jay Nanavati and Anton Schwaighofer and David Carter and Melissa Bristow and Ryutaro Tanno and Rajesh Jena and Gill Barnett and David Noble and Yvonne Rimmer and Ben Glocker and Kenton O'Hara and Christopher Bishop and Javier Alvarez-Valle and Aditya Nori},
+  journal         = {},
+  number          = {},
+  title           = {Evaluation of Deep Learning to Augment Image-Guided Radiotherapy for Head and Neck and Prostate Cancers},
+  volume          = {},
+  year            = {2020},
+  url             = {https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2773292},
+}
+
+@article{totalsegmentor-paper,
+  author          = {Jakob Wasserthal and Hanns-Christian Breit and Manfred T. Meyer and Maurice Pradella and Daniel Hinck and Alexander W. Sauter and Tobias Heye and Daniel T. Boll and Joshy Cyriac and Shan Yang and Michael Bach and Martin Segeroth},
+  journal         = {},
+  number          = {},
+  title           = {TotalSegmentator: Robust Segmentation of 104 Anatomic Structures in CT Images},
+  volume          = {},
+  year            = {2023},
+  url             = {https://arxiv.org/pdf/2208.05868.pdf},
+}
+// url             = {https://pubs.rsna.org/doi/10.1148/ryai.230024},
+
+@manual{totalsegmentor-git,
+  author       = {wasserth and lassoan and fedorov and cnicolasgr and Arputikos},
+  title        = {},
+  url          = {https://github.com/wasserth/TotalSegmentator},
+}
+
+// Transfer Learning
+
+@article{geeks-transfer-learning,
+  title           = {What is Transfer Learning?},
+  url             = {https://www.geeksforgeeks.org/ml-introduction-to-transfer-learning/},
+}
+
+@article{ gentle-introduction-to-transfer-learning,
+  author          = {Jason Brownlee},
+  title           = {A Gentle Introduction to Transfer Learning for Deep Learning},
+  year            = {2019},
+  url             = {https://machinelearningmastery.com/transfer-learning-for-deep-learning/},
+}
+
+@techreport{concise-review-of-transfer-learning,
+  author      = {Abolfazl Farahani and Behrouz Pourshojae and Khaled Rasheed and Hamid R. Arabnia},
+  title       = {A Concise Review of Transfer Learning},
+  year        = {2021},
+  url         = {https://arxiv.org/abs/2104.02144v1},
+}
+
+@techreport{comprehensive-survey-on-transfer-learning,
+  author      = {Fuzhen Zhuang and Zhiyuan Qi and Keyu Duan and Dongbo Xi and Yongchun Zhu and Hengshu Zhu and Hui Xiong and Qing He},
+  title       = {A Comprehensive Survey on Transfer Learning},
+  year        = {2019},
+  url         = {https://arxiv.org/abs/1911.02685},
+}
+
+@techreport{what-is-being-transferred,
+  author      = {Behnam Neyshabur and Hanie Sedghi and Chiyuan Zhang},
+  title       = {What is being transferred in Transfer Learning?},
+  year        = {2020},
+  url         = {https://arxiv.org/abs/2008.11687},
+}
+
+@techreport{liver-lesion-via-transfer-learning,
+  author      = {Michal Heker and Hayit Greenspan},
+  title       = {Joint Liver Lesion Segmentation and Classification via Transfer Learning},
+  year        = {2020},
+  url         = {https://arxiv.org/pdf/2004.12352.pdf},
+}
+
+@manual{transfer-learning-tutorial,
+  author       = {Sasank Chilamkurthy},
+  title        = {Transfer Learning for Computer Vision Tutorial},
+  url          = {https://pytorch.org/tutorials/beginner/transfer_learning_tutorial.html},
+}
+
+@manual{transfer-learning-medium,
+  author       = {Pedro Marcelino},
+  title        = {Transfer learning from pre-trained models},
+  year         = {2018},
+  url          = {https://towardsdatascience.com/transfer-learning-from-pre-trained-models-f2393f124751},
+}
+
+@techreport{transfer-learning-for-medical-image-classification-review,
+  author      = {Hee E. Kim and Alejandro Cosa-Linan and Nandhini Santhanam and Mahboubeh Jannesari and Mate E. Maros and Thomas Ganslandt},
+  title       = {Transfer learning for medical image classification: a literature review},
+  year        = {2022},
+  url         = {https://bmcmedimaging.biomedcentral.com/articles/10.1186/s12880-022-00793-7},
+}
+
+@manual{transfer-learning-in-medical-imaging,
+  author       = {Nikolas Adaloglou},
+  year         = {2020},
+  title        = {Transfer learning in medical imaging: classification and segmentation},
+  url          = {https://theaisummer.com/medical-imaging-transfer-learning/},
+}
+
+@manual{transfusion-medical-imaging,
+  author       = {Maithra Raghu and Chiyuan Zhang and Jon Kleinberg and Samy Bengio},
+  title        = {Transfusion: Understanding Transfer Learning for Medical Imaging},
+  year         = {2019},
+  url          = {https://arxiv.org/abs/1902.07208},
+}
+
+@manual{supervised-transfer-learning-at-scale,
+  author       = {Basil Mustafa and Aaron Loh and Jan Freyberg and Patricia MacWilliams and Megan Wilson and Scott Mayer McKinney and Marcin Sieniek and Jim Winkens and Yuan Liu and Peggy Bui and Shruthi Prabhakara and Umesh Telang and Alan Karthikesalingam and Neil Houlsby and Vivek Natarajan},
+  title        = {Supervised Transfer Learning at Scale for Medical Imaging},
+  url          = {https://arxiv.org/abs/2101.05913},
+  year         = {2021},
+}
+
+@manual{transfer-learning-medical-imaging-features,
+  author       = {Christos Matsoukas and Johan Fredin Haslum and Moein Sorkhei and Magnus Söderberg and Kevin Smith},
+  title        = {What Makes Transfer Learning Work For Medical Images: Feature Reuse & Other Factors},
+  url          = {https://arxiv.org/abs/2203.01825},
+  year         = {2022},
+}
+
+@article{survey-on-transfer-learning,
+  author          = {Sinno Jialin Pan and Qiang Yang},
+  title           = {A Survey on Transfer Learning},
+  year            = {2009},
+  url             = {https://ieeexplore.ieee.org/abstract/document/5288526},
+}
+
+@book{deep-learning-book,
+  author         = {Christopher M. Bishop and Hugh Bishop},
+  publisher      = {Springer},
+  title          = {Deep Learning, Foundations and Concepts},
+  year           = {2023}
+}
+
+@book{computer-vision-book,
+  author         = {Richard Szeliski},
+  publisher      = {Springer},
+  title          = {Computer Vision: Algorithms and Applications, 2nd ed.},
+  year           = {2022},
+  url            = {http://szeliski.org/Book/},
+}
+
+@techreport{torrey-handbook,
+  author      = {Lisa Torrey and Jude Shavlik},
+  institution = {University of Wisconsi},
+  title       = {Transfer Learning},
+  year        = {2009},
+  url         = {https://ftp.cs.wisc.edu/machine-learning/shavlik-group/torrey.handbook09.pdf},
+}
+
+@techreport{transfer-learning-boosting,
+  author      = {W. Dai and Q. Yang and G. Xue and Y. Yu},
+  title       = {Boosting for Transfer Learning},
+  year        = {2007},
+  url         = {https://cse.hkust.edu.hk/~qyang/Docs/2007/tradaboost.pdf},
+}
+
+@article{universeg,
+  author          = {Victor Ion Butoi and Jose Javier Gonzalez Ortiz and Tianyu Ma and Mert R. Sabuncu and John Guttag and Adrian V. Dalca},
+  title           = {UniverSeg: Universal Medical Image Segmentation},
+  year            = {2023},
+  url             = {https://arxiv.org/pdf/2304.06131.pdf},
+}
+
+@article{cell-death,
+  author          = {Yunfei Jiao and Fangyu Cao and Hu Liu},
+  journal         = {Halth Phys.},
+  number          = {},
+  title           = {Radiation-induced Cell Death and Its Mechanisms},
+  volume          = {},
+  year            = {2022},
+  url             = {https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9512240/pdf/hpj-123-376.pdf},
+}
+
+@article{radiotherapy-basic-concepts,
+  author          = {Lt Gen SR Mehta and Maj V Suhag and M Semwal and Maj N Sharma},
+  title           = {Radiotherapy : Basic Concepts and Recent Advances},
+  year            = {2010},
+  url             = {https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4920949/pdf/main.pdf},
+}
+
+@article{radiotherapy-advances,
+  author          = {Rajamanickam Baskar and Kuo Ann Lee and Richard Yeo and Kheng-Wei Yeoh1},
+  title           = {Cancer and Radiation Therapy: Current Advances and Future Directions},
+  year            = {2012},
+  url             = {https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3298009/},
+}
+
+@article{cervical-cancer-epidemic,
+  author          = {William Small and Monica A. Bacon and Amishi Bajaj and Linus T. Chuang and Brandon J. Fisher and Matthew M. Harkenrider and Anuja Jhingran and Henry C. Kitchener and Linda R. Mileshkin and Akila N. Viswanathan and David K. Gaffney},
+  journal         = {Cancer, An international interdisciplinary journal of American Cancer Society},
+  number          = {13},
+  title           = {Cervical cancer: A global health crisis},
+  volume          = {123},
+  year            = {2017},
+  url             = {https://acsjournals.onlinelibrary.wiley.com/doi/10.1002/cncr.30667},
+}
+
+@article{expanding-global-access-to-radiotherapy,
+  author          = {Prof Rifat Atun and Prof David A Jaffray and Michael B Barton and Freddie Bray and Prof Michael Baumann and Bhadrasain Vikram and Timothy P Hanna and Felicia M Knaul and Yolande Lievens and Tracey Y M Lui and Prof Michael Milosevic and Prof Brian O'Sullivan and Danielle L Rodin and Eduardo Rosenblatt and Prof Jacob Van Dyk and Mei Ling Yap},
+  journal         = {The Lancet Oncology Commission},
+  number          = {10},
+  title           = {Expanding global access to radiotherapy},
+  volume          = {16},
+  year            = {2015},
+  url             = {https://www.thelancet.com/journals/lanonc/article/PIIS1470-2045(15)00222-3/fulltext},
+}
+
+@article{dicom-to-nifti-conversion,
+  author          = {Xiangrui Li and Paul S. Morgan and John Ashburner and Jolinda Smith and Christopher Rorden},
+  journal         = {Journal of Neuroscience Methods},
+  number          = {},
+  title           = {The first step for neuroimaging data analysis: DICOM to NIfTI conversion},
+  volume          = {264},
+  year            = {2016},
+  url             = {https://pubmed.ncbi.nlm.nih.gov/26945974/},
+}
+
+@article{file-formats,
+  author          = {Michele Larobina and Loredana Murino},
+  journal         = {Journal of Digital Imaging},
+  number          = {},
+  title           = {Medical Image File Formats},
+  volume          = {27},
+  year            = {2013},
+  url             = {https://link.springer.com/article/10.1007/s10278-013-9657-9},
+}
+
+@manual{nifti-headers,
+  author       = {Bob Cox},
+  title        = {nifti-1 header field-by-field documentation},
+  url          = {https://nifti.nimh.nih.gov/pub/dist/src/niftilib/nifti1.h},
+}
+
+@manual{nifti-data-format,
+  author       = {Hester Breman},
+  title        = {NIfTI-1 Data Format},
+  url          = {https://nifti.nimh.nih.gov/nifti-1/documentation/nifti1diagrams/},
+}
+
+@manual{gov-gdpr,
+  title        = {Data Protection Act 2018},
+  url          = {https://www.legislation.gov.uk/ukpga/2018/12/contents/enacted}
+}
+
+@book{rise-of-ai-in-healthcare,
+  author         = {Adam Bohr and Kaveh Memarzadeh},
+  title          = {Artificial Intelligence in Healthcare},
+  year           = {2020},
+  pages          = {25-60},
+  chapter        = {The rise of artificial intelligence in healthcare applications},
+}
+
+@article{overview-of-ai-medicine,
+  author          = {Amisha and Paras Malik and Monika Pathania and Vyas Kumar Rathaur}, 
+  journal         = {Journal of Family Medicine and Primary Care},
+  number          = {7},
+  title           = {Overview of artificial intelligence in medicine},
+  volume          = {8},
+  year            = {2019},
+}
+
+@ARTICLE{overview-of-ai-medicine,
+  title    = "Overview of artificial intelligence in medicine",
+  author   = "{Amisha} and Malik, Paras and Pathania, Monika and Rathaur, Vyas
+              Kumar",
+  abstract = "BACKGROUND: Artificial intelligence (AI) is the term used to
+              describe the use of computers and technology to simulate
+              intelligent behavior and critical thinking comparable to a human
+              being. John McCarthy first described the term AI in 1956 as the
+              science and engineering of making intelligent machines.
+              OBJECTIVE: This descriptive article gives a broad overview of AI
+              in medicine, dealing with the terms and concepts as well as the
+              current and future applications of AI. It aims to develop
+              knowledge and familiarity of AI among primary care physicians.
+              MATERIALS AND METHODS: PubMed and Google searches were performed
+              using the key words 'artificial intelligence'. Further references
+              were obtained by cross-referencing the key articles. RESULTS:
+              Recent advances in AI technology and its current applications in
+              the field of medicine have been discussed in detail. CONCLUSIONS:
+              AI promises to change the practice of medicine in hitherto
+              unknown ways, but many of its practical applications are still in
+              their infancy and need to be explored and developed better.
+              Medical professionals also need to understand and acclimatize
+              themselves with these advances for better healthcare delivery to
+              the masses.",
+  journal  = "J Family Med Prim Care",
+  volume   =  8,
+  number   =  7,
+  pages    = "2328--2331",
+  month    =  jul,
+  year     =  2019,
+  address  = "India",
+  keywords = "Artificial intelligence; future of medicine; machine learning; neural networks; robots",
+  language = "en",
+  url             = {https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6691444/}
+}
+
+
+@article{AI-in-cancer-diagnosis-era,
+  author          = {Zi-Hang Chen and Li Lin and Chen-Fei Wu and Chao-Feng Li and Rui-Hua Xu and Ying Sun},
+  journal         = {Cancer Communications},
+  number          = {11},
+  title           = {Artificial intelligence for assisting cancer diagnosis and treatment in the era of precision medicine},
+  volume          = {41},
+  year            = {2021},
+  url             = {https://onlinelibrary.wiley.com/doi/10.1002/cac2.12215},
+}
+
+@article{auto-delineation-cervical-cancer-development,
+  author          = {
+Zhikai Liu and Xia Liu and Hui Guan and Hongan Zhen and Yuliang Sun and Qi Chen and Yu Chen and Shaobin Wang and Jie Qiu},
+  journal         = {Radiotherapy and Oncology},
+  title           = {Development and validation of a deep learning algorithm for auto-delineation of clinical target volume and organs at risk in cervical cancer radiotherapy },
+  volume          = {153},
+  year            = {2020}
+}
+
+@article{ct-scan,
+  author          = {Paula R. Patel; Orlando De Jesus.},
+  title           = {CT Scan},
+  year            = {2023},
+  url             = {https://pubmed.ncbi.nlm.nih.gov/33620865/},
+}
+
+@article{SimpleITK-paper,
+ title={Image Segmentation, Registration and Characterization in R with SimpleITK},
+ volume={86},
+ url={https://www.jstatsoft.org/article/view/v086i08},
+ doi={10.18637/jss.v086.i08},
+ abstract={Many types of medical and scientific experiments acquire raw data in the form of images. Various forms of image processing and image analysis are used to transform the raw image data into quantitative measures that are the basis of subsequent statistical analysis. In this article we describe the SimpleITK R package. SimpleITK is a simplified interface to the insight segmentation and registration toolkit (ITK). ITK is an open source C++ toolkit that has been actively developed over the past 18 years and is widely used by the medical image analysis community. SimpleITK provides packages for many interpreter environments, including R. Currently, it includes several hundred classes for image analysis including a wide range of image input and output, filtering operations, and higher level components for segmentation and registration. Using SimpleITK, development of complex combinations of image and statistical analysis procedures is feasible. This article includes several examples of computational image analysis tasks implemented using SimpleITK, including spherical marker localization, multi-modal image registration, segmentation evaluation, and cell image analysis.},
+ number={8},
+ journal={Journal of Statistical Software},
+ author={Beare, Richard and Lowekamp, Bradley and Yaniv, Ziv},
+ year={2018},
+ pages={1–35}
+}
+
+@article{automation-bias,
+title = {The automation of bias in medical Artificial Intelligence (AI): Decoding the past to create a better future},
+journal = {Artificial Intelligence in Medicine},
+volume = {110},
+pages = {101965},
+year = {2020},
+issn = {0933-3657},
+doi = {https://doi.org/10.1016/j.artmed.2020.101965},
+url = {https://www.sciencedirect.com/science/article/pii/S0933365720312306},
+author = {Isabel Straw},
+keywords = {Disparities, Inequality, Data science, Bias, Health, Medicine, Digital health, Artificial intelligence, Healthcare},
+abstract = {Medicine is at a disciplinary crossroads. With the rapid integration of Artificial Intelligence (AI) into the healthcare field the future care of our patients will depend on the decisions we make now. Demographic healthcare inequalities continue to persist worldwide and the impact of medical biases on different patient groups is still being uncovered by the research community. At a time when clinical AI systems are scaled up in response to the Covid19 pandemic, the role of AI in exacerbating health disparities must be critically reviewed. For AI to account for the past and build a better future, we must first unpack the present and create a new baseline on which to develop these tools. The means by which we move forwards will determine whether we project existing inequity into the future, or whether we reflect on what we hold to be true and challenge ourselves to be better. AI is an opportunity and a mirror for all disciplines to improve their impact on society and for medicine the stakes could not be higher.}
+}
+
+@article{evaluation-of-metrics-in-prostate,
+title = {Comparison of metrics for the evaluation of medical segmentations using prostate MRI dataset},
+journal = {Computers in Biology and Medicine},
+volume = {134},
+pages = {104497},
+year = {2021},
+issn = {0010-4825},
+doi = {https://doi.org/10.1016/j.compbiomed.2021.104497},
+url = {https://www.sciencedirect.com/science/article/pii/S0010482521002912},
+author = {Ying-Hwey Nai and Bernice W. Teo and Nadya L. Tan and Sophie O'Doherty and Mary C. Stephenson and Yee Liang Thian and Edmund Chiong and Anthonin Reilhac},
+keywords = {Prostate cancer, Medical image segmentation, Deep learning, Evaluation metrics, Rank evaluation},
+abstract = {Nine previously proposed segmentation evaluation metrics, targeting medical relevance, accounting for holes, and added regions or differentiating over- and under-segmentation, were compared with 24 traditional metrics to identify those which better capture the requirements for clinical segmentation evaluation. Evaluation was first performed using 2D synthetic shapes to highlight features and pitfalls of the metrics with known ground truths (GTs) and machine segmentations (MSs). Clinical evaluation was then performed using publicly-available prostate images of 20 subjects with MSs generated by 3 different deep learning networks (DenseVNet, HighRes3DNet, and ScaleNet) and GTs drawn by 2 readers. The same readers also performed the 2D visual assessment of the MSs using a dual negative-positive grading of −5 to 5 to reflect over- and under-estimation. Nine metrics that correlated well with visual assessment were selected for further evaluation using 3 different network ranking methods - based on a single metric, normalizing the metric using 2 GTs, and ranking the network based on a metric then averaging, including leave-one-out evaluation. These metrics yielded consistent ranking with HighRes3DNet ranked first then DenseVNet and ScaleNet using all ranking methods. Relative volume difference yielded the best positivity-agreement and correlation with dual visual assessment, and thus is better for providing over- and under-estimation. Interclass Correlation yielded the strongest correlation with the absolute visual assessment (0–5). Symmetric-boundary dice consistently yielded good discrimination of the networks for all three ranking methods with relatively small variations within network. Good rank discrimination may be an additional metric feature required for better network performance evaluation.}
+}
+
+@article{boundary-overlap-metrics,
+  title={Family of boundary overlap metrics for the evaluation of medical image segmentation},
+  author={Yeghiazaryan, Varduhi and Voiculescu, Irina},
+  journal={Journal of Medical Imaging},
+  volume={5},
+  number={1},
+  pages={015006--015006},
+  year={2018},
+  publisher={Society of Photo-Optical Instrumentation Engineers}
+}
+
+@ARTICLE{Nikolov2021-xe,
+  title    = "Clinically Applicable Segmentation of Head and Neck Anatomy for
+              Radiotherapy: Deep Learning Algorithm Development and Validation
+              Study",
+  author   = "Nikolov, Stanislav and Blackwell, Sam and Zverovitch, Alexei and
+              Mendes, Ruheena and Livne, Michelle and De Fauw, Jeffrey and
+              Patel, Yojan and Meyer, Clemens and Askham, Harry and
+              Romera-Paredes, Bernadino and Kelly, Christopher and
+              Karthikesalingam, Alan and Chu, Carlton and Carnell, Dawn and
+              Boon, Cheng and D'Souza, Derek and Moinuddin, Syed Ali and Garie,
+              Bethany and McQuinlan, Yasmin and Ireland, Sarah and Hampton,
+              Kiarna and Fuller, Krystle and Montgomery, Hugh and Rees, Geraint
+              and Suleyman, Mustafa and Back, Trevor and Hughes, C{\'\i}an Owen
+              and Ledsam, Joseph R and Ronneberger, Olaf",
+  abstract = "BACKGROUND: Over half a million individuals are diagnosed with
+              head and neck cancer each year globally. Radiotherapy is an
+              important curative treatment for this disease, but it requires
+              manual time to delineate radiosensitive organs at risk. This
+              planning process can delay treatment while also introducing
+              interoperator variability, resulting in downstream radiation dose
+              differences. Although auto-segmentation algorithms offer a
+              potentially time-saving solution, the challenges in defining,
+              quantifying, and achieving expert performance remain. OBJECTIVE:
+              Adopting a deep learning approach, we aim to demonstrate a 3D
+              U-Net architecture that achieves expert-level performance in
+              delineating 21 distinct head and neck organs at risk commonly
+              segmented in clinical practice. METHODS: The model was trained on
+              a data set of 663 deidentified computed tomography scans acquired
+              in routine clinical practice and with both segmentations taken
+              from clinical practice and segmentations created by experienced
+              radiographers as part of this research, all in accordance with
+              consensus organ at risk definitions. RESULTS: We demonstrated the
+              model's clinical applicability by assessing its performance on a
+              test set of 21 computed tomography scans from clinical practice,
+              each with 21 organs at risk segmented by 2 independent experts.
+              We also introduced surface Dice similarity coefficient, a new
+              metric for the comparison of organ delineation, to quantify the
+              deviation between organ at risk surface contours rather than
+              volumes, better reflecting the clinical task of correcting errors
+              in automated organ segmentations. The model's generalizability
+              was then demonstrated on 2 distinct open-source data sets,
+              reflecting different centers and countries to model training.
+              CONCLUSIONS: Deep learning is an effective and clinically
+              applicable technique for the segmentation of the head and neck
+              anatomy for radiotherapy. With appropriate validation studies and
+              regulatory approvals, this system could improve the efficiency,
+              consistency, and safety of radiotherapy pathways.",
+  journal  = "J Med Internet Res",
+  volume   =  23,
+  number   =  7,
+  pages    = "e26151",
+  month    =  jul,
+  year     =  2021,
+  address  = "Canada",
+  keywords = "UNet; artificial intelligence; contouring; convolutional neural
+              networks; machine learning; radiotherapy; segmentation; surface
+              DSC",
+  language = "en"
+}
+
+@ARTICLE{Sherer2021-le,
+  title    = "Metrics to evaluate the performance of auto-segmentation for
+              radiation treatment planning: A critical review",
+  author   = "Sherer, Michael V and Lin, Diana and Elguindi, Sharif and Duke,
+              Simon and Tan, Li-Tee and Cacicedo, Jon and Dahele, Max and
+              Gillespie, Erin F",
+  abstract = "Advances in artificial intelligence-based methods have led to the
+              development and publication of numerous systems for
+              auto-segmentation in radiotherapy. These systems have the
+              potential to decrease contour variability, which has been
+              associated with poor clinical outcomes and increased efficiency
+              in the treatment planning workflow. However, there are no uniform
+              standards for evaluating auto-segmentation platforms to assess
+              their efficacy at meeting these goals. Here, we review the most
+              frequently used evaluation techniques which include geometric
+              overlap, dosimetric parameters, time spent contouring, and
+              clinical rating scales. These data suggest that many of the most
+              commonly used geometric indices, such as the Dice Similarity
+              Coefficient, are not well correlated with clinically meaningful
+              endpoints. As such, a multi-domain evaluation, including
+              composite geometric and/or dosimetric metrics with
+              physician-reported assessment, is necessary to gauge the clinical
+              readiness of auto-segmentation for radiation treatment planning.",
+  journal  = "Radiother Oncol",
+  volume   =  160,
+  pages    = "185--191",
+  month    =  May,
+  year     =  2021,
+  address  = "Ireland",
+  keywords = "Auto-segmentation; Contouring; Quality assurance; Treatment
+              planning",
+  language = "en",
+  url             = {https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9444281/},
+}
+
+@ARTICLE{APL,
+  title    = "Evaluation of measures for assessing time-saving of automatic
+              organ-at-risk segmentation in radiotherapy",
+  author   = "Vaassen, Femke and Hazelaar, Colien and Vaniqui, Ana and Gooding,
+              Mark and van der Heyden, Brent and Canters, Richard and van
+              Elmpt, Wouter",
+  abstract = "BACKGROUND AND PURPOSE: In radiotherapy, automatic organ-at-risk
+              segmentation algorithms allow faster delineation times, but
+              clinically relevant contour evaluation remains challenging.
+              Commonly used measures to assess automatic contours, such as
+              volumetric Dice Similarity Coefficient (DSC) or Hausdorff
+              distance, have shown to be good measures for geometric
+              similarity, but do not always correlate with clinical
+              applicability of the contours, or time needed to adjust them.
+              This study aimed to evaluate the correlation of new and commonly
+              used evaluation measures with time-saving during contouring.
+              MATERIALS AND METHODS: Twenty lung cancer patients were used to
+              compare user-adjustments after atlas-based and deep-learning
+              contouring with manual contouring. The absolute time needed (s)
+              of adjusting the auto-contour compared to manual contouring was
+              recorded, from this relative time-saving (\%) was calculated. New
+              evaluation measures (surface DSC and added path length, APL) and
+              conventional evaluation measures (volumetric DSC and Hausdorff
+              distance) were correlated with time-recordings and time-savings,
+              quantified with the Pearson correlation coefficient, R. RESULTS:
+              The highest correlation (R = 0.87) was found between APL and
+              absolute adaption time. Lower correlations were found for APL
+              with relative time-saving (R = -0.38), for surface DSC with
+              absolute adaption time (R = -0.69) and relative time-saving (R =
+              0.57). Volumetric DSC and Hausdorff distance also showed lower
+              correlation coefficients for absolute adaptation time (R = -0.32
+              and 0.64, respectively) and relative time-saving (R = 0.44 and
+              -0.64, respectively). CONCLUSION: Surface DSC and APL are better
+              indicators for contour adaptation time and time-saving when using
+              auto-segmentation and provide more clinically relevant and better
+              quantitative measures for automatically-generated contour
+              quality, compared to commonly-used geometry-based measures.",
+  journal  = "Phys Imaging Radiat Oncol",
+  volume   =  13,
+  pages    = "1--6",
+  month    =  dec,
+  year     =  2019,
+  address  = "Netherlands",
+  keywords = "Added path length; Automatic delineation; Contouring time; Dice
+              similarity coefficient; Hausdorff distance; Radiotherapy; Surface
+              DSC; Time-saving",
+  language = "en"
+}
+
+@article{Samarasinghe2021-ps,
+  title    = "Deep learning for segmentation in radiation therapy planning: a
+              review",
+  author   = "Samarasinghe, Gihan and Jameson, Michael and Vinod, Shalini and
+              Field, Matthew and Dowling, Jason and Sowmya, Arcot and Holloway,
+              Lois",
+  abstract = "Segmentation of organs and structures, as either targets or
+              organs-at-risk, has a significant influence on the success of
+              radiation therapy. Manual segmentation is a tedious and
+              time-consuming task for clinicians, and inter-observer
+              variability can affect the outcomes of radiation therapy. The
+              recent hype over deep neural networks has added many powerful
+              auto-segmentation methods as variations of convolutional neural
+              networks (CNN). This paper presents a descriptive review of the
+              literature on deep learning techniques for segmentation in
+              radiation therapy planning. The most common CNN architecture
+              across the four clinical sub sites considered was U-net, with the
+              majority of deep learning segmentation articles focussed on head
+              and neck normal tissue structures. The most common data sets were
+              CT images from an inhouse source, along with some public data
+              sets. N-fold cross-validation was commonly employed; however, not
+              all work separated training, test and validation data sets. This
+              area of research is expanding rapidly. To facilitate comparisons
+              of proposed methods and benchmarking, consistent use of
+              appropriate metrics and independent validation should be
+              carefully considered.",
+  journal  = "J Med Imaging Radiat Oncol",
+  volume   =  65,
+  number   =  5,
+  pages    = "578--595",
+  month    =  jul,
+  year     =  2021,
+  address  = "Australia",
+  keywords = "contouring; deep learning; radiation therapy; segmentation",
+  language = "en",
+  url             = {https://pubmed.ncbi.nlm.nih.gov/34313006/},
+}
+
+
+@article{Sartor2020-et,
+  title    = "Auto-segmentations by convolutional neural network in cervical
+              and anorectal cancer with clinical structure sets as the ground
+              truth",
+  author   = "Sartor, Hanna and Minarik, David and Enqvist, Olof and Ul{\'e}n,
+              Johannes and Wittrup, Anders and Bjurberg, Maria and
+              Tr{\"a}g{\aa}rdh, Elin",
+  abstract = "BACKGROUND: It is time-consuming for oncologists to delineate
+              volumes for radiotherapy treatment in computer tomography (CT)
+              images. Automatic delineation based on image processing exists,
+              but with varied accuracy and moderate time savings. Using
+              convolutional neural network (CNN), delineations of volumes are
+              faster and more accurate. We have used CTs with the annotated
+              structure sets to train and evaluate a CNN. MATERIAL AND METHODS:
+              The CNN is a standard segmentation network modified to minimize
+              memory usage. We used CTs and structure sets from 75 cervical
+              cancers and 191 anorectal cancers receiving radiation therapy at
+              Sk{\aa}ne University Hospital 2014-2018. Five structures were
+              investigated: left/right femoral heads, bladder, bowel bag, and
+              clinical target volume of lymph nodes (CTVNs). Dice score and
+              mean surface distance (MSD) (mm) evaluated accuracy, and one
+              oncologist qualitatively evaluated auto-segmentations. RESULTS:
+              Median Dice/MSD scores for anorectal cancer: 0.91-0.92/1.93-1.86
+              femoral heads, 0.94/2.07 bladder, and 0.83/6.80 bowel bag. Median
+              Dice scores for cervical cancer were 0.93-0.94/1.42-1.49 femoral
+              heads, 0.84/3.51 bladder, 0.88/5.80 bowel bag, and 0.82/3.89
+              CTVNs. With qualitative evaluation, performance on femoral heads
+              and bladder auto-segmentations was mostly excellent, but CTVN
+              auto-segmentations were not acceptable to a larger extent.
+              DISCUSSION: It is possible to train a CNN with high overlap using
+              structure sets as ground truth. Manually delineated pelvic
+              volumes from structure sets do not always strictly follow volume
+              boundaries and are sometimes inaccurately defined, which leads to
+              similar inaccuracies in the CNN output. More data that is
+              consistently annotated is needed to achieve higher CNN accuracy
+              and to enable future clinical implementation.",
+  journal  = "Clin Transl Radiat Oncol",
+  volume   =  25,
+  pages    = "37--45",
+  month    =  sep,
+  year     =  2020,
+  address  = "Ireland",
+  keywords = "AI, artificial intelligence; Automatic segmentation; CNN,
+              convolutional neural network; CT, computer tomography; CTVN,
+              clinical target volume nodes; Cervical cancer radiotherapy;
+              Clinical Target Volume; Convolutional neural network; MSD, mean
+              surface distance; OAR, organs at risk; Organs-at-risk; PET-CT,
+              positron emission tomography/computer tomography",
+  language = "en",
+  url             = {https://pubmed.ncbi.nlm.nih.gov/33005756/},
+}
+
+@article{LIU2020184,
+title = {Segmentation of organs-at-risk in cervical cancer CT images with a convolutional neural network},
+journal = {Physica Medica},
+volume = {69},
+pages = {184-191},
+year = {2020},
+issn = {1120-1797},
+doi = {https://doi.org/10.1016/j.ejmp.2019.12.008},
+url = {https://www.sciencedirect.com/science/article/pii/S1120179719305290},
+author = {Zhikai Liu and Xia Liu and Bin Xiao and Shaobin Wang and Zheng Miao and Yuliang Sun and Fuquan Zhang},
+keywords = {Cervical cancer radiotherapy, Automatic segmentation, Organs-at-risk, Convolutional neural network},
+abstract = {Purpose
+We introduced and evaluated an end-to-end organs-at-risk (OARs) segmentation model that can provide accurate and consistent OARs segmentation results in much less time.
+Methods
+We collected 105 patients’ Computed Tomography (CT) scans that diagnosed locally advanced cervical cancer and treated with radiotherapy in one hospital. Seven organs, including the bladder, bone marrow, left femoral head, right femoral head, rectum, small intestine and spinal cord were defined as OARs. The annotated contours of the OARs previously delineated manually by the patient’s radiotherapy oncologist and confirmed by the professional committee consisted of eight experienced oncologists before the radiotherapy were used as the ground truth masks. A multi-class segmentation model based on U-Net was designed to fulfil the OARs segmentation task. The Dice Similarity Coefficient (DSC) and 95th Hausdorff Distance (HD) are used as quantitative evaluation metrics to evaluate the proposed method.
+Results
+The mean DSC values of the proposed method are 0.924, 0.854, 0.906, 0.900, 0.791, 0.833 and 0.827 for the bladder, bone marrow, femoral head left, femoral head right, rectum, small intestine, and spinal cord, respectively. The mean HD values are 5.098, 1.993, 1.390, 1.435, 5.949, 5.281 and 3.269 for the above OARs respectively.
+Conclusions
+Our proposed method can help reduce the inter-observer and intra-observer variability of manual OARs delineation and lessen oncologists’ efforts. The experimental results demonstrate that our model outperforms the benchmark U-Net model and the oncologists’ evaluations show that the segmentation results are highly acceptable to be used in radiation therapy planning.},
+url             = {https://www.sciencedirect.com/science/article/pii/S1120179719305290},
+}
+
+@ARTICLE{Rhee2020-ms,
+  title    = "Automatic contouring system for cervical cancer using
+              convolutional neural networks",
+  author   = "Rhee, Dong Joo and Jhingran, Anuja and Rigaud, Bastien and
+              Netherton, Tucker and Cardenas, Carlos E and Zhang, Lifei and
+              Vedam, Sastry and Kry, Stephen and Brock, Kristy K and Shaw,
+              William and O'Reilly, Frederika and Parkes, Jeannette and Burger,
+              Hester and Fakie, Nazia and Trauernicht, Chris and Simonds,
+              Hannah and Court, Laurence E",
+  abstract = "PURPOSE: To develop a tool for the automatic contouring of
+              clinical treatment volumes (CTVs) and normal tissues for
+              radiotherapy treatment planning in cervical cancer patients.
+              METHODS: An auto-contouring tool based on convolutional neural
+              networks (CNN) was developed to delineate three cervical CTVs and
+              11 normal structures (seven OARs, four bony structures) in
+              cervical cancer treatment for use with the Radiation Planning
+              Assistant, a web-based automatic plan generation system. A total
+              of 2254 retrospective clinical computed tomography (CT) scans
+              from a single cancer center and 210 CT scans from a segmentation
+              challenge were used to train and validate the CNN-based
+              auto-contouring tool. The accuracy of the tool was evaluated by
+              calculating the S{\o}rensen-dice similarity coefficient (DSC) and
+              mean surface and Hausdorff distances between the automatically
+              generated contours and physician-drawn contours on 140 internal
+              CT scans. A radiation oncologist scored the automatically
+              generated contours on 30 external CT scans from three South
+              African hospitals. RESULTS: The average DSC, mean surface
+              distance, and Hausdorff distance of our CNN-based tool were
+              0.86/0.19 cm/2.02 cm for the primary CTV, 0.81/0.21 cm/2.09 cm
+              for the nodal CTV, 0.76/0.27 cm/2.00 cm for the PAN CTV,
+              0.89/0.11 cm/1.07 cm for the bladder, 0.81/0.18 cm/1.66 cm for
+              the rectum, 0.90/0.06 cm/0.65 cm for the spinal cord, 0.94/0.06
+              cm/0.60 cm for the left femur, 0.93/0.07 cm/0.66 cm for the right
+              femur, 0.94/0.08 cm/0.76 cm for the left kidney, 0.95/0.07
+              cm/0.84 cm for the right kidney, 0.93/0.05 cm/1.06 cm for the
+              pelvic bone, 0.91/0.07 cm/1.25 cm for the sacrum, 0.91/0.07
+              cm/0.53 cm for the L4 vertebral body, and 0.90/0.08 cm/0.68 cm
+              for the L5 vertebral bodies. On average, 80\% of the CTVs, 97\%
+              of the organ at risk, and 98\% of the bony structure contours in
+              the external test dataset were clinically acceptable based on
+              physician review. CONCLUSIONS: Our CNN-based auto-contouring tool
+              performed well on both internal and external datasets and had a
+              high rate of clinical acceptability.",
+  journal  = "Med Phys",
+  volume   =  47,
+  number   =  11,
+  pages    = "5648--5658",
+  month    =  oct,
+  year     =  2020,
+  address  = "United States",
+  keywords = "auto-contouring; cervical cancer; convolutional neural network;
+              deep learning",
+  language = "en",
+  url             = {https://pubmed.ncbi.nlm.nih.gov/32964477/},
+}
+
+@ARTICLE{Lin2021-oz,
+  title    = "Deep learning for automatic target volume segmentation in
+              radiation therapy: a review",
+  author   = "Lin, Hui and Xiao, Haonan and Dong, Lei and Teo, Kevin Boon-Keng
+              and Zou, Wei and Cai, Jing and Li, Taoran",
+  abstract = "Deep learning, a new branch of machine learning algorithm, has
+              emerged as a fast growing trend in medical imaging and become the
+              state-of-the-art method in various clinical applications such as
+              Radiology, Histo-pathology and Radiation Oncology. Specifically
+              in radiation oncology, deep learning has shown its power in
+              performing automatic segmentation tasks in radiation therapy for
+              Organs-At-Risks (OAR), given its potential in improving the
+              efficiency of OAR contouring and reducing the inter- and
+              intra-observer variabilities. The similar interests were shared
+              for target volume segmentation, an essential step of radiation
+              therapy treatment planning, where the gross tumor volume is
+              defined and microscopic spread is encompassed. The deep
+              learning-based automatic segmentation method has recently been
+              expanded into target volume automatic segmentation. In this
+              paper, the authors summarized the major deep learning
+              architectures of supervised learning fashion related to target
+              volume segmentation, reviewed the mechanism of each
+              infrastructure, surveyed the use of these models in various
+              imaging domains (including Computational Tomography with and
+              without contrast, Magnetic Resonant Imaging and Positron Emission
+              Tomography) and multiple clinical sites, and compared the
+              performance of different models using standard geometric
+              evaluation metrics. The paper concluded with a discussion of open
+              challenges and potential paths of future research in target
+              volume automatic segmentation and how it may benefit the clinical
+              practice.",
+  journal  = "Quant Imaging Med Surg",
+  volume   =  11,
+  number   =  12,
+  pages    = "4847--4858",
+  month    =  dec,
+  year     =  2021,
+  address  = "China",
+  keywords = "Deep learning; auto segmentation; radiation therapy; target
+              volume delineation",
+  language = "en",
+  url             = {https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8611469/},
+}
+
+
+@article{LIU2020172,
+  title = {Development and validation of a deep learning algorithm for auto-delineation of clinical target volume and organs at risk in cervical cancer radiotherapy},
+  journal = {Radiotherapy and Oncology},
+  volume = {153},
+  pages = {172-179},
+  year = {2020},
+  note = {Physics Special Issue: ESTRO Physics Research Workshops on Science in Development},
+  issn = {0167-8140},
+  doi = {https://doi.org/10.1016/j.radonc.2020.09.060},
+  url = {https://www.sciencedirect.com/science/article/pii/S0167814020308355},
+  author = {Zhikai Liu and Xia Liu and Hui Guan and Hongan Zhen and Yuliang Sun and Qi Chen and Yu Chen and Shaobin Wang and Jie Qiu},
+  keywords = {Clinical target volume, Cervical cancer radiotherapy, Deep learning, Auto-delineation},
+}
+
+@book{diagnostic-radiology-physics,
+  author         = {D.R. Dance and S. Christofides and A.D.A. Maidment and I.D. McLean and K.H. Ng},
+  editor         = {},
+  publisher      = {International Atomic Energy Agency},
+  title          = {Diagnostic Radiology Physics},
+  year           = {2014}
 }
