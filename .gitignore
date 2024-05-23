@@ -16,6 +16,7 @@
 *.blg
 *.run.xml
 *.toc
+*.brf
 
 # just in-case, ignore any CT scans
 *.nii.gz

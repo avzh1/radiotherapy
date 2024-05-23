@@ -19,12 +19,10 @@
 %----------------------------------------------------------------------------------------
 \usepackage[a4paper,hmargin=2.0cm,vmargin=1.0cm,includeheadfoot]{geometry}
 \usepackage{textpos}
-
-\usepackage[square,numbers]{natbib} % for bibliography
-\usepackage[nottoc]{tocbibind} % Includes "References" in the table of contents
-\bibliographystyle{unsrtnat}
-
+% \usepackage{natbib} % for bibliography
+\usepackage{biblatex}
 \usepackage{tabularx,longtable,multirow,subfigure,caption}%hangcaption
+\usepackage{fncylab} %formatting of labels
 \usepackage{fancyhdr} % page layout
 \usepackage{url} % URLs
 \usepackage[english]{babel}
@@ -32,11 +30,10 @@
 \usepackage{graphicx}
 \usepackage{dsfont}
 \usepackage{epstopdf} % automatically replace .eps with .pdf in graphics
-\usepackage{backref} % needed for citations
+% \usepackage{backref} % needed for citations
 \usepackage{array}
 \usepackage{latexsym}
-
-\usepackage[pdftex,pagebackref,hypertexnames=false,colorlinks]{hyperref} % provide links in pdf
+\usepackage[pdftex,hypertexnames=false,colorlinks]{hyperref} % provide links in pdf (had pagebackref)
 \usepackage{booktabs}
 \usepackage{wrapfig}
 \usepackage{caption}  % Required for \captionof
@@ -44,19 +41,22 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{csquotes}
-% \usepackage{subcaption} % causes a compilation error after changing back to natbib referencing... 
+\usepackage{subcaption}
+
+
+\usepackage[nottoc]{tocbibind}
 
 \hypersetup{pdftitle={},
-  pdfsubject={}, 
+  pdfsubject={},
   pdfauthor={},
-  pdfkeywords={}, 
+  pdfkeywords={},
   pdfstartview=FitH,
   pdfpagemode={UseOutlines},% None, FullScreen, UseOutlines
   bookmarksnumbered=true, bookmarksopen=true, colorlinks,
-    citecolor=black,%
-    filecolor=black,%
-    linkcolor=black,%
-    urlcolor=black}
+  citecolor=black,%
+  filecolor=black,%
+  linkcolor=black,%
+  urlcolor=black}
 
 \usepackage[all]{hypcap}
 
@@ -80,6 +80,7 @@
     postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
 }
 
+
 %\usepackage{color}
 %\usepackage[tight,ugly]{units}
 %\usepackage{float}
@@ -97,6 +98,7 @@
 %%% Default fonts
 \renewcommand*{\rmdefault}{bch}
 \renewcommand*{\ttdefault}{cmtt}
+
 
 
 %%% Default settings (page layout)
