@@ -55,6 +55,14 @@ parser.add_argument(
     required=True
 )
 
+# 1.2 Add the model training type
+parser.add_argument(
+    '--model_training',
+    type=str,
+    help='Determines the type of model that is being trained. For example, if the model uses only points, the argument should be "point". If the model uses both points and bounding boxes, the argument should be "point_bbox".',
+    required=True,
+)
+
 # 2. Path to the MedSAM checkpoint
 parser.add_argument(
     '--checkpoint',
@@ -112,7 +120,6 @@ parser.add_argument(
     type=int,
     help='Number of batches per epoch',
     required=False,
-    default=1000
 )
 
 # 8. Learning rate for the fine-tuning
@@ -154,14 +161,22 @@ parser.add_argument(
 # In[ ]:
 
 
+print('Preparing to parse args!')
+
+
+# In[ ]:
+
+
 args = parser.parse_args()
 # Suppose for now we get the following set of required arguments:
 # args = parser.parse_args([
-#     '--anatomy', 'CTVn',
-#     # '--checkpoint', os.path.join(os.environ['PROJECT_DIR'], 'models', 'MedSAM', 'work_dir', 'MedSAM', 'medsam_vit_b.pth'),
-#     # '--save_dir', os.path.join(os.environ['MedSAM_finetuned']),
-#     # '--batch_size', '2',
-#     '--epochs', '10',
+#     '--anatomy', 'Bladder',
+#     '--model_training', 'point_general_checkpoint',
+# #     # '--checkpoint', os.path.join(os.environ['PROJECT_DIR'], 'models', 'MedSAM', 'work_dir', 'MedSAM', 'medsam_vit_b.pth'),
+# #     # '--save_dir', os.path.join(os.environ['MedSAM_finetuned']),
+#     '--epochs', '100',
+#     '--batch_size', '9',
+#     '--batches_per_epoch', '100', 
 # ])
 
 
@@ -182,13 +197,14 @@ num_workers = args.num_workers
 weight_decay = args.weight_decay
 resume = args.resume
 batches_per_epoch = args.batches_per_epoch
+model_training = args.model_training
 
 if img_dir is None:
     img_dir = os.path.join(os.environ['MedSAM_preprocessed'], 'imgs')
 if gt_dir is None:
     gt_dir = os.path.join(os.environ['MedSAM_preprocessed'], 'gts', anatomy)
 
-save_dir = os.path.join(save_dir, anatomy)
+save_dir = os.path.join(save_dir, model_training, anatomy)
 
 # print all the args
 print('Arguments:')
@@ -223,6 +239,8 @@ slice_id_from_file_name_regex = r'.*-(\d+).*'
 # In[ ]:
 
 
+from stocaching import SharedCache
+
 # Adapted Dataset class from ../2_no_finetuning/MEDSAM_helper_functions.py
 class SAM_Dataset(Dataset):
     """A torch dataset for delivering slices of any axis to a medsam model."""
@@ -246,6 +264,14 @@ class SAM_Dataset(Dataset):
         self.axis1_imgs = list(filter(filter_fn, os.listdir(os.path.join(gt_path, 'axis1'))))
         self.axis2_imgs = list(filter(filter_fn, os.listdir(os.path.join(gt_path, 'axis2'))))
 
+        self.cache = SharedCache(
+            size_limit_gib=50,
+            dataset_len=self.__len__(),
+            # dataset_len = self.__len__() if batches_per_epoch is None else min(self.__len__(), batches_per_epoch),
+            data_dims=(3,1024,1024),
+            dtype=torch.float32
+        )
+
     def __len__(self):
         return len(self.axis0_imgs) + len(self.axis1_imgs) + len(self.axis2_imgs)
 
@@ -256,6 +282,54 @@ class SAM_Dataset(Dataset):
         # ground truth masks, so that if for some reason the images are misaligned we will
         # guarantee that we will fetch the correct image
 
+        img_path, gt_path, img_name = self._get_image_and_gt_path(idx)
+
+        # retrieve data from cache if it's there
+        img = self.cache.get_slot(idx) # will be None if the cache slot was empty or OOB
+        if img is None:
+            img = np.load(img_path, 'r', allow_pickle=True) # (H, W, C)
+            img = np.transpose(img, (2, 0, 1)) # (C, H, W)
+            assert np.max(img) <= 1. and np.min(img) >= 0., 'image should be normalized to [0, 1]'
+            
+            img = torch.tensor(img).float()
+
+            self.cache.set_slot(idx, img) # try to cache
+        
+        # Loading of ground truth shouldn't be the limiting factor
+        gt = np.load(gt_path, 'r', allow_pickle=True) # (H, W, C)
+
+        # add data augmentation: random fliplr and random flipud
+        if self.data_aug:
+            if random.random() > 0.5:
+                # img = np.ascontiguousarray(np.flip(img, axis=-1))
+                gt = np.ascontiguousarray(np.flip(gt, axis=-1))
+                img = img.flip(-1).contiguous()
+                # gt = gt.flip(-1).contiguous()
+            if random.random() > 0.5:
+                # img = np.ascontiguousarray(np.flip(img, axis=-2))
+                gt = np.ascontiguousarray(np.flip(gt, axis=-2))
+                img = img.flip(-2).contiguous()
+                # gt = gt.flip(-2).contiguous()
+        
+        coords = self._get_random_coord(gt)
+
+        # The output of the model is 256x256, and it is easier to reason about
+        # constricting an image, rather than expanding the output back ot 1024x1024
+
+        gt = cv2.resize(
+            gt,
+            (256, 256),
+            interpolation=cv2.INTER_NEAREST
+        )
+
+        return {
+            "image": img, # 3x1024x1024
+            "gt2D": torch.tensor(gt[None, :,:]).long(), # 1x256x256
+            "coords": torch.tensor(coords[None, ...]).float(),
+            "image_name": img_name
+        }
+    
+    def _get_image_and_gt_path(self, idx):
         if idx < len(self.axis0_imgs):
             axis, gt_name = 0, self.axis0_imgs[idx]
         elif idx < len(self.axis0_imgs) + len(self.axis1_imgs):
@@ -268,31 +342,16 @@ class SAM_Dataset(Dataset):
 
         img_name = f'CT_zzAMLART_{image_id:03d}-{slice_id:03d}.npy'
         
-        # Load the image and ground truth mask
-
         img_path = os.path.join(self.root_img_path, f'axis{axis}', img_name)
         gt_path = os.path.join(self.root_gt_path, f'axis{axis}', gt_name)
 
-        img = np.load(img_path, 'r', allow_pickle=True) # (H, W, C)
-        gt = np.load(gt_path, 'r', allow_pickle=True) # (H, W, C)
-
-        # Pre-process where necessary
-
-        img = np.transpose(img, (2, 0, 1)) # (C, H, W)
-        assert np.max(img) <= 1. and np.min(img) >= 0., 'image should be normalized to [0, 1]'
-
-        # add data augmentation: random fliplr and random flipud
-        if self.data_aug:
-            if random.random() > 0.5:
-                img = np.ascontiguousarray(np.flip(img, axis=-1))
-                gt = np.ascontiguousarray(np.flip(gt, axis=-1))
-            if random.random() > 0.5:
-                img = np.ascontiguousarray(np.flip(img, axis=-2))
-                gt = np.ascontiguousarray(np.flip(gt, axis=-2))
-        
+        return img_path, gt_path, img_name
+    
+    def _get_random_coord(self, gt):
         # Select a random point. We will use this point to guide the model to segment the
         # anatomy. The idea is that we want to select the center of this shape with
         # greater probability than the outside of the shape.
+
         gt = np.uint8(gt > 0)
         y_indices, x_indices = np.where(gt > 0)
 
@@ -315,36 +374,20 @@ class SAM_Dataset(Dataset):
         x_point = x_indices[index]
         y_point = y_indices[index]
 
-        coords = np.array([x_point, y_point])
-
-        # The output of the model is 256x256, and it is easier to reason about
-        # constricting an image, rather than expanding the output back ot 1024x1024
-
-        gt = cv2.resize(
-            gt,
-            (256, 256),
-            interpolation=cv2.INTER_NEAREST
-        )
-
-        return {
-            "image": torch.tensor(img).float(),
-            "gt2D": torch.tensor(gt[None, :,:]).long(),
-            "coords": torch.tensor(coords[None, ...]).float(),
-            "image_name": img_name
-        }
+        return np.array([x_point, y_point])
 
 
 # In[ ]:
 
 
-# quick test to see if the points are being generated correctly and transformations are also ok
+# # quick test to see if the points are being generated correctly and transformations are also ok
 
 # if __name__ == '__main__':
 #     from torchvision.utils import make_grid
 #     import torch.nn.functional as F
 
 #     experimental_datset = SAM_Dataset(img_dir, gt_dir, [1,2,3,4,5], data_aug=False)
-#     dataloader = torch.utils.data.DataLoader(experimental_datset, batch_size=16, shuffle=True)
+#     dataloader = DataLoader(experimental_datset, batch_size=16, shuffle=True)
 
 #     # Get a batch of examples
 #     batch = next(iter(dataloader))
@@ -746,7 +789,7 @@ class MedSAMTrainer(object):
         self.checkpointHandler = checkpointHandler
 
         self.epochs = kwargs['epochs']
-        self.batches_per_epoch = -1 if 'batches_per_epoch' not in kwargs.keys() else kwargs['batches_per_epoch']
+        self.batches_per_epoch = -1 if 'batches_per_epoch' not in kwargs.keys() or kwargs['batches_per_epoch'] is None else kwargs['batches_per_epoch']
         self.resume = kwargs['resume']
 
         self.dice_loss_fn = monai.losses.DiceLoss(sigmoid=True, squared_pred=True, reduction='mean')
@@ -765,7 +808,6 @@ class MedSAMTrainer(object):
                 dice_loss, ce_loss = self.train_step(batch_id, batch)            
                 
                 pbar.set_description(f"Epoch {epoch}, loss: {dice_loss + ce_loss:.4f}")
-
 
             with torch.no_grad():
                 self.on_validation_epoch_start()
@@ -837,7 +879,7 @@ class MedSAMTrainer(object):
         self.optimizer.step()
         self.optimizer.zero_grad()
 
-        self.loggingHandler.log(f'[TRAINING]:   Received dice: {dice_loss.item()} with cross entropy loss: {ce_loss.item()}')
+        self.loggingHandler.log(f'[TRAINING]:   Received dice loss: {dice_loss.item()} with cross entropy loss: {ce_loss.item()}')
         self.loggingHandler.log_metric('dice_loss', dice_loss.item(), self.current_epoch)
         self.loggingHandler.log_metric('ce_loss', ce_loss.item(), self.current_epoch)
 
@@ -879,7 +921,7 @@ class MedSAMTrainer(object):
         dice_loss = self.dice_loss_fn(medsam_lite_pred, gt2D)
         ce_loss = self.ce_loss_fn(medsam_lite_pred, gt2D.float())
 
-        self.loggingHandler.log(f'[VALIDATION]: Received dice: {dice_loss.item()} with cross entropy loss: {ce_loss.item()}')
+        self.loggingHandler.log(f'[VALIDATION]: Received dice loss: {dice_loss.item()} with cross entropy loss: {ce_loss.item()}')
         self.loggingHandler.log_metric('val_dice_loss', dice_loss.item(), self.current_epoch)
         self.loggingHandler.log_metric('val_ce_loss', ce_loss.item(), self.current_epoch)
 
@@ -904,7 +946,6 @@ myTrainer = MedSAMTrainer(
     dataloaderHandler, 
     checkpointHandler,
     epochs=epochs,
-    # epochs=2,
     resume=resume,
     batches_per_epoch=batches_per_epoch
 )

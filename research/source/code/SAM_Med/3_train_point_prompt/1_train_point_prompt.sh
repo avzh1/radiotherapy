@@ -4,7 +4,7 @@
 #SBATCH -c 16                            # Number of CPU Cores
 #SBATCH -p gpus                          # Partition (queue)
 #SBATCH --gres gpu:1                     # gpu:n, where n = number of GPUs
-#SBATCH --mem 20G                        # memory pool for all cores
+#SBATCH --mem 100G                       # memory pool for all cores
 #SBATCH --output=logs/slurm.%N.%j.log    # Standard output and error log
 
 #SBATCH --job-name=MEDSAM.finetune
@@ -27,6 +27,7 @@ source ${SOURCE_DIR}/.venv/bin/activate
 
 # Convert Python Script
 jupyter nbconvert --to script '1_train_point_prompt.ipynb'
+echo "Converted Python Script"
 
 # Run python script
-python3 1_train_point_prompt.py --anatomy $1 --model_training points --epochs 100 --batch_size=6
+python3 1_train_point_prompt.py --anatomy $1 --model_training point --epochs 100 --batch_size=4 --batches_per_epoch 1000

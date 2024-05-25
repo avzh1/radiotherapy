@@ -46,22 +46,27 @@ parser.add_argument('--verbose', action='store_true', help='print more informati
 # import sys
 # original_args = sys.argv
 
-# # sys.argv = [
-# #     sys.argv[0],
-# #     'CT',
-# #     'Bladder',
-# #     '/vol/biomedic3/bglocker/ugproj2324/az620/radiotherapy/data/nnUNet_raw/Dataset002_Bladder/imagesTr',
-# #     '/vol/biomedic3/bglocker/ugproj2324/az620/radiotherapy/data/nnUNet_raw/Dataset002_Bladder/labelsTr',
-# #     '/vol/biomedic3/bglocker/ugproj2324/az620/radiotherapy/data/MedSAM_preprocessed',
-# #     '--axis', '1', '--verbose'
-# # ]
+# sys.argv = [
+#     sys.argv[0],
+#     'CT',
+#     'Bladder',
+#     '/vol/biomedic3/bglocker/ugproj2324/az620/radiotherapy/data/nnUNet_raw/Dataset002_Bladder/imagesTr',
+#     '/vol/biomedic3/bglocker/ugproj2324/az620/radiotherapy/data/nnUNet_raw/Dataset002_Bladder/labelsTr',
+#     '/vol/biomedic3/bglocker/ugproj2324/az620/radiotherapy/data/MedSAM_preprocessed_lowres',
+#     '--axis', '1', 
+#     '--image_size', '512',
+#     '--verbose'
+# ]
 
 # %%
 args = parser.parse_args()
 
-# if args.verbose:
-#     for arg in vars(args):
-#         print(f"{arg}: {getattr(args, arg)}")
+if args.verbose:
+    for arg in vars(args):
+        print(f"{arg}: {getattr(args, arg)}")
+
+# %%
+print('Preprocessing', args.modality, args.anatomy, args.axis)
 
 # %%
 modality = args.modality
@@ -208,7 +213,8 @@ for name in tqdm(names):
             
             if not os.path.isfile(img_save_path):
                 img_i = img_roi[slice_at(i)]
-                img_3c = np.repeat(img_i[:, :, None], 3, axis=-1)
+                # img_3c = np.repeat(img_i[:, :, None], 3, axis=-1)
+                img_3c = img_i # don't repeat the channels when saving. This should be done in the dataloader as otherwise there is a lot of redundancy
                 resize_img_skimg = transform.resize(
                     img_3c,
                     (image_size, image_size),
