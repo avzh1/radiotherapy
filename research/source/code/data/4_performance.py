@@ -516,12 +516,12 @@ table = True
 
 for c in [
              os.environ.get('Anorectum'),
-            #  os.environ.get('Bladder'),
-            #  os.environ.get('CTVn'),
-            #  os.environ.get('CTVp'),
-            #  os.environ.get('Parametrium'),
-            #  os.environ.get('Uterus'),
-            #  os.environ.get('Vagina'),
+             os.environ.get('Bladder'),
+             os.environ.get('CTVn'),
+             os.environ.get('CTVp'),
+             os.environ.get('Parametrium'),
+             os.environ.get('Uterus'),
+             os.environ.get('Vagina'),
              ]:
     id = int(c.split('_')[0][len('Dataset'):])
     print('Fetching metrics for ', c, ' id ', id)
@@ -553,47 +553,4 @@ vagina_metrics = None if os.environ.get('Vagina') not in metrics.keys() else met
 # ctvn_metrics_ax2 = fetch_metric_for_class(3, axis=2)
 # ctvp_metrics_ax2 = fetch_metric_for_class(4, axis=2)
 # parametrium_metrics_ax2 = fetch_metric_for_class(5, axis=2)
-
-
-# In[9]:
-
-
-save = True
-separate = False
-table = True
-
-for anatomy, metrics_dict in metrics.items():
-    plot_metrics(metrics_dict, anatomy, save=save, separate=separate, table=table)
-
-# plot_metrics(anorectum_metrics, 'anorectum', save=save, separate=separate, table=table)
-# plot_metrics(bladder_metrics, 'bladder', save=save, separate=separate, table=table, showfliers=False)
-# plot_metrics(ctvn_metrics, 'ctvn', save=save, separate=separate, table=table)
-# plot_metrics(ctvp_metrics, 'ctvp', save=save, separate=separate, table=table)
-# plot_metrics(parametrium_metrics, 'parametrium', save=save, separate=separate, table=table)
-# plot_metrics(uterus_metrics, 'uterus', save=save, separate=separate, table=table)
-# plot_metrics(vagina_metrics, 'vagina', save=save, separate=separate, table=table)
-
-# plot_metrics(anorectum_metrics_ax0, 'anorectum', save=save, separate=separate, table=table, additional_title_context='(Axis 0)')
-# plot_metrics(bladder_metrics_ax0, 'bladder', save=save, separate=separate, table=table, additional_title_context='(Axis 0)')
-# plot_metrics(ctvn_metrics_ax0, 'ctvn', save=save, separate=separate, table=table, additional_title_context='(Axis 0)')
-# plot_metrics(ctvp_metrics_ax0, 'ctvp', save=save, separate=separate, table=table, additional_title_context='(Axis 0)')
-# plot_metrics(parametrium_metrics_ax0, 'parametrium', save=save, separate=separate, table=table, additional_title_context='(Axis 0)')
-
-# plot_metrics(anorectum_metrics_ax1, 'anorectum', save=save, separate=separate, table=table, additional_title_context='(Axis 1)')
-# plot_metrics(bladder_metrics_ax1, 'bladder', save=save, separate=separate, table=table, additional_title_context='(Axis 1)')
-# plot_metrics(ctvn_metrics_ax1, 'ctvn', save=save, separate=separate, table=table, additional_title_context='(Axis 1)')
-# plot_metrics(ctvp_metrics_ax1, 'ctvp', save=save, separate=separate, table=table, additional_title_context='(Axis 1)')
-# plot_metrics(parametrium_metrics_ax1, 'parametrium', save=save, separate=separate, table=table, additional_title_context='(Axis 1)')
-
-# plot_metrics(anorectum_metrics_ax2, 'anorectum', save=save, separate=separate, table=table, additional_title_context='(Axis 2)')
-# plot_metrics(bladder_metrics_ax2, 'bladder', save=save, separate=separate, table=table, additional_title_context='(Axis 2)')
-# plot_metrics(ctvn_metrics_ax2, 'ctvn', save=save, separate=separate, table=table, additional_title_context='(Axis 2)')
-# plot_metrics(ctvp_metrics_ax2, 'ctvp', save=save, separate=separate, table=table, additional_title_context='(Axis 2)')
-# plot_metrics(parametrium_metrics_ax2, 'parametrium', save=save, separate=separate, table=table, additional_title_context='(Axis 2)')
-
-
-# In[ ]:
-
-
-
 

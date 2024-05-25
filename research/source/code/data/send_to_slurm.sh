@@ -23,3 +23,5 @@ fi
 # Run python script
 jupyter nbconvert --to script $1.ipynb
 python3 $1.py
+
+rm -rf $1.py
