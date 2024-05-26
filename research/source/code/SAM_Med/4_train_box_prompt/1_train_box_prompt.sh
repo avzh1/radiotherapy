@@ -6,7 +6,6 @@
 #SBATCH --gres gpu:1                     # gpu:n, where n = number of GPUs
 #SBATCH --mem 30G                        # memory pool for all cores
 #SBATCH --output=logs/slurm.%N.%j.log    # Standard output and error log
-#SBATCH --nodelist lory                  # SLURM node
 
 #SBATCH --job-name=MEDSAM.finetune
 
