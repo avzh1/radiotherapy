@@ -179,12 +179,12 @@ print('Preparing to parse args!')
 args = parser.parse_args()
 # Suppose for now we get the following set of required arguments:
 # args = parser.parse_args([
-#     '--anatomy', 'Bladder',
-#     '--model_training', 'point_general_checkpoint',
+#     '--anatomy', 'CTVn',
+#     '--model_training', 'boxed_lowres',
 # #     # '--checkpoint', os.path.join(os.environ['PROJECT_DIR'], 'models', 'MedSAM', 'work_dir', 'MedSAM', 'medsam_vit_b.pth'),
 # #     # '--save_dir', os.path.join(os.environ['MedSAM_finetuned']),
 #     '--epochs', '100',
-#     '--batch_size', '9',
+#     '--batch_size', '2',
 #     '--batches_per_epoch', '100', 
 #     '--lowres', 'True',
 # ])
@@ -272,7 +272,7 @@ from stocaching import SharedCache
 class SAM_Dataset(Dataset):
     """A torch dataset for delivering slices of any axis to a medsam model."""
 
-    def __init__(self, img_path, gt_path, id_split, data_aug=False, max_points=5):
+    def __init__(self, img_path, gt_path, id_split, data_aug=False, max_points=5, box_padding=10, max_box_points=3):
         """
         Args:
             img_path (string): Path to the directory containing the images
@@ -285,6 +285,8 @@ class SAM_Dataset(Dataset):
         self.id_split = id_split
         self.data_aug = data_aug
         self.max_points = max_points
+        self.box_padding = box_padding
+        self.max_box_points = max_box_points
         
         # Assume that axese 0 1 and 2 have been processed.
         filter_fn = lambda x : x.endswith('.npy') and int(re.search(image_id_from_file_name_regex, x).group(1)) in id_split
@@ -293,7 +295,7 @@ class SAM_Dataset(Dataset):
         self.axis2_imgs = list(filter(filter_fn, os.listdir(os.path.join(gt_path, 'axis2'))))
 
         self.cache = SharedCache(
-            size_limit_gib=15,
+            size_limit_gib=20,
             dataset_len=self.__len__(),
             # dataset_len = self.__len__() if batches_per_epoch is None else min(self.__len__(), batches_per_epoch),
             data_dims=(512,512),
@@ -310,10 +312,10 @@ class SAM_Dataset(Dataset):
         # ground truth masks, so that if for some reason the images are misaligned we will
         # guarantee that we will fetch the correct image
 
-        img_path, gt_path, img_name = self._get_image_and_gt_path(idx)
+        img_path, gt_path, img_name, axis = self._get_image_and_gt_path(idx)
 
-        img = self._load_image(img_path, idx) # (H, W, C)
-        gt = self._load_gt(gt_path) # (H, W, C)
+        img = self._load_image(img_path, idx, axis) # (H, W, C)
+        gt = self._load_gt(gt_path, axis) # (H, W, C)
 
         # add data augmentation: random fliplr and random flipud
         if self.data_aug:
@@ -328,7 +330,8 @@ class SAM_Dataset(Dataset):
                 img = img.flip(-2).contiguous()
                 # gt = gt.flip(-2).contiguous()
         
-        coords = self._get_random_coord(gt)
+        coords = self._get_random_coord(gt) if self.max_points > 0 else np.ones((0, 2)) * -1
+        boxes, gt = self._get_bounding_boxes(gt) if self.max_box_points > 0 else (np.ones((0, 4)) * -1, gt)
 
         # The output of the model is 256x256, and it is easier to reason about
         # constricting an image, rather than expanding the output back ot 1024x1024
@@ -343,6 +346,7 @@ class SAM_Dataset(Dataset):
             "image": img, # 3x1024x1024
             "gt2D": torch.tensor(gt[None, :,:]).long(), # 1x256x256
             "coords": torch.tensor(coords[None, ...]).float(),
+            "boxes": torch.tensor(boxes[None, ...]).float(),
             "image_name": img_name
         }
     
@@ -362,7 +366,7 @@ class SAM_Dataset(Dataset):
         img_path = os.path.join(self.root_img_path, f'axis{axis}', img_name)
         gt_path = os.path.join(self.root_gt_path, f'axis{axis}', gt_name)
 
-        return img_path, gt_path, img_name
+        return img_path, gt_path, img_name, axis
     
     def _get_random_coord(self, gt):
         # Select a random point. We will use this point to guide the model to segment the
@@ -418,7 +422,7 @@ class SAM_Dataset(Dataset):
 
         return coordinates
 
-    def _load_image(self, img_path, idx):
+    def _load_image(self, img_path, idx, axis):
         # retrieve data from cache if it's there
         img = self.cache.get_slot(idx) # will be None if the cache slot was empty or OOB
 
@@ -470,11 +474,24 @@ class SAM_Dataset(Dataset):
             assert np.max(img) <= 1. and np.min(img) >= 0., 'image should be normalized to [0, 1]'
 
             img = np.transpose(img, (2, 0, 1)) # (C, H, W)
-            
+        
+        img = self._put_image_in_right_direction_based_on_axis(img, axis)
         img = torch.tensor(img).float()
         return img
 
-    def _load_gt(self, gt_path):
+    def _put_image_in_right_direction_based_on_axis(self, array, axis):
+        # ValueError: At least one stride in the given numpy array is negative, and
+        # tensors with negative strides are not currently supported. (You can probably
+        # work around this by making a copy of your array  with array.copy().) 
+
+        # if axis == 1 or axis == 2:
+        #     # invert the y-axis
+        #     array_copy = array.copy()
+        #     return np.flipud(array_copy)
+
+        return array
+
+    def _load_gt(self, gt_path, axis):
         # Loading of ground truth shouldn't be the limiting factor
         gt = np.load(gt_path, 'r', allow_pickle=True) # (H, W, C)
 
@@ -489,7 +506,46 @@ class SAM_Dataset(Dataset):
             )
             gt = (gt > 0).astype(np.uint8)
 
+        gt = self._put_image_in_right_direction_based_on_axis(gt, axis)
+
         return gt
+
+    def _get_bounding_boxes(self, gt):
+        # Find contours in the segmentation map
+        contours, _ = cv2.findContours(gt, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        # Initialize list to store bounding boxes
+        bounding_boxes = []
+
+        # Loop through contours to find bounding boxes
+        for contour in contours:
+            # Get bounding box coordinates
+            x, y, w, h = cv2.boundingRect(contour)
+            bounding_boxes.append([x - self.box_padding, y - self.box_padding, x + w + self.box_padding, y + h + self.box_padding])  # Format: (x_min, y_min, x_max, y_max)
+
+        # Adjust the number of bounding boxes if necessary
+        if len(bounding_boxes) > self.max_box_points:
+            # Sort bounding boxes based on area
+            bounding_boxes = sorted(bounding_boxes, key=lambda bb: (bb[2] - bb[0]) * (bb[3] - bb[1]), reverse=True)
+            bounding_boxes = bounding_boxes[:self.max_box_points]  # Select bounding boxes with the greatest area
+        elif len(bounding_boxes) < self.max_box_points:
+            # Repeat existing bounding boxes to fill in
+            repeat_times = self.max_box_points // len(bounding_boxes)
+            remaining = self.max_box_points % len(bounding_boxes)
+            bounding_boxes = np.tile(bounding_boxes, (repeat_times, 1))
+            # If the number of bounding boxes required is not divisible evenly by the existing ones,
+            # then we append the remaining bounding boxes from the existing ones
+            if remaining > 0:
+                bounding_boxes = np.concatenate((bounding_boxes, bounding_boxes[:remaining]), axis=0)
+
+        box_mask = np.zeros_like(gt, dtype=bool)
+        # set the regions that are inside the bounds of the bounding box to 1 in box_mask
+        for bb in bounding_boxes:
+            box_mask[bb[1]:bb[3], bb[0]:bb[2]] = 1
+        
+        gt = np.logical_and(box_mask, gt).astype(np.uint8)
+
+        return np.array(bounding_boxes), gt
 
 
 # In[ ]:
@@ -497,41 +553,65 @@ class SAM_Dataset(Dataset):
 
 # quick test to see if the points are being generated correctly and transformations are also ok
 
-if __name__ == '__main__':
-    from torchvision.utils import make_grid
-    import torch.nn.functional as F
+from torchvision.utils import make_grid
+import torch.nn.functional as F
 
-    experimental_datset = SAM_Dataset(img_dir, gt_dir, [i for i in range(1, 2)], data_aug=False)
-    dataloader = DataLoader(experimental_datset, batch_size=16, shuffle=True)
+experimental_datset = SAM_Dataset(img_dir, gt_dir, [i for i in range(1, 2)], data_aug=False, max_box_points=1)
+dataloader = DataLoader(experimental_datset, batch_size=16, shuffle=True)
 
-    # Get a batch of examples
-    batch = next(iter(dataloader))
+# Get a batch of examples
+batch = next(iter(dataloader))
 
-    images = F.interpolate(batch['image'], size=(256, 256), mode='bilinear', align_corners=False)
 
-    grid_imgs = make_grid(images, nrow=4, padding=0)
-    grid_gts = make_grid(batch['gt2D'].float(), nrow=4, padding=0)
-    gts_mask = (grid_gts.sum(dim=0) > 0).float()
+# In[ ]:
 
-    plt.figure(figsize=(30, 30))
-    plt.imshow(grid_imgs.permute(1, 2, 0))
-    plt.imshow(gts_mask, alpha=gts_mask, cmap='viridis')
 
-    shift_x = 0
-    shift_y = -256
-    for i in range(16):
+images = F.interpolate(batch['image'], size=(256, 256), mode='bilinear', align_corners=False)
 
-        shift_y = shift_y + 256 if i % 4 == 0 else shift_y
-        shift_x = shift_x + 256 if i % 4 != 0 else 0
+grid_imgs = make_grid(images, nrow=4, padding=0)
+grid_gts = make_grid(batch['gt2D'].float(), nrow=4, padding=0)
+gts_mask = (grid_gts.sum(dim=0) > 0).float()
 
-        coord = batch['coords'][i].squeeze().numpy()
-        for c in coord:
-            x, y = c[0], c[1]
-            x, y = x * 256 / 1024 + shift_x, y * 256 / 1024 + shift_y
-            plt.scatter(x, y, c='r', s=60)
+plt.figure(figsize=(30, 30))
+plt.imshow(grid_imgs.permute(1, 2, 0))
+plt.imshow(gts_mask, alpha=gts_mask, cmap='viridis')
 
-    plt.axis('off')
-    plt.show()
+shift_x = 0
+shift_y = -256
+# for i in range(16):
+
+#     shift_y = shift_y + 256 if i % 4 == 0 else shift_y
+#     shift_x = shift_x + 256 if i % 4 != 0 else 0
+
+#     coord = batch['coords'][i].squeeze().numpy()
+#     for c in coord:
+#         x, y = c[0], c[1]
+#         x, y = x * 256 / 1024 + shift_x, y * 256 / 1024 + shift_y
+#         plt.scatter(x, y, c='r', s=60)
+
+for i in range(16):
+
+    shift_y = shift_y + 256 if i % 4 == 0 else shift_y
+    shift_x = shift_x + 256 if i % 4 != 0 else 0
+
+    coord = batch['boxes'][i, 0].numpy().astype(np.uint16)
+    for c in coord:
+        x_min, y_min, x_max, y_max = c[0], c[1], c[2], c[3]
+        
+        # plot the box
+        x, y = x_min, y_min
+        x, y = x * 256 / 1024 + shift_x, y * 256 / 1024 + shift_y
+
+        h, w = y_max - y_min, x_max - x_min
+        h, w = h * 256 / 1024, w * 256 / 1024
+
+        rectangle = plt.Rectangle((x, y), w, h, edgecolor='r', facecolor='none')
+        plt.gca().add_patch(rectangle)
+
+        # plt.scatter(x, y, c='r', s=60)
+
+plt.axis('off')
+plt.show()
 
 
 # ## Set up Fine-Tuning nn Module
@@ -560,7 +640,7 @@ class MedSAM(nn.Module):
             for param in self.image_encoder.parameters():
                 param.requires_grad = False
 
-    def forward(self, image, point_prompt):
+    def forward(self, image, point_prompt=None, boxes=None):
 
         # do not compute gradients for pretrained img encoder and prompt encoder
         with torch.no_grad():
@@ -569,7 +649,7 @@ class MedSAM(nn.Module):
             # bbox is already in 1024x1024
             sparse_embeddings, dense_embeddings = self.prompt_encoder(
                 points=point_prompt,
-                boxes=None,
+                boxes=boxes,
                 masks=None,
             )
         low_res_masks, iou_predictions = self.mask_decoder(
@@ -684,6 +764,9 @@ class DataLoaderHandler():
             batch_size,
             num_workers,
             data_aug : bool,
+            max_points : int,
+            box_padding : int,
+            max_box_points : int,
             training_split = 0.8, 
             validation_split = 0.2):
 
@@ -698,6 +781,9 @@ class DataLoaderHandler():
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.data_aug = data_aug
+        self.max_points = max_points
+        self.box_padding = box_padding
+        self.max_box_points = max_box_points
         
         # Splits for validation and training
         assert training_split + validation_split == 1
@@ -753,8 +839,8 @@ class DataLoaderHandler():
 
     def setup_dataloaders(self):
         
-        self.training_dataset = SAM_Dataset(self.image_dir, self.gt_dir, self.training_image_ids, data_aug = self.data_aug)
-        self.validation_dataset = SAM_Dataset(self.image_dir, self.gt_dir, self.validation_image_ids, data_aug = self.data_aug)
+        self.training_dataset = SAM_Dataset(self.image_dir, self.gt_dir, self.training_image_ids, data_aug = self.data_aug, max_points=self.max_points, box_padding=self.box_padding, max_box_points=self.max_box_points)
+        self.validation_dataset = SAM_Dataset(self.image_dir, self.gt_dir, self.validation_image_ids, data_aug = self.data_aug, max_points=self.max_points, box_padding=self.box_padding, max_box_points=self.max_box_points)
         
         # Quick check
         assert set(map(lambda x : int(re.search(image_id_from_file_name_regex, x).group(1)), self.validation_dataset.axis0_imgs)) == set(self.validation_image_ids), 'DataSet incorrectly loaded image ids that don\'t match supplied validation set image ids'
@@ -891,7 +977,7 @@ class LoggingHandler():
 
 
 loggingHandler = LoggingHandler(save_dir)
-dataloaderHandler = DataLoaderHandler(save_dir, img_dir, gt_dir, batch_size, num_workers, True)
+dataloaderHandler = DataLoaderHandler(save_dir, img_dir, gt_dir, batch_size, num_workers, True, 0, 5, 1)
 checkpointHandler = CheckpointHandler(save_dir, checkpoint_path, lr=lr, weight_decay=weight_decay)
 
 
@@ -919,7 +1005,7 @@ class MedSAMTrainer(object):
 
             pbar = tqdm(range(self.batches_per_epoch))
             for batch_id in pbar:
-
+                self.loggingHandler.log('Getting batch {}'.format(batch_id))
                 batch = next(iter(self.dataloaderHandler.train_loader))
                 dice_loss, ce_loss = self.train_step(batch_id, batch)            
                 
@@ -977,13 +1063,14 @@ class MedSAMTrainer(object):
         # Get data
         image = batch["image"].to(device)
         gt2D = batch["gt2D"].to(device)
-        coords_torch = batch["coords"].squeeze().to(device) # ([B, Ps, 2])
+        # coords_torch = batch["coords"].squeeze().to(device) # ([B, Ps, 2])
+        boxes_torch = batch["boxes"].squeeze().to(device) # ([B, Ps, 4])
 
-        self.optimizer.zero_grad()
-        labels_torch = torch.ones(coords_torch.shape[0], coords_torch.shape[1]).long() # (B, Ps)
-        coords_torch, labels_torch = coords_torch.to(device), labels_torch.to(device)
-        point_prompt = (coords_torch, labels_torch)
-        medsam_lite_pred = self.model(image, point_prompt)
+        # self.optimizer.zero_grad()
+        # labels_torch = torch.ones(coords_torch.shape[0], coords_torch.shape[1]).long() # (B, Ps)
+        # coords_torch, labels_torch = coords_torch.to(device), labels_torch.to(device)
+        # point_prompt = (coords_torch, labels_torch)
+        medsam_lite_pred = self.model(image, None, boxes_torch)
 
         dice_loss = self.dice_loss_fn(medsam_lite_pred, gt2D)
         ce_loss = self.ce_loss_fn(medsam_lite_pred, gt2D.float())
@@ -1078,10 +1165,4 @@ myTrainer.run_training()
 
 
 # batch = next(iter(myTrainer.dataloaderHandler.train_loader))
-
-
-# In[ ]:
-
-
-# myTrainer.train_step(-1, batch)
 

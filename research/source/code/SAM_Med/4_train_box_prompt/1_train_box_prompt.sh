@@ -27,8 +27,8 @@ source ${SOURCE_DIR}/.venv/bin/activate
 # source ${SOURCE_DIR}/data/data_vars.sh
 
 # Convert Python Script
-jupyter nbconvert --to script '2_train_dense_point_prompt.ipynb'
+jupyter nbconvert --to script '1_train_box_prompt.ipynb'
 echo "Converted Python Script"
 
 # Run python script
-python3 2_train_dense_point_prompt.py --anatomy $1 --model_training dense_point_lowres_contrained_batch --epochs 100 --batch_size=4 --lowres True --batches_per_epoch 200
+python3 1_train_box_prompt.py --anatomy $1 --model_training boxed_lowres --epochs 100 --batch_size=4 --lowres True --batches_per_epoch 200
