@@ -9,7 +9,7 @@
 
 # ## Argparse Setup
 
-# In[ ]:
+# In[24]:
 
 
 # Imports
@@ -41,7 +41,7 @@ from utils.environment import setup_data_vars
 setup_data_vars()
 
 
-# In[ ]:
+# In[25]:
 
 
 parser = argparse.ArgumentParser()
@@ -167,32 +167,32 @@ parser.add_argument(
 )
 
 
-# In[ ]:
+# In[26]:
 
 
 print('Preparing to parse args!')
 
 
-# In[ ]:
+# In[27]:
 
 
 args = parser.parse_args()
 # Suppose for now we get the following set of required arguments:
 # args = parser.parse_args([
 #     '--anatomy', 'Bladder',
-#     '--model_training', 'point_general_checkpoint',
+#     '--model_training', 'dense_point_lowres_constrained_batch_test',
 # #     # '--checkpoint', os.path.join(os.environ['PROJECT_DIR'], 'models', 'MedSAM', 'work_dir', 'MedSAM', 'medsam_vit_b.pth'),
 # #     # '--save_dir', os.path.join(os.environ['MedSAM_finetuned']),
 #     '--epochs', '100',
-#     '--batch_size', '9',
-#     '--batches_per_epoch', '100', 
+#     '--batch_size', '2',
+#     '--batches_per_epoch', '2', 
 #     '--lowres', 'True',
 # ])
 
 
 # ## Set up the vars
 
-# In[ ]:
+# In[28]:
 
 
 anatomy = args.anatomy
@@ -241,7 +241,7 @@ print(f'lowres {lowres}')
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-# In[ ]:
+# In[29]:
 
 
 seed = 42
@@ -254,7 +254,7 @@ torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
 
 
-# In[ ]:
+# In[30]:
 
 
 image_id_from_file_name_regex = r'.*_(\d+).*'
@@ -263,7 +263,7 @@ slice_id_from_file_name_regex = r'.*-(\d+).*'
 
 # ## Set up Dataset class
 
-# In[ ]:
+# In[31]:
 
 
 from stocaching import SharedCache
@@ -492,7 +492,7 @@ class SAM_Dataset(Dataset):
         return gt
 
 
-# In[ ]:
+# In[32]:
 
 
 # quick test to see if the points are being generated correctly and transformations are also ok
@@ -536,7 +536,7 @@ if __name__ == '__main__':
 
 # ## Set up Fine-Tuning nn Module
 
-# In[ ]:
+# In[33]:
 
 
 class MedSAM(nn.Module):
@@ -585,7 +585,7 @@ class MedSAM(nn.Module):
 
 # ## Helper Classes
 
-# In[ ]:
+# In[34]:
 
 
 class CheckpointHandler():
@@ -673,7 +673,7 @@ class CheckpointHandler():
         return os.path.exists(os.path.join(self.save_dir, 'checkpoint_final.pth')) 
 
 
-# In[ ]:
+# In[35]:
 
 
 class DataLoaderHandler():
@@ -764,7 +764,7 @@ class DataLoaderHandler():
         self.val_loader = DataLoader(self.validation_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers, pin_memory=True)
 
 
-# In[ ]:
+# In[36]:
 
 
 class LoggingHandler():
@@ -887,7 +887,7 @@ class LoggingHandler():
 
 # ## Main Training Loop
 
-# In[ ]:
+# In[37]:
 
 
 loggingHandler = LoggingHandler(save_dir)
@@ -895,7 +895,7 @@ dataloaderHandler = DataLoaderHandler(save_dir, img_dir, gt_dir, batch_size, num
 checkpointHandler = CheckpointHandler(save_dir, checkpoint_path, lr=lr, weight_decay=weight_decay)
 
 
-# In[ ]:
+# In[38]:
 
 
 class MedSAMTrainer(object):
@@ -971,9 +971,7 @@ class MedSAMTrainer(object):
         self.loggingHandler.start_new_epoch(epoch)
         self.current_epoch = epoch
 
-    def train_step(self, step, batch):
-        self.loggingHandler.log(f'Starting epoch {self.current_epoch} and step {step} out of {self.batches_per_epoch}')
-
+    def forward_pass(self, batch):
         # Get data
         image = batch["image"].to(device)
         gt2D = batch["gt2D"].to(device)
@@ -988,8 +986,14 @@ class MedSAMTrainer(object):
         dice_loss = self.dice_loss_fn(medsam_lite_pred, gt2D)
         ce_loss = self.ce_loss_fn(medsam_lite_pred, gt2D.float())
 
+        return dice_loss, ce_loss
+
+    def train_step(self, step, batch):
+        self.loggingHandler.log(f'Starting epoch {self.current_epoch} and step {step} out of {self.batches_per_epoch}')
+
+        dice_loss, ce_loss = self.forward_pass(batch)
         loss = dice_loss + ce_loss
-        
+
         loss.backward()
         self.optimizer.step()
         self.optimizer.zero_grad()
@@ -1023,18 +1027,7 @@ class MedSAMTrainer(object):
     def validation_step(self, batch_id, batch):
         self.loggingHandler.log(f'Validation step {batch_id} out of {min(len(self.dataloaderHandler.val_loader), self.batches_per_epoch)}')
 
-        image = batch["image"].to(device)
-        gt2D = batch["gt2D"].to(device)
-        coords_torch = batch["coords"].to(device)
-
-        labels_torch = torch.ones(coords_torch.shape[0]).long().to(device)
-        labels_torch = labels_torch.unsqueeze(1)
-
-        point_prompt = (coords_torch, labels_torch)
-        medsam_lite_pred = self.model(image, point_prompt)
-
-        dice_loss = self.dice_loss_fn(medsam_lite_pred, gt2D)
-        ce_loss = self.ce_loss_fn(medsam_lite_pred, gt2D.float())
+        dice_loss, ce_loss = self.forward_pass(batch)
 
         self.loggingHandler.log(f'[VALIDATION]: Received dice loss: {dice_loss.item()} with cross entropy loss: {ce_loss.item()}')
         self.loggingHandler.log_metric('val_dice_loss', dice_loss.item(), self.current_epoch)
@@ -1053,7 +1046,7 @@ class MedSAMTrainer(object):
         self.loggingHandler.log(f'Average loss: {epoch_loss_reduced}')
 
 
-# In[ ]:
+# In[39]:
 
 
 myTrainer = MedSAMTrainer(

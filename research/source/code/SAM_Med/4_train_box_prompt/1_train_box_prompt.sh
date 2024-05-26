@@ -4,7 +4,7 @@
 #SBATCH -c 16                            # Number of CPU Cores
 #SBATCH -p gpus                          # Partition (queue)
 #SBATCH --gres gpu:1                     # gpu:n, where n = number of GPUs
-#SBATCH --mem 30G                        # memory pool for all cores
+#SBATCH --mem 35G                        # memory pool for all cores
 #SBATCH --output=logs/slurm.%N.%j.log    # Standard output and error log
 
 #SBATCH --job-name=MEDSAM.finetune
