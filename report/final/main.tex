@@ -62,7 +62,266 @@
 
 \section{Clinical Context}
 \subsection{Cancer}
-\subsection{Data}
+
+\subsection{CT modality}
+
+\begin{figure}[H]
+    \centering
+    \subfigure[Muscle Window $(35,55)$~\cite{other-HD-units}]{{\includegraphics[width=0.3\textwidth, trim=0.2cm 1cm 21cm 2cm, clip]{../figures/HU-window.png}}}
+    \subfigure[Cancellous Bone Window  $(300,400)$~\cite{cancellous-bone}]{{\includegraphics[width=0.3\textwidth, trim=10.6cm 1cm 10.6cm 2cm, clip]{../figures/HU-window.png}}}
+    \subfigure[Fat Window $(-120, -90)$~\cite{other-HD-units}]{{\includegraphics[width=0.3\textwidth, trim=21cm 1cm 0.2cm 2cm, clip]{../figures/HU-window.png}}}
+    \caption{Coronal view the same image slice of a CT image, with different window cropping (Patient id: 49, slice 251, axis 1)}
+    \label{fig:ct-windows}
+\end{figure}
+
+The CT scan is a popular imaging modality in clinical environments because of its non-invasive ability to provide detailed images of the internal structures of the body. A series of X-ray devices are rotated around a specified body part, and computer-generated cross-sectional images are produced~\cite{file-formats}. Whilst the scanner rotates, the table the patient lies on slowly moves up and down inside the tube to produce different cross-section images. 
+
+The granularity or image slice thickness is decided by the operator or physician and ranges from 1mm to 10mm. Therefore, the precision along each axis creates a cube, or voxel which represents the value on a grid in three-dimensional space. The voxel values are measured in Hounsfield Units (HU)~\cite{diagnostic-radiology-physics}. 
+
+Contrary to natural images, where pixel values vary from 0 to 255 in 3 channels representing Red, Blue and Green, the Hounsfield scale is a quantitative scale for describing radiodensity where the image intensity reflects tissue type; each voxel intensity refers to specific tissue composition. The positive values are a consequence of more dense tissue with greater X-ray beam absorption, and negative values are less dense tissue with less X-ray beam absorption~\cite{Statpearls}.  
+
+Therefore, becuase the HU scale is relative, different windows may be taken of a CT scan to highlight different tissues. Those voxels that lie within the window, are likely to be tissues of a specific classification. For example, disaplyed in Figure~\ref{fig:ct-windows} we display 3 such windows, muscle, cancellous bone and fat.
+
+
+% The data is acquired during a CT scan (Section~\ref{sec:data-ct-scan}) and presented as a set of \texttt{NIfTI} (Section~\ref{sec:data-file-format}) files provided by the Royal Marsden Hospital. The data is of 100 patients each with a variant of cervical cancer. We have obtained from the hospital a spreadsheet with additional notes about each patient which may be useful in training and debugging (Section~\ref{sec:data-notes}). Finally, this data is labelled into 5 different classes as a binary segmentation problem (Section~\ref{sec:data-delineation-classes}). Included is a set of 10 hold-out data items, which are patients with only the raw CT scan with no labels.
+
+% Delineated labelled data have been labelled consistently by the provider to improve chances that an AI model can learn cervical cancer CTV patterns~\cite{AMLART-data}.
+
+
+%  This means for our purposes data normalization is not necessary, becuase intensities are not relative, and the model would not suffer from reading raw unnormalized data. Therefore, there are typical value ranges for different tissue types like fat being between $-100$ to $-80$ and muscle from $+10$ to $+40$. Since the minimum bit depth for such measurements is 12, downscaling to an 8 bit greyscale image may fool an observer about the detail of the scan, however, information is represented in full resolution.
+
+% \section{File Format}\label{sec:data-file-format}
+
+% The files are stored in a \texttt{.nii} file format which defines a style of image called the `Neuroimaging Informatics Technology Initiative' (NIfTI)~\cite{file-formats}. It serves as a lightweight alternative to other formats such as DICOM and eliminates ambiguity from spatial orientation information~\cite{dicom-to-nifti-conversion}.
+
+% The file has a fixed-size header which stores information about the data collected. Table~\ref{tab:nifti-header} summarizes some key attributes of the header. All other attributes not listed are handled by the SimpleITK library~\cite{SimpleITK-paper} which we use to read and manipulate the data in this project. The library defines the image as a set of points in a grid occupying a physical region in space as defined by this metadata, and therefore is influenced by the origin, size, spacing and so on.
+
+% \begin{table}[ht]
+%   \centering
+%   \begin{tabular}{>{\raggedright}p{1.5cm}p{8cm}p{4cm}}
+%     \toprule
+%     \textbf{Name} & \textbf{Meaning}                                                                          & \textbf{Value example} \\
+%     \midrule
+%     dim           & Image dimension                                                                           & 3 512 512 193 1 1 1 1  \\
+%     bitpix        & Number of bits per voxel                                                                  & 32                     \\
+%     pixdim        & The grid spacing (voxel size) and optionally time interval                                & 0 1.3 1.3 2.5 0 0 0 0  \\
+%     xyzt\_units   & indicates units of pixdim and defined in the C header, e.g. \texttt{NIFTI\_UNITS\_MM = 2} & 2                      \\
+%     \bottomrule
+%   \end{tabular}
+%   \caption{Description of NIfTI header parameters relevant to this project~\cite{dicom-to-nifti-conversion, nifti-headers, nifti-data-format}. Example values are taken from patient id:075.}
+%  \label{tab:nifti-header}
+% \end{table}
+
+% \section{Notes}\label{sec:data-notes}
+
+% The notes contain information about each of the 100 labelled data pairs~\cite{AMLART-data}. This information can be helpful in debugging or troubleshooting. It also provides a good warning regarding the variability of the data. In particular some aspects to note are summarized in Table~\ref{tab:notes-summary}.
+
+% \begin{table}[ht]
+%   \centering
+%   \begin{tabular}{>{\raggedright}p{3cm}p{6cm}p{6cm}}
+%     \toprule
+%     \textbf{Patient ID} & \textbf{Comment}                                                                                           & \textbf{Concern}                                                                                \\
+%     \midrule
+%     zzAMLART003         & ``no GTVp''                                                                                                & Some scans contain no visible tumour, but we still draw a CTV                                   \\
+%     \midrule
+%     zzAMLART017         & ``only scanned bottom of kidneys''                                                                         & We should be cautious of variability of width scope given in our source data                    \\
+%     \midrule
+%     zzAMLART017         & ``missing left kidney''                                                                                    & Unusual body anatomy might trip up the model, mentioned elsewhere are also                      \\
+%     \midrule
+%     zzAMLART041         & ``extra slices''                                                                                           & variability in voxels or quantity may require data pre-processing to eliminate data uncertainty \\
+%     \midrule
+%     zzAMLART055         & ``no contrast - hard to see LNs. NG tube in situ. posterior renal vein. small parametrium and low uterus'' & An edge case like this will require more thought                                                \\
+%     \bottomrule
+%   \end{tabular}
+%   \caption{A few captivating notes about each patient and why it might be concerning}
+%  \label{tab:notes-summary}
+% \end{table}
+
+% There exist note entires for the majority of the 100 patients which weren't shown in Table~\ref{tab:notes-summary}. Regardless, these notes are helpful to identify what type of pre-processing we must do in order to fully address some differences between patients. The concern is to not overfit on the 'normal' cases but also generalize and engineer a solution that is also open-minded to extreme or poorly captured cases; there is a vast variability in the anatomy of patients which makes computer vision tasks more challenging.
+
+% \section{Delineation classes}\label{sec:data-delineation-classes}
+
+% The clinicians at the Royal Marsden Hospital have provided segmentation labels for 5 high-priority classes of interest. These are the Bladder, Anorectum, CTVn, CTVp, and Parametrium.
+
+% \subsection{Organs At Risk}\label{sec:data-organs-at-risk}
+
+% \begin{figure}[H]
+%   \centering
+%   \subfigure[Axial]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Axial.png}
+%    \label{fig:example-anorectum-axial}
+%   }
+%   \subfigure[Coronal]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Coronal.png}
+%    \label{fig:example-anorectum-coronal}
+%   }
+%   \subfigure[Sagittal]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Sagittal.png}
+%    \label{fig:example-anorectum-sagittal}
+%   }
+%   \vspace{1em}
+%   \subfigure[Axial]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Axial.png}
+%    \label{fig:example-bladder-axial}
+%   }
+%   \subfigure[Coronal]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Coronal.png}
+%    \label{fig:example-bladder-coronal}
+%   }
+%   \subfigure[Sagittal]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Sagittal.png}
+%    \label{fig:example-bladder-sagittal}
+%   }
+%   \caption{Views of a segmented (in red) Anorectum (\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}) and Bladder (\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}) of an arbitrary patient}
+% \end{figure}
+
+% An organ at risk is an organ which has a substantial probability of being within the PTV despite being healthy. Any areas that are created around the area should actively avoid these organs because by overlapping with them we risk complicating the treatment and compromising the health of functioning organs.
+
+% Many anatomies have been provided in the risk categories, however, in particular we have been supplied with contours for the Bladder (Figure~\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}) and the Anorectum (Figure~\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}). In particular, clinicians have identified that the Bladder may overlap with the CTVn (Section~\ref{sec:data-CTVn}) and the Parametrium (Section~\ref{sec:data-Parametrium}).
+
+% \subsection{CTVp}\label{sec:data-CTVp}
+
+% \begin{figure}[H]
+%   \centering
+%   \subfigure[Axial]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Axial.png}
+%    \label{fig:example-CTVp-axial}
+%   }
+%   \subfigure[Coronal]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Coronal.png}
+%    \label{fig:example-CTVp-coronal}
+%   }
+%   \subfigure[Sagittal]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Sagittal.png}
+%    \label{fig:example-CTVp-sagittal}
+%   }
+%   \caption{Views of a segmented (in red) CTVp of an arbitrary patient}
+%  \label{fig:example-CTVp}
+% \end{figure}
+
+% The CTVp stands for the Primary Clinical Target Volume, see the example at Figure~\ref{fig:example-CTVp}. This is the CTV where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour)~\cite{AMLART-data}. This is the area that contains the tumour.
+
+% This isn't by any means an organ in a body, but rather an area comprised of other components formed by joining other structures together. The CTVp is an area defined in Equation~\ref{eq:ctvp}.
+
+% \subsection{CTVn}\label{sec:data-CTVn}
+
+% \begin{figure}[H]
+%   \centering
+%   \subfigure[Axial]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Axial.png}
+%    \label{fig:example-CTVn-axial}
+%   }
+%   \subfigure[Coronal]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Coronal.png}
+%    \label{fig:example-CTVn-coronal}
+%   }
+%   \subfigure[Sagittal]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Sagittal.png}
+%    \label{fig:example-CTVn-sagittal}
+%   }
+%   \caption{Views of a segmented (in red) CTVn of an arbitrary patient}
+%  \label{fig:example-CTVn}
+% \end{figure}
+
+% The CTVn stands for Nodal Clinical Target Volume, see the example at Figure~\ref{fig:example-CTVn}. This is the CTV where there may be microscopic spread to lymph nodes. It is drawn based on set margins around pelvic blood vessels and includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes~\cite{AMLART-data}.
+
+% Similarly to CTVp, this is a compound area with three groups of lymph nodes. In clinical practice, the number of these groups included in the CTV varies in each patient, depending on how advanced the disease is. Pathological lymph nodes (GTVn) are also included. The CTVn is an area defined in Equation~\ref{eq:ctvn}.
+
+% \subsection{Parametrium}\label{sec:data-Parametrium}
+
+% \begin{figure}[H]
+%   \subfigure[Axial]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Axial.png}
+%    \label{fig:example-Parametrium-axial}
+%   }
+%   \subfigure[Coronal]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Coronal.png}
+%    \label{fig:example-Parametrium-coronal}
+%   }
+%   \subfigure[Sagittal]{
+%     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Sagittal.png}
+%    \label{fig:example-Parametrium-saggital}
+%   }
+%   \caption{Views of a segmented (in red) Parametrium of an arbitrary patient}
+%  \label{fig:example-Parametrium}
+% \end{figure}
+
+% The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at risk of local spread, see Figure~\ref{fig:example-Parametrium}. Drawn as a complete structure and editing back to the level of vagina to be included~\cite{AMLART-data}.
+
+% \section{Establishing Rules for Structures}\label{sec:data-delineation-rules}
+
+% \begin{minipage}{0.5\textwidth}
+%   \subsubsection{Notation of Structures}
+%   \begin{enumerate}
+%     \item Let the Anorectum be denoted as $A$
+%     \item Let the Bladder be denoted as $B$
+%     \item Let the Cervix be denoted with $C$
+%     \item Let the CTVn be denoted with $C_n$
+%     \item Let the CTVp be denoted with $C_p$
+%     \item Let the GTVp be denoted with $G_p$
+%     \item Let the GTVn be denoted with $G_n$
+%     \item Let the Pelvic Lymph Node be denoted as $L_p$
+%     \item Let the Common Iliac Lymph Node be denoted as $L_i$
+%     \item Let the Para-aortic Lymph Node be denoted as $L_{pa}$
+%   \end{enumerate}
+% \end{minipage}%
+% \begin{minipage}{0.5\textwidth}
+
+%   \begin{enumerate}
+%     \setcounter{enumi}{10}
+%     \item Let the Parametrium be denoted with $P$
+%     \item Let the Uterus be denoted with $U$
+%     \item Let the Vagina be denoted with $V$
+%   \end{enumerate}
+
+%   \subsection{Relationship between Structures}
+
+%   \begin{enumerate}
+%     \item Let $O$ denote the set $O = \{B, A, C_n, C_p, P \}$ for a particular patient. If we want to talk about a specific patient, we should use the super-script notation to differentiate patients, e.g., $O^i = \{B^i, A^i, C_n^i, C_p^i, P^i\}$.
+%     \item Let the overlap of two structures be denoted by the set intersect symbol $\cap$.
+%     \item Let the joint area of two structures be denoted by the set union symbol $\cup$.
+%   \end{enumerate}
+
+%   % \vspace{4em}
+
+% \end{minipage}
+
+% \subsection{Rules}
+
+% The top 5 priority structures have been selected to identify and plan an area where radiotherapy should be used. With these structures, there are rules that the clinicians have outlined, they are quoted for clarification (these structures only refer to each independent patient):
+
+% \begin{enumerate}
+%   \item There should be no overlap between the CTVn, CTVp or Anorectum.
+
+%         \begin{equation}
+%           \forall{i,j \in \{C_n, C_p, A\}}\text{ with } i \neq j, i \cap j = \emptyset
+%         \end{equation}
+
+%   \item The Parametrium may overlap with all of the other structures.
+
+%         \begin{equation}
+%           \forall i \in S, \quad P \cap S_i \neq \emptyset \quad \text{(Possibly)}
+%         \end{equation}
+
+%   \item The Bladder may overlap with the CTVn.
+
+%         \begin{equation}
+%           B \cap C_n \neq \emptyset \vee B \cap C_n = \emptyset\label{eq:ctvn}
+%         \end{equation}
+
+%   \item The CTVp is defined as a compound structure containing:
+
+%         \begin{equation}
+%           C_p = \overbrace{C \cup G_p}^{\text{High Risk CTV}} \quad \cup \quad U \cup V\label{eq:ctvp}
+%         \end{equation}
+
+%   \item The CTVn is defined as a compound structure containing:
+
+%         \begin{equation}
+%           C_n = G_n \cup L_i \cup L_p + L_{pa}
+%         \end{equation}
+
+% \end{enumerate}
 
 \section{Technical Context}
 \subsection{AI in medical imaging}
