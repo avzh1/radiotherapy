@@ -62,7 +62,35 @@
 
 \section{Clinical Context}
 
-\subsection{Cancer}
+This section will provide a baseline understanding of the clinical context for developing a tool to help segment tumours in patients with cervical cancer. Considering the unfortunate high frequency of cancers developing in people across the globe~\cite{cervical-cancer-epidemic}, the idea for developing a model to help segment cancers has long been in the scope for many researchers.
+
+\subsection{Cervical Cancer}\label{sect:cervical-cancer}
+
+In 2017, Cervical Cancer accumulated 530,000 new cases annually, with 270,000 deaths, making it the fourth most common malignancy diagnosed in women worldwide~\cite{cervical-cancer-epidemic}. A common treatment mechanism involves radiation therapy which targets cancerous cells in a clinically defined target area with beams of high energy (Section~\ref{sect:radiotherapy}). This treatment is tedious, as it is estimated that an oncologist needs 90-120 min to delineate target areas for radiotherapy~\cite{LIU2020184}.
+
+This time consuming nature of studying each patient makes treating cancers a time consuming endeavour which is particularly threatening when time is not on the patients side. Death from Cervical Cancer involves significant pain and suffering for the patients who cannot receive urgent treatment~\cite{cervical-cancer-epidemic}. This is particularly a problem in mid-low income countries with approximately 85\% of cases of cervical cancer occurring, making them have 18 times the death rates of high-income countries~\cite{cervical-cancer-epidemic}. 
+
+\subsubsection{Radiotherapy}\label{sect:radiotherapy}
+
+Radiation therapy is a treatment option for cancer treatment. In 2012, approximately 50\% of all cancer patients received radiation therapy, with an additional 40\% involving curative treatment~\cite{radiotherapy-advances}. 
+
+Physicians abuse the physical properties of radiation to damage the genetic material of cells and block their ability to cause further damage to a patient~\cite{radiotherapy-advances}. Importantly for our cause, radiation damages intercellular molecules leading to degradation and stopping a cells ability to divide, leading to interphase death. Alternatively, radiation may cause a ``mitotic catastrophe'' causing a cell to die of a proliferative death~\cite{cell-death}. 
+
+\subsubsection{Contour Planning}\label{sect:contour-planning}
+
+Radiotherapy has become a great option due to high resolution X-ray or CT scans which produce high contrasting images of the damaged and surrounding soft tissue~\cite{radiotherapy-basic-concepts}. Physicians then use this 3D scan to plan a target volume for the radiation therapy surrounding the tumor in hopes of killing it and not damaging the surrounding tissue.
+
+\subsubsection{Process}
+
+This begins with the high contrasting image of the tumour area. In a clinical setting, an Oncologist will use knowledge about the particular cancer to determine target structures, structures we need to protect (organs-at-risk), and areas where each particular cancer is likely to spread to~\cite{AMLART-data}. 
+
+The first area defined from the scan is the Gross Target Volume (GTV). This macroscopic delineated area is the visible tumour area on the scan and contains a high probability of containing the tumour. Secondly, the Clinical Target Volume (CTV) is derived to account for potential microscopic spread. This will be an area at least as big as the tumor area segmented in the GTV with an optional margin surrounding it containing a 'rind' of non-zero probability of tumour spread. Lastly, the Primary Tumour Volume (PTV) contains residual geometric uncertainties and safety margins surrounding the CTV ensuring the radiotherapy dose is actually delivered to the CTV~\cite{tumor-delineation,defining-target-volumes,Lin2021-oz,personalised-PTV-strategies}. These target volumes also constantly consider critical normal tissue structures which need to be preserved during irradiation. These are referred to as organs-at-risk (ORs). In some specific circumstances, it is necessary to add a margin analogous to the PTV margin around an OR to ensure that the organ cannot receive a higher-than-safe dose; this gives a planning organ at risk volume~\cite{defining-target-volumes}.
+
+\subsubsection{A tangent on Accuracy}
+
+The CTV volumes may vary between clinicians as there is no internationally agreed guidelines. As a very time consuming process which high variability it therefore suffers from a lot of inter and intra-observer variability~\cite{Lin2021-oz}. However, the data provided has been standardized as a gold standard, see Section~\ref{sect:data}.
+
+The PTV volume is an additional step which provides a margin of protection surrounding the CTV. One might think that a CTV step is the final step in clinical trials as it defines the most tight volume surrounding the cancerous site, however, geometric errors are impossible to eliminate. This includes short-term organ movement, voxel size and slice resolution, and possibility of relative movement of structure of reference and the tumour~\cite{VANHERK200452}
 
 \subsection{CT modality}
 
@@ -109,7 +137,7 @@ The notes are helpful to identify and diagnose some reasons for poor performance
 
 The clinicians at the Royal Marsden Hospital have provided segmentation labels for 5 high-priority classes of interest. These are the Bladder, Anorectum, CTVn, CTVp, and Parametrium.
 
-\subsection{Organs At Risk}\label{sec:data-organs-at-risk}
+\subsubsection{Organs At Risk}\label{sec:data-organs-at-risk}
 
 \begin{figure}[H]
   \centering
@@ -145,7 +173,7 @@ An organ at risk is an organ which has a substantial probability of being within
 
 Many anatomies have been provided in the risk categories, however, in particular we have been supplied with contours for the Bladder (Figure~\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}) and the Anorectum (Figure~\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}). In particular, clinicians have identified that the Bladder may overlap with the CTVn (Section~\ref{sec:data-CTVn}) and the Parametrium (Section~\ref{sec:data-Parametrium}).
 
-\subsection{CTVp}\label{sec:data-CTVp}
+\subsubsection{CTVp}\label{sec:data-CTVp}
 
 \begin{figure}[H]
   \centering
@@ -169,7 +197,7 @@ The CTVp stands for the Primary Clinical Target Volume, see the example at Figur
 
 This isn't by any means an organ in a body, but rather an area comprised of other components formed by joining other structures together. The CTVp is an area defined in Equation~\ref{eq:ctvp}.
 
-\subsection{CTVn}\label{sec:data-CTVn}
+\subsubsection{CTVn}\label{sec:data-CTVn}
 
 \begin{figure}[H]
   \centering
@@ -193,7 +221,7 @@ The CTVn stands for Nodal Clinical Target Volume, see the example at Figure~\ref
 
 Similarly to CTVp, this is a compound area with three groups of lymph nodes. In clinical practice, the number of these groups included in the CTV varies in each patient, depending on how advanced the disease is. Pathological lymph nodes (GTVn) are also included. The CTVn is an area defined in Equation~\ref{eq:ctvn}.
 
-\subsection{Parametrium}\label{sec:data-Parametrium}
+\subsubsection{Parametrium}\label{sec:data-Parametrium}
 
 \begin{figure}[H]
   \subfigure[Axial]{
@@ -214,7 +242,7 @@ Similarly to CTVp, this is a compound area with three groups of lymph nodes. In 
 
 The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at risk of local spread, see Figure~\ref{fig:example-Parametrium}. Drawn as a complete structure and editing back to the level of vagina to be included~\cite{AMLART-data}.
 
-\section{Establishing Rules for Structures}\label{sec:data-delineation-rules}
+\subsection{Rules}\label{sec:data-delineation-rules}
 
 \begin{minipage}{0.5\textwidth}
   \subsubsection{Notation of Structures}
@@ -240,7 +268,7 @@ The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at
     \item Let the Vagina be denoted with $V$
   \end{enumerate}
 
-  \subsection{Relationship between Structures}
+  \subsubsection{Relationship between Structures}
 
   \begin{enumerate}
     \item Let $O$ denote the set $O = \{B, A, C_n, C_p, P \}$ for a particular patient. If we want to talk about a specific patient, we should use the super-script notation to differentiate patients, e.g., $O^i = \{B^i, A^i, C_n^i, C_p^i, P^i\}$.
@@ -251,8 +279,6 @@ The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at
   % \vspace{4em}
 
 \end{minipage}
-
-\subsection{Rules}
 
 The top 5 priority structures have been selected to identify and plan an area where radiotherapy should be used. With these structures, there are rules that the clinicians have outlined, they are quoted for clarification (these structures only refer to each independent patient):
 
@@ -295,21 +321,172 @@ The top 5 priority structures have been selected to identify and plan an area wh
 \subsection{TotalSegmentator}
 \subsection{UniverSeg}
 \subsection{SAM}
+\section{Evaluation Metrics}
+
+To determine if a contour can be used in a clinical context, would be include calculating the difference between the provided labelled data. However, in a delineation context, we have different ways to evaluate this measure.
+
+Suppose we are writing a linear-regression model to match a line onto a set of points. To quantify the performance of our line we would measure the shortest distance between each point and the predicted line. This relies on the assumption of points in a known domain that a model is attempting to approximate. In this case we are fitting a 1-dimensional model onto 0-dimensional points in the grid space.
+
+% However, it is far harder to decide on a scoring system when in a delineation context. Consider a single slice of a CT-scan with a known contour around the perimeter of a tumour\footnote{Here we assume that the contour will hug the GTV tightly with no concern for microscopic spread around the remainder of the system}. A model like those mentioned in Section~\ref{sect:image-segmentation} would attempt to learn a function to closely replicate the contour. Here our domain, prediction and ground truth are all 2-dimensional objects.
+
+Geometric measures are the most popular, a survey has found~\cite{review-metrics}. These measures compare an auto-contour to a ground-truth contour and return a relative score based on its performance.
+
+\subsection{Classification Based}\label{sect:classification-based}
+
+Assesses if voxels within and outside the auto-contour have been correctly labelled~\cite{review-metrics}. To begin, we define 'positive' to mean that the voxel selected is indeed in need of radiotherapy treatment, and 'negative' to mean that the voxel is classified as healthy.
+
+A standard measure of classification is accuracy. It measures the total amount of correct predictions vs the total predictions it made. However, this measure alone isn't enough to fully capture the bias of a model because it doesn't tell you the full story with class-imbalanced data when there isn't an even number between positive and negative labels.
+
+\begin{equation*}
+  \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation*}
+
+Better measures are Precision and Recall scores. The Precision (also known as the Positive Predictive Value~\cite{evaluation-metrics}) measures the proportion of predictions that were successfully correct. The Recall (also known as True Positive Rate~\cite{evaluation-metrics}), on the other hand, ``measures the portion of positive voxels in the ground truth that are also identified as positive by the segmentation being evaluated''.
+
+\begin{equation*}
+  \text{Precision} = \frac{TP}{TP+FP}, \quad \text{Recall} = \frac{TP}{TP+FN}
+\end{equation*}
+
+\subsection{Spatial Overlap Based}\label{sect:spatial-overlap-based}
+
+Similarly to Classification Based metrics in Section~\ref{sect:classification-based}, an Overlap Based metric measures the extent of overlap between an auto-contour and a reference structure~\cite{review-metrics}.
+
+The scores above can be combined into a more general score $F_\beta$ to give
+
+\begin{equation*}
+  \text{F}_\beta = (1+\beta^2)\cdot \frac{\text{Precision} \cdot \text{Recall}}{\beta^2 \cdot \text{Precision}+\text{Recall}}
+\end{equation*}
+
+A specific case of this equation with $\beta=1$ is mathematically equivalent to the DICE Similarity Coefficient which was found to be the most popular evaluation metric amongst 2021 studies~\cite{review-metrics,evaluation-metrics, Sherer2021-le}.
+
+% \begin{align*}
+%   F_1 = \text{DICE} & = \frac{2 \cdot \text{Precision} \cdot \text{Recall}} {\text{Precision} + \text{Recall}} & \\ 
+%   % & = \frac{2 \cdot \frac{TP}{TP + FP} \cdot \frac{TP}{TP + FN}}{\frac{TP}{TP + FP} + \frac{TP}{TP + FN}} \\
+%   % & = \frac{2 \cdot TP \cdot TP}{TP(TP+FN)+TP(TP+FP)} \\ 
+%   & = \frac{2 \cdot TP}{2TP + FP + FN} \quad = \quad \frac{2|S_g^1\cap S_p^1|}{|S_g^1|+|S_p^1|} , \text{where} \begin{cases}
+%     S_g^1 & \text{ground truth} \\
+%     S_p^1 & \text{segmentation}
+%   \end{cases}
+% \end{align*}
+
+\begin{equation*}
+  F_1 = \text{DICE} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}} {\text{Precision} + \text{Recall}} = \frac{2 \cdot TP}{2TP + FP + FN} \quad = \quad \frac{2|S_g\cap S_p|}{|S_g|+|S_p|}
+\end{equation*}
+
+Where $S_g$ is the ground truth segmentation and $S_p$ is the predicted segmentation. From this relationship, the DICE score has found popularity in image segmentation for similar reasons that the $F_1$ score has found its popularity classical machine learning; it is able to provide a fair result for imbalanced datasets. This mentality is applicable in our scenario because a tumour will make up very little of the total volume of the domain space. This can be extended to a Volumetric DSC by considering the above in all 3-dimensions~\cite{APL}.
+
+Another popular related evaluation method is the Jaccard Index, which measures the intersection over the union of two sets:
+
+\begin{equation*}
+  \text{JAC} = \frac{TP}{TP+FP+FN} = \frac{|S_g\cap S_p|}{|S_g \cup S_p|} \iff \frac{DICE}{2 - DICE}
+\end{equation*}
+
+Since the numerator for the Jaccard Index is smaller (since we avoid the issue of counting the intersecting sections twice) the JAC is always larger than the DICE score.
+
+\subsection{Surface Based}\label{sect:surface-based}
+
+Also commonly known as Boundary-Distance-Based Methods~\cite{boundary-overlap-metrics} compares the distance between two structure
+surfaces. These can be either maximum distance, average distance or distance at a set percentile of ordered distances~\cite{evaluation-metrics}.
+
+A common example is the Haussdorf Distance. Here, a directed distance metric is defined as the maximum distance from a point in the first set to a nearest point in the other between two individual voxels~\cite{boundary-overlap-metrics}. Therefore, the better the HD metric, the smaller the value it returns. Here, the distance is taken by some norm, typically Euclidian distnace.
+
+\begin{equation*}
+  \text{HD}(A,B) = \max(h(A,B), h(B,A)), \quad \text{ and directed h}(A,B)=\max_{a\in A}\min_{b \in B} ||a-b||
+\end{equation*}
+
+The HD is generally sensitive to outliers. Because noise and outliers are common in medical segmentations, it is not recommended to use the HD directly~\cite{boundary-overlap-metrics}. Therefore, we can calculate the average directed Haussdorf Distance.
+
+
+\subsection{Volume Based}
+
+Volume-based metrics consider only the volume of the segmentation~\cite{evaluation-of-metrics-in-prostate,review-metrics, boundary-overlap-metrics}. However, due to its poor spatial descriptions it is more commonly used jointly with other metrics.
+
+\begin{equation*}
+  \text{Relative Volume Difference (RVD)} = \bigg| \frac{|S_g|-|S_p|}{|S_g|}\bigg|
+\end{equation*}
+
+\subsection{Evaluation}\label{sect:evaluation-of-evaluation-methods}
+
+All these methods can be advantageous in some places rather than other. We can begin to list off some challenging scenarios to decide which segmentation is the best.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../figures/segmentation-cases-1.png}
+  \caption{Figure from~\cite{boundary-overlap-metrics} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics}
+ \label{fig:segmentation-cases-1}
+\end{figure}
+
+\begin{itemize}
+  \item Classification Based (Section~\ref{sect:classification-based}) and Spatial Overlap Based (Section~\ref{sect:spatial-overlap-based}) are similar; they are concerned with the number of correctly classified or misclassified voxels without taking into account their spatial distribution. Here, Figure~\ref{fig:segmentation-cases-1}(a) and Figure~\ref{fig:segmentation-cases-1}(c) would achieve similar results despite Figure~\ref{fig:segmentation-cases-1}(a) being locally bound to a better area.
+  \item With Haussdorf Distance (Section~\ref{sect:surface-based}) output segmentations generated by Figure~\ref{fig:segmentation-cases-1}(d) and Figure~\ref{fig:segmentation-cases-1}(e) will result in the same score, which is not favorable in a radiotherapy planning environment where an organ-at-risk is involved.
+  \item Figure~\ref{fig:segmentation-cases-1}(b) would score flawlessly when using volumetric score estimation, however, it doesn't take into acount spatial placement, which makes this measurement rather poor when used individually.
+\end{itemize}
+
+\subsection{Estimated Editing Based}\label{sect:surface-dice}
+
+\begin{warning}
+  This is a quotation from this paper,~\cite{Sherer2021-le}, however, it is referencing a paper of its own. Shall I reference the original paper or are 'linked' references OK?
+\end{warning}
+
+It is difficult to select a measurement which can reflect a clinicians acceptability score. A study found that there was a lack of correlation between a geometric index and expert evaluation, with the JAC score having a 13\% False Positive Rate. The conclusion of the study summarised that scores such as JSC and volumetric DSC, ``provide limited clinical context and correlation with clinical or dosimetric quality''~\cite{Sherer2021-le}.
+
+% Because of the clinical context of evaluating the segmentation by a machine, it may sometimes be helpful to define a performance metric as the ``fraction of the surface that needs to be redrawn''~\cite{Nikolov2021-xe} since models at this point require manual review to avoid automation bias (Section~\ref{sect:using-the-tool}). For larger structures, this method is useful it doesn't assign a lot of weight on the large trivial internal volume which accounts for a much larger proportion of the score.
+
+\subsubsection{Surface DSC}\label{sect:surface-DSC}
+
+The study at~\cite{Sherer2021-le} helped drive an initiative to combine aspects of Surface Based evaluation (Section~\ref{sect:surface-based}) and Spatial Overlap Based evaluation (Section~\ref{sect:spatial-overlap-based}) into a Surface DICE. This assesses the specified tolerance instead of the overlap of the two volumes.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\linewidth]{../figures/Surface-dice.png}
+  \caption{Taken from~\cite{Nikolov2021-xe}. Illustrates the computation of the surface DICE, where the continuous line is the predicted surface and the dashed line is the ground truth. The black arrows show the maximum deviation tolerated without penalty; therefore, in pink is the unacceptable deviations and green otherwise.}
+\end{figure}
+
+We can formulate the Surface DSC score in a mathematical definition~\cite{Sherer2021-le}.
+
+\begin{equation*}
+  \text{Surface DSC} = \frac{|S_p \cap B_{g,\tau}| + |S_g \cap B_{p,\tau}|}{|S_p| + |S_g|}
+\end{equation*}
+
+Which provides a measure of the agreement between just the surfaces of two structures above a clinically determined tolerance parameter, $\tau$. Here, $B_{p,\tau}$ represents the  boundary region of the predicted surface within a maximum margin of deviation $\tau$ and similarly for $B_{g,\tau}$ for the ground truth.
+
+\subsubsection{Added Path Length}
+
+In a similar spirit, the APL was proposed as a score to predict ``the path length of a contour that has to be added''~\cite{APL}. This is achieved similarly by considering the number of added voxels required between the prediction and the gold standard with no regard to tolerance as a pose to Surface DSC (Section~\ref{sect:surface-DSC})
+
+\begin{warning}
+  For future reference, \textit{\href{https://stackoverflow.com/questions/73286639/how-to-calculate-added-path-length-apl-image-segmentation-metric}{stack overflow discussion}}
+
+  Implementation of surface DSC and APL: \textit{\href{https://github.com/pyplati/platipy/blob/master/platipy/imaging/label/comparison.py}{source code}}
+\end{warning}
+
+\subsection{Summary}
+
+This is why we settle at the Surface DSC (Section~\ref{sect:surface-dice}) which prioritizes deviation along boundary to a certain degree while measuring the fraction of the surface that needs to be redrawn, thus favouring a more conservative prediction of Figure~\ref{fig:segmentation-cases-1}(d) instead of (e).
+
+For the purpose of this project, we shall select a evaluation measurement which is more bias towards conservative boundary estimates to not touch the organs at risk. This choice was in-part influenced by the clinician's review pipeline; it would easier to correct Figure~\ref{fig:segmentation-cases-1}(d) instead of Figure~\ref{fig:segmentation-cases-1}(e) because correcting the latter would likely take a considerable amount of time as it would require redrawing almost all of the boundary, whereas the former could be corrected much faster~\cite{Nikolov2021-xe}.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Methodology}
 
-\section{Evaluation Metrics}
 \section{Base-line nnUNet...}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Results}
 
+...
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Discussion}
 
+Here, discuss results from all 4 of the methods tested.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Conclusion}
+
+Transfer works!
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Ethics}
