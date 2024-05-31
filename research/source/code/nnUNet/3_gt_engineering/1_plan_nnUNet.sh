@@ -25,6 +25,6 @@ source ${SOURCE_DIR}/data/data_vars.sh
 ############################
 
 # Run python script
-nnUNetv2_plan_and_preprocess -d 8 --verify_dataset_integrity -np 4 4 4 -c 3d_lowres -pl nnUNetPlannerResEncM
+nnUNetv2_plan_and_preprocess -d 8 --verify_dataset_integrity -np 4 4 4 # -c 3d_lowres -pl nnUNetPlannerResEncM
 
 # Since the pre-processing step is identical for all datasets, we can copy the rest
