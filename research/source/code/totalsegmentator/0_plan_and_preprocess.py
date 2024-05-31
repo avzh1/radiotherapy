@@ -10,7 +10,7 @@
 # 
 # 
 
-# In[8]:
+# In[ ]:
 
 
 import os, sys
@@ -18,14 +18,14 @@ dir1 = os.path.abspath(os.path.join(os.path.abspath(''), '..'))
 if not dir1 in sys.path: sys.path.append(dir1)
 
 
-# In[9]:
+# In[ ]:
 
 
 from utils.environment import setup_data_vars
 setup_data_vars()
 
 
-# In[10]:
+# In[ ]:
 
 
 def get_raw_and_gt_data_paths():
@@ -38,7 +38,9 @@ def get_raw_and_gt_data_paths():
              , os.environ.get('CTVp') 
              , os.environ.get('Parametrium') 
              , os.environ.get('Uterus') 
-             , os.environ.get('Vagina')]
+             , os.environ.get('Vagina')
+             , os.environ.get('TotalBinary')
+             , os.environ.get('TotalSegmentator')]
 
     raw_data = [os.path.join(os.environ.get('nnUNet_raw'), x, os.environ.get('data_trainingImages')) for x in classes]
     gt_labels = [os.path.join(os.environ.get('nnUNet_raw'), x, os.environ.get('data_trainingLabels')) for x in classes]
@@ -46,7 +48,7 @@ def get_raw_and_gt_data_paths():
     return classes, raw_data, gt_labels
 
 
-# In[11]:
+# In[ ]:
 
 
 from totalsegmentator.config import setup_nnunet, setup_totalseg
@@ -77,7 +79,7 @@ def fetch_pretrained_totalsegmentator_model():
     download_pretrained_weights(task_id)
 
 
-# In[15]:
+# In[ ]:
 
 
 import shutil
@@ -91,7 +93,7 @@ if __name__ == '__main__':
     classes, raw_data, gt_labels = get_raw_and_gt_data_paths()
     
     source_file = os.path.join(os.environ.get('TOTALSEG_HOME_DIR'), 'nnunet', 'results', 'Dataset291_TotalSegmentator_part1_organs_1559subj', 'nnUNetTrainerNoMirroring__nnUNetPlans__3d_fullres', 'plans.json')
-    destination_file = os.path.join(os.environ.get('nnUNet_preprocessed'), 'Dataset008_TotalSegmentator', 'nnUNetPlans.json')
+    destination_file = os.path.join(os.environ.get('nnUNet_preprocessed'), os.environ.get('TotalSegmentator'), 'nnUNetPlans.json')
 
     assert os.path.exists(source_file), "The source file does not exist"
     shutil.copy(source_file, destination_file)
@@ -121,13 +123,13 @@ if __name__ == '__main__':
 
     from nnunetv2.experiment_planning.plans_for_pretraining.move_plans_between_datasets import move_plans_between_datasets
 
-    starting_class = 1
-    end_class = 7 # len(classes)
+    starting_class = 8
+    end_class = 8 # len(classes)
 
     for i in range(starting_class, end_class + 1):
         print(f'Transferring for {i}')
 
-        move_plans_between_datasets(source_dataset_name_or_id=8
+        move_plans_between_datasets(source_dataset_name_or_id=9
                                     , target_dataset_name_or_id=i
                                     , source_plans_identifier='nnUNetPlans'
                                     , target_plans_identifier=f'totseg_nnUNetPlans'

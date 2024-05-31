@@ -4,7 +4,7 @@
 #SBATCH -c 4                        # Number of CPU Cores
 #SBATCH -p gpus                     # Partition (queue)
 #SBATCH --gres gpu:1                # gpu:n, where n = number of GPUs
-#SBATCH --mem 12288                 # memory pool for all cores
+#SBATCH --mem 20G                   # memory pool for all cores
 #SBATCH --output=slurm.%N.%j.log    # Standard output and error log
 
 # Get the directory of the script

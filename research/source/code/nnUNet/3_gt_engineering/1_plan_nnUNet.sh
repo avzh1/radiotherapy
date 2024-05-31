@@ -2,12 +2,12 @@
 
 # Example of running python script in a batch mode
 #SBATCH -c 16                       # Number of CPU Cores
-#SBATCH -p gpus                     # Partition (queue)
+#SBATCH -p gpushigh                     # Partition (queue)
 #SBATCH --gres gpu:1                # gpu:n, where n = number of GPUs
-#SBATCH --mem 20G                   # memory pool for all cores
+#SBATCH --mem 30G                   # memory pool for all cores
 #SBATCH --output=logs/slurm.preprocess.1.lowres.%N.%j.log    # Standard output and error log
 
-#SBATCH --job-name=pp.1.nnUNEt
+#SBATCH --job-name=itsquick_sorry
 
 # --nodelist lory           # SLURM node
 # --nodelist loki          	# SLURM node
