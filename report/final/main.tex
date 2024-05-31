@@ -101,9 +101,17 @@ Therefore, because the HU scale is relative, different windows may be taken for 
 
 \subsection{Radiotherapy Planning}
 
-Oncologists draw clinical volumes by combining their knowledge about the particular cancer to determine target structures, organs-at-risk structures, and areas where the cancer will likely spread to~\cite{AMLART-data}. The first area is the macroscopic delineated area of the visible tumour area. This Gross Target Volume (GTV) has a high probability of containing the tumour. Secondly, the Clinical Target Volume (CTV) is derived to account for potential microscopic spread. The CTV will be an area at least as big as the GTV with an optional margin surrounding it containing a 'rind' of non-zero probability of tumour spread. Lastly, the Primary Target Volume (PTV) contains residual geometric uncertainties and safety margins surrounding the CTV, ensuring the radiotherapy dose gets delivered to the CTV~\cite{tumor-delineation,defining-target-volumes,Lin2021-oz,personalised-PTV-strategies}. The PTV is a necessary extension of the CTV since geometric uncertainties are impossible and not advised to eliminate; after all, static scans are only estimations, subject to short-term organ misalignment, relative movement between structures of reference and tumours, partial volume effects and skewed anisotropic resolution~\cite{VANHERK200452}.
+\begin{warning}
+  Perhaps, include a graph to visualse target volumes visually
+\end{warning}
+
+Oncologist use the CT scans to draw clinical volumes by combining their knowledge about the particular cancer to determine target structures, organs-at-risk structures, and areas where the cancer will likely spread to~\cite{AMLART-data}. 
+
+The first area is the macroscopic delineated area of the visible tumour area. This Gross Target Volume (GTV) has a high probability of containing the tumour. Secondly, the Clinical Target Volume (CTV) is derived to account for potential microscopic spread. The CTV will be an area at least as big as the GTV with an optional margin surrounding it containing a 'rind' of non-zero probability of tumour spread. Lastly, the Primary Target Volume (PTV) contains residual geometric uncertainties and safety margins surrounding the CTV, ensuring the radiotherapy dose gets delivered to the CTV~\cite{tumor-delineation,defining-target-volumes,Lin2021-oz,personalised-PTV-strategies}. The PTV is a necessary extension of the CTV since geometric uncertainties are impossible and not advised to eliminate; after all, static scans are only estimations, subject to short-term organ misalignment, relative movement between structures of reference and tumours, partial volume effects and skewed anisotropic resolution~\cite{VANHERK200452}.
 
 In parallel, the Oncologist constantly considers critical healthy tissue structures that need to be preserved during irradiation. These are referred to as organs-at-risk (ORs). In some specific circumstances, adding a margin analogous to the PTV margin around an OR is necessary to ensure that the organ cannot receive a higher-than-safe dose; this gives a planning organ at risk volume~\cite{defining-target-volumes}.
+
+\subsection{International Guidelines}
 
 The final volumes have no internationally agreed-upon guidelines, which leaves it up to the interpretation of the oncologists and Hospitals to use their heuristics when drawing areas. This time-consuming process has high variability, causing it to suffer significantly from inter and intra-observer variability~\cite{Lin2021-oz}. 
 
@@ -111,23 +119,19 @@ The final volumes have no internationally agreed-upon guidelines, which leaves i
 
 \subsection{Data Aquisition}
 
-\subsubsection{Format}
+The Royal Marsden Hospital provides a dataset as a set of `Neuroimaging Informatics Technology Initiative' files (NIfTI)~\cite{file-formats}. It is a lightweight alternative to other formats such as DICOM and eliminates ambiguity from spatial orientation information~\cite{dicom-to-nifti-conversion}. Libraries exist for handling these files, such as SimpleITK~\cite{SimpleITK-paper}, which we use to read and manipulate the data in this project. The library reads, manipulates, and handles the image as a set of points in a grid occupying a physical region in space defined by the metadata to remove ambiguity from the origin, size, spacing, and so on that might vary between patient scans.
 
-The data acquired through The Royal Marsden Hospital is presented as a set of `Neuroimaging Informatics Technology Initiative' files (NIfTI)~\cite{file-formats}. It serves as a lightweight alternative to other formats such as DICOM and eliminates ambiguity from spatial orientation information~\cite{dicom-to-nifti-conversion}. Libraries exist for handling these files, such as SimpleITK~\cite{SimpleITK-paper} which we use to read and manipulate the data in this project. The library reads, manipulates, and handles the image as a set of points in a grid occupying a physical region in space as defined by the metadata to remove ambiguity from the origin, size, spacing and so on that might vary between patient scans.
+The training data provides one hundred female patients that have been diagnosed with similar types of cervical cancer. Each patient comes with seven relevant segmentation classes which contribute to radiotherapy planning. For reproducibility, all delineated anatomies were labelled consistently by the Oncologists to improve chances that an AI model can learn cervical cancer patterns~\cite{AMLART-data}. 
 
-\subsubsection{Training Data}
+Finally, the dataset comes with ten hold-out data items, which are patients with only the raw CT scan information without labels.
 
-Data was sampled for 100 varying female patients with similar types of cancer. With this data, come 7 relevant segmentation classes which contribute to radiotherapy planning. For the purpose of reproducibility, all delinated lablled data was lablled consistently by the Oncologists to improve chances that an AI model can learn cervical cancer patterns~\cite{AMLART-data}. 
+% \subsubsection{Notes}
 
-Finally, 10 hold-out data items were provided, which are patients with only the raw CT scan information with no labels.
+% Some notes contain clinical observations about each of the 100 labelled data pairs~\cite{AMLART-data}. This small sample size of patients is also a good representation of the variability of data in the population. Because of the relatively small sample size, it is essential to be more acutely aware of the variability in the data.
 
-\subsubsection{Notes}
+% A common observation is that scans contain poor contrast. For patient 13, the note reads ``no contrast - hard to see LNs,'' which is information crucial to determining segmenting the Clinical Target Volume for Lymph Nodes (CTVn). Patients 9, 60, and 62 also have ``very large tumours''; sometimes, these even shift into uncommon areas, with ``sigmoid hanging into parametrium''. % GTV not visible?
 
-Some notes contain clinical observations about each of the 100 labelled data pairs~\cite{AMLART-data}. This small sample size of patients is also a good representation of the variability of data in the population. Because of the relatively small sample size, its important to be more acutely aware of the variability in the data. In particular, some observations are summarized.
-
-A common observation is that scans contain poor contrast. For patient 13, the note reads ``no contrast - hard to see LNs'' which is information crutial to determine for segmenting the Clinical Target Volume for Lymph Nodes (CTVn). Additionally, patients 9, 60, and 62 are examples that have ``very large tumors'', sometimes, these even shift into uncommon areas, with ``sigmoid hanging into parametrium''. % GTV not visible?
-
-The notes are helpful to identify and diagnose some reasons for poor performance of the model which is characteristic of the high variability between patients.
+% The notes help identify and diagnose some reasons for the model's poor performance in some cases, which may be due to the high variability between patients in quality and physiology.
 
 \subsection{Delineation classes}
 
