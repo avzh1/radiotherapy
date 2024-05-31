@@ -259,33 +259,33 @@ The final structures are the Vagina and Uterus, their clinical significance is t
     \item Let the CTVp be denoted with $C_p$
     \item Let the GTVp be denoted with $G_p$
     \item Let the GTVn be denoted with $G_n$
-    \item Let the Pelvic Lymph Node be denoted as $L_p$
-    \item Let the Common Iliac Lymph Node be denoted as $L_i$
-    \item Let the Para-aortic Lymph Node be denoted as $L_{pa}$
   \end{enumerate}
 \end{minipage}%
 \begin{minipage}{0.5\textwidth}
 
   \begin{enumerate}
-    \setcounter{enumi}{10}
+    \setcounter{enumi}{7}
+    \item Let the Pelvic Lymph Node be denoted as $L_p$
+    \item Let the Common Iliac Lymph Node be denoted as $L_i$
+    \item Let the Para-aortic Lymph Node be denoted as $L_{pa}$
     \item Let the Parametrium be denoted with $P$
     \item Let the Uterus be denoted with $U$
     \item Let the Vagina be denoted with $V$
   \end{enumerate}
 
-  \subsubsection{Relationship between Structures}
+\end{minipage}
+
+\subsubsection{Relationship between Structures}
 
   \begin{enumerate}
-    \item Let $O$ denote the set $O = \{B, A, C_n, C_p, P \}$ for a particular patient. If we want to talk about a specific patient, we should use the super-script notation to differentiate patients, e.g., $O^i = \{B^i, A^i, C_n^i, C_p^i, P^i\}$.
+    \item If we want to talk about a specific patient, we should use the super-script notation to differentiate patients, e.g., $B^i$ for the Bladder of patient $i$.
     \item Let the overlap of two structures be denoted by the set intersect symbol $\cap$.
     \item Let the joint area of two structures be denoted by the set union symbol $\cup$.
   \end{enumerate}
 
   % \vspace{4em}
 
-\end{minipage}
-
-The top 5 priority structures have been selected to identify and plan an area where radiotherapy should be used. With these structures, there are rules that the clinicians have outlined, they are quoted for clarification (these structures only refer to each independent patient):
+The top seven priority structures have been selected to identify and plan an area where radiotherapy should be used. With these structures, there are rules that the clinicians have outlined, they are quoted for clarification (these structures only refer to each independent patient):
 
 \begin{enumerate}
   \item There should be no overlap between the CTVn, CTVp or Anorectum.
@@ -297,7 +297,7 @@ The top 5 priority structures have been selected to identify and plan an area wh
   \item The Parametrium may overlap with all of the other structures.
 
         \begin{equation}
-          \forall i \in S, \quad P \cap S_i \neq \emptyset \quad \text{(Possibly)}
+          \forall i \in S, \quad P \cap S_i \neq \emptyset \vee P \cap S_i = \emptyset
         \end{equation}
 
   \item The Bladder may overlap with the CTVn.
