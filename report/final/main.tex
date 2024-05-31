@@ -62,35 +62,40 @@
 
 \section{Clinical Context}
 
-This section will provide a baseline understanding of the clinical context for developing a tool to help segment tumours in patients with cervical cancer. Considering the unfortunate high frequency of cancers developing in people across the globe~\cite{cervical-cancer-epidemic}, the idea for developing a model to help segment cancers has long been in the scope for many researchers.
+This project will have its foundation for experimentation in a dataset provided by the Royal Marsden Hospital. We introduce this real-world clinical dataset, which has no exposure in academia and has uncommon and limited segmentation patterns, that will act as the pillar for justifying the success and transferability of ideas explored in this project to other medical domains. This dataset segments key anatomies and tumours which aid in radiotherapy planning for females with cervical cancer.
+
+In this section, we discuss the clinical context behind cervical cancer in the population, the Hospital's pipeline for segmenting patients in preparation for radiotherapy treatment, and the Hospital's motivation for recruiting an AI tool to assist in its treatment pipeline. 
 
 \subsection{Cervical Cancer}\label{sect:cervical-cancer}
 
-In 2017, Cervical Cancer accumulated 530,000 new cases annually, with 270,000 deaths, making it the fourth most common malignancy diagnosed in women worldwide~\cite{cervical-cancer-epidemic}. A common treatment mechanism involves radiation therapy which targets cancerous cells in a clinically defined target area with beams of high energy (Section~\ref{sect:radiotherapy}). This treatment is tedious, as it is estimated that an oncologist needs 90-120 min to delineate target areas for radiotherapy~\cite{LIU2020184}.
+Cancer is a burden around the globe that has been a driver for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer in 157 in 2022~\cite{Global-cancer-2022}. Furthermore, the resulting maternal orphans from cancers affecting females experience health and education disadvantages throughout their lives~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}, which inspires further complete clinical understanding of the disease. This motivation and the potential to pair with quality improvements offered by medical imaging models drive this research project to explore transfer knowledge in this field.
 
-This time consuming nature of studying each patient makes treating cancers a time consuming endeavour which is particularly threatening when time is not on the patients side. Death from Cervical Cancer involves significant pain and suffering for the patients who cannot receive urgent treatment~\cite{cervical-cancer-epidemic}. This is particularly a problem in mid-low income countries with approximately 85\% of cases of cervical cancer occurring, making them have 18 times the death rates of high-income countries~\cite{cervical-cancer-epidemic}. 
 
-\subsubsection{Radiotherapy}\label{sect:radiotherapy}
+% In 2017, Cervical Cancer accumulated 530,000 new cases annually, with 270,000 deaths, making it the fourth most common malignancy diagnosed in women worldwide~\cite{cervical-cancer-epidemic}. A common treatment mechanism involves radiation therapy which targets cancerous cells in a clinically defined target area with beams of high energy (Section~\ref{sect:radiotherapy}). This treatment is tedious, as it is estimated that an oncologist needs 90-120 min to delineate target areas for radiotherapy~\cite{LIU2020184}.
 
-Radiation therapy is a treatment option for cancer treatment. In 2012, approximately 50\% of all cancer patients received radiation therapy, with an additional 40\% involving curative treatment~\cite{radiotherapy-advances}. 
+% This time consuming nature of studying each patient makes treating cancers a time consuming endeavour which is particularly threatening when time is not on the patients side. Death from Cervical Cancer involves significant pain and suffering for the patients who cannot receive urgent treatment~\cite{cervical-cancer-epidemic}. This is particularly a problem in mid-low income countries with approximately 85\% of cases of cervical cancer occurring, making them have 18 times the death rates of high-income countries~\cite{cervical-cancer-epidemic}. 
 
-Physicians abuse the physical properties of radiation to damage the genetic material of cells and block their ability to cause further damage to a patient~\cite{radiotherapy-advances}. Importantly for our cause, radiation damages intercellular molecules leading to degradation and stopping a cells ability to divide, leading to interphase death. Alternatively, radiation may cause a ``mitotic catastrophe'' causing a cell to die of a proliferative death~\cite{cell-death}. 
+% \subsubsection{Radiotherapy}\label{sect:radiotherapy}
 
-\subsubsection{Contour Planning}\label{sect:contour-planning}
+% Radiation therapy is a treatment option for cancer treatment. In 2012, approximately 50\% of all cancer patients received radiation therapy, with an additional 40\% involving curative treatment~\cite{radiotherapy-advances}. 
 
-Radiotherapy has become a great option due to high resolution X-ray or CT scans which produce high contrasting images of the damaged and surrounding soft tissue~\cite{radiotherapy-basic-concepts}. Physicians then use this 3D scan to plan a target volume for the radiation therapy surrounding the tumor in hopes of killing it and not damaging the surrounding tissue.
+% Physicians abuse the physical properties of radiation to damage the genetic material of cells and block their ability to cause further damage to a patient~\cite{radiotherapy-advances}. Importantly for our cause, radiation damages intercellular molecules leading to degradation and stopping a cells ability to divide, leading to interphase death. Alternatively, radiation may cause a ``mitotic catastrophe'' causing a cell to die of a proliferative death~\cite{cell-death}. 
 
-\subsubsection{Process}
+% \subsubsection{Contour Planning}\label{sect:contour-planning}
 
-This begins with the high contrasting image of the tumour area. In a clinical setting, an Oncologist will use knowledge about the particular cancer to determine target structures, structures we need to protect (organs-at-risk), and areas where each particular cancer is likely to spread to~\cite{AMLART-data}. 
+% Radiotherapy has become a great option due to high resolution X-ray or CT scans which produce high contrasting images of the damaged and surrounding soft tissue~\cite{radiotherapy-basic-concepts}. Physicians then use this 3D scan to plan a target volume for the radiation therapy surrounding the tumor in hopes of killing it and not damaging the surrounding tissue.
 
-The first area defined from the scan is the Gross Target Volume (GTV). This macroscopic delineated area is the visible tumour area on the scan and contains a high probability of containing the tumour. Secondly, the Clinical Target Volume (CTV) is derived to account for potential microscopic spread. This will be an area at least as big as the tumor area segmented in the GTV with an optional margin surrounding it containing a 'rind' of non-zero probability of tumour spread. Lastly, the Primary Tumour Volume (PTV) contains residual geometric uncertainties and safety margins surrounding the CTV ensuring the radiotherapy dose is actually delivered to the CTV~\cite{tumor-delineation,defining-target-volumes,Lin2021-oz,personalised-PTV-strategies}. These target volumes also constantly consider critical normal tissue structures which need to be preserved during irradiation. These are referred to as organs-at-risk (ORs). In some specific circumstances, it is necessary to add a margin analogous to the PTV margin around an OR to ensure that the organ cannot receive a higher-than-safe dose; this gives a planning organ at risk volume~\cite{defining-target-volumes}.
+% \subsubsection{Process}
 
-\subsubsection{A tangent on Accuracy}
+% This begins with the high contrasting image of the tumour area. In a clinical setting, an Oncologist will use knowledge about the particular cancer to determine target structures, structures we need to protect (organs-at-risk), and areas where each particular cancer is likely to spread to~\cite{AMLART-data}. 
 
-The CTV volumes may vary between clinicians as there is no internationally agreed guidelines. As a very time consuming process which high variability it therefore suffers from a lot of inter and intra-observer variability~\cite{Lin2021-oz}. However, the data provided has been standardized as a gold standard, see Section~\ref{sect:data}.
+% The first area defined from the scan is the Gross Target Volume (GTV). This macroscopic delineated area is the visible tumour area on the scan and contains a high probability of containing the tumour. Secondly, the Clinical Target Volume (CTV) is derived to account for potential microscopic spread. This will be an area at least as big as the tumor area segmented in the GTV with an optional margin surrounding it containing a 'rind' of non-zero probability of tumour spread. Lastly, the Primary Tumour Volume (PTV) contains residual geometric uncertainties and safety margins surrounding the CTV ensuring the radiotherapy dose is actually delivered to the CTV~\cite{tumor-delineation,defining-target-volumes,Lin2021-oz,personalised-PTV-strategies}. These target volumes also constantly consider critical normal tissue structures which need to be preserved during irradiation. These are referred to as organs-at-risk (ORs). In some specific circumstances, it is necessary to add a margin analogous to the PTV margin around an OR to ensure that the organ cannot receive a higher-than-safe dose; this gives a planning organ at risk volume~\cite{defining-target-volumes}.
 
-The PTV volume is an additional step which provides a margin of protection surrounding the CTV. One might think that a CTV step is the final step in clinical trials as it defines the most tight volume surrounding the cancerous site, however, geometric errors are impossible to eliminate. This includes short-term organ movement, voxel size and slice resolution, and possibility of relative movement of structure of reference and the tumour~\cite{VANHERK200452}
+% \subsubsection{A tangent on Accuracy}
+
+% The CTV volumes may vary between clinicians as there is no internationally agreed guidelines. As a very time consuming process which high variability it therefore suffers from a lot of inter and intra-observer variability~\cite{Lin2021-oz}. However, the data provided has been standardized as a gold standard, see Section~\ref{sect:data}.
+
+% The PTV volume is an additional step which provides a margin of protection surrounding the CTV. One might think that a CTV step is the final step in clinical trials as it defines the most tight volume surrounding the cancerous site, however, geometric errors are impossible to eliminate. This includes short-term organ movement, voxel size and slice resolution, and possibility of relative movement of structure of reference and the tumour~\cite{VANHERK200452}
 
 \subsection{CT modality}
 
@@ -153,7 +158,11 @@ The clinicians at the Royal Marsden Hospital have provided segmentation labels f
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Sagittal.png}
    \label{fig:example-anorectum-sagittal}
   }
-  \vspace{1em}
+  \caption{Views of a segmented (in red) Anorectum of an arbitrary patient}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
   \subfigure[Axial]{
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Axial.png}
    \label{fig:example-bladder-axial}
@@ -166,7 +175,7 @@ The clinicians at the Royal Marsden Hospital have provided segmentation labels f
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Sagittal.png}
    \label{fig:example-bladder-sagittal}
   }
-  \caption{Views of a segmented (in red) Anorectum (\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}) and Bladder (\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}) of an arbitrary patient}
+  \caption{Views of a segmented (in red) Bladder of an arbitrary patient}
 \end{figure}
 
 An organ at risk is an organ which has a substantial probability of being within the PTV despite being healthy. Any areas that are created around the area should actively avoid these organs because by overlapping with them we risk complicating the treatment and compromising the health of functioning organs.
