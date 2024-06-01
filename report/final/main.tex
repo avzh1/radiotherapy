@@ -362,7 +362,16 @@ Trivial upsampling through de-convolutional layers allows the heatmap to transla
 
 \subsection{UNet}
 
-At first a 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.9\linewidth, trim=0 200px 0 0, clip]{../figures/u-net.png}
+  \caption{The U-Net architecture, with contractive side on the left, and expansive side on the right. The feature map follows the arrows and multiplies the number of feature maps twice at each contraction, and halves at each expansion~\cite{U-Net}.}\label{fig:unet}
+\end{figure}
+
+
+Simultaneously, a unique architecture was under development. This architecture mirrored the hourglass structure of contracting and upsampling sections, only this time, the illustration of its architecture led to its name, the UNet~\cite{U-Net}.
+
+The UNet similarly consists of a contractive and expansive side, with the so-called `skip-connections' added feature. As shown in Figure~\ref{fig:unet}, at each stage of the contracting/expansive side, these copy operations help localise high-resolution features from the contracting path~\cite{U-Net}. The network yielded great results for a few training images and more precise segmentations.
 
 \subsection{nnUNet}
 
