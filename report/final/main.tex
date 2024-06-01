@@ -331,7 +331,9 @@ The top seven priority structures have been selected to identify and plan an are
 
 \subsection{Motivation in AI}
 
-The key objective of models trained for delineating target structures is to see if an AI model can learn cervical cancer CTV pattern detection. The decision is complex as clinicians use information beyond the CT-imaging modality, such as how far along the tumour has progressed, and other clinical intuition to make proper judgements about the CTV volumes. Therefore, with this information missing from AI models, it is likely to misjudge target volumes, and a clinician will have to select which components of the CTV are required. However, a clinician will likely benefit from the time saved and improved consistency with the planning process if a trained model can produce the substructures required within the CTV that a clinician can review~\cite{AMLART-data}.
+The medical sector has been a hotbed for AI research since researchers realised they could apply Convolutional Neural Networks (Section~\ref{sect:cnn-for-segmentation}) to medical image data. A branch of research dedicated itself to segmentation, which involves labelling individual pixels in the image according to which object or class they belong to. In dense classification, a model assigns every pixel to a specific class. Relevant to the direction of this project is determining the precise location and extent of organs or certain types of tissue, like ORs, CTV volumes, or other anatomies. 
+
+The key objective of models trained for delineating target structures for this project is to see if an AI model can learn cervical cancer CTV pattern detection. The decision is complex as clinicians use information beyond the CT-imaging modality, such as how far along the tumour has progressed, and other clinical intuition to make proper judgements about the CTV volumes. Therefore, with this information missing from AI models, it is likely to misjudge target volumes, and a clinician will have to select which components of the CTV are required. However, a clinician will likely benefit from the time saved and improved consistency with the planning process if a trained model can produce the substructures required within the CTV that a clinician can review~\cite{AMLART-data}.
 
 \section{Technical Context}
 
@@ -339,16 +341,28 @@ Before popularising machine learning algorithms, strict and convoluted rule sets
 
 Algorithms began to emerge that fell into the classification of neural network models. Observations were rephrased and morphed into vectorised inputs, where each constituent of the vector represented a particular feature of the observation. For instance, the California Housing dataset~\cite{kelleypace1997} contains an input of 9 features (longitude, latitude, number of bathrooms, ...) and one target feature (house price). After pre-processing and strategising, this input would be vectorised and fed into a network with several layers. Within each layer, sets of tunable parameters would optionally change the number of features and learn a relationship between parameters using weights until the $1 \times 9$ vector finally translates into a scalar value indicating the house price. After many repetitions of learning from examples, the model would learn an approximation to the solution. These models were termed Multi-Layered Perceptrons (MLPs).
 
-At the same time, J. Hull, sponsored by the United States Postal Service, published a Database for Handwritten Text Recognition with the incentive of providing an extensive dataset of 300-pixel images of characters of variable writing mediums, isolation, overlap, and neatness~\cite{JJHull1994}. 
+At the same time, J. Hull, sponsored by the United States Postal Service, published a Database for Handwritten Text Recognition with the incentive of providing an extensive dataset of 300-pixel images of characters of variable writing mediums, isolation, overlap, and neatness to aid research efforts in developing accurate digit classification algorithms~\cite{JJHull1994}. 
 
-The current machine learning approach didn't work well with image data. Up until that point, rich structures such as images were neglected, and matrices of gray-scale images were mutilated into flat vectors. This approach was necessary to feed the flattened image representation through the MLP. 
-
-The issue with vectorising an image is that it loses its spatial context-driven awareness. Yann LeCunn et al.~\cite{Lenet1998} was the first to propose a convolution-based approach, which preserved the input in its 2D glory by applying a set of slideable convolutional blocks and morphing it into intermediate feature maps. This first convolutional network spawned a vicious flurry of convolutional architectures, which followed in their footsteps.
+The current machine learning approach didn't work well with image data. Up until that point, rich structures such as images were neglected, and matrices of gray-scale images were mutilated into flat vectors. This approach was necessary to feed the flattened image representation through the MLP. The issue with vectorising an image is that it loses its spatial context-driven awareness. Yann LeCunn et al.~\cite{Lenet1998} was the first to propose a convolution-based approach, which preserved the input in its 2D glory by applying a set of slideable convolutional blocks and morphing it into intermediate feature maps. This first convolutional network spawned a vicious flurry of convolutional architectures, which followed in their footsteps.
 
 
-\subsection{AI in medical imaging}
+\subsection{Convolutions for Segmentation}\label{sect:cnn-for-segmentation}
 
-TODO
+\begin{figure}
+  \centering
+  \subfigure{\includegraphics[width=.49\linewidth, trim=0 230px 0 0, clip]{../figures/fcnupsample.png}}
+  \subfigure{\includegraphics[width=.49\linewidth, trim=0 33px 0 200px, clip]{../figures/fcnupsample.png}}
+  \caption{Comparison of upsampling a base image using FCN~\cite{fully-CNNs-for-semantic-segmentation} and the VGG-16-based DeconvNet~\cite{noh2015learning, simonyan2014very} architectures.}\label{fig:fcn-vs-deconvnet}
+\end{figure}
+
+
+The Fully Connected Neural Network (FCN) was the first attempt to adapt popular architectures for image classification. Previously, convolutions would reduce input image feature vectors into non-spatial classification outputs. However, this paper `convolutionalized the pipeline to provide a heatmap of segmented objects within the image~\cite{fully-CNNs-for-semantic-segmentation}. The heatmap would describe in a 2D feature the location of each class.
+
+Trivial upsampling through de-convolutional layers allows the heatmap to translate back to the original size. The trivial process would produce a largely inaccurate segmentation with much room for improvement. Therefore, similarly to learning the downsampling, the model learnt to upsample low-level heatmap representations~\cite{noh2015learning}. This way, the deconvolutional network also became ``a key component for precise object segmentation,'' which improved the base upsampling provided by the FCN. This conclusion is shown in Figure~\ref{fig:fcn-vs-deconvnet}.
+
+\subsection{UNet}
+
+At first a 
 
 \subsection{nnUNet}
 
