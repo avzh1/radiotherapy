@@ -62,13 +62,14 @@
 
 \section{Clinical Context}
 
-This project will have its foundation for experimentation in a dataset provided by the Royal Marsden Hospital. We introduce this real-world clinical dataset, which has had no exposure in academia and has uncommon and limited segmentation patterns, that will act as the pillar for justifying the success and transferability of ideas explored in this project to other medical domains. This dataset segments key anatomies and tumours which aid in radiotherapy planning for females with cervical cancer.
+This project will have its foundation for experimentation in a dataset provided by the Royal Marsden Hospital. The real-world clinical dataset segments key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the widespread segmentation challenges and has uncommon and limited segmentation patterns. This dataset will act as the pillar for justifying the success of the transferability of knowledge between medical domains.
 
 In this section, we discuss the clinical context behind cervical cancer in the population, the Hospital's pipeline for segmenting patients in preparation for radiotherapy treatment, and the Hospital's motivation for recruiting an AI tool to assist in its treatment pipeline. 
 
 \subsection{Cervical Cancer}\label{sect:cervical-cancer}
 
-Cancer is a burden around the globe that has been a driver for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer in 157 in 2022~\cite{Global-cancer-2022}. Furthermore, the resulting maternal orphans from cancers affecting their mothers experience health and education disadvantages throughout their lives~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}, which inspires further complete clinical understanding of the disease. This motivation and the potential to pair with quality improvements offered by medical imaging models drive this research project to explore transfer knowledge in this field.
+Cancer is a burden around the globe that has been a driver for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer in 157 in 2022~\cite{Global-cancer-2022}. Furthermore, an estimated 1 million maternal orphans who lose their mothers to cancer suffer long-term disadvantages in health and education~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}, which inspires further complete clinical understanding of the disease. This motivation and the potential to pair with quality improvements offered by medical imaging models drive this research project to explore transfer knowledge in this field.
+
 
 \subsection{Radiotherapy Treatment}
 
@@ -119,7 +120,7 @@ The final volumes have no internationally agreed-upon guidelines, which leaves i
 
 \subsection{Data Aquisition}
 
-The Royal Marsden Hospital provides a dataset as a set of `Neuroimaging Informatics Technology Initiative' files (NIfTI)~\cite{file-formats}. It is a lightweight alternative to other formats such as DICOM and eliminates ambiguity from spatial orientation information~\cite{dicom-to-nifti-conversion}. Libraries exist for handling these files, such as SimpleITK~\cite{SimpleITK-paper}, which we use to read and manipulate the data in this project. The library reads, manipulates, and handles the image as a set of points in a grid occupying a physical region in space defined by the metadata to remove ambiguity from the origin, size, spacing, and so on that might vary between patient scans.
+The Royal Marsden Hospital provides the dataset as a set of `Neuroimaging Informatics Technology Initiative' files (NIfTI)~\cite{file-formats}. It is a lightweight alternative to other formats such as DICOM and eliminates ambiguity from spatial orientation information~\cite{dicom-to-nifti-conversion}. Libraries exist for handling these files, such as SimpleITK~\cite{SimpleITK-paper}, which we use to read and manipulate the data in this project. The library reads, manipulates, and handles the image as a set of points in a grid occupying a physical region in space defined by the metadata to remove ambiguity from the origin, size, spacing, and so on that might vary between patient scans.
 
 The training data provides one hundred female patients that have been diagnosed with similar types of cervical cancer. Each patient comes with seven relevant segmentation classes which contribute to radiotherapy planning. For reproducibility, all delineated anatomies were labelled consistently by the Oncologists to improve chances that an AI model can learn cervical cancer patterns~\cite{AMLART-data}. 
 
@@ -309,7 +310,7 @@ The top seven priority structures have been selected to identify and plan an are
   \item The CTVp is defined as a compound structure containing:
 
         \begin{equation}
-          C_p = \overbrace{C \cup G_p}^{\text{High Risk CTV}} \quad \cup \quad U \cup V\label{eq:ctvp1}
+          C_p = \overbrace{C \cup G_p}^{\text{High Risk CTV}} \cup \ \ U \cup V\label{eq:ctvp1}
         \end{equation}
 
   However, since we are never explicitly provided with the segmentation maps for the Cervix $C$ and the GTVp $G_p$, we cannot use as strong of a definition as above. Instead, we operate on the assumption that the union of the Uterus and Vagina is at least as big as the CTVp.
@@ -327,6 +328,10 @@ The top seven priority structures have been selected to identify and plan an are
   Similarly, we are not provided segmentations for these areas, therefore, operating under no clinical knoweldge apart from the provided, cannot make any claims as to the composition of the CTVn.
 
 \end{enumerate}
+
+\subsection{Motivation in AI}
+
+The key objective of models trained for delineating target structures is to see if an AI model can learn cervical cancer CTV pattern detection. The decision is complex as clinicians use information beyond the CT-imaging modality, such as how far along the tumour has progressed, and other clinical intuition to make proper judgements about the CTV volumes. Therefore, with this information missing from AI models, it is likely to misjudge target volumes, and a clinician will have to select which components of the CTV are required. However, a clinician will likely benefit from the time saved and improved consistency with the planning process if a trained model can produce the substructures required within the CTV that a clinician can review~\cite{AMLART-data}.
 
 \section{Technical Context}
 \subsection{AI in medical imaging}
