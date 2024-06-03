@@ -57,6 +57,8 @@
 
 % To mention: Medical Image Segmentation is currently dominated by deep convolutional neural networks (CNNs). However, each segmentation benchmark seems to require specialized architectures and training scheme modifications to achieve competi- tive performance [1,2,3,4,5]. This results in huge amounts of publications in the field that, alongside often limited validation on only few or even just a single dataset, make it increasingly difficult for researchers to identify methods that live up to their promised superiority beyond the limited scenarios they are demon- strated on~\cite{nnunet}
 
+% In many biomedical applications, only very few images are required to train a network that generalizes reasonably well. This is because each image already comprises repetitive structures with corresponding variation~\cite{DBLP:journals/corr/CicekALBR16}.
+
 \section{Objectives and Contributions}
 \section{Outline of Report}
 
@@ -139,7 +141,7 @@ Finally, the dataset comes with ten hold-out data items, which are patients with
 
 \subsection{Delineation classes}
 
-The clinicians at the Royal Marsden Hospital have provided segmentation labels for seven high-priority classes of interest. These are the Bladder, Anorectum, CTVn, CTVp, Parametrium, Uterus, and Vagina. The function of these anatomies is irrelevant to this project and is left to the reader to research further. Note that for the sake of this report, the only deviation from clinical understanding is the CTV cancerous delineations. % TODO, maybe reword
+The clinicians at the Royal Marsden Hospital have provided segmentation labels for seven high-priority regions of interest (roi). These are the Bladder, Anorectum, CTVn, CTVp, Parametrium, Uterus, and Vagina. The function of these anatomies is irrelevant to this project and is left to the reader to research further.
 
 \subsubsection{Organs At Risk}\label{sec:data-organs-at-risk}
 
@@ -253,31 +255,39 @@ The final structures are the Vagina and Uterus, their clinical significance is t
 
 \subsection{Rules}\label{sec:data-delineation-rules}
 
-\begin{minipage}{0.5\textwidth}
-  \subsubsection{Notation of Structures}
-  \begin{enumerate}
-    \item Let the Anorectum be denoted as $A$
-    \item Let the Bladder be denoted as $B$
-    \item Let the Cervix be denoted with $C$
-    \item Let the CTVn be denoted with $C_n$
-    \item Let the CTVp be denoted with $C_p$
-    \item Let the GTVp be denoted with $G_p$
-    \item Let the GTVn be denoted with $G_n$
-  \end{enumerate}
-\end{minipage}%
-\begin{minipage}{0.5\textwidth}
+Let us represent each organ anatomy as the first letter of its name, specifically: ($A$)norectum, ($B$)ladder, ($C$)ervix, ($P$)arametrium, ($U$)terus, ($V$)agina. Further, define:
 
-  \begin{enumerate}
-    \setcounter{enumi}{7}
-    \item Let the Pelvic Lymph Node be denoted as $L_p$
-    \item Let the Common Iliac Lymph Node be denoted as $L_i$
-    \item Let the Para-aortic Lymph Node be denoted as $L_{pa}$
-    \item Let the Parametrium be denoted with $P$
-    \item Let the Uterus be denoted with $U$
-    \item Let the Vagina be denoted with $V$
-  \end{enumerate}
+\begin{enumerate}
+  \item The CTVn and CTVp as $C_n$ and $C_p$ respectively
+  \item The GTVn and GTVp as $G_n$ and $G_p$ respectively
+  \item The Pelvic, Common and Para-aortic Lymph Node as $L_p$, $L_c$, and $L_{pa}$ respectively
+\end{enumerate}
 
-\end{minipage}
+% \begin{minipage}{0.5\textwidth}
+%   \subsubsection{Notation of Structures}
+%   \begin{enumerate}
+%     \item Let the Anorectum be denoted as $A$
+%     \item Let the Bladder be denoted as $B$
+%     \item Let the Cervix be denoted with $C$
+%     \item Let the CTVn be denoted with $C_n$
+%     \item Let the CTVp be denoted with $C_p$
+%     \item Let the GTVp be denoted with $G_p$
+%     \item Let the GTVn be denoted with $G_n$
+%   \end{enumerate}
+% \end{minipage}%
+% \begin{minipage}{0.5\textwidth}
+
+%   \begin{enumerate}
+%     \setcounter{enumi}{7}
+%     \item Let the Pelvic Lymph Node be denoted as $L_p$
+%     \item Let the Common Iliac Lymph Node be denoted as $L_i$
+%     \item Let the Para-aortic Lymph Node be denoted as $L_{pa}$
+%     \item Let the Parametrium be denoted with $P$
+%     \item Let the Uterus be denoted with $U$
+%     \item Let the Vagina be denoted with $V$
+%   \end{enumerate}
+
+% \end{minipage}
 
 \subsubsection{Relationship between Structures}
 
@@ -350,7 +360,7 @@ The current machine learning approach didn't work well with image data. Up until
 
 At the same time, J. Hull, sponsored by the United States Postal Service, published a Database for Handwritten Text Recognition with the incentive of providing an extensive dataset of images of characters of variable writing mediums, isolation, overlap, and neatness to aid research efforts in developing accurate digit classification algorithms~\cite{JJHull1994}. Yann LeCunn et al.~\cite{Lenet1998} used this database to propose a convolution-based approach for image processing, which preserved the input in its 2D glory by applying convolutions.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{../figures/sobel.png}
   \caption{Example application of a convolution. From left to right, the input image with a region outlined in a red box, the boxed region magnified with a convolutional (sobel) filter being applied to a part of the magnified region, and lastly the output after the filter has passed over the entire image}\label{fig:sobel}
@@ -358,7 +368,7 @@ At the same time, J. Hull, sponsored by the United States Postal Service, publis
 
 Convolutional layers are rectangular blocks that are recipes for translating an image (the input feature). The algorithm centres the block over a specific pixel and uses a square radius of neighbouring pixels. It multiplies and sums the pixels along the corresponding pixel positions according to the recipe to produce a transformed resulting pixel that encodes the reference pixel's information and the surrounding receptive field around it. Figure~\ref{fig:sobel} demonstrates this concept. Specifically, the middle tile which shows an example 3x3 convolutional filter being applied to a zoomed in part of the image. This filter slides across the entire image and encodes the entire image which produces the output on the right of Figure~\ref{fig:sobel}. A network then learns values within the square convolution, which best encodes the image's features according to the training objective. When stacked with many other convolutional filters that piggyback off the encoded features produced by filters before it, this allows for dense feature representations that encode the entire image.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \subfigure{\includegraphics[width=.49\linewidth, trim=0 230px 0 0, clip]{../figures/fcnupsample.png}}
   \subfigure{\includegraphics[width=.49\linewidth, trim=0 33px 0 200px, clip]{../figures/fcnupsample.png}}
@@ -404,9 +414,14 @@ The continued performance dominance gives the nnUNet a good foundation for being
 
 \subsection{TotalSegmentator}
 
+Total Segmentation is a tool with an nnUNet backbone pre-trained on 1204 CT examinations to provide plans to segment 104 anatomical structures. The anatomies selected included apparent structures such as skeletal structures, gastrointestinal organs and other major organs. The training data contained many CT images, with differences in slice thickness, resolution, and contrast phase~\cite{totalsegmentor-paper}. However, it is important to note that 60\% of the scans occurred in a contrast-enhanced environment, which plays a role in how obvious delineations are during scanning, a scanning detail that was omitted during the training data collection for this research project. Furthermore, only an estimated 10\% of the data collected from this model contained relevant studies for the abdomen and pelvic areas.
 
+From the segmented organs that total segmentator provides, only the Bladder overlapped with the organs that were of interest in this study.
 
 \subsection{UniverSeg}
+
+
+
 \subsection{SAM}
 
 \section{Performance Evaluation for Segmentation Methods}
@@ -570,10 +585,15 @@ For this project, we shall select an evaluation measurement more biased towards 
 
 Here, discuss results from all 4 of the methods tested.
 
+% total segmentator had 500 females to 700 males which may explain the struggle to locate the uterus and vagina.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Conclusion}
 
 Transfer works!
+
+% because of the way the CTV is drawn based on the progression of the tumor and how far along the patient is, this influences the contour drawen. Perhaps, the metrics suggest that a model with only one modality is not enough to make a decision which sparks the idea of a model which is capable of multi-modal analysis.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Ethics}
