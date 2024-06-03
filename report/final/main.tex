@@ -420,7 +420,25 @@ From the segmented organs that total segmentator provides, only the Bladder over
 
 \subsection{UniverSeg}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.5\linewidth]{../figures/universeg.png}
+  \caption{The UniverSeg architecture~\cite{universeg}. Diagram illustrates the freezing of model parameters while providing a support set of images which follows the query image through the segmentation pipeline.}\label{fig:universeg}
+\end{figure}
 
+UniverSeg attempts to provide segmentation on a target image based on examples of other samples with the same anatomy contoured in a selection of other images. 
+
+With UniverSeg, Butoi et al. present a model that breaks away from the traditional approach. Instead of training a model and freezing parameters during inference, this architecture uses a support set of images to provide a practical few-shot approach to inferring segmentations from input images. Figure~\ref {fig:universeg} shows an example of this efficient querying.
+
+This model operates on 2D slices of images and directly avoids the finetuning argument for medical imaging. They argue that finetuning can be unhelpful due to the differences between medical domains, features, and data fingerprints. As such, UniverSeg avoids significant retaining for each subtask.
+
+% Fully transferable, no retraining, few shot learning
+
+% This is especially problematic in the medical domain where clinical researchers or other scientists are constantly defining new segmentation tasks driven by evolving populations, and scientific and clinical goals. To solve these problems they need to either train models from scratch or fine-tune existing models.
+
+% Fine-tuning models trained on the natural image domain can be unhelpful in the medical domain [ 82 ], likely due to the differences in data sizes, features, and task specifications between domains, and importantly still requires substantial retraining. 
+
+% Universeg avoids substatial retraining for each subtask
 
 \subsection{SAM}
 
