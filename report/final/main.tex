@@ -345,15 +345,15 @@ Algorithms began to emerge that fell into the classification of neural network m
 
 The current machine learning approach didn't work well with image data. Up until that point, rich structures such as images were neglected, and matrices of gray-scale images were mutilated into flat vectors. This approach was necessary to feed the flattened image representation through the MLP. The issue with vectorising an image is that it loses its spatial context-driven awareness. 
 
-At the same time, J. Hull, sponsored by the United States Postal Service, published a Database for Handwritten Text Recognition with the incentive of providing an extensive dataset of 300-pixel images of characters of variable writing mediums, isolation, overlap, and neatness to aid research efforts in developing accurate digit classification algorithms~\cite{JJHull1994}. Yann LeCunn et al.~\cite{Lenet1998} used this database to propose a convolution-based approach for image processing, which preserved the input in its 2D glory by applying convolutions.
+At the same time, J. Hull, sponsored by the United States Postal Service, published a Database for Handwritten Text Recognition with the incentive of providing an extensive dataset of images of characters of variable writing mediums, isolation, overlap, and neatness to aid research efforts in developing accurate digit classification algorithms~\cite{JJHull1994}. Yann LeCunn et al.~\cite{Lenet1998} used this database to propose a convolution-based approach for image processing, which preserved the input in its 2D glory by applying convolutions.
 
 \begin{figure}
   \centering
   \includegraphics[width=1\linewidth]{../figures/sobel.png}
-  \caption{Example application of a convolution. From left to right, the input image with a region outlined in a red box, the boxed region magnified with a region being applied to the convolutional (sobel) filter, and lastly the output after the filter has passed over the entire image}\label{fig:sobel}
+  \caption{Example application of a convolution. From left to right, the input image with a region outlined in a red box, the boxed region magnified with a convolutional (sobel) filter being applied to a part of the magnified region, and lastly the output after the filter has passed over the entire image}\label{fig:sobel}
 \end{figure}
 
-Convolutional layers are rectangular blocks that are recipes for translating an image (the input feature). The algorithm centres the block over a specific pixel and uses a square radius of neighbouring pixels. It multiplies and sums the pixels along the corresponding pixel positions according to the recipe to produce a transformed resulting pixel that encodes the reference pixel's information and the surrounding receptive field around it. Figure~\ref{fig:sobel} demonstrates this concept, specifically, the middle tile which shows an example 3x3 convolutional filter being applied to a zoomed in part of the image. This filter slides across the entire image and encodes the entire image which produces the output on the right of Figure~\ref{fig:sobel}.
+Convolutional layers are rectangular blocks that are recipes for translating an image (the input feature). The algorithm centres the block over a specific pixel and uses a square radius of neighbouring pixels. It multiplies and sums the pixels along the corresponding pixel positions according to the recipe to produce a transformed resulting pixel that encodes the reference pixel's information and the surrounding receptive field around it. Figure~\ref{fig:sobel} demonstrates this concept. Specifically, the middle tile which shows an example 3x3 convolutional filter being applied to a zoomed in part of the image. This filter slides across the entire image and encodes the entire image which produces the output on the right of Figure~\ref{fig:sobel}. A network then learns values within the square convolution, which best encodes the image's features according to the training objective. When stacked with many other convolutional filters that piggyback off the encoded features produced by filters before it, this allows for dense feature representations that encode the entire image.
 
 \begin{figure}
   \centering
@@ -362,26 +362,30 @@ Convolutional layers are rectangular blocks that are recipes for translating an 
   \caption{Comparison of upsampling a base image using FCN~\cite{fully-CNNs-for-semantic-segmentation} and the VGG-16-based DeconvNet~\cite{noh2015learning, simonyan2014very} architectures.}\label{fig:fcn-vs-deconvnet}
 \end{figure}
 
-This first convolutional network spawned a vicious flurry of convolutional architectures, which followed in their footsteps. The Fully Connected Neural Network (FCN) adapted the architecture used by LeCunn et al.~\cite{Lenet1998} for segmentation applications. Previously, convolutions would reduce input image feature vectors into non-spatial classification outputs. However, this paper `convolutionalized the pipeline to provide a heatmap of segmented objects within the image~\cite{fully-CNNs-for-semantic-segmentation}. The heatmap would describe in a 2D feature the location of each class.
+This first convolutional network spawned a vicious flurry of convolutional architectures, which followed in their footsteps. The Fully Connected Neural Network (FCN) adapted the architecture used by LeCunn et al.~\cite{Lenet1998} for segmentation applications. Previously, convolutions would reduce input image feature vectors into non-spatial classification outputs. However, this paper `convolutionalized' the pipeline to provide a heatmap of segmented objects within the image~\cite{fully-CNNs-for-semantic-segmentation}. The heatmap would describe in a 2D feature the location of each class.
 
 Trivial upsampling through de-convolutional layers allows the heatmap to translate back to the original size. The trivial process would produce a largely inaccurate segmentation with much room for improvement. Therefore, similarly to learning the downsampling, the model learnt to upsample low-level heatmap representations~\cite{noh2015learning}. This way, the deconvolutional network also became ``a key component for precise object segmentation,'' which improved the base upsampling provided by the FCN. This conclusion is shown in Figure~\ref{fig:fcn-vs-deconvnet}.
 
+The strategy of downsampling and upsampling for image segmentation is a common theme amongst many segmentation architectures.
+
 \subsection{UNet}
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=.9\linewidth, trim=0 200px 0 0, clip]{../figures/u-net.png}
   \caption{The U-Net architecture, with contractive side on the left, and expansive side on the right. The feature map follows the arrows and multiplies the number of feature maps twice at each contraction, and halves at each expansion~\cite{U-Net}.}\label{fig:unet}
 \end{figure}
 
 
-Simultaneously, a unique architecture was under development. This architecture mirrored the hourglass structure of contracting and upsampling sections, only this time, the illustration of its architecture led to its name, the UNet~\cite{U-Net}.
+Simultaneously, a unique architecture was under development. This architecture mirrored the hourglass structure of contracting and upsampling sections of the FCN, only this time, the illustration of its architecture led to its name, the UNet~\cite{U-Net}.
 
-The UNet similarly consists of a contractive and expansive side, with the so-called `skip-connections' added feature. As shown in Figure~\ref{fig:unet}, at each stage of the contracting/expansive side, these copy operations help localise high-resolution features from the contracting path~\cite{U-Net}. The network yielded great results for a few training images and more precise segmentations.
+The UNet similarly consists of a contractive and expansive side, with the added feature of so-called `skip-connections'. As shown in Figure~\ref{fig:unet}, at each stage of the contracting/expansive side, these copy operations help localise high-resolution features from the contracting path~\cite{U-Net}. The network yielded great results for a few training images and more precise segmentations.
+
+The U-Net was now very close to being a staple choice in biomedical data for anatomy segmentation. A limitation of its current implementation is that slices along the third dimension would most certainly contain contextual information that would influence the decision of the current design. Therefore, an identical network topology with extended 3D convolutions was proposed by \c{C}i{\c{c}}ek et al.~\cite{DBLP:journals/corr/CicekALBR16}.
 
 \subsection{nnUNet}
 
-One problem remained. The UNet architecture operated on 2D data, which 
+
 
 % mention that sam decided that 2d was not enough?
 
