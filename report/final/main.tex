@@ -480,14 +480,14 @@ The SAM model implemented a modification of the transformer architecture~\cite{S
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{../figures/sam-performance.png}
-  \caption{Performance of a SAM (todo, was this finetuned?) model across a reference nnUNet baseline when applied to different datasets. The evaluation was considered for semantic, point and box prompts.~\cite{he2023computervision}.}\label{fig:sam-performance}
+  \caption{Performance of a SAM model across a reference nnUNet baseline when applied to different datasets. The evaluation was considered for semantic, point and box prompts.~\cite{he2023computervision}.}\label{fig:sam-performance}
 \end{figure}
 
 SAM trains its network on a collection of natural images, not medical images such as CT and MRI scans. Extensive stress tests performed on SAM concluded that SAM's out-of-the-box promotable segmentation tool had good baseline performance on large visible objects~\cite{deng2023segment} but required exact prompt segmentation, making it inaccessible to automated contouring. Regarding the number of points required to make a sensible prediction, SAM quantitatively underperformed a nnUNet baseline, with qualitative evaluation showing fuzzy boundaries in medical contexts~\cite{hu2023sam}. Finally, Figure~\ref{fig:sam-performance} shows the performance of SAM against an nnUNet baseline across a set of datasets and imaging modalities~\cite{he2023computervision} which concludes that SAM never outperformed the nnUNet baseline when trained on the 11M natural images~\cite{SAM}. 
 
-Thus, Ma et al. further reinforced the task to utilize a dataset of nearly 500k CT scan test examples to train a model for medical images, named MedSAM~\cite{Ma2024}. Ma et al. decided to keep close to its original despite medical images being 3-dimensional in CT and MRI scans because of ``enhanced flexibility and adaptability'' where slices along an axis substitute 3D scans~\cite{Ma2024}.
+\subsection{MedSAM}\label{sect:medsam}
 
-Thus, Ma et al. further reinforced the task to utilize a dataset of nearly 500k CT scan test examples to train a model for medical images, named MedSAM~\cite{Ma2024}. Ma et al. decided to keep close to its original despite medical images being 3-dimensional in CT and MRI scans because of ``enhanced flexibility and adaptability'' where slices along an axis substitute 3D scans~\cite{Ma2024}. This model demonstrates an improvement over SAM, nnUNet, and Deepmedic models when MedSAM bounding boxes extracted from the ground truth prompt the model~\cite{Ma2024}.
+Therefore, Ma et al. enhanced the architecture provided by SAM by training it on a dataset of nearly 500k CT scan test examples to train a model for medical images, named MedSAM~\cite{Ma2024}. Ma et al. decided to keep close to its original despite medical images being 3-dimensional in CT and MRI scans because of ``enhanced flexibility and adaptability'' where slices along an axis substitute 3D scans~\cite{Ma2024}. This model demonstrates an improvement over SAM, nnUNet, and Deepmedic models when MedSAM bounding boxes extracted from the ground truth prompt the model~\cite{Ma2024}.
 
 \clearpage
 
