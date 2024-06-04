@@ -53,6 +53,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Introduction}
 
+
+
 \section{Technical Context}
 
 % To mention: Medical Image Segmentation is currently dominated by deep convolutional neural networks (CNNs). However, each segmentation benchmark seems to require specialized architectures and training scheme modifications to achieve competi- tive performance [1,2,3,4,5]. This results in huge amounts of publications in the field that, alongside often limited validation on only few or even just a single dataset, make it increasingly difficult for researchers to identify methods that live up to their promised superiority beyond the limited scenarios they are demon- strated on~\cite{nnunet}
@@ -60,12 +62,17 @@
 % In many biomedical applications, only very few images are required to train a network that generalizes reasonably well. This is because each image already comprises repetitive structures with corresponding variation~\cite{DBLP:journals/corr/CicekALBR16}.
 
 \section{Objectives and Contributions}
+
 \section{Outline of Report}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Motivation}
+The report will first discuss the relevant background knowledge required for this project in Chapter~\ref{sect:motivation}. Within, we provide a high-level overview of anatomies and the clinical context (Section~\ref{sect:clinical-context}) as well as core existing academic knowledge in the Computer-assisted vision in the Medical Imaging field (Section~\ref{sect:machine-learning-for-image-segmentation}-\ref{sect:performance-evaluation}). 
 
-\section{Clinical Context}
+Then, Chapter~\ref{sect:methodology} describes the experiments used to evaluate how well different architectures transfer knowledge into the target domain, as well as an overview of the results (Chapter~\ref{sect:results}) as well as a discussion of their implications (Chapter~\ref{sect:discussion}).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Motivation}\label{sect:motivation}
+
+\section{Clinical Context}\label{sect:clinical-context}
 
 This project will have its foundation for experimentation in a dataset provided by the Royal Marsden Hospital. The real-world clinical dataset segments key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the widespread segmentation challenges and has uncommon and limited segmentation patterns. This dataset will act as the pillar for justifying the success of the transferability of knowledge between medical domains.
 
@@ -348,7 +355,7 @@ The medical sector has been a hotbed for AI research since researchers realised 
 
 The key objective of models trained for delineating target structures for this project is to see if an AI model can learn cervical cancer CTV pattern detection. The decision is complex as clinicians use information beyond the CT-imaging modality, such as how far along the tumour has progressed, and other clinical intuition to make proper judgements about the CTV volumes. Therefore, with this information missing from AI models, it is likely to misjudge target volumes, and a clinician will have to select which components of the CTV are required. However, a clinician will likely benefit from the time saved and improved consistency with the planning process if a trained model can produce the substructures required within the CTV that a clinician can review~\cite{AMLART-data}.
 
-\section{Machine learning for image segmentation}
+\section{Machine learning for image segmentation}\label{sect:machine-learning-for-image-segmentation}
 
 Before popularising machine learning algorithms, strict and convoluted rule sets defined algorithms. These heuristically defined algorithms struggled to scale to complex problems and were often complicated or confusing to maintain. The typical task, however, does not warp easily into human intuition.
 
@@ -462,7 +469,7 @@ Thus, Ma et al. further reinforced the task to utilize a dataset of nearly 500k 
 
 Thus, Ma et al. further reinforced the task to utilize a dataset of nearly 500k CT scan test examples to train a model for medical images, named MedSAM~\cite{Ma2024}. Ma et al. decided to keep close to its original despite medical images being 3-dimensional in CT and MRI scans because of ``enhanced flexibility and adaptability'' where slices along an axis substitute 3D scans~\cite{Ma2024}. This model demonstrates an improvement over SAM, nnUNet, and Deepmedic models when MedSAM bounding boxes extracted from the ground truth prompt the model~\cite{Ma2024}.
 
-\section{Performance Evaluation for Segmentation Methods}
+\section{Performance Evaluation for Segmentation Methods}\label{sect:performance-evaluation}
 
 Calculating the difference between the provided labelled data would be one way to determine if a contour can be used in a clinical context. However, we have different ways to evaluate this measure in a delineation context.
 
@@ -603,19 +610,19 @@ For this project, we shall select an evaluation measurement more biased towards 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Methodology}
+\chapter{Methodology}\label{sect:methodology}
 
 \section{Transfer Learning}
 
 \section{Base-line nnUNet...}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Results}
+\chapter{Results}\label{sect:results}
 
 ...
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Discussion}
+\chapter{Discussion}\label{sect:discussion}
 
 Here, discuss results from all 4 of the methods tested.
 
