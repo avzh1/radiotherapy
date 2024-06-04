@@ -427,8 +427,6 @@ The UNet similarly consists of a contractive and expansive side, with the added 
 
 The U-Net was now very close to being a staple choice in biomedical data for anatomy segmentation. A limitation of its current implementation is that slices along the third dimension would most certainly contain contextual information that would influence the decision of the current design. Therefore, an identical network topology with extended 3D convolutions was proposed by \c{C}i{\c{c}}ek et al.~\cite{DBLP:journals/corr/CicekALBR16}.
 
-% In many biomedical applications, only very few images are required to train a network that generalizes reasonably well. This is because each image already comprises repetitive structures with corresponding variation~\cite{DBLP:journals/corr/CicekALBR16}.
-
 \subsection{nnUNet}
 
 Until now, architectures have operated on data pre-processed to a particular expected distribution and configured to deal with a specific problem. For instance, out-of-the-box configuration has stringent input size requirements, which require image resizing. Furthermore, 3D images commonly produce heterogeneous voxel spacing depending on the parameters chosen by the clinician or the machine from which they were produced~\cite{nnunet}. The number of moving parts often leaves a unidirectional dependency on the data depending on the architecture. 
@@ -440,8 +438,6 @@ The automated method configuration is classified into three categories. A datase
 A review of segmentation methods in 2024 reviewed some further developments in segmentation models and found that the convolution-based U-Net architectures continued to outperform Attention-based or Mamba-based approaches six years after the initial publication of the self-configuring network~\cite{isensee2024nnunet}. Isensee et al. concluded that there was a significant mischaracterisation of proclaimed improvements in new strategies such as transformers. Claims of performance improvements over the nnUNet were reviewed through the control of validation datasets and removals of baseline tampering, which demonstrated the convolution-based performance on datasets with low statistical intra-method standard deviation~\cite{isensee2024nnunet}.
 
 The continued performance dominance gives the nnUNet a good foundation for being used as a baseline model for all datasets.
-
-% mention that sam decided that 2d was not enough?
 
 \subsection{TotalSegmentator}
 
@@ -638,7 +634,24 @@ For this project, we shall select an evaluation measurement more biased towards 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Methodology}\label{sect:methodology}
 
+A simple nnUNet model can be trained from scratch to provide an accurate segmentation for anatomy and radiotherapy target volumes. This nnUNet model has been shown to provide more robust results in external stress tests than other comparable architectures on a set of different datasets~\cite{isensee2024nnunet}. Also, in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}.
+
+However, improvements over the baseline could hypothetically allow the segmentation of delineated areas more accurately.
+
 \section{Transfer Learning}
+
+A strategy for improving the accuracy of a model is Transfer Learning.
+
+Transfer Learning involves transferring a model's knowledge from a domain that has trained on more volumes of training data in another domain and is used as a starting point in the target domain. Transfer is a source of success because, in the early layers of a model, it typically learns very low-level features. At 
+this scale, the objective of the original domain does not matter; regardless of the initialisation, a model working on a similar problem will inevitably learn similar low-level features. 
+
+Arguably, the universality of the parameters learnt in a model with prosperous access to data will have richer and better patterns that another with less data did not have enough information to learn~\cite{deep-learning-book, survey-on-transfer-learning}.
+
+Transfer Learning has the potential to improve initial performance using only the transferred knowledge before any further learning begins, improve the time it takes to thoroughly learn the target task given the transferred knowledge, and improve the final performance all when compared to initial benchmarks without transfer~\cite{torrey-handbook}. Medical contexts have already applied Transfer Learning, which reportedly improved weight initialisation for 332 abdominal liver CT scans and resulted in faster convergence, providing a more robust representation~\cite{liver-lesion-via-transfer-learning}.
+
+Transfer Learning has been seen to prevent overfitting in domains where data volume is low and where generality without overfitting is hard to come by. The prevention is because the model has already learnt features likely to be helpful in the second task~\cite{geeks-transfer-learning}. 
+
+However, generalisation is not a guarantee, as overfitting is still possible if the model is fine-tuned too much on the second task, as it may `learn task-specific features that do not generalise well to new data'~\cite{geeks-transfer-learning}. In our case, our target dataset is small but similar to the base network dataset. We may overfit because fine-tuning the pre-trained network with the target dataset may not generalise to the global population. If, instead, we attempt to transfer a task with a different base network dataset, then using high-level features of the pre-trained model will not be useful~\cite{geeks-transfer-learning}.
 
 \section{Base-line nnUNet...}
 
