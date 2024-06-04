@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def display_batch(batch, show_points = True, show_boxes = True):
+def display_batch(batch, show_points = True, show_boxes = True, size=20):
     # get the shape of the batch
     n = batch['image'].shape[0]
     # we plot the grid as a square; therefore, construct a square grid
@@ -16,7 +16,7 @@ def display_batch(batch, show_points = True, show_boxes = True):
     grid_gts = make_grid(batch['gt2D'].float(), nrow=nrows, padding=0)
     gts_mask = (grid_gts.sum(dim=0) > 0).float()
 
-    plt.figure(figsize=(20, 20))
+    plt.figure(figsize=(size, size))
     plt.imshow(grid_imgs.permute(1, 2, 0))
     plt.imshow(gts_mask, alpha=gts_mask, cmap='viridis')
 

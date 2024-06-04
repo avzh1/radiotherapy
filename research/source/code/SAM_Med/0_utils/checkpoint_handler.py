@@ -18,8 +18,8 @@ class CheckpointHandler():
         self.checkpoint_path = checkpoint_path
         self.device = device
         
-        self.lr = kwargs['lr']
-        self.weight_decay = kwargs['weight_decay']
+        self.lr = kwargs['lr'] if 'lr' in kwargs else 1e-4
+        self.weight_decay = kwargs['weight_decay'] if 'weight_decay' in kwargs else 0.01
 
     def save_checkpoint(self, model, optimizer, epoch, epoch_loss, best_loss, final):
         """
