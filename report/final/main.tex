@@ -414,7 +414,7 @@ The strategy of downsampling and upsampling for image segmentation is a common t
 
 \subsection{UNet}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=.9\linewidth, trim=0 200px 0 0, clip]{../figures/u-net.png}
   \caption{The U-Net architecture, with contractive side on the left, and expansive side on the right. The feature map follows the arrows and multiplies the number of feature maps twice at each contraction, and halves at each expansion~\cite{U-Net}.}\label{fig:unet}
@@ -492,6 +492,8 @@ SAM trains its network on a collection of natural images, not medical images suc
 Thus, Ma et al. further reinforced the task to utilize a dataset of nearly 500k CT scan test examples to train a model for medical images, named MedSAM~\cite{Ma2024}. Ma et al. decided to keep close to its original despite medical images being 3-dimensional in CT and MRI scans because of ``enhanced flexibility and adaptability'' where slices along an axis substitute 3D scans~\cite{Ma2024}.
 
 Thus, Ma et al. further reinforced the task to utilize a dataset of nearly 500k CT scan test examples to train a model for medical images, named MedSAM~\cite{Ma2024}. Ma et al. decided to keep close to its original despite medical images being 3-dimensional in CT and MRI scans because of ``enhanced flexibility and adaptability'' where slices along an axis substitute 3D scans~\cite{Ma2024}. This model demonstrates an improvement over SAM, nnUNet, and Deepmedic models when MedSAM bounding boxes extracted from the ground truth prompt the model~\cite{Ma2024}.
+
+\clearpage
 
 \section{Performance Evaluation for Segmentation Methods}\label{sect:performance-evaluation}
 
@@ -601,13 +603,13 @@ Selecting a measurement that can reflect a clinician's acceptability score is di
 
 The study at~\cite{Sherer2021-le} helped drive an initiative to combine aspects of surface Based evaluation (Section~\ref{sect:surface-based}) and Spatial Overlap Based evaluation (Section~\ref{sect:spatial-overlap-based}) into a Surface DICE which assesses the specified tolerance instead of the overlap of the two volumes.
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=0.3\linewidth]{../figures/Surface-dice.png}
-  \caption{Taken from~\cite{Nikolov2021-xe}. Illustrates the computation of the surface DICE, where the continuous line is the predicted surface, and the dashed line is the ground truth. The black arrows show the maximum deviation tolerated without penalty; therefore, in pink are the unacceptable deviations and green otherwise.}
+  \caption{Taken from~\cite{Nikolov2021-xe}. Illustrates the computation of the surface DICE, where the continuous line is the predicted surface, and the dashed line is the ground truth. The black arrows show the maximum deviation tolerated without penalty; therefore, in pink are the unacceptable deviations and green otherwise.}\label{fig:surface-dice}
 \end{figure}
 
-We can formulate the Surface DSC score in a mathematical definition~\cite{Sherer2021-le}.
+We can formulate the Surface DSC score in a mathematical definition~\cite{Sherer2021-le} with its corresponding illustration in Figure~\ref{fig:surface-dice}.
 
 \begin{equation*}
  \text{Surface DSC} = \frac{|S_p \cap B_{g,\tau}| + |S_g \cap B_{p,\tau}|}{|S_p| + |S_g|}
