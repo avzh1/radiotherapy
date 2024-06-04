@@ -363,7 +363,7 @@ At the same time, J. Hull, sponsored by the United States Postal Service, publis
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{../figures/sobel.png}
-  \caption{Example application of a convolution. From left to right, the input image with a region outlined in a red box, the boxed region magnified with a convolutional (sobel) filter being applied to a part of the magnified region, and lastly the output after the filter has passed over the entire image}\label{fig:sobel}
+  \caption{Example application of a convolution. From left to right, the input image with a region outlined in a red box, the boxed region magnified with a convolutional (sobel) filter being applied to a part of the magnified region, and lastly the output after the filter has passed over the entire image. The output represents a new feature map encoding features of the original (input) feature.}\label{fig:sobel}
 \end{figure}
 
 Convolutional layers are rectangular blocks that are recipes for translating an image (the input feature). The algorithm centres the block over a specific pixel and uses a square radius of neighbouring pixels. It multiplies and sums the pixels along the corresponding pixel positions according to the recipe to produce a transformed resulting pixel that encodes the reference pixel's information and the surrounding receptive field around it. Figure~\ref{fig:sobel} demonstrates this concept. Specifically, the middle tile which shows an example 3x3 convolutional filter being applied to a zoomed in part of the image. This filter slides across the entire image and encodes the entire image which produces the output on the right of Figure~\ref{fig:sobel}. A network then learns values within the square convolution, which best encodes the image's features according to the training objective. When stacked with many other convolutional filters that piggyback off the encoded features produced by filters before it, this allows for dense feature representations that encode the entire image.
@@ -377,7 +377,7 @@ Convolutional layers are rectangular blocks that are recipes for translating an 
 
 This first convolutional network spawned a vicious flurry of convolutional architectures, which followed in their footsteps. The Fully Connected Neural Network (FCN) adapted the architecture used by LeCunn et al.~\cite{Lenet1998} for segmentation applications. Previously, convolutions would reduce input image feature vectors into non-spatial classification outputs. However, this paper `convolutionalized' the pipeline to provide a heatmap of segmented objects within the image~\cite{fully-CNNs-for-semantic-segmentation}. The heatmap would describe in a 2D feature the location of each class.
 
-Trivial upsampling through de-convolutional layers allows the heatmap to translate back to the original size. The trivial process would produce a largely inaccurate segmentation with much room for improvement. Therefore, similarly to learning the downsampling, the model learnt to upsample low-level heatmap representations~\cite{noh2015learning}. This way, the deconvolutional network also became ``a key component for precise object segmentation,'' which improved the base upsampling provided by the FCN. This conclusion is shown in Figure~\ref{fig:fcn-vs-deconvnet}.
+Trivial upsampling through de-convolutional layers allows the heatmap to translate back to the original size. This process would produce a largely inaccurate segmentation with much room for improvement. Therefore, similarly to learning the downsampling, the model learnt to upsample low-level heatmap representations~\cite{noh2015learning}. This way, the deconvolutional network also became ``a key component for precise object segmentation,'' which improved the base upsampling provided by the FCN. This conclusion is shown in Figure~\ref{fig:fcn-vs-deconvnet}.
 
 The strategy of downsampling and upsampling for image segmentation is a common theme amongst many segmentation architectures.
 
@@ -406,7 +406,7 @@ Therefore, the nnUNet analyses the fingerprint of the dataset and the device to 
 
 The automated method configuration is classified into three categories. A dataset fingerprint extracts training data distributions such as shape, spacing and intensity distributions. Rule-based parameters estimate the most common robust parameters for resampling and normalization. Finally, the Empirical Parameters learn parameters, such as ensemble selection, which is not derivable from the dataset fingerprint.
 
-A review of segmentation methods in 2024 reviewed some further developments in segmentation models and found that the convolution-based U-Net architectures continued to outperform Attention-based or Mamba-based approaches six years after the initial publication of the self-configuring network~\cite{isensee2024nnunet}. A study concluded that there was a significant mischaracterisation of proclaimed improvements in new strategies such as transformers. Claims of performance improvements over the nnUNet were reviewed through the control of validation datasets and removals of baseline tampering, which demonstrated the convolution-based performance on datasets with low statistical intra-method standard deviation~\cite{isensee2024nnunet}.
+A review of segmentation methods in 2024 reviewed some further developments in segmentation models and found that the convolution-based U-Net architectures continued to outperform Attention-based or Mamba-based approaches six years after the initial publication of the self-configuring network~\cite{isensee2024nnunet}. Isensee et al. concluded that there was a significant mischaracterisation of proclaimed improvements in new strategies such as transformers. Claims of performance improvements over the nnUNet were reviewed through the control of validation datasets and removals of baseline tampering, which demonstrated the convolution-based performance on datasets with low statistical intra-method standard deviation~\cite{isensee2024nnunet}.
 
 The continued performance dominance gives the nnUNet a good foundation for being used as a baseline model for all datasets.
 
@@ -426,9 +426,7 @@ From the segmented organs that total segmentator provides, only the Bladder over
   \caption{The UniverSeg architecture~\cite{universeg}. Diagram illustrates the freezing of model parameters while providing a support set of images which follows the query image through the segmentation pipeline.}\label{fig:universeg}
 \end{figure}
 
-UniverSeg attempts to provide segmentation on a target image based on examples of other samples with the same anatomy contoured in a selection of other images. 
-
-With UniverSeg, Butoi et al. present a model that breaks away from the traditional approach. Instead of training a model and freezing parameters during inference, this architecture uses a support set of images to provide a practical few-shot approach to inferring segmentations from input images. Figure~\ref {fig:universeg} shows an example of this efficient querying.
+Butoi et al. present UniverSeg, a model that breaks away from the traditional approach. Instead of training a model and freezing parameters during inference, this architecture uses a support set of images to provide a practical few-shot approach to inferring segmentations from input images. Figure~\ref {fig:universeg} shows an example of this efficient querying. This way, Butoi et al. attempt to provide segmentation on a target image based on examples of other samples with the same anatomy contoured in a selection of other images.
 
 This model operates on 2D slices of images and directly avoids the finetuning argument for medical imaging. They argue that finetuning can be unhelpful due to the differences between medical domains, features, and data fingerprints. As such, UniverSeg avoids significant retaining for each subtask.
 
@@ -563,10 +561,6 @@ All these methods can be advantageous in some places rather than others. To deci
 \end{itemize}
 
 \subsection{Estimated Editing Based}\label{sect:surface-dice}
-
-\begin{warning}
- This is a quotation from this paper,~\cite{Sherer2021-le}, however, it is referencing a paper of its own. Shall I reference the original paper, or are 'linked' references OK?
-\end{warning}
 
 Selecting a measurement that can reflect a clinician's acceptability score is difficult. A study found a lack of correlation between a geometric index and expert evaluation, with the JAC score having a 13\% False Positive Rate. The study's conclusion summarised that scores such as JSC and volumetric DSC ``provide limited clinical context and correlation with clinical or dosimetric quality''~\cite{Sherer2021-le}.
 
