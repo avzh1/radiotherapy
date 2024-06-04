@@ -429,6 +429,10 @@ The U-Net was now very close to being a staple choice in biomedical data for ana
 
 \subsection{nnUNet}
 
+\begin{warning}
+  skazat pochemu nnUNet svazanno s unet, prizhok est'
+\end{warning}
+
 Until now, architectures have operated on data pre-processed to a particular expected distribution and configured to deal with a specific problem. For instance, out-of-the-box configuration has stringent input size requirements, which require image resizing. Furthermore, 3D images commonly produce heterogeneous voxel spacing depending on the parameters chosen by the clinician or the machine from which they were produced~\cite{nnunet}. The number of moving parts often leaves a unidirectional dependency on the data depending on the architecture. 
 
 Therefore, the nnUNet analyses the fingerprint of the dataset and the device to deliver a tailored experience and force a more codependent relationship; now, the architecture depends on the data and the data is pre-processed to conform to the network~\cite{nnunet}. Furthermore, hardware restrictions mean networks may be inaccessible to those with worse specifications or, at the other end of the spectrum, may underutilize powerful computation still available~\cite{nnunet}; the nnUNet analyses GPU constraints used to influence batch sizes and more~\cite{nnunet-git-paper}.
