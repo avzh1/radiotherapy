@@ -442,6 +442,18 @@ This model operates on 2D slices of images and directly avoids the finetuning ar
 
 \subsection{SAM}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{../figures/SAM.png}
+  \caption{The SAM model involves a transformer architecture that embeds points and bounding boxes into a promptable encoding, which is used in tandem with the image encoding to produce the most likely segmentation of the described area~\cite{SAM}.}\label{fig:sam}
+\end{figure}
+
+Up until recently, the segmentation methods have been convolution-based. However, advances in NLP with attention-based mechanisms prompted the adaption of transformers into the image domain~\cite{attention, ViT}. A vision transformer (ViT) views the image as a grid of tokens; in the original paper, Dosovitskiy et al. read in patches of the image through the attention mechanism into a classification mechanism~\cite{ViT}. 
+
+The SAM model implemented a modification of the transformer architecture~\cite{SAM} as seen in Figure~\ref{fig:sam}. However, the task was reformulated as a promotable segmentation problem to allow for zero-shot generalisation (the model can generalise to unseen examples without examples of its segmentation seen beforehand).
+
+
+
 \section{Performance Evaluation for Segmentation Methods}
 
 Calculating the difference between the provided labelled data would be one way to determine if a contour can be used in a clinical context. However, we have different ways to evaluate this measure in a delineation context.
@@ -572,11 +584,11 @@ This definition measures the agreement between just the surfaces of two structur
 
 Similarly, the APL score predicts ``the path length of a contour that has to be added''~\cite{APL}. APL achieved similarly by considering the number of added voxels required between the prediction and the gold standard with no regard to tolerance as a pose to Surface DSC (Section~\ref{sect:surface-DSC})
 
-\begin{warning}
- For future reference, \textit{\href{https://stackoverflow.com/questions/73286639/how-to-calculate-added-path-length-apl-image-segmentation-metric}{stack overflow discussion}}
+% \begin{warning}
+%  For future reference, \textit{\href{https://stackoverflow.com/questions/73286639/how-to-calculate-added-path-length-apl-image-segmentation-metric}{stack overflow discussion}}
 
- Implementation of surface DSC and APL: \textit{\href{https://github.com/pyplati/platipy/blob/master/platipy/imaging/label/comparison.py}{source code}}
-\end{warning}
+%  Implementation of surface DSC and APL: \textit{\href{https://github.com/pyplati/platipy/blob/master/platipy/imaging/label/comparison.py}{source code}}
+% \end{warning}
 
 \subsection{Summary}
 
