@@ -7,7 +7,7 @@
 # we have for 50 epochs so that we may see it afterwards in due corse. We can increase the
 # number of epochs later.
 
-# In[1]:
+# In[ ]:
 
 
 import os, sys
@@ -30,7 +30,9 @@ def get_raw_and_gt_data_paths():
              , os.environ.get('CTVp') 
              , os.environ.get('Parametrium') 
              , os.environ.get('Uterus') 
-             , os.environ.get('Vagina')]
+             , os.environ.get('Vagina')
+             , os.environ.get('TotalBinary')
+             , os.environ.get('TotalSegmentator')]
 
     raw_data = [os.path.join(os.environ.get('nnUNet_raw'), x, os.environ.get('data_trainingImages')) for x in classes]
     gt_labels = [os.path.join(os.environ.get('nnUNet_raw'), x, os.environ.get('data_trainingLabels')) for x in classes]
@@ -69,7 +71,7 @@ def fetch_pretrained_totalsegmentator_model():
     download_pretrained_weights(task_id)
 
 
-# In[ ]:
+# In[4]:
 
 
 import sys
@@ -107,7 +109,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('dataset', type=int, help='The dataset to fine tune on')
     parser.add_argument('fold', type=int, help='The fold to fine tune on')
-    args = parser.parse_args()
+    parser.add_argument('continue_trianing', type=bool, help='Whether to continue training from a checkpoint', default=False)
+    args = parser.parse_args(
+        # ['1', '0']
+    )
+
+    print('[DEBUG]: Arguments received:')
+    print(f'Dataset: {args.dataset}')
+    print(f'Fold: {args.fold}')
+    print(f'Fold: {args.continue_trianing}')
 
     assert args.dataset is not None, "Please provide the dataset to fine tune on"
     assert args.dataset in range(1, len(classes) + 1), "Please provide a valid dataset to fine tune on"
@@ -133,7 +143,12 @@ if __name__ == '__main__':
     print('-----------')
 
     # !nnUNetv2_train TARGET_DATASET CONFIG FOLD -pretrained_weights PATH_TO_CHECKPOINT
-    sys.argv = [original_sys_argv[0], str(TARGET_DATASET), CONFIG, str(FOLD), '-pretrained_weights', PATH_TO_CHECKPOINT, '-tr', 'nnUNetTrainer_250epochs', '--npz', '-p', 'totseg_nnUNetPlans']
+    sys.argv = [original_sys_argv[0], str(TARGET_DATASET), CONFIG, str(FOLD), '-tr', 'nnUNetTrainer_500epochs', '--npz', '-p', 'totseg_nnUNetPlans']
+    if args.continue_trianing:
+        sys.argv += ['--c']
+    else:
+        sys.argv += ['-pretrained_weights', PATH_TO_CHECKPOINT]
+
     run_training_entry()
 
     sys.argv = original_sys_argv
