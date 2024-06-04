@@ -5,10 +5,10 @@
 #SBATCH -p gpus                          # Partition (queue)
 #SBATCH --gres gpu:1                     # gpu:n, where n = number of GPUs
 #SBATCH --mem 20G                        # memory pool for all cores
-#SBATCH --output=logs/training/slurm.train.7.%N.%j.log    # Standard output and error log
-#SBATCH --nodelist loki
+#SBATCH --output=logs/slurm.%N.%j.log    # Standard output and error log
+#SBATCH --nodelist monal03
 
-#SBATCH --job-name=7.nnUNEt
+#SBATCH --job-name=infer.totbin
 
 # --nodelist lory           # SLURM node
 # --nodelist loki          	# SLURM node
@@ -20,15 +20,8 @@ SOURCE_DIR=$(git rev-parse --show-toplevel)
 source ${SOURCE_DIR}/.venv/bin/activate
 source ${SOURCE_DIR}/data/data_vars.sh
 
-
-if [ -z "$1" ]; then
-    echo "Error: FOLD is not provided."
-    exit -1
-fi
-
-# TORCH_LOGS="+dynamo" TORCHDYNAMO_VERBOSE=1 
+# Convert Python Script
+jupyter nbconvert --to script '3_inference.ipynb'
 
 # Run python script
-# nnUNetv2_train DATASET_NAME_OR_ID UNET_CONFIGURATION FOLD [additional options, see -h]
-nnUNetv2_train 8 3d_fullres $1 -tr nnUNetTrainer_500epochs --npz --val_best --c
-
+python3 3_inference.py
