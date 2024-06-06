@@ -431,9 +431,7 @@ The U-Net was now very close to being a staple choice in biomedical data for ana
 
 \subsection{nnUNet}
 
-\begin{warning}
-  skazat pochemu nnUNet svazanno s unet, prizhok est'
-\end{warning}
+The nnUNet is closely related to the U-Net architecture. However, nnUNet's ability to adapt to the data improves this model performance over the vanilla implementation.
 
 Until now, architectures have operated on data pre-processed to a particular expected distribution and configured to deal with a specific problem. For instance, out-of-the-box configuration has stringent input size requirements, which require image resizing. Furthermore, 3D images commonly produce heterogeneous voxel spacing depending on the parameters chosen by the clinician or the machine from which they were produced~\cite{nnunet}. The number of moving parts often leaves a unidirectional dependency on the data depending on the architecture. 
 
@@ -447,11 +445,13 @@ The continued performance dominance gives the nnUNet a good foundation for being
 
 \subsection{TotalSegmentator}
 
-Total Segmentation is a tool with an nnUNet backbone pre-trained on 1204 CT examinations to provide plans to segment 104 anatomical structures. The anatomies selected included apparent structures such as skeletal structures, gastrointestinal organs and other major organs. The training data contained many CT images, with differences in slice thickness, resolution, and contrast phase~\cite{totalsegmentor-paper}. However, it is important to note that 60\% of the scans occurred in a contrast-enhanced environment, which plays a role in how obvious delineations are during scanning, a scanning detail that was omitted during the training data collection for this research project. Furthermore, only an estimated 10\% of the data collected from this model contained relevant studies for the abdomen and pelvic areas.
+TotalSegmentator is a tool based around the nnUNet. TotalSegmentator is pre-trained on 1204 CT examinations to provide plans to segment 104 anatomical structures. The anatomies selected included apparent structures such as skeletal structures, gastrointestinal organs and other major organs. The training data contained many CT images, with differences in slice thickness, resolution, and contrast phase~\cite{totalsegmentor-paper}. However, it is important to note that 60\% of the scans occurred in a contrast-enhanced environment, which plays a role in how obvious delineations are during scanning, a scanning detail that was omitted during the training data collection for this research project. Furthermore, only an estimated 10\% of the data collected from this model contained relevant studies for the abdomen and pelvic areas.
 
 From the segmented organs that total segmentator provides, only the Bladder overlapped with the organs that were of interest in this study.
 
 \subsection{UniverSeg}
+
+Convolutional architectures like those discussed above utilize many-shot learning (Section TODO). However, models trained on segmenting a target domain (e.g., bone delineation) do not transfer to other domains (e.g., organ segmentation) without fine-tuning.
 
 \begin{figure}[H]
   \centering
@@ -459,7 +459,7 @@ From the segmented organs that total segmentator provides, only the Bladder over
   \caption{The UniverSeg architecture~\cite{universeg}. Diagram illustrates the freezing of model parameters while providing a support set of images which follows the query image through the segmentation pipeline.}\label{fig:universeg}
 \end{figure}
 
-Butoi et al. present UniverSeg, a model that breaks away from the traditional approach. Instead of training a model and freezing parameters during inference, this architecture uses a support set of images to provide a practical few-shot approach to inferring segmentations from input images. Figure~\ref {fig:universeg} shows an example of this efficient querying. This way, Butoi et al. attempt to provide segmentation on a target image based on examples of other samples with the same anatomy contoured in a selection of other images.
+Butoi et al. present UniverSeg, a model that breaks away from the traditional approach; instead of training a model and freezing parameters during inference, this architecture uses a support set of images to provide a practical few-shot approach to inferring segmentations from input images. Figure~\ref{fig:universeg} shows an example of this efficient querying, which manifests itself in a U-Net architecture where the support set passes through the network along the query to influence the final segmentation. This way, Butoi et al. attempt to provide segmentation on a target image based on examples of other samples with the same anatomy contoured in a selection of other images.
 
 This model operates on 2D slices of images and directly avoids the finetuning argument for medical imaging. They argue that finetuning can be unhelpful due to the differences between medical domains, features, and data fingerprints. As such, UniverSeg avoids significant retaining for each subtask.
 
@@ -473,17 +473,17 @@ This model operates on 2D slices of images and directly avoids the finetuning ar
 
 \subsection{SAM}
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=1\linewidth]{../figures/SAM.png}
   \caption{The SAM model involves a transformer architecture that embeds points and bounding boxes into a promptable encoding, which is used in tandem with the image encoding to produce the most likely segmentation of the described area~\cite{SAM}.}\label{fig:sam}
 \end{figure}
 
-Up until recently, the segmentation methods have been convolution-based. However, advances in NLP with attention-based mechanisms prompted the adaption of transformers into the image domain~\cite{attention, ViT}. A vision transformer (ViT) views the image as a grid of tokens; in the original paper, Dosovitskiy et al. separate the image into a grid of patches and read in these cells of the grid as individual tokens. The tokens pass through the attention mechanism as with NLP and into a classification mechanism~\cite{ViT}. 
+Advances in NLP, with attention-based mechanisms, have questioned whether convolutional-based methods like those above are the best approach for segmentation. Transformers from NLP were adapted to form the Vision Transformer (ViT)~\cite{ViT}. This model views the image as a grid of tokens; in the original paper, Dosovitskiy et al. separate the image into a grid of patches and read in these grid cells as individual tokens. The tokens pass through the attention mechanism as with NLP and into a classification mechanism~\cite{ViT}. 
 
 The SAM model implemented a modification of the transformer architecture~\cite{SAM} as seen in Figure~\ref{fig:sam}. However, the task was reformulated as a promotable segmentation problem to allow for zero-shot generalisation (the model can generalise to unseen examples with no re-training or fine-tuning).
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=1\linewidth]{../figures/sam-performance.png}
   \caption{Performance of a SAM model across a reference nnUNet baseline when applied to different datasets. The evaluation was considered for semantic, point and box prompts.~\cite{he2023computervision}.}\label{fig:sam-performance}
@@ -494,8 +494,6 @@ SAM trains its network on a collection of natural images, not medical images suc
 \subsection{MedSAM}\label{sect:medsam}
 
 Therefore, Ma et al. enhanced the architecture provided by SAM by training it on a dataset of nearly 500k CT scan test examples to train a model for medical images, named MedSAM~\cite{Ma2024}. Ma et al. decided to keep close to its original despite medical images being 3-dimensional in CT and MRI scans because of ``enhanced flexibility and adaptability'' where slices along an axis substitute 3D scans~\cite{Ma2024}. This model demonstrates an improvement over SAM, nnUNet, and Deepmedic models when MedSAM bounding boxes extracted from the ground truth prompt the model~\cite{Ma2024}.
-
-\clearpage
 
 \section{Performance Evaluation for Segmentation Methods}\label{sect:performance-evaluation}
 
