@@ -32,9 +32,11 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \begin{abstract}\label{sect:abstract}
+\begin{abstract}\label{sect:abstract}
    
-% \end{abstract}
+
+  % The repo is available at \url{https://github.com/AntonZhitomirsky/radiotherapy}.
+\end{abstract}
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %--- table of contents
@@ -90,7 +92,7 @@ This death is characteristic of any cell subjected to high energy beams, placing
 
 This time-consuming endeavour is never favourable for a patient already in a dangerous situation. For mid-low-income countries, where this may not be an available resource, this leaves them with a death rate 18 times that of a higher-income country~\cite{cervical-cancer-epidemic}. 
 
-\subsection{CT modality}
+\subsection{CT modality}\label{sect:ct-modality}
 
 High-resolution and high-contrast CT machines have further benefited cancer treatment due to their noninvasive nature and ability to view patients' internal organs. X-ray devices rotate around a specified body part, and computer-generated cross-sectional images are produced~\cite{file-formats}. Whilst the scanner rotates, the patient's table slowly moves up and down inside the tube to produce different cross-section images. The images show damaged and surrounding soft tissue, allowing physicians to propose clinical target volumes more accurately.
 
@@ -426,7 +428,7 @@ From the segmented organs that total segmentator provides, only the Bladder over
 
 \subsection{UniverSeg}\label{sect:universeg}
 
-Convolutional architectures like those discussed above utilize many-shot learning (Section TODO). However, models trained on segmenting a target domain (e.g., bone delineation) do not transfer to other domains (e.g., organ segmentation) without fine-tuning.
+Convolutional architectures like those discussed above utilize many-shot learning (Section~\ref{sect:many-shot-learning}). However, models trained on segmenting a target domain (e.g., bone delineation) do not transfer to other domains (e.g., organ segmentation) without fine-tuning.
 
 \begin{figure}[H]
   \centering
@@ -504,19 +506,17 @@ The transfer of models is dependent on the strategy the model uses to make predi
 
 Instead of learning underlying patterns, meta-learning models learn to \textit{learn} the algorithm itself. This allows it to generalize tasks with few labelled examples of new or rare cases. Otherwise, multitask learning makes predictions for a particular set of tasks~\cite{deep-learning-book}.
 
-\subsubsection{Zero-shot Learning}
+\subsubsection{Zero-shot Learning}\label{sect:zero-shot-learning}
 
 Zero-shot models (Figure~\ref{fig:zero-shot}) can generalize to unseen tasks. An example of a model targeted for zero-shot transferability is the SAM model (Section~\ref{sect:sam}).
 
-\subsubsection{Few-shot Learning}
+\subsubsection{Few-shot Learning}\label{sect:few-shot-learning}
 
 Few-shot models (Figure~\ref{fig:few-shot}) can generalize to unseen tasks with a few examples. The UniverSeg model is the target model for few-shot transferability (Section~\ref{sect:universeg}).
 
-\subsubsection{Many-shot Learning}
+\subsubsection{Many-shot Learning}\label{sect:many-shot-learning}
 
 Many-shot models can generalize to unseen tasks with many examples. The nnUNet model is the target model for many-shot transferability (Section~\ref{sect:nnunet}).
-
-A simple nnUNet model can be trained from scratch on many examples of the objective to provide an accurate segmentation for anatomy and radiotherapy target volumes. This nnUNet model has been shown to provide more robust results in external stress tests than other comparable architectures on a set of different datasets~\cite{isensee2024nnunet}. Also, in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}.
 
 \section{Performance Evaluation for Segmentation Methods}\label{sect:performance-evaluation}
 
@@ -662,18 +662,33 @@ For this project, we shall select an evaluation measurement more biased towards 
 
 Improvements over the transfer from models trained on other domains could hypothetically allow the segmentation of delineated areas more accurately. To investigate this claim, we iterate over the three types of shot learning, zero-shot, few-shot, and many-shot learning, to determine the effectiveness of transfer learning in the radiotherapy domain.
 
+\section{Many-shot Transfer}
+
+\subsection{nnUNet baseline}
+
+The provided examples of the objective are enough to train a nnUNet model from scratch to segment anatomy and radiotherapy target volumes accurately. This nnUNet model has been shown to provide more robust results in external stress tests than other comparable architectures on a set of different datasets~\cite{isensee2024nnunet}. Also, in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}.
+
+\subsubsection{Normalization}
+
+Prior to training, necessary normalization must take place to standardize each input. Firstly, CT scans can produce results for different spacings, resolutions, and dimensions. Because the model samples data in batches, the batch properties must align within the model's body. Therefore, the fingerprint taken by the preprocessing pipeline resamples input data towards the median dimension. 
+
+The traditional method of normalization involves normalizing the entire image corpus. However, this method does not take into account the skew that might affect the outcome. This is because the background value occurs most frequently, and artifacts such as metal cause outlier peaks. As a result, traditional normalization could overlook important tissues as it attempts to treat background and outlier values equally with foreground values.
+
+Therefore, the nnUNet avoids this complication by processing voxel properties encased by the ground truth segmentation. The values are clipped to their 0.5 and 99.5 percentile, followed by traditional normalization with the mean and standard deviation. This way, the target structure properties remain relative to their original, and the background label conforms to the normalization inspired by the region of interest.
+
+\subsection{Separate Training}
+
+The default strategy is to consider each anatomy separately and attempt to learn segmentation patterns without considering constraints mentioned in Section~\ref{sec:data-delineation-rules}. 
+
+Pretraining considers 
+
+
+
 
 % \section{Base-line nnUNet...}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Results}\label{sect:results}
-
-...
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Discussion}\label{sect:discussion}
-
-Here, discuss results from all 4 of the methods tested.
+\chapter{Results and Discussion}\label{sect:results}\label{sect:discussion}
 
 % Mention SAM's argument about ignoring small structures
 
