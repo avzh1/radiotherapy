@@ -80,8 +80,7 @@ In this section, we discuss the clinical context behind cervical cancer in the p
 
 \subsection{Cervical Cancer}\label{sect:cervical-cancer}
 
-Cancer is a burden around the globe that has been a driver for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer in 157 in 2022~\cite{Global-cancer-2022}. Furthermore, an estimated 1 million maternal orphans who lose their mothers to cancer suffer long-term disadvantages in health and education~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}, which inspires further complete clinical understanding of the disease. This motivation and the potential to pair with quality improvements offered by medical imaging models drive this research project to explore transfer knowledge in this field.
-
+Cancer is a burden around the globe that has been a driver for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer for 157 countries in 2022~\cite{Global-cancer-2022}. Furthermore, an estimated 1 million maternal orphans who lose their mothers to cancer suffer long-term disadvantages in health and education~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}, which inspires further complete clinical understanding of the disease. Paired with quality improvements offered by medical imaging models, the motivation for total control over cervical cancer drive this research project to explore transfer knowledge in this field. % TODO: have you mentioned that transfer learning is a gap in the field?
 
 \subsection{Radiotherapy Treatment}
 
@@ -93,7 +92,7 @@ This time-consuming endeavour is never favourable for a patient already in a dan
 
 \subsection{CT modality}
 
-Development in high-resolution and high-contrast X-ray imaging (CT scans) machines has further incentivised radiotherapy treatment due to its noninvasive nature and ability to view patients' internal organs. X-ray devices rotate around a specified body part, and computer-generated cross-sectional images are produced~\cite{file-formats}. Whilst the scanner rotates, the patient's table slowly moves up and down inside the tube to produce different cross-section images. The images show damaged and surrounding soft tissue, allowing physicians to propose clinical target volumes more accurately.
+High-resolution and high-contrast CT machines have further benefited cancer treatment due to their noninvasive nature and ability to view patients' internal organs. X-ray devices rotate around a specified body part, and computer-generated cross-sectional images are produced~\cite{file-formats}. Whilst the scanner rotates, the patient's table slowly moves up and down inside the tube to produce different cross-section images. The images show damaged and surrounding soft tissue, allowing physicians to propose clinical target volumes more accurately.
 
 \subsubsection{Hounsfield Units}
 
@@ -102,13 +101,13 @@ Development in high-resolution and high-contrast X-ray imaging (CT scans) machin
     \subfigure[Muscle Window $(35,55)$~\cite{other-HD-units}]{{\includegraphics[width=0.3\textwidth, trim=0.2cm 1cm 21cm 2cm, clip]{../figures/HU-window.png}}}
     \subfigure[Cancellous Bone Window  $(300,400)$~\cite{cancellous-bone}]{{\includegraphics[width=0.3\textwidth, trim=10.6cm 1cm 10.6cm 2cm, clip]{../figures/HU-window.png}}}
     \subfigure[Fat Window $(-120, -90)$~\cite{other-HD-units}]{{\includegraphics[width=0.3\textwidth, trim=21cm 1cm 0.2cm 2cm, clip]{../figures/HU-window.png}}}
-    \caption{Coronal view the same image slice of a CT image, with different window cropping (Patient id: 49, slice 251, axis 1)}
+    \caption{Coronal view the same image slice of a CT image, with different window cropping (Patient id: 49, slice 251). White areas represent high-density tissues, and black areas represent low-density tissues within the window range.}
     \label{fig:ct-windows}
 \end{figure}
 
 The operator or physician decides the granularity or image slice thickness, which ranges from 1mm to 10mm. Therefore, the precision along each axis creates a cube, or voxel, representing the value on a grid in three-dimensional space. The voxel values are measured in Hounsfield Units (HU)~\cite{diagnostic-radiology-physics}. 
 
-Contrary to natural images, where pixel values vary from 0 to 255 in 3 channels representing Red, Blue and Green, the Hounsfield scale is a quantitative scale describing radiodensity. The image intensity reflects tissue type; each voxel intensity refers to a specific tissue composition. The positive values result from more dense tissue with greater X-ray beam absorption, and negative values are less dense tissue with less X-ray beam absorption~\cite{Statpearls}.  
+Contrary to natural images, where pixel values vary from 0 to 255 in 3 channels representing Red, Blue and Green, the Hounsfield scale is a quantitative scale describing radiodensity. The image intensity reflects tissue type; each voxel intensity refers to a specific tissue composition. The positive values (white) result from more dense tissue with greater X-ray beam absorption, and negative values (black) are less dense tissue with less X-ray beam absorption~\cite{Statpearls}.  
 
 Therefore, because the HU scale is relative, different windows may be taken for a CT scan to highlight different tissues. Those voxels within the window will likely be tissues of a specific classification. For example, as shown in Figure~\ref{fig:ct-windows}, we display three such windows: muscle, cancellous bone and fat.
 
@@ -132,9 +131,9 @@ The final volumes have no internationally agreed-upon guidelines, which leaves i
 
 \subsection{Data Aquisition}
 
-The Royal Marsden Hospital provides the dataset as a set of `Neuroimaging Informatics Technology Initiative' files (NIfTI)~\cite{file-formats}. It is a lightweight alternative to other formats such as DICOM and eliminates ambiguity from spatial orientation information~\cite{dicom-to-nifti-conversion}. Libraries exist for handling these files, such as SimpleITK~\cite{SimpleITK-paper}, which we use to read and manipulate the data in this project. The library reads, manipulates, and handles the image as a set of points in a grid occupying a physical region in space defined by the metadata to remove ambiguity from the origin, size, spacing, and so on that might vary between patient scans.
+The Royal Marsden Hospital provides the dataset as a set of `Neuroimaging Informatics Technology Initiative' files (NIfTI)~\cite{file-formats}. It is a lightweight alternative to other formats such as DICOM and eliminates ambiguity from spatial orientation information~\cite{dicom-to-nifti-conversion}. Libraries exist for handling these files, such as SimpleITK~\cite{SimpleITK-paper}, which we use to read and manipulate the data in this project. % The library reads, manipulates, and handles the image as a set of points in a grid occupying a physical region in space defined by the metadata to remove ambiguity from the origin, size, spacing, and so on that might vary between patient scans.
 
-The training data provides one hundred female patients that have been diagnosed with similar types of cervical cancer. Each patient comes with seven relevant segmentation classes which contribute to radiotherapy planning. For reproducibility, all delineated anatomies were labelled consistently by the Oncologists to improve chances that an AI model can learn cervical cancer patterns~\cite{AMLART-data}. 
+The training data provides one hundred female patients that have been diagnosed with similar types of cervical cancer. Each patient comes with seven relevant segmentation classes which contribute to radiotherapy planning for cervical cancer. For reproducibility, all delineated anatomies were labelled consistently by the Oncologists to improve chances that an AI model can learn cervical cancer patterns~\cite{AMLART-data}. 
 
 Finally, the dataset comes with ten hold-out data items, which are patients with only the raw CT scan information without labels.
 
@@ -147,6 +146,8 @@ Finally, the dataset comes with ten hold-out data items, which are patients with
 % The notes help identify and diagnose some reasons for the model's poor performance in some cases, which may be due to the high variability between patients in quality and physiology.
 
 \subsection{Delineation classes}
+
+
 
 The clinicians at the Royal Marsden Hospital have provided segmentation labels for seven high-priority regions of interest (roi). These are the Bladder, Anorectum, CTVn, CTVp, Parametrium, Uterus, and Vagina. The function of these anatomies is irrelevant to this project and is left to the reader to research further.
 
@@ -203,9 +204,7 @@ An organ at risk is an organ that, despite being healthy, is substantially likel
  \label{fig:example-CTVp}
 \end{figure}
 
-The CTVp stands for the Primary Clinical Target Volume; see the example at Figure~\ref{fig:example-CTVp}. This is an extension of the CTV definition (Section~\ref{sect:radiotherapy-planning}) where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour)~\cite{AMLART-data}. This is the area that contains the tumour. 
-
-The CTVp is not an organ in a body but rather an area comprised of other components formed by joining other structures. The CTVp is an area defined in Equation~\ref{eq:ctvp}.
+The CTVp stands for the Primary Clinical Target Volume; see the example at Figure~\ref{fig:example-CTVp}. This is an area comprised from areas where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour)~\cite{AMLART-data}.
 
 \subsubsection{CTVn}\label{sec:data-CTVn}
 
@@ -227,9 +226,10 @@ The CTVp is not an organ in a body but rather an area comprised of other compone
  \label{fig:example-CTVn}
 \end{figure}
 
-The CTVn stands for Nodal Clinical Target Volume; see the example at Figure~\ref{fig:example-CTVn}. Once again, this is an extension of the CTV definition (Section~\ref{sect:radiotherapy-planning}), with the enhanced condition that there may be microscopic spread to lymph nodes. It is drawn based on set margins around pelvic blood vessels and includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes~\cite{AMLART-data}.
+The CTVn stands for Nodal Clinical Target Volume; see the example at Figure~\ref{fig:example-CTVn}. This CTV surrounds areas that may contain microscopic spread to lymph nodes. It is drawn based on set margins around pelvic blood vessels and includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes~\cite{AMLART-data}.
 
-Similarly to CTVp, this is a compound area with three groups of lymph nodes. In clinical practice, the number of these groups in the CTV varies in each patient, depending on the advanced disease. The CTVn is an area defined in Equation~\ref{eq:ctvn}. % TODO: reference notes? They say that depending on the development of the diease, different patients may get different extents of contouring of this structure.
+Similarly to CTVp, this is a compound area with three groups of lymph nodes. In clinical practice, the number of these groups in the CTV varies in each patient, depending on the advanced disease. % TODO: reference notes? They say that depending on the development of the disease, different patients may get different extents of contouring of this structure.
+However, in contrast to the CTVp, this area is drawn depending on the development of the disease.
 
 \subsubsection{Parametrium}\label{sec:data-Parametrium}
 
@@ -389,7 +389,7 @@ Algorithms began to emerge that fell into the classification of neural network m
 
 The current machine learning approach didn't work well with image data. Up until that point, rich structures such as images were neglected, and matrices of gray-scale images were mutilated into flat vectors. This approach was necessary to feed the flattened image representation through the MLP. The issue with vectorising an image is that it loses its spatial context-driven awareness. 
 
-At the same time, J. Hull, sponsored by the United States Postal Service, published a Database for Handwritten Text Recognition with the incentive of providing an extensive dataset of images of characters of variable writing mediums, isolation, overlap, and neatness to aid research efforts in developing accurate digit classification algorithms~\cite{JJHull1994}. Yann LeCunn et al.~\cite{Lenet1998} used this database to propose a convolution-based approach for image processing, which preserved the input in its 2D glory by applying convolutions.
+At the same time, J. Hull, sponsored by the United States Postal Service, published a Database for Handwritten Text Recognition with the incentive of providing an extensive dataset of images of characters of variable writing mediums, isolation, overlap, and neatness to aid research efforts in developing accurate digit classification algorithms~\cite{JJHull1994}. Yann LeCunn et al.~\cite{Lenet1998} used this database to propose the first Convolutional Neural Network (CNN) for image processing, which preserved the input in its 2D glory by applying convolutions.
 
 \begin{figure}[H]
   \centering
@@ -397,9 +397,11 @@ At the same time, J. Hull, sponsored by the United States Postal Service, publis
   \caption{Example application of a convolution. From left to right, the input image with a region outlined in a red box, the boxed region magnified with a convolutional (sobel) filter being applied to a part of the magnified region, and lastly the output after the filter has passed over the entire image. The output represents a new feature map encoding features of the original (input) feature.}\label{fig:sobel}
 \end{figure}
 
-Convolutional layers are rectangular blocks that are recipes for translating an image (the input feature). The algorithm centres the block over a specific pixel and uses a square radius of neighbouring pixels. It multiplies and sums the pixels along the corresponding pixel positions according to the recipe to produce a transformed resulting pixel that encodes the reference pixel's information and the surrounding receptive field around it. Figure~\ref{fig:sobel} demonstrates this concept. Specifically, the middle tile which shows an example 3x3 convolutional filter being applied to a zoomed in part of the image. This filter slides across the entire image and encodes the entire image which produces the output on the right of Figure~\ref{fig:sobel}. A network then learns values within the square convolution, which best encodes the image's features according to the training objective. When stacked with many other convolutional filters that piggyback off the encoded features produced by filters before it, this allows for dense feature representations that encode the entire image.
+Convolutional layers are rectangular blocks that are recipes for translating an image (the input feature). The algorithm centres the block over a specific pixel and uses a square radius of neighbouring pixels. It multiplies and sums the pixels along the corresponding pixel positions according to the recipe to produce a transformed resulting pixel that encodes the reference pixel's information and the surrounding receptive field around it. Figure~\ref{fig:sobel} demonstrates this concept. Specifically, the middle tile which shows an example 3x3 convolutional filter being applied to a zoomed in part of the image. This filter slides across the entire image and encodes the entire image which produces the output on the right of Figure~\ref{fig:sobel}. 
 
-\begin{figure}[H]
+The CNN operates by having multiple learnable convolutional filters stacked on top of each other. The values within the square convolutional filter are \textit{learned} during training; the values learnt are those that, in combination with the layers before and after, encode the image's features according to the training objective the best. When stacked with many other convolutional filters that piggyback off the encoded features produced by filters before it, this allows for dense feature representations that encode the entire image.
+
+\begin{figure}
   \centering
   \subfigure{\includegraphics[width=.49\linewidth, trim=0 230px 0 0, clip]{../figures/fcnupsample.png}}
   \subfigure{\includegraphics[width=.49\linewidth, trim=0 33px 0 200px, clip]{../figures/fcnupsample.png}}
