@@ -84,9 +84,9 @@ Cancer is a burden around the globe that has been a driver for almost one-sixth 
 
 \subsection{Radiotherapy Treatment}
 
-A mechanism available for cancer treatment involves radiation therapy. High beams of radiation energy are tuned to hone in to target cancerous cells in a clinically defined 'target area'. The cells killed by the energy experience interphase or proliferative death depending on the cell cycle stage. Death occurs when the damage to genetic material within the cell prevents it from dividing, or the cell's accumulation of genetic aberrations leads to a ``mitotic catastrophe''~\cite{cell-death}. In Europe, radiotherapy treatment was used on average for 70\% of cases, with a curative rate of 40\%~\cite{radiotherapy-advances, Thompson2018}.
+A mechanism available for cancer treatment involves radiation therapy. High beams of radiation energy are tuned to hone in to target cancerous cells in a clinically defined `target area'. The cells killed by the energy experience interphase or proliferative death depending on the cell cycle stage. Death occurs when the damage to genetic material within the cell prevents it from dividing, or the cell's accumulation of genetic aberrations leads to a ``mitotic catastrophe''~\cite{cell-death}. In Europe, radiotherapy treatment was used on average for 70\% of cases, with a curative rate of 40\%~\cite{radiotherapy-advances, Thompson2018}.
 
-This death is characteristic of any cell subjected to high energy beams, placing much responsibility on the Oncologist to deliver an accurate treatment area so that healthy cells are unaffected; any adverse alteration of an organ's standard functionality may cause grave implications for the already compromised patient. Therefore, the precise and complex nature of the task is estimated to take oncologists 90-120 mins to delineate target areas for radiotherapy~\cite{LIU2020184}.
+This death is characteristic of any cell subjected to high energy beams, placing much responsibility on the Oncologist to deliver an accurate treatment area so that healthy cells are unaffected; any adverse alteration of an organ's standard functionality may cause grave implications for the already compromised patient. Therefore, the precise and complex nature of the task is estimated to take oncologists 90--120 mins to delineate target areas for radiotherapy~\cite{LIU2020184}.
 
 This time-consuming endeavour is never favourable for a patient already in a dangerous situation. For mid-low-income countries, where this may not be an available resource, this leaves them with a death rate 18 times that of a higher-income country~\cite{cervical-cancer-epidemic}. 
 
@@ -99,10 +99,9 @@ High-resolution and high-contrast CT machines have further benefited cancer trea
 \begin{figure}[H]
     \centering
     \subfigure[Muscle Window $(35,55)$~\cite{other-HD-units}]{{\includegraphics[width=0.3\textwidth, trim=0.2cm 1cm 21cm 2cm, clip]{../figures/HU-window.png}}}
-    \subfigure[Cancellous Bone Window  $(300,400)$~\cite{cancellous-bone}]{{\includegraphics[width=0.3\textwidth, trim=10.6cm 1cm 10.6cm 2cm, clip]{../figures/HU-window.png}}}
+    \subfigure[Bone Window  $(300,400)$~\cite{cancellous-bone}]{{\includegraphics[width=0.3\textwidth, trim=10.6cm 1cm 10.6cm 2cm, clip]{../figures/HU-window.png}}}
     \subfigure[Fat Window $(-120, -90)$~\cite{other-HD-units}]{{\includegraphics[width=0.3\textwidth, trim=21cm 1cm 0.2cm 2cm, clip]{../figures/HU-window.png}}}
-    \caption{Coronal view the same image slice of a CT image, with different window cropping (Patient id: 49, slice 251). White areas represent high-density tissues, and black areas represent low-density tissues within the window range.}
-    \label{fig:ct-windows}
+    \caption{Coronal view the same image slice of a CT image, with different window cropping (Patient id: 49, slice 251). White areas represent high-density tissues, and black areas represent low-density tissues within the window range.}\label{fig:ct-windows}
 \end{figure}
 
 The operator or physician decides the granularity or image slice thickness, which ranges from 1mm to 10mm. Therefore, the precision along each axis creates a cube, or voxel, representing the value on a grid in three-dimensional space. The voxel values are measured in Hounsfield Units (HU)~\cite{diagnostic-radiology-physics}. 
@@ -147,37 +146,31 @@ Finally, the dataset comes with ten hold-out data items, which are patients with
 
 \subsection{Delineation classes}
 
-
-
 The clinicians at the Royal Marsden Hospital have provided segmentation labels for seven high-priority regions of interest (roi). These are the Bladder, Anorectum, CTVn, CTVp, Parametrium, Uterus, and Vagina. The function of these anatomies is irrelevant to this project and is left to the reader to research further.
+
+
 
 \subsubsection{Organs At Risk}\label{sec:data-organs-at-risk}
 
 \begin{figure}[H]
   \centering
   \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Axial.png}
-   \label{fig:example-anorectum-axial}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Axial.png}\label{fig:example-anorectum-axial}
   }
   \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Coronal.png}
-   \label{fig:example-anorectum-coronal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Coronal.png}\label{fig:example-anorectum-coronal}
   }
   \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Sagittal.png}
-   \label{fig:example-anorectum-sagittal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Sagittal.png}\label{fig:example-anorectum-sagittal}
   }
   \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Axial.png}
-   \label{fig:example-bladder-axial}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Axial.png}\label{fig:example-bladder-axial}
   }
   \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Coronal.png}
-   \label{fig:example-bladder-coronal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Coronal.png}\label{fig:example-bladder-coronal}
   }
   \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Sagittal.png}
-   \label{fig:example-bladder-sagittal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Sagittal.png}\label{fig:example-bladder-sagittal}
   }
   \caption{Views of the segmentation (in red) of the Anorectum (\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}) and  the segmentation (in red) of the Bladder (\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}) of an arbitrary patient}
 \end{figure}
@@ -189,19 +182,15 @@ An organ at risk is an organ that, despite being healthy, is substantially likel
 \begin{figure}[H]
   \centering
   \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Axial.png}
-   \label{fig:example-CTVp-axial}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Axial.png}\label{fig:example-CTVp-axial}
   }
   \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Coronal.png}
-   \label{fig:example-CTVp-coronal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Coronal.png}\label{fig:example-CTVp-coronal}
   }
   \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Sagittal.png}
-   \label{fig:example-CTVp-sagittal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Sagittal.png}\label{fig:example-CTVp-sagittal}
   }
-  \caption{Views of a segmented (in red) CTVp of an arbitrary patient}
- \label{fig:example-CTVp}
+  \caption{Views of a segmented (in red) CTVp of an arbitrary patient}\label{fig:example-CTVp}
 \end{figure}
 
 The CTVp stands for the Primary Clinical Target Volume; see the example at Figure~\ref{fig:example-CTVp}. This is an area comprised from areas where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour)~\cite{AMLART-data}.
@@ -211,19 +200,15 @@ The CTVp stands for the Primary Clinical Target Volume; see the example at Figur
 \begin{figure}[H]
   \centering
   \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Axial.png}
-   \label{fig:example-CTVn-axial}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Axial.png}\label{fig:example-CTVn-axial}
   }
   \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Coronal.png}
-   \label{fig:example-CTVn-coronal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Coronal.png}\label{fig:example-CTVn-coronal}
   }
   \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Sagittal.png}
-   \label{fig:example-CTVn-sagittal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Sagittal.png}\label{fig:example-CTVn-sagittal}
   }
-  \caption{Views of a segmented (in red) CTVn of an arbitrary patient}
- \label{fig:example-CTVn}
+  \caption{Views of a segmented (in red) CTVn of an arbitrary patient}\label{fig:example-CTVn}
 \end{figure}
 
 The CTVn stands for Nodal Clinical Target Volume; see the example at Figure~\ref{fig:example-CTVn}. This CTV surrounds areas that may contain microscopic spread to lymph nodes. It is drawn based on set margins around pelvic blood vessels and includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes~\cite{AMLART-data}.
@@ -235,50 +220,40 @@ However, in contrast to the CTVp, this area is drawn depending on the developmen
 
 \begin{figure}[H]
   \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Axial.png}
-   \label{fig:example-Parametrium-axial}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Axial.png}\label{fig:example-Parametrium-axial}
   }
   \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Coronal.png}
-   \label{fig:example-Parametrium-coronal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Coronal.png}\label{fig:example-Parametrium-coronal}
   }
   \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Sagittal.png}
-   \label{fig:example-Parametrium-saggital}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Sagittal.png}\label{fig:example-Parametrium-saggital}
   }
-  \caption{Views of a segmented (in red) Parametrium of an arbitrary patient}
- \label{fig:example-Parametrium}
+  \caption{Views of a segmented (in red) Parametrium of an arbitrary patient}\label{fig:example-Parametrium}
 \end{figure}
 
-The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina - at risk of local spread; see Figure~\ref{fig:example-Parametrium}. The Parametrium is drawn as a complete structure and edited back to the level of the vagina to be included~\cite{AMLART-data}.
+The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina at risk of local spread; see Figure~\ref{fig:example-Parametrium}. The Parametrium is drawn as a complete structure and edited back to the level of the vagina to be included~\cite{AMLART-data}.
 
 \subsubsection{Vagina and Uterus}
 
 \begin{figure}[H]
   \centering
   \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Axial.png}
-   \label{fig:example-uterus-axial}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Axial.png}\label{fig:example-uterus-axial}
   }
   \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Coronal.png}
-   \label{fig:example-uterus-coronal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Coronal.png}\label{fig:example-uterus-coronal}
   }
   \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Sagittal.png}
-   \label{fig:example-uterus-sagittal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Sagittal.png}\label{fig:example-uterus-sagittal}
   }
   \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Axial.png}
-   \label{fig:example-vagina-axial}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Axial.png}\label{fig:example-vagina-axial}
   }
   \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Coronal.png}
-   \label{fig:example-vagina-coronal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Coronal.png}\label{fig:example-vagina-coronal}
   }
   \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Sagittal.png}
-   \label{fig:example-vagina-sagittal}
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Sagittal.png}\label{fig:example-vagina-sagittal}
   }
   \caption{Views of the segmentation (in red) of the Uterus (\ref{fig:example-uterus-axial}-\ref{fig:example-uterus-sagittal}) and  the segmentation (in red) of the Vagina (\ref{fig:example-vagina-axial}-\ref{fig:example-vagina-sagittal}) of an arbitrary patient}
 \end{figure}
@@ -383,7 +358,7 @@ The key objective of models trained for delineating target structures for this p
 
 Before popularising machine learning algorithms, strict and convoluted rule sets defined algorithms. These heuristically defined algorithms struggled to scale to complex problems and were often complicated or confusing to maintain. The typical task, however, does not warp easily into human intuition.
 
-Algorithms began to emerge that fell into the classification of neural network models. Observations were rephrased and morphed into vectorised inputs, where each constituent of the vector represented a particular feature of the observation. For instance, the California Housing dataset~\cite{kelleypace1997} contains an input of 9 features (longitude, latitude, number of bathrooms, ...) and one target feature (house price). After pre-processing and strategising, this input would be vectorised and fed into a network with several layers. Within each layer, sets of tunable parameters would optionally change the number of features and learn a relationship between parameters using weights until the $1 \times 9$ vector finally translates into a scalar value indicating the house price. After many repetitions of learning from examples, the model would learn an approximation to the solution. These models were termed Multi-Layered Perceptrons (MLPs).
+Algorithms began to emerge that fell into the classification of neural network models. Observations were rephrased and morphed into vectorised inputs, where each constituent of the vector represented a particular feature of the observation. For instance, the California Housing dataset~\cite{kelleypace1997} contains an input of 9 features (longitude, latitude, number of bathrooms, \dots) and one target feature (house price). After pre-processing and strategising, this input would be vectorised and fed into a network with several layers. Within each layer, sets of tunable parameters would optionally change the number of features and learn a relationship between parameters using weights until the $1 \times 9$ vector finally translates into a scalar value indicating the house price. After many repetitions of learning from examples, the model would learn an approximation to the solution. These models were termed Multi-Layered Perceptrons (MLPs).
 
 \subsection{Image Segmentation}\label{sect:image-segmentation}
 
@@ -397,7 +372,7 @@ At the same time, J. Hull, sponsored by the United States Postal Service, publis
   \caption{Example application of a convolution. From left to right, the input image with a region outlined in a red box, the boxed region magnified with a convolutional (sobel) filter being applied to a part of the magnified region, and lastly the output after the filter has passed over the entire image. The output represents a new feature map encoding features of the original (input) feature.}\label{fig:sobel}
 \end{figure}
 
-Convolutional layers are rectangular blocks that are recipes for translating an image (the input feature). The algorithm centres the block over a specific pixel and uses a square radius of neighbouring pixels. It multiplies and sums the pixels along the corresponding pixel positions according to the recipe to produce a transformed resulting pixel that encodes the reference pixel's information and the surrounding receptive field around it. Figure~\ref{fig:sobel} demonstrates this concept. Specifically, the middle tile which shows an example 3x3 convolutional filter being applied to a zoomed in part of the image. This filter slides across the entire image and encodes the entire image which produces the output on the right of Figure~\ref{fig:sobel}. 
+Convolutional layers are rectangular blocks that are recipes for translating an image (the input feature). The algorithm centres the block over a specific pixel and uses a square radius of neighbouring pixels. It multiplies and sums the pixels along the corresponding pixel positions according to the recipe to produce a transformed resulting pixel that encodes the reference pixel's information and the surrounding receptive field around it. Figure~\ref{fig:sobel} demonstrates this concept. Specifically, the middle tile which shows an example $3 \times 3$ convolutional filter being applied to a zoomed in part of the image. This filter slides across the entire image and encodes the entire image which produces the output on the right of Figure~\ref{fig:sobel}. 
 
 The CNN operates by having multiple learnable convolutional filters stacked on top of each other. The values within the square convolutional filter are \textit{learned} during training; the values learnt are those that, in combination with the layers before and after, encode the image's features according to the training objective the best. When stacked with many other convolutional filters that piggyback off the encoded features produced by filters before it, this allows for dense feature representations that encode the entire image.
 
@@ -410,7 +385,7 @@ The CNN operates by having multiple learnable convolutional filters stacked on t
 
 This first convolutional network spawned a vicious flurry of convolutional architectures, which followed in their footsteps. The Fully Connected Neural Network (FCN) adapted the architecture used by LeCunn et al.~\cite{Lenet1998} for segmentation applications. Previously, convolutions would reduce input image feature vectors into non-spatial classification outputs. However, this paper `convolutionalized' the pipeline to provide a heatmap of segmented objects within the image~\cite{fully-CNNs-for-semantic-segmentation}. The heatmap would describe in a 2D feature the location of each class.
 
-Trivial upsampling through de-convolutional layers allows the heatmap to translate back to the original size. This process would produce a largely inaccurate segmentation with much room for improvement. Therefore, similarly to learning the downsampling, the model learnt to upsample low-level heatmap representations~\cite{noh2015learning}. This way, the deconvolutional network also became ``a key component for precise object segmentation,'' which improved the base upsampling provided by the FCN. This conclusion is shown in Figure~\ref{fig:fcn-vs-deconvnet}.
+Trivial upsampling through de-convolutional layers allows the heatmap to translate back to the original size. This process would produce a largely inaccurate segmentation with much room for improvement. Therefore, similarly to learning the downsampling, the model learnt to upsample low-level heatmap representations~\cite{noh2015learning}. This way, the deconvolutional network also became ``a key component for precise object segmentation'', which improved the base upsampling provided by the FCN. This conclusion is shown in Figure~\ref{fig:fcn-vs-deconvnet}.
 
 The strategy of downsampling and upsampling for image segmentation is a common theme amongst many segmentation architectures.
 
@@ -631,8 +606,7 @@ All these methods can be advantageous in some places rather than others. To deci
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{../figures/segmentation-cases-1.png}
-  \caption{Figure from~\cite{boundary-overlap-metrics} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics}
- \label{fig:segmentation-cases-1}
+  \caption{Figure from~\cite{boundary-overlap-metrics} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics}\label{fig:segmentation-cases-1}
 \end{figure}
 
 \begin{itemize}
@@ -686,7 +660,7 @@ For this project, we shall select an evaluation measurement more biased towards 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Methodology}\label{sect:methodology}
 
-Improvements over the transfer from models trained on other domains could hypothetically allow the segmentation of delineated areas more accurately.
+Improvements over the transfer from models trained on other domains could hypothetically allow the segmentation of delineated areas more accurately. To investigate this claim, we iterate over the three types of shot learning, zero-shot, few-shot, and many-shot learning, to determine the effectiveness of transfer learning in the radiotherapy domain.
 
 
 % \section{Base-line nnUNet...}
