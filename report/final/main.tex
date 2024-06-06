@@ -429,7 +429,7 @@ The UNet similarly consists of a contractive and expansive side, with the added 
 
 The U-Net was now very close to being a staple choice in biomedical data for anatomy segmentation. A limitation of its current implementation is that slices along the third dimension would most certainly contain contextual information that would influence the decision of the current design. Therefore, an identical network topology with extended 3D convolutions was proposed by \c{C}i{\c{c}}ek et al.~\cite{DBLP:journals/corr/CicekALBR16}.
 
-\subsection{nnUNet}
+\subsection{nnUNet}\label{sect:nnunet}
 
 The nnUNet is closely related to the U-Net architecture. However, nnUNet's ability to adapt to the data improves this model performance over the vanilla implementation.
 
@@ -449,7 +449,7 @@ TotalSegmentator is a tool based around the nnUNet. TotalSegmentator is pre-trai
 
 From the segmented organs that total segmentator provides, only the Bladder overlapped with the organs that were of interest in this study.
 
-\subsection{UniverSeg}
+\subsection{UniverSeg}\label{sect:universeg}
 
 Convolutional architectures like those discussed above utilize many-shot learning (Section TODO). However, models trained on segmenting a target domain (e.g., bone delineation) do not transfer to other domains (e.g., organ segmentation) without fine-tuning.
 
@@ -471,7 +471,7 @@ This model operates on 2D slices of images and directly avoids the finetuning ar
 
 % Universeg avoids substatial retraining for each subtask
 
-\subsection{SAM}
+\subsection{SAM}\label{sect:sam}
 
 \begin{figure}
   \centering
@@ -494,6 +494,54 @@ SAM trains its network on a collection of natural images, not medical images suc
 \subsection{MedSAM}\label{sect:medsam}
 
 Therefore, Ma et al. enhanced the architecture provided by SAM by training it on a dataset of nearly 500k CT scan test examples to train a model for medical images, named MedSAM~\cite{Ma2024}. Ma et al. decided to keep close to its original despite medical images being 3-dimensional in CT and MRI scans because of ``enhanced flexibility and adaptability'' where slices along an axis substitute 3D scans~\cite{Ma2024}. This model demonstrates an improvement over SAM, nnUNet, and Deepmedic models when MedSAM bounding boxes extracted from the ground truth prompt the model~\cite{Ma2024}.
+
+\section{Transfer Learning}
+
+Transfer Learning involves transferring a model's knowledge from a domain that has trained on more volumes of training data in another domain and is used as a starting point in the target domain. Transfer is a source of success because, in the early layers of a model, it typically learns very low-level features. At 
+this scale, the objective of the original domain does not matter; regardless of the initialisation, a model working on a similar problem will inevitably learn similar low-level features. 
+
+Arguably, the universality of the parameters learnt in a model with prosperous access to data will have richer and better patterns that another with less data did not have enough information to learn~\cite{deep-learning-book, survey-on-transfer-learning}.
+
+Transfer Learning has the potential to improve initial performance using only the transferred knowledge before any further learning begins, improve the time it takes to thoroughly learn the target task given the transferred knowledge, and improve the final performance all when compared to initial benchmarks without transfer~\cite{torrey-handbook}. Medical contexts have already applied Transfer Learning, which reportedly improved weight initialisation for 332 abdominal liver CT scans and resulted in faster convergence, providing a more robust representation~\cite{liver-lesion-via-transfer-learning}.
+
+Transfer Learning has been seen to prevent overfitting in domains where data volume is low and where generality without overfitting is hard to come by. The prevention is because the model has already learnt features likely to be helpful in the second task~\cite{geeks-transfer-learning}. 
+
+% However, generalisation is not a guarantee, as overfitting is still possible if the model is fine-tuned too much on the second task, as it may `learn task-specific features that do not generalise well to new data'~\cite{geeks-transfer-learning}. In our case, our target dataset is small but similar to the base network dataset. We may overfit because fine-tuning the pre-trained network with the target dataset may not generalise to the global population. If, instead, we attempt to transfer a task with a different base network dataset, then using high-level features of the pre-trained model will not be useful~\cite{geeks-transfer-learning}.
+
+\subsection{Shot based learning}
+
+\begin{figure}[H]
+  \centering
+  \raisebox{-0.5\height}{
+    \subfigure[Zero-shot]{
+      \includegraphics[width=.45\linewidth]{../figures/zero-shot-learning.png}\label{fig:zero-shot}
+    }
+  }
+  \raisebox{-0.5\height}{
+    \subfigure[Few-shot]{
+      \includegraphics[width=.45\linewidth]{../figures/few-shot-learning.png}\label{fig:few-shot}
+    }
+  }
+  \caption{Shot based learning captured in the natural language context~\cite{openaishotbasedlearning}}
+\end{figure}
+
+The transfer of models is dependent on the strategy the model uses to make predictions. Shot-based learning is a substantial factor. This describes the model's exposure to data in domains and its ability to handle cases it has never seen before. Thus, shot-based learning can be separated into meta-learning tasks or multitask learning. 
+
+Instead of learning underlying patterns, meta-learning models learn to \textit{learn} the algorithm itself. This allows it to generalize tasks with few labelled examples of new or rare cases. Otherwise, multitask learning makes predictions for a particular set of tasks~\cite{deep-learning-book}.
+
+\subsubsection{Zero-shot Learning}
+
+Zero-shot models (Figure~\ref{fig:zero-shot}) can generalize to unseen tasks. An example of a model targeted for zero-shot transferability is the SAM model (Section~\ref{sect:sam}).
+
+\subsubsection{Few-shot Learning}
+
+Few-shot models (Figure~\ref{fig:few-shot}) can generalize to unseen tasks with a few examples. The UniverSeg model is the target model for few-shot transferability (Section~\ref{sect:universeg}).
+
+\subsubsection{Many-shot Learning}
+
+Many-shot models can generalize to unseen tasks with many examples. The nnUNet model is the target model for many-shot transferability (Section~\ref{sect:nnunet}).
+
+A simple nnUNet model can be trained from scratch on many examples of the objective to provide an accurate segmentation for anatomy and radiotherapy target volumes. This nnUNet model has been shown to provide more robust results in external stress tests than other comparable architectures on a set of different datasets~\cite{isensee2024nnunet}. Also, in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}.
 
 \section{Performance Evaluation for Segmentation Methods}\label{sect:performance-evaluation}
 
@@ -638,26 +686,10 @@ For this project, we shall select an evaluation measurement more biased towards 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Methodology}\label{sect:methodology}
 
-A simple nnUNet model can be trained from scratch to provide an accurate segmentation for anatomy and radiotherapy target volumes. This nnUNet model has been shown to provide more robust results in external stress tests than other comparable architectures on a set of different datasets~\cite{isensee2024nnunet}. Also, in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}.
+Improvements over the transfer from models trained on other domains could hypothetically allow the segmentation of delineated areas more accurately.
 
-However, improvements over the baseline could hypothetically allow the segmentation of delineated areas more accurately.
 
-\section{Transfer Learning}
-
-A strategy for improving the accuracy of a model is Transfer Learning.
-
-Transfer Learning involves transferring a model's knowledge from a domain that has trained on more volumes of training data in another domain and is used as a starting point in the target domain. Transfer is a source of success because, in the early layers of a model, it typically learns very low-level features. At 
-this scale, the objective of the original domain does not matter; regardless of the initialisation, a model working on a similar problem will inevitably learn similar low-level features. 
-
-Arguably, the universality of the parameters learnt in a model with prosperous access to data will have richer and better patterns that another with less data did not have enough information to learn~\cite{deep-learning-book, survey-on-transfer-learning}.
-
-Transfer Learning has the potential to improve initial performance using only the transferred knowledge before any further learning begins, improve the time it takes to thoroughly learn the target task given the transferred knowledge, and improve the final performance all when compared to initial benchmarks without transfer~\cite{torrey-handbook}. Medical contexts have already applied Transfer Learning, which reportedly improved weight initialisation for 332 abdominal liver CT scans and resulted in faster convergence, providing a more robust representation~\cite{liver-lesion-via-transfer-learning}.
-
-Transfer Learning has been seen to prevent overfitting in domains where data volume is low and where generality without overfitting is hard to come by. The prevention is because the model has already learnt features likely to be helpful in the second task~\cite{geeks-transfer-learning}. 
-
-However, generalisation is not a guarantee, as overfitting is still possible if the model is fine-tuned too much on the second task, as it may `learn task-specific features that do not generalise well to new data'~\cite{geeks-transfer-learning}. In our case, our target dataset is small but similar to the base network dataset. We may overfit because fine-tuning the pre-trained network with the target dataset may not generalise to the global population. If, instead, we attempt to transfer a task with a different base network dataset, then using high-level features of the pre-trained model will not be useful~\cite{geeks-transfer-learning}.
-
-\section{Base-line nnUNet...}
+% \section{Base-line nnUNet...}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Results}\label{sect:results}
