@@ -20,9 +20,15 @@ SOURCE_DIR=$(git rev-parse --show-toplevel)
 source ${SOURCE_DIR}/.venv/bin/activate
 source ${SOURCE_DIR}/data/data_vars.sh
 
+
+if [ -z "$1" ]; then
+    echo "Error: FOLD is not provided."
+    exit -1
+fi
+
 # TORCH_LOGS="+dynamo" TORCHDYNAMO_VERBOSE=1 
 
 # Run python script
 # nnUNetv2_train DATASET_NAME_OR_ID UNET_CONFIGURATION FOLD [additional options, see -h]
-nnUNetv2_train 8 3d_fullres 0 -tr nnUNetTrainer_500epochs --npz --val_best
+nnUNetv2_train 8 3d_fullres $1 -tr nnUNetTrainer_500epochs --npz --val_best --c
 

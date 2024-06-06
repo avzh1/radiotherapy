@@ -21,12 +21,17 @@ if [ -z "$2" ]; then
     exit -1
 fi
 
+if [ -z "$3" ]; then
+    echo "Please provide a boolean flag True or False whether to continue or not."
+    exit -1
+fi
+
 # Get the directory of the script
 SOURCE_DIR=$(git rev-parse --show-toplevel)
 
-# Load the virtual environment
+# Load the virtual environme008nt
 source ${SOURCE_DIR}/.venv/bin/activate
 source ${SOURCE_DIR}/data/data_vars.sh
 
 jupyter nbconvert --to script '1_fine_tune_structures.ipynb'
-python3 1_fine_tune_structures.py $1 $2
+python3 1_fine_tune_structures.py $1 $2 $3

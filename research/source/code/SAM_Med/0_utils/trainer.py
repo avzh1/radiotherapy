@@ -11,9 +11,9 @@ class MedSAMTrainer(object):
         self.checkpointHandler = checkpointHandler
         self.device = device
 
-        self.epochs = kwargs['epochs']
+        self.epochs = kwargs['epochs'] if 'epochs' in kwargs.keys() else 100
         self.batches_per_epoch = -1 if 'batches_per_epoch' not in kwargs.keys() or kwargs['batches_per_epoch'] is None else kwargs['batches_per_epoch']
-        self.resume = kwargs['resume']
+        self.resume = kwargs['resume'] if 'resume' in kwargs.keys() else False
 
         self.use_boxes = kwargs['use_boxes'] if 'use_boxes' in kwargs.keys() and kwargs['use_boxes'] else False
         self.use_positive_points = kwargs['use_positive_points'] if 'use_positive_points' in kwargs.keys() and kwargs['use_positive_points'] else False
