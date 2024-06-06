@@ -259,9 +259,9 @@ The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina at r
   }
   \caption{Views of the segmentation (in red) of the Uterus (\ref{fig:example-uterus-axial}-\ref{fig:example-uterus-sagittal}) and  the segmentation (in red) of the Vagina (\ref{fig:example-vagina-axial}-\ref{fig:example-vagina-sagittal}) of an arbitrary patient}
 \end{figure}
-The final structures are the Vagina and Uterus, their clinical significance is to help define encapsulating structures like the CTVn (see Section~\ref{sec:data-delineation-rules}).
+The final structures are the Vagina and Uterus, their clinical significance is to help define encapsulating structures like the CTVn (see Section~\ref{sec:rules}).
 
-\subsection{Rules}\label{sec:data-delineation-rules}
+\subsection{Rules}\label{sec:rules}
 
 Let us represent each organ anatomy as the first letter of its name, specifically: ($A$)norectum, ($B$)ladder, ($C$)ervix, ($P$)arametrium, ($U$)terus, ($V$)agina. Further, define:
 
@@ -312,7 +312,7 @@ The top seven priority structures have been selected to identify and plan an are
 \begin{enumerate}
   \item There should be no overlap between the CTVn, CTVp or Anorectum.
 
-        \begin{equation}
+        \begin{equation}\label{eq:ctvn-ctvp-anorectum}
           \forall{i,j \in \{C_n, C_p, A\}}\text{ with } i \neq j, i \cap j = \emptyset
         \end{equation}
 
@@ -678,14 +678,33 @@ Therefore, the nnUNet avoids this complication by processing voxel properties en
 
 \subsection{Separate Training}
 
-The default strategy is to consider each anatomy separately and attempt to learn segmentation patterns without considering constraints mentioned in Section~\ref{sec:data-delineation-rules}. 
+The default strategy is to consider each anatomy separately and attempt to learn segmentation patterns without considering constraints mentioned in Section~\ref{sec:rules}. These models can be used in an ensemble system to produce thorough segmentations of the target volumes which being oblivious of cliical constraints. 
 
-Pretraining considers 
+\subsection{Region Based Training}
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Anorectum]{\includegraphics[width=.24\linewidth, trim=0 0 4400px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[Bladder]{\includegraphics[width=.24\linewidth, trim=630px 0 3770px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[CTVn]{\includegraphics[width=.24\linewidth, trim=1260px 0 3140px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[CTVp]{\includegraphics[width=.24\linewidth, trim=1890px 0 2510px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[Parametrium]{\includegraphics[width=.24\linewidth, trim=2520px 0 1880px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[Uterus]{\includegraphics[width=.24\linewidth, trim=3150px 0 1250px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[Vagina]{\includegraphics[width=.24\linewidth, trim=3780px 0 620px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[Combined Labels]{\includegraphics[width=.24\linewidth, trim=4430px 0 0px 140px, clip]{../figures/check_if_worked_axis_1.png}\label{fig:combined-labels-region-based}}
+  
+  \includegraphics[width=\linewidth]{../figures/check_if_worked_axis_1_legend.png}
+
+  \caption{New IDs generated for a single slice as a consequence of practical experience show non-conformity to rules in Section~\ref{sec:rules}. TODO make legend larger}\label{fig:check-if-worked-axis-1}
+\end{figure}
+
+The natural extension of separate training is to consider training each class simultaneously. Region-based training is a noninvasive method offered by the nnUNet. This training style combines the 3D segmentation maps for each of the seven classes into one 3D segmentation by introducing new IDs wherever there is a new overlap.
+
+A sensible and calibrated set of ids could be drawn based on the rules in Section~\ref{sec:rules}. However, practical experience and the recalcitrant and challenging nature of defining logical expressions to generalize something as complex as organs and something as fuzzy as microscopic cancer spread mean that, in practice, these rules cannot be implemented strictly.
+
+Please refer to Equation~\ref{eq:ctvn-ctvp-anorectum} ``There should be no overlap between the CTVn, CTVp or Anorectum''. We see marginal overlap between the structures in Figure~\ref{fig:combined-labels-region-based} in ids 55, 94. These are almost not visible on the figure, but captured by the legend. We can conclude that these rules are not strictly followed in practice, but that for generalisation, the rules should be implemented.
 
 
-
-
-% \section{Base-line nnUNet...}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Results and Discussion}\label{sect:results}\label{sect:discussion}
