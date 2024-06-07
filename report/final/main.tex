@@ -462,17 +462,18 @@ This model operates on 2D slices of images and directly avoids the finetuning ar
 
 Advances in NLP, with attention-based mechanisms, have questioned whether convolutional-based methods like those above are the best approach for segmentation. Transformers from NLP were adapted to form the Vision Transformer (ViT)~\cite{ViT}. This model views the image as a grid of tokens; in the original paper, Dosovitskiy et al. separate the image into a grid of patches and read in these grid cells as individual tokens. The tokens pass through the attention mechanism as with NLP and into a classification mechanism~\cite{ViT}. 
 
-The SAM model implemented a modification of the transformer architecture~\cite{SAM} as seen in Figure~\ref{fig:sam}. However, the task was reformulated as a promotable segmentation problem to allow for zero-shot generalisation (the model can generalise to unseen examples with no re-training or fine-tuning).
+% TODO search and replace normalize -> normalise
+The SAM model implemented a modification of the transformer architecture~\cite{SAM} as seen in Figure~\ref{fig:sam}. However, the task was reformulated as a promotable segmentation problem to allow for zero-shot generalisation (the model can generalise to unseen examples with no re-training or fine-tuning). As seen in Figure~\ref{fig:sam}, the model inputs an image along with either points in the image or boxes. This reduces the search space SAM has to perform to segment an object into an area or a set of points.
 
-\begin{figure}
+\subsection{MedSAM}\label{sect:medsam}
+
+\begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{../figures/sam-performance.png}
   \caption{Performance of a SAM model across a reference nnUNet baseline when applied to different datasets. The evaluation was considered for semantic, point and box prompts.~\cite{he2023computervision}.}\label{fig:sam-performance}
 \end{figure}
 
 SAM trains its network on a collection of natural images, not medical images such as CT and MRI scans. Extensive stress tests performed on SAM concluded that SAM's out-of-the-box promotable segmentation tool had good baseline performance on large visible objects~\cite{deng2023segment} but required exact prompt segmentation, making it inaccessible to automated contouring. Regarding the number of points required to make a sensible prediction, SAM quantitatively underperformed a nnUNet baseline, with qualitative evaluation showing fuzzy boundaries in medical contexts~\cite{hu2023sam}. Finally, Figure~\ref{fig:sam-performance} shows the performance of SAM against an nnUNet baseline across a set of datasets and imaging modalities~\cite{he2023computervision} which concludes that SAM never outperformed the nnUNet baseline when trained on the 11M natural images~\cite{SAM}. 
-
-\subsection{MedSAM}\label{sect:medsam}
 
 Therefore, Ma et al. enhanced the architecture provided by SAM by training it on a dataset of nearly 500k CT scan test examples to train a model for medical images, named MedSAM~\cite{Ma2024}. Ma et al. decided to keep close to its original despite medical images being 3-dimensional in CT and MRI scans because of ``enhanced flexibility and adaptability'' where slices along an axis substitute 3D scans~\cite{Ma2024}. This model demonstrates an improvement over SAM, nnUNet, and Deepmedic models when MedSAM bounding boxes extracted from the ground truth prompt the model~\cite{Ma2024}.
 
@@ -595,9 +596,13 @@ We hypothesise that although the baseline model attempts to approximate the grou
 
 UniverSeg operates on 2-dimensional data. As a result, to provide automatic radiotherapy planning volumes, it is essential to provide slices for the model as input alongside a sufficient support size of similar slices. 
 
-However, for an unseen example, the location of the tumour can only be determined by referring to assisting models that provide estimates. In a secluded environment where only one's model transferability is assessed, we instead analyse the properties of the tumour from the examples.
+\subsubsection{Normalization}
 
-We begin by analysing the tumour locations along each axis. The intuition is that the normalised images of equal dimensions and spacings should contain the tumour at approximately the same location. Figure~\ref{fig:start-end-distribution-universeg} shows the distribution of start and end slices for the tumor and the corresponding sampled support set.
+Images are normalized to match UniverSeg's training properties. Specifically image intensities are clipped to the range $[-500, 1000]$ and normalize to be between $[0,1]$ and finally scaled down to a $128 \times 128$ resolution~\cite{universeg}.
+
+For the purpose of the experiment, this was repeated along each axis to produce a
+
+\subsubsection{Selecting support}
 
 \begin{figure}[H]
   \centering
@@ -608,9 +613,54 @@ We begin by analysing the tumour locations along each axis. The intuition is tha
   \caption{The distribution of the start and ending slices of the tumor in a normalized batch of images across axes 0 (axial dimension) and the corresponding sampled support extracted.}\label{fig:start-end-distribution-universeg}
 \end{figure}
 
-Images are normalized to match UniverSeg's training properties. Specifically image intensities are clipped to the range $[-500, 1000]$ and normalize to be between $[0,1]$ and finally scaled down to a $128 \times 128$ resolution~\cite{universeg}.
+However, for an unseen example, the location of the tumour can only be determined by referring to assisting models that provide estimates. In a secluded environment where only one's model transferability is assessed, we instead analyse the properties of the tumour from the examples.
+
+We begin by analysing the tumour locations along each axis. The intuition is that the normalised images of equal dimensions and spacings should contain the tumour at approximately the same location. Figure~\ref{fig:start-end-distribution-universeg} shows the distribution of start and end slices for the tumor and the corresponding sampled support set.
 
 \section{Zero-shot Transfer -- MedSAM}
+
+MedSAM is the final algorithm in the shot-learning strategies that will be covered. Specifically, MedSAM is being evaluated on the provided dataset, both with and without transfer, to test the claim of transferability.
+
+Zero-shot learning, a promising feature of MedSAM, could potentially enable it to handle tasks it has never encountered before. However, the assertion that it can seamlessly transfer without refinements is a bit of a stretch. This is because certain contours, like the CTVn, delineate tiny tumor spread throughout the lymph node system. Therefore, it is unlikely that MedSAM, trained in such cases, would be used for these specific tasks. It would typically be used for more straightforward volume delineations, such as organs.
+
+\subsection{Preprocessing}
+
+MedSAM takes two-dimensional images as input, much like UniverSeg. Therefore, we similarly preprocess the data to a resolution of $1024 \times 1024$ along each slice where the ground truth is present. We clip the ranges of the CT scan to Hounsfield units centred around the 40 value, with a window radius of 400 units and later normalized to the range of $[0,1]$. 
+
+\subsection{Point based transfer}
+
+We first experimented with the MedSAM architecture to test the effectiveness of prompting on points. We formulated this task into two categories: a sparse and dense point experiment. 
+
+\begin{figure}[H]
+  \centering
+  \raisebox{-0.5\height}{\subfigure[Sparse point prompt]{\includegraphics[width=.45\linewidth, trim=850 850 0 0, clip]{../../research/source/code/SAM_Med/3_train_point_prompt/point_batch_example.png}}}
+  \raisebox{-0.5\height}{\subfigure[Dense point prompt]{\includegraphics[width=.45\linewidth, trim=0 0 850 850, clip]{../../research/source/code/SAM_Med/3_train_point_prompt/point_dense_batch_example.png}}}
+  \caption{The two strategies for sampling structures in the MedSAM model.}\label{fig:point-prompt}
+\end{figure}
+
+The two strategies are shown in Figure~\ref{fig:point-prompt}. The sparse point prompt is a single point in the image, while the dense point prompt is a set of $n$ points randomly sampled from the ground truth segmentation.
+
+The hypothesis is that point prompts may work well with structures such as the bladder which are trivial to identify. However, for the CTV, the point prompt may not segment the full extent of the structure.
+
+\subsection{Box based transfer}
+
+A box prompted solution will define the area where the tumour is likely to be. Box prompts for training are obtained from the ground truth, with a margin surrounding the box. 
+
+For training, only one box may be fed into the model for inference. Therefore, we select a random structure from the boxes encompassing the tumour for a given slice. Figure~\ref{fig:box-prompt-sam-selection} demonstrates the tumour box selection at training time. 
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Boxed ground truth image]{
+    {\includegraphics[width=.3\linewidth, trim=40 30 610 30, clip]{../../research/source/code/SAM_Med/4_train_box_prompt/select_top_n_largest_structures.png}}
+  }
+  \subfigure[Selected tumor boxed]{
+    {\includegraphics[width=.3\linewidth, trim=340 30 310 30, clip]{../../research/source/code/SAM_Med/4_train_box_prompt/select_top_n_largest_structures.png}}
+  }
+  \subfigure[Ground truth augmentation]{
+    {\includegraphics[width=.3\linewidth, trim=630 30 20 30, clip]{../../research/source/code/SAM_Med/4_train_box_prompt/select_top_n_largest_structures.png}}
+  }
+  \caption{The process of selection bounding box for a given boxed tumor with an augmented ground truth used at training time for the MedSAM bax-based prompt model.}\label{fig:box-prompt-sam-selection}
+\end{figure}
 
 \section{Quantiative Evaluation of Segmentation}\label{sect:performance-evaluation}
 
