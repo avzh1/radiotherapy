@@ -300,7 +300,7 @@ Let us represent each organ anatomy as the first letter of its name, specificall
 \subsubsection{Relationship between Structures}
 
   \begin{enumerate}
-    \item If we want to talk about a specific patient, we should use the super-script notation to differentiate patients, e.g., $B^i$ for the Bladder of patient $i$.
+    % \item If we want to talk about a specific patient, we should use the super-script notation to differentiate patients, e.g., $B^i$ for the Bladder of patient $i$.
     \item Let the overlap of two structures be denoted by the set intersect symbol $\cap$.
     \item Let the joint area of two structures be denoted by the set union symbol $\cup$.
   \end{enumerate}
@@ -319,7 +319,7 @@ The top seven priority structures have been selected to identify and plan an are
   \item The Parametrium may overlap with all of the other structures.
 
         \begin{equation}
-          \forall i \in S, \quad P \cap S_i \neq \emptyset \vee P \cap S_i = \emptyset
+          \forall i \in S, \quad (P \cap S \neq \emptyset) \vee (P \cap S = \emptyset), \quad \text{where } S = \{A, B, C, C_n, C_p, U, V\}
         \end{equation}
 
   \item The Bladder may overlap with the CTVn.
@@ -368,7 +368,7 @@ The current machine learning approach didn't work well with image data. Up until
 
 At the same time, J. Hull, sponsored by the United States Postal Service, published a Database for Handwritten Text Recognition with the incentive of providing an extensive dataset of images of characters of variable writing mediums, isolation, overlap, and neatness to aid research efforts in developing accurate digit classification algorithms~\cite{JJHull1994}. Yann LeCunn et al.~\cite{Lenet1998} used this database to propose the first Convolutional Neural Network (CNN) for image processing, which preserved the input in its 2D glory by applying convolutions.
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=1\linewidth]{../figures/sobel.png}
   \caption{Example application of a convolution. From left to right, the input image with a region outlined in a red box, the boxed region magnified with a convolutional (sobel) filter being applied to a part of the magnified region, and lastly the output after the filter has passed over the entire image. The output represents a new feature map encoding features of the original (input) feature.}\label{fig:sobel}
@@ -412,9 +412,13 @@ The nnUNet is closely related to the U-Net architecture. However, nnUNet's abili
 
 Until now, architectures have operated on data pre-processed to a particular expected distribution and configured to deal with a specific problem. For instance, out-of-the-box configuration has stringent input size requirements, which require image resizing. Furthermore, 3D images commonly produce heterogeneous voxel spacing depending on the parameters chosen by the clinician or the machine from which they were produced~\cite{nnunet}. The number of moving parts often leaves a unidirectional dependency on the data depending on the architecture. 
 
+\subsubsection{Automated Method Configuration}
+
 Therefore, the nnUNet analyses the fingerprint of the dataset and the device to deliver a tailored experience and force a more codependent relationship; now, the architecture depends on the data and the data is pre-processed to conform to the network~\cite{nnunet}. Furthermore, hardware restrictions mean networks may be inaccessible to those with worse specifications or, at the other end of the spectrum, may underutilize powerful computation still available~\cite{nnunet}; the nnUNet analyses GPU constraints used to influence batch sizes and more~\cite{nnunet-git-paper}.
 
 The automated method configuration is classified into three categories. A dataset fingerprint extracts training data distributions such as shape, spacing and intensity distributions. Rule-based parameters estimate the most common robust parameters for resampling and normalization. Finally, the Empirical Parameters learn parameters, such as ensemble selection, which is not derivable from the dataset fingerprint.
+
+\subsubsection{Critical Review of the nnUNet}
 
 A review of segmentation methods in 2024 reviewed some further developments in segmentation models and found that the convolution-based U-Net architectures continued to outperform Attention-based or Mamba-based approaches six years after the initial publication of the self-configuring network~\cite{isensee2024nnunet}. Isensee et al. concluded that there was a significant mischaracterisation of proclaimed improvements in new strategies such as transformers. Claims of performance improvements over the nnUNet were reviewed through the control of validation datasets and removals of baseline tampering, which demonstrated the convolution-based performance on datasets with low statistical intra-method standard deviation~\cite{isensee2024nnunet}.
 
@@ -436,7 +440,7 @@ Convolutional architectures like those discussed above utilize many-shot learnin
   \caption{The UniverSeg architecture~\cite{universeg}. Diagram illustrates the freezing of model parameters while providing a support set of images which follows the query image through the segmentation pipeline.}\label{fig:universeg}
 \end{figure}
 
-Butoi et al. present UniverSeg, a model that breaks away from the traditional approach; instead of training a model and freezing parameters during inference, this architecture uses a support set of images to provide a practical few-shot approach to inferring segmentations from input images. Figure~\ref{fig:universeg} shows an example of this efficient querying, which manifests itself in a U-Net architecture where the support set passes through the network along the query to influence the final segmentation. This way, Butoi et al. attempt to provide segmentation on a target image based on examples of other samples with the same anatomy contoured in a selection of other images.
+Butoi et al. present UniverSeg, a model that breaks away from the traditional approach; instead of training a model on a single task (e.g. bone delineation) and freezing parameters during inference, this architecture uses a support set of images to provide a practical few-shot approach to inferring segmentations from input images. Figure~\ref{fig:universeg} shows an example of this efficient querying, which manifests itself in a U-Net architecture where the support set passes through the network along the query to influence the final segmentation. This way, Butoi et al. attempt to provide segmentation on a target image based on examples of other samples with the same anatomy contoured in a selection of other images. This way, the model can learn to segment both bone and organ segmentation tasks without the need for fine-tuning~\cite{universeg}.
 
 This model operates on 2D slices of images and directly avoids the finetuning argument for medical imaging. They argue that finetuning can be unhelpful due to the differences between medical domains, features, and data fingerprints. As such, UniverSeg avoids significant retaining for each subtask.
 
@@ -516,9 +520,80 @@ Few-shot models (Figure~\ref{fig:few-shot}) can generalize to unseen tasks with 
 
 \subsubsection{Many-shot Learning}\label{sect:many-shot-learning}
 
-Many-shot models can generalize to unseen tasks with many examples. The nnUNet model is the target model for many-shot transferability (Section~\ref{sect:nnunet}).
+Many-shot models can generalize to unseen tasks with many examples. The nnUNet based models such as the TotalSegmentator is the target model for many-shot transferability (Section~\ref{sect:nnunet}).
 
-\section{Performance Evaluation for Segmentation Methods}\label{sect:performance-evaluation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Methodology}\label{sect:methodology}
+
+Improvements over the transfer from models trained on other domains could hypothetically allow the segmentation of delineated areas more accurately. To investigate this claim, we iterate over the three types of shot learning, zero-shot, few-shot, and many-shot learning, to determine the effectiveness of transfer learning in the radiotherapy domain.
+
+\section{nnUNet baseline}
+
+The provided examples of the objective are enough to train an nnUNet model from scratch to segment anatomy and radiotherapy target volumes accurately. This nnUNet model has been shown to provide more robust results in external stress tests than other comparable architectures on a set of different datasets~\cite{isensee2024nnunet}. Also, in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}.
+
+\subsection{Normalization}
+
+Prior to training, necessary normalization must take place to standardize each input. Firstly, CT scans can produce results for different spacings, resolutions, and dimensions. Because the model samples data in batches, the batch properties must align within the model's body. Therefore, the fingerprint taken by the preprocessing pipeline resamples input data towards the median dimension. 
+
+The traditional method of normalization involves normalizing the entire image corpus. However, this method does not take into account the skew that might affect the outcome. This is because the background value occurs most frequently, and artifacts such as metal cause outlier peaks. As a result, traditional normalization could overlook important tissues as it attempts to treat background and outlier values equally with foreground values.
+
+Therefore, the nnUNet avoids this complication by processing voxel properties encased by the ground truth segmentation. The values are clipped to their 0.5 and 99.5 percentile, followed by traditional normalization with the mean and standard deviation. This way, the target structure properties remain relative to their original, and the background label conforms to the normalization inspired by the region of interest.
+
+\subsection{Separate Training}
+
+The default strategy is to consider each anatomy separately and attempt to learn segmentation patterns without considering constraints mentioned in Section~\ref{sec:rules}. These models can be used in an ensemble system to produce thorough segmentations of the target volumes, oblivious to clinical constraints. 
+
+This will act as the baseline capabilities of models with no transfer of knowledge.
+
+\section{Many-shot Transfer -- TotalSegmentator}
+
+We kickstart the transfer discussion by evaluating the transfer of many-shot models. The candidate model for this is the TotalSegmentator model, which is entirely based on the default implementation of the nnUNet. 
+
+When transferring information, many-shot models are the most obvious choice. These models have the potential to increase the amount of helpful information that can be used to segment anatomies in the target domain by transferring the original task. The hypothesis is that many-shot transfer models will improve segmentations for clear organ delineations. Additionally, anatomies that have already been segmented (such as the bladder) will fine-tune to become more accurate.
+
+\subsection{Separate Training}
+
+Like the nnUNet, we apply the default fine-tuning strategy to a pre-trained TotalSegmentator model. TotalSegmentator has 23 separate nnUNet pre-trained models on different sub-tasks in the anatomical segmentation~\cite{totalsegmentor-git}. These individual models segment structures like the vertebrae, cardiac muscles, rubs, and lung vessels. For this destination delineation task, we chose the 'organ' model trained on a withheld dataset of 1200 CT scans. The only anatomy shared between the two domains is the Bladder which will hypothetically provide a performance improvement for this anatomy due to the additional thousand examples of the bladder.
+
+\subsection{Region Based Training}
+
+The natural extension of separate training is to consider training each class simultaneously. Region-based training is a noninvasive method offered by the nnUNet. This training style combines the 3D segmentation maps for each of the seven classes into one 3D segmentation by introducing new IDs wherever there is a new overlap. An example slice can be seen in Figure~\ref{fig:check-if-worked-axis-1}.
+
+For the purposes of evaluation, the following methods will be applied to the baseline nnUNet model to assess the success.
+
+\subsubsection{No Rule Enforcement}
+
+A sensible and calibrated set of ids could be drawn based on the rules in Section~\ref{sec:rules}. However, practical experience and the recalcitrant and challenging nature of defining logical expressions to generalize something as complex as organs and something as fuzzy as microscopic cancer spread mean that, in practice, these rules cannot be implemented strictly.
+
+Please refer to Equation~\ref{eq:ctvn-ctvp-anorectum} ``There should be no overlap between the CTVn, CTVp or Anorectum''. We see marginal overlap between the structures in Figure~\ref{fig:combined-labels-region-based} in ids 55, 94. These are almost not visible on the figure, but captured by the legend. 
+
+\subsubsection{With Rule Enforcement}
+
+We can conclude that these rules are not strictly followed in practice but should be implemented for generalisation. Therefore, an augmentation of the nnUNet trainer, specifically the [TODO], is necessary to capture this result.
+
+We hypothesise that although the baseline model attempts to approximate the ground truth, which may call for marginal overlap, with the rules in place, this may generalise better over other cases.
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Anorectum]{\includegraphics[width=.24\linewidth, trim=0 0 4400px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[Bladder]{\includegraphics[width=.24\linewidth, trim=630px 0 3770px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[CTVn]{\includegraphics[width=.24\linewidth, trim=1260px 0 3140px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[CTVp]{\includegraphics[width=.24\linewidth, trim=1890px 0 2510px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[Parametrium]{\includegraphics[width=.24\linewidth, trim=2520px 0 1880px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[Uterus]{\includegraphics[width=.24\linewidth, trim=3150px 0 1250px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[Vagina]{\includegraphics[width=.24\linewidth, trim=3780px 0 620px 110px, clip]{../figures/check_if_worked_axis_1.png}}
+  \subfigure[Combined Labels]{\includegraphics[width=.24\linewidth, trim=4430px 0 0px 140px, clip]{../figures/check_if_worked_axis_1.png}\label{fig:combined-labels-region-based}}
+  
+  \includegraphics[width=\linewidth]{../figures/check_if_worked_axis_1_legend.png}
+  
+  \caption{New IDs generated for a single slice as a consequence of practical experience show non-conformity to rules in Section~\ref{sec:rules}.}\label{fig:check-if-worked-axis-1}
+\end{figure}
+
+\section{Few-shot Transfer -- UniverSeg}
+
+\section{Zero-shot Transfer -- MedSAM}
+
+\section{Quantiative Evaluation of Segmentation}\label{sect:performance-evaluation}
 
 Calculating the difference between the provided labelled data would be one way to determine if a contour can be used in a clinical context. However, we have different ways to evaluate this measure in a delineation context.
 
@@ -654,57 +729,6 @@ Similarly, the APL score predicts ``the path length of a contour that has to be 
 This is why we settle at the Surface DSC (Section~\ref{sect:surface-dice}), which prioritizes deviation along the boundary to a certain degree while measuring the fraction of the surface that needs to be redrawn, thus favouring a more conservative prediction of Figure~\ref{fig:segmentation-cases-1}(d) instead of (e).
 
 For this project, we shall select an evaluation measurement more biased towards conservative boundary estimates not to touch the organs at risk. The clinician's review pipeline, in part, influenced this choice; it would be easier to correct Figure~\ref{fig:segmentation-cases-1}(d) instead of Figure~\ref{fig:segmentation-cases-1}(e) because correcting the latter would likely take a considerable amount of time as it would require redrawing almost all of the boundary, whereas the former could be corrected much faster~\cite{Nikolov2021-xe}.
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Methodology}\label{sect:methodology}
-
-Improvements over the transfer from models trained on other domains could hypothetically allow the segmentation of delineated areas more accurately. To investigate this claim, we iterate over the three types of shot learning, zero-shot, few-shot, and many-shot learning, to determine the effectiveness of transfer learning in the radiotherapy domain.
-
-\section{Many-shot Transfer}
-
-\subsection{nnUNet baseline}
-
-The provided examples of the objective are enough to train a nnUNet model from scratch to segment anatomy and radiotherapy target volumes accurately. This nnUNet model has been shown to provide more robust results in external stress tests than other comparable architectures on a set of different datasets~\cite{isensee2024nnunet}. Also, in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}.
-
-\subsubsection{Normalization}
-
-Prior to training, necessary normalization must take place to standardize each input. Firstly, CT scans can produce results for different spacings, resolutions, and dimensions. Because the model samples data in batches, the batch properties must align within the model's body. Therefore, the fingerprint taken by the preprocessing pipeline resamples input data towards the median dimension. 
-
-The traditional method of normalization involves normalizing the entire image corpus. However, this method does not take into account the skew that might affect the outcome. This is because the background value occurs most frequently, and artifacts such as metal cause outlier peaks. As a result, traditional normalization could overlook important tissues as it attempts to treat background and outlier values equally with foreground values.
-
-Therefore, the nnUNet avoids this complication by processing voxel properties encased by the ground truth segmentation. The values are clipped to their 0.5 and 99.5 percentile, followed by traditional normalization with the mean and standard deviation. This way, the target structure properties remain relative to their original, and the background label conforms to the normalization inspired by the region of interest.
-
-\subsection{Separate Training}
-
-The default strategy is to consider each anatomy separately and attempt to learn segmentation patterns without considering constraints mentioned in Section~\ref{sec:rules}. These models can be used in an ensemble system to produce thorough segmentations of the target volumes which being oblivious of cliical constraints. 
-
-\subsection{Region Based Training}
-
-\begin{figure}[H]
-  \centering
-  \subfigure[Anorectum]{\includegraphics[width=.24\linewidth, trim=0 0 4400px 110px, clip]{../figures/check_if_worked_axis_1.png}}
-  \subfigure[Bladder]{\includegraphics[width=.24\linewidth, trim=630px 0 3770px 110px, clip]{../figures/check_if_worked_axis_1.png}}
-  \subfigure[CTVn]{\includegraphics[width=.24\linewidth, trim=1260px 0 3140px 110px, clip]{../figures/check_if_worked_axis_1.png}}
-  \subfigure[CTVp]{\includegraphics[width=.24\linewidth, trim=1890px 0 2510px 110px, clip]{../figures/check_if_worked_axis_1.png}}
-  \subfigure[Parametrium]{\includegraphics[width=.24\linewidth, trim=2520px 0 1880px 110px, clip]{../figures/check_if_worked_axis_1.png}}
-  \subfigure[Uterus]{\includegraphics[width=.24\linewidth, trim=3150px 0 1250px 110px, clip]{../figures/check_if_worked_axis_1.png}}
-  \subfigure[Vagina]{\includegraphics[width=.24\linewidth, trim=3780px 0 620px 110px, clip]{../figures/check_if_worked_axis_1.png}}
-  \subfigure[Combined Labels]{\includegraphics[width=.24\linewidth, trim=4430px 0 0px 140px, clip]{../figures/check_if_worked_axis_1.png}\label{fig:combined-labels-region-based}}
-  
-  \includegraphics[width=\linewidth]{../figures/check_if_worked_axis_1_legend.png}
-
-  \caption{New IDs generated for a single slice as a consequence of practical experience show non-conformity to rules in Section~\ref{sec:rules}. TODO make legend larger}\label{fig:check-if-worked-axis-1}
-\end{figure}
-
-The natural extension of separate training is to consider training each class simultaneously. Region-based training is a noninvasive method offered by the nnUNet. This training style combines the 3D segmentation maps for each of the seven classes into one 3D segmentation by introducing new IDs wherever there is a new overlap.
-
-A sensible and calibrated set of ids could be drawn based on the rules in Section~\ref{sec:rules}. However, practical experience and the recalcitrant and challenging nature of defining logical expressions to generalize something as complex as organs and something as fuzzy as microscopic cancer spread mean that, in practice, these rules cannot be implemented strictly.
-
-Please refer to Equation~\ref{eq:ctvn-ctvp-anorectum} ``There should be no overlap between the CTVn, CTVp or Anorectum''. We see marginal overlap between the structures in Figure~\ref{fig:combined-labels-region-based} in ids 55, 94. These are almost not visible on the figure, but captured by the legend. We can conclude that these rules are not strictly followed in practice, but that for generalisation, the rules should be implemented.
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Results and Discussion}\label{sect:results}\label{sect:discussion}
