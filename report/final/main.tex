@@ -114,11 +114,23 @@ Therefore, because the HU scale is relative, different windows may be taken for 
 
 \subsection{Radiotherapy Planning}\label{sect:radiotherapy-planning}
 
-\begin{warning}
-  Perhaps, include a graph to visualse target volumes visually
-\end{warning}
+\begin{figure}[H]
+  \subfigure[GTV]{
+    \includegraphics[width=.23\linewidth, trim=35 905 562 40, clip]{../figures/planning-areas.jpeg}\label{fig:gtv}
+  }
+  \subfigure[GTV macroscopic]{
+    \includegraphics[width=.23\linewidth, trim=562 905 35 40, clip]{../figures/planning-areas.jpeg}\label{fig:gtv-macroscopic}
+  }
+  \subfigure[CTV microscopic]{
+    \includegraphics[width=.23\linewidth, trim=45 443 562 510, clip]{../figures/planning-areas.jpeg}\label{fig:ctv-microscopic}
+  }
+  \subfigure[PTV area]{
+    \includegraphics[width=.23\linewidth, trim=562 443 48 510, clip]{../figures/planning-areas.jpeg}\label{fig:ptv-area}
+  }
+  \caption{Simplified representation of the clinical target volumes. Figure~\ref{fig:gtv-macroscopic} shows the visible tumor, Figure~\ref{fig:ctv-microscopic} shows microscopic spread of the tumor, Figure~\ref{fig:ptv-area} shows area to account for short-term organ misalignment.}\label{fig:planning-areas}
+\end{figure}
 
-Oncologist use the CT scans to draw clinical volumes by combining their knowledge about the particular cancer to determine target structures, organs-at-risk structures, and areas where the cancer will likely spread to~\cite{AMLART-data}. 
+Oncologist use the CT scans to draw clinical volumes by combining their knowledge about the particular cancer to determine target structures, organs-at-risk structures, and areas where the cancer will likely spread to~\cite{AMLART-data}. We provide a simplified representation on Figure~\ref{fig:planning-areas}.
 
 The first area is the macroscopic delineated area of the visible tumour area. This Gross Target Volume (GTV) has a high probability of containing the tumour. Secondly, the Clinical Target Volume (CTV) is derived to account for potential microscopic spread. The CTV will be an area at least as big as the GTV with an optional margin surrounding it containing a 'rind' of non-zero probability of tumour spread. Lastly, the Primary Target Volume (PTV) contains residual geometric uncertainties and safety margins surrounding the CTV, ensuring the radiotherapy dose gets delivered to the CTV~\cite{tumor-delineation,defining-target-volumes,Lin2021-oz,personalised-PTV-strategies}. The PTV is a necessary extension of the CTV since geometric uncertainties are impossible and not advised to eliminate; after all, static scans are only estimations, subject to short-term organ misalignment, relative movement between structures of reference and tumours, partial volume effects and skewed anisotropic resolution~\cite{VANHERK200452}.
 
