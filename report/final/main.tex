@@ -527,7 +527,7 @@ Many-shot models can generalize to unseen tasks with many examples. The nnUNet b
 
 Improvements over the transfer from models trained on other domains could hypothetically allow the segmentation of delineated areas more accurately. To investigate this claim, we iterate over the three types of shot learning, zero-shot, few-shot, and many-shot learning, to determine the effectiveness of transfer learning in the radiotherapy domain.
 
-\section{nnUNet baseline}
+\section{Baseline -- nnUNet}
 
 The provided examples of the objective are enough to train an nnUNet model from scratch to segment anatomy and radiotherapy target volumes accurately. This nnUNet model has been shown to provide more robust results in external stress tests than other comparable architectures on a set of different datasets~\cite{isensee2024nnunet}. Also, in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}.
 
@@ -544,6 +544,8 @@ Therefore, the nnUNet avoids this complication by processing voxel properties en
 The default strategy is to consider each anatomy separately and attempt to learn segmentation patterns without considering constraints mentioned in Section~\ref{sec:rules}. These models can be used in an ensemble system to produce thorough segmentations of the target volumes, oblivious to clinical constraints. 
 
 This will act as the baseline capabilities of models with no transfer of knowledge.
+
+% TODO folds and validation
 
 \section{Many-shot Transfer -- TotalSegmentator}
 
@@ -590,6 +592,23 @@ We hypothesise that although the baseline model attempts to approximate the grou
 \end{figure}
 
 \section{Few-shot Transfer -- UniverSeg}
+
+UniverSeg operates on 2-dimensional data. As a result, to provide automatic radiotherapy planning volumes, it is essential to provide slices for the model as input alongside a sufficient support size of similar slices. 
+
+However, for an unseen example, the location of the tumour can only be determined by referring to assisting models that provide estimates. In a secluded environment where only one's model transferability is assessed, we instead analyse the properties of the tumour from the examples.
+
+We begin by analysing the tumour locations along each axis. The intuition is that the normalised images of equal dimensions and spacings should contain the tumour at approximately the same location. Figure~\ref{fig:start-end-distribution-universeg} shows the distribution of start and end slices for the tumor and the corresponding sampled support set.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.8\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_0_anorectum.png}
+  \includegraphics[width=\linewidth, trim=0 0 340px 0, clip]{../../research/source/code/UniverSeg/support_anorectum_axis_0.png}
+  % \subfigure[]{\includegraphics[width=.45\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_1_anorectum.png}}
+  % \subfigure[]{\includegraphics[width=.45\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_2_anorectum.png}}
+  \caption{The distribution of the start and ending slices of the tumor in a normalized batch of images across axes 0 (axial dimension) and the corresponding sampled support extracted.}\label{fig:start-end-distribution-universeg}
+\end{figure}
+
+Images are normalized to match UniverSeg's training properties. Specifically image intensities are clipped to the range $[-500, 1000]$ and normalize to be between $[0,1]$ and finally scaled down to a $128 \times 128$ resolution~\cite{universeg}.
 
 \section{Zero-shot Transfer -- MedSAM}
 
