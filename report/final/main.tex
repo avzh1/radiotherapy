@@ -532,7 +532,7 @@ Improvements over the transfer from models trained on other domains could hypoth
 
 The provided examples of the objective are enough to train an nnUNet model from scratch to segment anatomy and radiotherapy target volumes accurately. This nnUNet model has been shown to provide more robust results in external stress tests than other comparable architectures on a set of different datasets~\cite{isensee2024nnunet}. Also, in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}.
 
-\subsection{Normalization}
+\subsection{Preprocessing}
 
 Prior to training, necessary normalization must take place to standardize each input. Firstly, CT scans can produce results for different spacings, resolutions, and dimensions. Because the model samples data in batches, the batch properties must align within the model's body. Therefore, the fingerprint taken by the preprocessing pipeline resamples input data towards the median dimension. 
 
@@ -596,13 +596,13 @@ We hypothesise that although the baseline model attempts to approximate the grou
 
 UniverSeg operates on 2-dimensional data. As a result, to provide automatic radiotherapy planning volumes, it is essential to provide slices for the model as input alongside a sufficient support size of similar slices. 
 
-\subsubsection{Normalization}
+\subsection{Preprocessing}
 
 Images are normalized to match UniverSeg's training properties. Specifically image intensities are clipped to the range $[-500, 1000]$ and normalize to be between $[0,1]$ and finally scaled down to a $128 \times 128$ resolution~\cite{universeg}.
 
 For the purpose of the experiment, this was repeated along each axis to produce a
 
-\subsubsection{Selecting support}
+\subsection{Selecting support}
 
 \begin{figure}[H]
   \centering
