@@ -76,7 +76,7 @@ We therefore analyse the effectiveness of Transfer Learning in radiotherapy plan
 
 \section{Objective and Methodology}
 
-Firstly, we select a dataset from The Royal Marsden Hospital, which will act as the pillar for advocating the success and use of transfer learning in radiotherapy planning. The real-world clinical dataset segments key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the widespread segmentation challenges and has uncommon and limited segmentation patterns.
+Firstly, we select a dataset from The Royal Marsden Hospital, which will act as the pillar for advocating the success and use of transfer learning in radiotherapy planning. The real-world clinical dataset segments key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the widespread segmentation challenges and has uncommon and limited segmentation patterns specified by internal team-wide guidelines.
 
 Secondly, we analyse the effectiveness of Transfer learning in radiotherapy planning. To research the application of this technique in the medical context, we study three types of modern training approaches to study their transferability. These types are zero-shot, few-shot, and many-shot learning transfers, which are modern extensions for segmentation tasks thanks to the development of generative NLP applications.
 
@@ -183,112 +183,24 @@ The clinicians at the Royal Marsden Hospital have provided segmentation labels f
 
 \subsubsection{Organs At Risk}\label{sec:data-organs-at-risk}
 
-\begin{figure}[H]
-  \centering
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Axial.png}\label{fig:example-anorectum-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Coronal.png}\label{fig:example-anorectum-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Sagittal.png}\label{fig:example-anorectum-sagittal}
-  }
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Axial.png}\label{fig:example-bladder-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Coronal.png}\label{fig:example-bladder-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Sagittal.png}\label{fig:example-bladder-sagittal}
-  }
-  \caption{Views of the segmentation (in red) of the Anorectum (\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}) and  the segmentation (in red) of the Bladder (\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}) of an arbitrary patient}
-\end{figure}
-
 An organ at risk is an organ that, despite being healthy, is substantially likely to be within the PTV. Any areas created around the area should actively avoid these organs because overlapping with them risks complicating treatment and compromising the health of functioning organs. The key supplied anatomies at risk are the  Anorectum (Figure~\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}) and the Bladder (Figure~\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}).
 
 \subsubsection{CTVp}\label{sec:data-CTVp}
 
-\begin{figure}[H]
-  \centering
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Axial.png}\label{fig:example-CTVp-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Coronal.png}\label{fig:example-CTVp-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Sagittal.png}\label{fig:example-CTVp-sagittal}
-  }
-  \caption{Views of a segmented (in red) CTVp of an arbitrary patient}\label{fig:example-CTVp}
-\end{figure}
-
 The CTVp stands for the Primary Clinical Target Volume; see the example at Figure~\ref{fig:example-CTVp}. This is an area comprised from areas where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour)~\cite{AMLART-data}.
 
 \subsubsection{CTVn}\label{sec:data-CTVn}
-
-\begin{figure}[H]
-  \centering
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Axial.png}\label{fig:example-CTVn-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Coronal.png}\label{fig:example-CTVn-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Sagittal.png}\label{fig:example-CTVn-sagittal}
-  }
-  \caption{Views of a segmented (in red) CTVn of an arbitrary patient}\label{fig:example-CTVn}
-\end{figure}
 
 The CTVn stands for Nodal Clinical Target Volume; see the example at Figure~\ref{fig:example-CTVn}. This CTV surrounds areas that may contain microscopic spread to lymph nodes. It is drawn based on set margins around pelvic blood vessels and includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes~\cite{AMLART-data}.
 
 Similarly to CTVp, this is a compound area with three groups of lymph nodes. In clinical practice, the number of these groups in the CTV varies in each patient, depending on the advanced disease. % TODO: reference notes? They say that depending on the development of the disease, different patients may get different extents of contouring of this structure.
 However, in contrast to the CTVp, this area is drawn depending on the development of the disease.
 
-\subsubsection{Parametrium}\label{sec:data-Parametrium}
-
-\begin{figure}[H]
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Axial.png}\label{fig:example-Parametrium-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Coronal.png}\label{fig:example-Parametrium-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Sagittal.png}\label{fig:example-Parametrium-saggital}
-  }
-  \caption{Views of a segmented (in red) Parametrium of an arbitrary patient}\label{fig:example-Parametrium}
-\end{figure}
+\subsubsection{Parametrium, Vagina, and Uterus}\label{sec:data-Parametrium}
 
 The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina at risk of local spread; see Figure~\ref{fig:example-Parametrium}. The Parametrium is drawn as a complete structure and edited back to the level of the vagina to be included~\cite{AMLART-data}.
 
-\subsubsection{Vagina and Uterus}
-
-\begin{figure}[H]
-  \centering
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Axial.png}\label{fig:example-uterus-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Coronal.png}\label{fig:example-uterus-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Sagittal.png}\label{fig:example-uterus-sagittal}
-  }
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Axial.png}\label{fig:example-vagina-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Coronal.png}\label{fig:example-vagina-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Sagittal.png}\label{fig:example-vagina-sagittal}
-  }
-  \caption{Views of the segmentation (in red) of the Uterus (\ref{fig:example-uterus-axial}-\ref{fig:example-uterus-sagittal}) and  the segmentation (in red) of the Vagina (\ref{fig:example-vagina-axial}-\ref{fig:example-vagina-sagittal}) of an arbitrary patient}
-\end{figure}
-The final structures are the Vagina and Uterus, their clinical significance is to help define encapsulating structures like the CTVn (see Section~\ref{sec:rules}).
+Finally, the clinical significane of the Vagina and Uterus is to help define encapsulating structures like the CTVn (see Section~\ref{sec:rules}). Example for the Uterus and Vagina structures can be seen at Figure~\ref{fig:example-uterus-axial}-~\ref{fig:example-anorectum-sagittal} and Figure~\ref{fig:example-vagina-axial}-~\ref{fig:example-vagina-sagittal} respectively.
 
 \subsection{Rules}\label{sec:rules}
 
@@ -866,6 +778,109 @@ However, it is too early to take the results of the medical tool as gospel. For 
 Clinicians can fall into the trap of automation bias as AI becomes more commonplace in clinical environments~\cite{STRAW2020101965}. However, many models of this age codify the existing bias in common cases, which often will fail those patients who do not fit the majority's expectations. 
 
 Therefore, before integrating tools into workflows, a committee must establish the degree of supervision required from physicians if this tool is to be used in practice. Currently, oncologists will be required to reverse-engineer the `black box' results to verify why a decision has been made. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+\appendix
+
+\chapter{Appendix}
+
+\section{Ground Truth Organ Delineations}
+
+\subsection{Organs At Risk}
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Axial]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Axial.png}\label{fig:example-anorectum-axial}
+  }
+  \subfigure[Coronal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Coronal.png}\label{fig:example-anorectum-coronal}
+  }
+  \subfigure[Sagittal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Sagittal.png}\label{fig:example-anorectum-sagittal}
+  }
+  \subfigure[Axial]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Axial.png}\label{fig:example-bladder-axial}
+  }
+  \subfigure[Coronal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Coronal.png}\label{fig:example-bladder-coronal}
+  }
+  \subfigure[Sagittal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Sagittal.png}\label{fig:example-bladder-sagittal}
+  }
+  \caption{Views of the segmentation (in red) of the Anorectum (\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}) and  the segmentation (in red) of the Bladder (\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}) of an arbitrary patient}
+\end{figure}
+
+\subsection{CTV volumes}
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Axial]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Axial.png}\label{fig:example-CTVp-axial}
+  }
+  \subfigure[Coronal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Coronal.png}\label{fig:example-CTVp-coronal}
+  }
+  \subfigure[Sagittal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Sagittal.png}\label{fig:example-CTVp-sagittal}
+  }
+  \caption{Views of a segmented (in red) CTVp of an arbitrary patient}\label{fig:example-CTVp}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Axial]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Axial.png}\label{fig:example-CTVn-axial}
+  }
+  \subfigure[Coronal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Coronal.png}\label{fig:example-CTVn-coronal}
+  }
+  \subfigure[Sagittal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Sagittal.png}\label{fig:example-CTVn-sagittal}
+  }
+  \caption{Views of a segmented (in red) CTVn of an arbitrary patient}\label{fig:example-CTVn}
+\end{figure}
+
+\subsection{Parametrium, Uteurs, and Vagina}
+
+\begin{figure}[H]
+  \subfigure[Axial]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Axial.png}\label{fig:example-Parametrium-axial}
+  }
+  \subfigure[Coronal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Coronal.png}\label{fig:example-Parametrium-coronal}
+  }
+  \subfigure[Sagittal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Sagittal.png}\label{fig:example-Parametrium-saggital}
+  }
+  \caption{Views of a segmented (in red) Parametrium of an arbitrary patient}\label{fig:example-Parametrium}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Axial]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Axial.png}\label{fig:example-uterus-axial}
+  }
+  \subfigure[Coronal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Coronal.png}\label{fig:example-uterus-coronal}
+  }
+  \subfigure[Sagittal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Sagittal.png}\label{fig:example-uterus-sagittal}
+  }
+  \subfigure[Axial]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Axial.png}\label{fig:example-vagina-axial}
+  }
+  \subfigure[Coronal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Coronal.png}\label{fig:example-vagina-coronal}
+  }
+  \subfigure[Sagittal]{
+    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Sagittal.png}\label{fig:example-vagina-sagittal}
+  }
+  \caption{Views of the segmentation (in red) of the Uterus (\ref{fig:example-uterus-axial}-\ref{fig:example-uterus-sagittal}) and  the segmentation (in red) of the Vagina (\ref{fig:example-vagina-axial}-\ref{fig:example-vagina-sagittal}) of an arbitrary patient}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
