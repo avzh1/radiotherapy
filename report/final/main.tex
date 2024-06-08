@@ -59,11 +59,25 @@
 
 \section{Technical Context}
 
-% To mention: Medical Image Segmentation is currently dominated by deep convolutional neural networks (CNNs). However, each segmentation benchmark seems to require specialized architectures and training scheme modifications to achieve competi- tive performance [1,2,3,4,5]. This results in huge amounts of publications in the field that, alongside often limited validation on only few or even just a single dataset, make it increasingly difficult for researchers to identify methods that live up to their promised superiority beyond the limited scenarios they are demon- strated on~\cite{nnunet}
+Currently, there is a gap in technical research surrounding the transfer of knowledge in the radiotherapy planning domain. An accrual of literature across PubMed in 2023-2024 was conducted with the following search string.
 
-% In many biomedical applications, only very few images are required to train a network that generalizes reasonably well. This is because each image already comprises repetitive structures with corresponding variation~\cite{DBLP:journals/corr/CicekALBR16}.
+\begin{lstlisting}
+ ``radiotherapy'' AND ``contour'' AND (``cervix'' OR ``cervical'') AND ``cancer'' AND (``Deep Learning'' OR ``DeepLearning'' OR ``Machine Learning'' OR ``ML'' OR ``Artificial Intelligence'' OR ``AI'' OR ``Computer assisted'')  
+\end{lstlisting}
 
-\section{Objectives and Contributions}
+The most common approach for segmentation resulting from the accrual was the U-Net architecture~\cite{Samarasinghe2021-ps}. However, each segmentation benchmark required modifications such as specialized architectures or bespoke training schemes to achieve competitive performance. These tailored modifications contribute little to the overall development in medical segmentation~\cite{isensee2024nnunet}, as it becomes increasingly challenging for researchers to identify methods that live up to their promised superiority beyond the limited scenarios they are demonstrated on~\cite{nnunet}.
+
+The publications from the accrual also reveal that the bespoke trained model assumes a sufficient sample size, representing the entire population of all individuals under the same circumstances. However, the underrepresented users of these models cannot apply this assumption; most hospital teams work in a specialized medical field with only in-house patients who follow specific hospital guidelines. A simple plug-and-play approach is unsuitable in this scenario because segmentation guidelines often differ between facilities. Therefore, specific recalibration is necessary to effectively use these models because incorrect or inaccurate contours are the primary factors contributing to treatment failures in radiotherapy~\cite{Rhee2020-ms}.
+
+We therefore analyse the effectiveness of Transfer Learning in radiotherapy planning. The Transfer Learning approach aims to leverage other trained models with great performance and lift low-level features for the target domain. A PubMed search for publications mentioning transfer learning in the radiotherapy planning field returned no relevant matches. Therefore, research in transfer in the medical domain will also fill the literature gap, which has yet to consider solving the auto-contouring problem for radiotherapy planning volumes. 
+
+\section{Objective and Methodology}
+
+Firstly, we select a dataset from The Royal Marsden Hospital, which will act as the pillar for advocating the success and use of transfer learning in radiotherapy planning. The real-world clinical dataset segments key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the widespread segmentation challenges and has uncommon and limited segmentation patterns.
+
+Secondly, we analyse the effectiveness of Transfer learning in radiotherapy planning. To research the application of this technique in the medical context, we study three types of modern training approaches to study their transferability. These types are zero-shot, few-shot, and many-shot learning transfers, which are modern extensions for segmentation tasks thanks to the development of generative NLP applications.
+
+\section{Results and Conclusions}
 
 \section{Outline of Report}
 
@@ -82,7 +96,7 @@ In this section, we discuss the clinical context behind cervical cancer in the p
 
 \subsection{Cervical Cancer}\label{sect:cervical-cancer}
 
-Cancer is a burden around the globe that has been a driver for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer for 157 countries in 2022~\cite{Global-cancer-2022}. Furthermore, an estimated 1 million maternal orphans who lose their mothers to cancer suffer long-term disadvantages in health and education~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}, which inspires further complete clinical understanding of the disease. Paired with quality improvements offered by medical imaging models, the motivation for total control over cervical cancer drive this research project to explore transfer knowledge in this field. % TODO: have you mentioned that transfer learning is a gap in the field?
+Cancer is a burden around the globe that has been a driver for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer for 157 countries in 2022~\cite{Global-cancer-2022}. Furthermore, an estimated 1 million maternal orphans who lose their mothers to cancer suffer long-term disadvantages in health and education~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}, which inspires further complete clinical understanding of the disease. Paired with quality improvements offered by medical imaging models, this forms the motivation for total control over cervical cancer drive this research project to explore transfer knowledge in this field. % TODO: have you mentioned that transfer learning is a gap in the field?
 
 \subsection{Radiotherapy Treatment}
 
