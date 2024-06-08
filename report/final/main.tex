@@ -59,13 +59,16 @@
 
 \section{Technical Context}
 
-Currently, there is a gap in technical research surrounding the transfer of knowledge in the radiotherapy planning domain. An accrual of literature across PubMed in 2023-2024 was conducted with the following search string.
+Currently, there is a gap in technical research surrounding the transfer of knowledge in the radiotherapy planning domain. 
 
-\begin{lstlisting}
- ``radiotherapy'' AND ``contour'' AND (``cervix'' OR ``cervical'') AND ``cancer'' AND (``Deep Learning'' OR ``DeepLearning'' OR ``Machine Learning'' OR ``ML'' OR ``Artificial Intelligence'' OR ``AI'' OR ``Computer assisted'')  
-\end{lstlisting}
+\begin{figure}[H]
+  \begin{lstlisting}
+    ``radiotherapy'' AND ``contour'' AND (``cervix'' OR ``cervical'') AND ``cancer'' AND (``Deep Learning'' OR ``DeepLearning'' OR ``Machine Learning'' OR ``ML'' OR ``Artificial Intelligence'' OR ``AI'' OR ``Computer assisted'')  
+   \end{lstlisting}
+   \caption{Search string used in PubMed accrual in 2023-2024}\label{fig:pubmed-search-string}  
+\end{figure}
 
-The most common approach for segmentation resulting from the accrual was the U-Net architecture~\cite{Samarasinghe2021-ps}. However, each segmentation benchmark required modifications such as specialized architectures or bespoke training schemes to achieve competitive performance. These tailored modifications contribute little to the overall development in medical segmentation~\cite{isensee2024nnunet}, as it becomes increasingly challenging for researchers to identify methods that live up to their promised superiority beyond the limited scenarios they are demonstrated on~\cite{nnunet}.
+An accrual of literature across PubMed in 2023-2024 was conducted with a search string displayed in Figure~\ref{fig:pubmed-search-string}. The conclusion of the accrual confirmed that the most common network structure for segmentation was the U-Net architecture~\cite{Samarasinghe2021-ps,Lin2021-oz,Sartor2020-et,LIU2020184,Rhee2020-ms,LIU2020172}. However, each segmentation benchmark required modifications such as specialized architectures or bespoke training schemes to achieve competitive performance. These tailored modifications contribute little to the overall development in medical segmentation~\cite{isensee2024nnunet}, as it becomes increasingly challenging for researchers to identify methods that live up to their promised superiority beyond the limited scenarios they are demonstrated on~\cite{nnunet}.
 
 The publications from the accrual also reveal that the bespoke trained model assumes a sufficient sample size, representing the entire population of all individuals under the same circumstances. However, the underrepresented users of these models cannot apply this assumption; most hospital teams work in a specialized medical field with only in-house patients who follow specific hospital guidelines. A simple plug-and-play approach is unsuitable in this scenario because segmentation guidelines often differ between facilities. Therefore, specific recalibration is necessary to effectively use these models because incorrect or inaccurate contours are the primary factors contributing to treatment failures in radiotherapy~\cite{Rhee2020-ms}.
 
