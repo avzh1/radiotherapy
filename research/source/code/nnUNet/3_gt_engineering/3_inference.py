@@ -9,7 +9,7 @@
 
 # ## Setup env variables
 
-# In[8]:
+# In[1]:
 
 
 import os, sys
@@ -17,7 +17,7 @@ dir1 = os.path.abspath(os.path.join(os.path.abspath(''), '..', '..'))
 if not dir1 in sys.path: sys.path.append(dir1)
 
 
-# In[9]:
+# In[2]:
 
 
 from utils.environment import setup_data_vars
@@ -25,7 +25,7 @@ from utils.environment import setup_data_vars
 
 # ## Setup Inference Pipeline
 
-# In[10]:
+# In[3]:
 
 
 import torch
@@ -38,7 +38,7 @@ else:
 device
 
 
-# In[11]:
+# In[4]:
 
 
 def initialise_predictor(model_path, fold):
@@ -66,7 +66,7 @@ def initialise_predictor(model_path, fold):
     return predictor
 
 
-# In[12]:
+# In[5]:
 
 
 def predict_file(input_file, output_file, predictor):
@@ -81,9 +81,14 @@ def predict_file(input_file, output_file, predictor):
 
     predictor.predict_from_files(input_file,
                                  output_file,
-                                 save_probabilities=False, overwrite=False,
-                                 num_processes_preprocessing=2, num_processes_segmentation_export=2,
-                                 folder_with_segs_from_prev_stage=None, num_parts=1, part_id=0)
+                                 save_probabilities=False,
+                                 flatten_prediction=False,
+                                 overwrite=False,
+                                 num_processes_preprocessing=2,
+                                 num_processes_segmentation_export=2,
+                                 folder_with_segs_from_prev_stage=None,
+                                 num_parts=1,
+                                 part_id=0)
 
     # variant 2, use list of files as inputs. Note how we use nested lists!!!
     # predictor.predict_from_files([[file_name]],
@@ -97,11 +102,10 @@ def predict_file(input_file, output_file, predictor):
 # 
 # Running on slurm requires freezing: https://stackoverflow.com/questions/24374288/where-to-put-freeze-support-in-a-python-script
 
-# In[20]:
+# In[6]:
 
 
 import multiprocessing
-import argparse
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()
@@ -110,7 +114,7 @@ if __name__ == '__main__':
 
     class_of_interest = os.environ.get('TotalBinary')
     input_data_path = os.path.join(os.environ.get('nnUNet_raw'), class_of_interest, os.environ.get('data_trainingImages'))
-    output_path = os.path.join(os.environ.get('nnUNet_inference'), class_of_interest, 'nnUNetTrainer_500epochs__nnUNetPlans__3d_fullres')
+    output_path = os.path.join(os.environ.get('nnUNet_inference'), class_of_interest, 'nnUNetTrainer_500epochs__nnUNetPlans__3d_fullres_unflattened')
     model_path = os.path.join(class_of_interest, 'nnUNetTrainer_500epochs__nnUNetPlans__3d_fullres')
 
     folds_for_model = set()
@@ -130,4 +134,26 @@ if __name__ == '__main__':
     
     print(f'predicting from {input_data_path} to {output_path}')
     predict_file(input_data_path, output_path, predictor)
+
+
+# ## Custom predictor
+
+# In[7]:
+
+
+# from nnunetv2.imageio.simpleitk_reader_writer import SimpleITKIO
+# from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
+
+# img, props = SimpleITKIO().read_images([os.path.join(os.environ.get('nnUNet_raw'), os.environ.get('TotalBinary'), os.environ.get('data_trainingImages'), 'zzAMLART_011_0000.nii.gz')])
+
+# ret = predictor.predict_single_npy_array(
+#         input_image = img, 
+#         image_properties = props, 
+#         segmentation_previous_stage = None,
+#         output_file_truncated = None,
+#         save_or_return_probabilities = True,
+#         flatten_prediction = False)
+
+# # iterator = predictor.get_data_iterator_from_raw_npy_data([img], None, [props], None, 1)
+# # ret = predictor.predict_from_data_iterator(iterator, False, 1)
 
