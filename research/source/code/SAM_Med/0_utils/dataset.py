@@ -91,7 +91,8 @@ class SAM_Dataset(Dataset):
             "gt2D": torch.tensor(gt[None, :,:]).long(), # 1x256x256
             "coords": torch.tensor(coords[None, ...]).float(),
             "boxes": torch.tensor(boxes[None, ...]).float(),
-            "image_name": img_name
+            "image_name": img_name,
+            "axis": axis
         }
     
     def _get_image_and_gt_path(self, idx):

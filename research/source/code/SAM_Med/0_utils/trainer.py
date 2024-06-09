@@ -29,10 +29,10 @@ class MedSAMTrainer(object):
         for epoch in range(self.current_epoch, self.epochs):
             self.on_epoch_start(epoch)
 
-            pbar = tqdm(range(self.batches_per_epoch))
-            for batch_id in pbar:
+            pbar = tqdm(enumerate(self.dataloaderHandler.train_loader), total=self.batches_per_epoch)
+            for batch_id, batch in pbar:
                 self.loggingHandler.log('Getting batch {}'.format(batch_id))
-                batch = next(iter(self.dataloaderHandler.train_loader))
+                # batch = next(iter(self.dataloaderHandler.train_loader))
                 dice_loss, ce_loss = self.train_step(batch_id, batch)            
                 
                 pbar.set_description(f"Epoch {epoch}, loss: {dice_loss + ce_loss:.4f}")
@@ -40,10 +40,9 @@ class MedSAMTrainer(object):
             with torch.no_grad():
                 self.on_validation_epoch_start()
                 val_len = min(len(self.dataloaderHandler.val_loader), self.batches_per_epoch) # in debugging batches might be small, so we go with this.
-                pbar = tqdm(range(val_len))
-                for batch_id in pbar:
-
-                    batch = next(iter(self.dataloaderHandler.val_loader))
+                pbar = tqdm(enumerate(self.dataloaderHandler.val_loader), total=val_len)
+                for batch_id, batch in pbar:
+                    
                     dice_loss, ce_loss = self.validation_step(batch_id, batch)
                     
                     pbar.set_description(f"Validating epoch {epoch}, loss: {dice_loss + ce_loss:.4f}")

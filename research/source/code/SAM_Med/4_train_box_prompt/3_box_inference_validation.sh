@@ -6,6 +6,7 @@
 #SBATCH --gres gpu:1                     # gpu:n, where n = number of GPUs
 #SBATCH --mem 35G                        # memory pool for all cores
 #SBATCH --output=logs/slurm.%N.%j.log    # Standard output and error log
+#SBATCH --nodelist monal05
 
 #SBATCH --job-name=MEDSAM.finetune
 
@@ -26,8 +27,8 @@ source ${SOURCE_DIR}/.venv/bin/activate
 # source ${SOURCE_DIR}/data/data_vars.sh
 
 # Convert Python Script
-jupyter nbconvert --to script '1_train_box_prompt.ipynb'
+jupyter nbconvert --to script '3_box_inference_validation.ipynb'
 echo "Converted Python Script"
 
 # Run python script
-python3 1_train_box_prompt.py --anatomy $1 --model_training boxed_lowres --epochs 100 --batch_size=4 --lowres True --batches_per_epoch 200
+python3 3_box_inference_validation.py --anatomy $1

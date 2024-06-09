@@ -177,18 +177,18 @@ print('Preparing to parse args!')
 
 
 # Suppose for now we get the following set of required arguments:
-# args = parser.parse_args([
-#     '--anatomy', 'CTVn',
-#     '--model_training', 'boxed_lowres_test',
-# #     # '--checkpoint', os.path.join(os.environ['PROJECT_DIR'], 'models', 'MedSAM', 'work_dir', 'MedSAM', 'medsam_vit_b.pth'),
-# #     # '--save_dir', os.path.join(os.environ['MedSAM_finetuned']),
-#     '--epochs', '100',
-#     '--batch_size', '2',
-#     '--batches_per_epoch', '2', 
-#     '--lowres', 'True',
-# ])
+args = parser.parse_args([
+    '--anatomy', 'CTVn',
+    '--model_training', 'boxed_lowres',
+#     # '--checkpoint', os.path.join(os.environ['PROJECT_DIR'], 'models', 'MedSAM', 'work_dir', 'MedSAM', 'medsam_vit_b.pth'),
+#     # '--save_dir', os.path.join(os.environ['MedSAM_finetuned']),
+    '--epochs', '100',
+    '--batch_size', '4',
+    '--batches_per_epoch', '200', 
+    '--lowres', 'True',
+])
 
-args = parser.parse_args()
+# args = parser.parse_args()
 
 
 # ## Set up the vars
@@ -279,7 +279,7 @@ dataloaderHandler = DataLoaderHandler(save_dir, img_dir, gt_dir, batch_size, num
 checkpointHandler = CheckpointHandler(save_dir, checkpoint_path, device, lr=lr, weight_decay=weight_decay)
 
 
-# In[9]:
+# In[ ]:
 
 
 myTrainer = MedSAMTrainer(
