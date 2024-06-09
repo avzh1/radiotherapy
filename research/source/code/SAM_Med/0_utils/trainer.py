@@ -31,6 +31,9 @@ class MedSAMTrainer(object):
 
             pbar = tqdm(enumerate(self.dataloaderHandler.train_loader), total=self.batches_per_epoch)
             for batch_id, batch in pbar:
+                if batch_id > self.batches_per_epoch:
+                    break
+
                 self.loggingHandler.log('Getting batch {}'.format(batch_id))
                 # batch = next(iter(self.dataloaderHandler.train_loader))
                 dice_loss, ce_loss = self.train_step(batch_id, batch)            
@@ -42,6 +45,8 @@ class MedSAMTrainer(object):
                 val_len = min(len(self.dataloaderHandler.val_loader), self.batches_per_epoch) # in debugging batches might be small, so we go with this.
                 pbar = tqdm(enumerate(self.dataloaderHandler.val_loader), total=val_len)
                 for batch_id, batch in pbar:
+                    if batch_id > self.batches_per_epoch:
+                        break
                     
                     dice_loss, ce_loss = self.validation_step(batch_id, batch)
                     
