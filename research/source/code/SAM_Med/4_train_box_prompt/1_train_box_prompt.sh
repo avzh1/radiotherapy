@@ -30,4 +30,4 @@ jupyter nbconvert --to script '1_train_box_prompt.ipynb'
 echo "Converted Python Script"
 
 # Run python script
-python3 1_train_box_prompt.py --anatomy $1 --model_training boxed_lowres --epochs 100 --batch_size=4 --lowres True --batches_per_epoch 200
+python3 1_train_box_prompt.py --anatomy $1 --model_training boxed_lowres_2 --epochs 200 --batch_size=4 --lowres True --batches_per_epoch 1000

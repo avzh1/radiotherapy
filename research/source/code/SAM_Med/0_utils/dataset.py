@@ -269,19 +269,28 @@ class SAM_Dataset(Dataset):
             bounding_boxes.append([x - self.box_padding, y - self.box_padding, x + w + self.box_padding, y + h + self.box_padding])  # Format: (x_min, y_min, x_max, y_max)
 
         # Adjust the number of bounding boxes if necessary
-        if len(bounding_boxes) > self.max_box_points:
-            # Sort bounding boxes based on area
-            bounding_boxes = sorted(bounding_boxes, key=lambda bb: (bb[2] - bb[0]) * (bb[3] - bb[1]), reverse=True)
-            bounding_boxes = bounding_boxes[:self.max_box_points]  # Select bounding boxes with the greatest area
-        elif len(bounding_boxes) < self.max_box_points:
-            # Repeat existing bounding boxes to fill in
-            repeat_times = self.max_box_points // len(bounding_boxes)
-            remaining = self.max_box_points % len(bounding_boxes)
-            bounding_boxes = np.tile(bounding_boxes, (repeat_times, 1))
-            # If the number of bounding boxes required is not divisible evenly by the existing ones,
-            # then we append the remaining bounding boxes from the existing ones
-            if remaining > 0:
-                bounding_boxes = np.concatenate((bounding_boxes, bounding_boxes[:remaining]), axis=0)
+        # if len(bounding_boxes) > self.max_box_points:
+        #     # Sort bounding boxes based on area
+        #     bounding_boxes = sorted(bounding_boxes, key=lambda bb: (bb[2] - bb[0]) * (bb[3] - bb[1]), reverse=True)
+        #     bounding_boxes = bounding_boxes[:self.max_box_points]  # Select bounding boxes with the greatest area
+        # elif len(bounding_boxes) < self.max_box_points:
+        #     # Repeat existing bounding boxes to fill in
+        #     repeat_times = self.max_box_points // len(bounding_boxes)
+        #     remaining = self.max_box_points % len(bounding_boxes)
+        #     bounding_boxes = np.tile(bounding_boxes, (repeat_times, 1))
+        #     # If the number of bounding boxes required is not divisible evenly by the existing ones,
+        #     # then we append the remaining bounding boxes from the existing ones
+        #     if remaining > 0:
+        #         bounding_boxes = np.concatenate((bounding_boxes, bounding_boxes[:remaining]), axis=0)
+
+        if len(bounding_boxes) < self.max_box_points:
+            # if we don't have enough bounding boxes, we make randoms samples where duplicates are possible and expected
+            subset = [random.choice(bounding_boxes) for _ in range(self.max_box_points)]
+        else:
+            # if the number of bounding boxes is greater or equal, we sample without replacement
+            subset = random.sample(bounding_boxes, self.max_box_points)
+
+        bounding_boxes = subset
 
         box_mask = np.zeros_like(gt, dtype=bool)
         # set the regions that are inside the bounds of the bounding box to 1 in box_mask
