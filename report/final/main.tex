@@ -525,6 +525,14 @@ A sensible and calibrated set of ids could be drawn based on the rules in Sectio
 
 Please refer to Equation~\ref{eq:ctvn-ctvp-anorectum} ``There should be no overlap between the CTVn, CTVp or Anorectum''. We see marginal overlap between the structures in Figure~\ref{fig:combined-labels-region-based} in ids 55, 94. These are almost not visible on the figure, but captured by the legend. 
 
+When considering the total sample set, the overlap makes up a minimal percentage of the total volume with non-background label classification. Take, for instance, Figure~\ref{fig:illegal_overlap}, which shows all cases of `illegal' overlap found within the samples. The most frequent culprit overlap that breaks the condition is between the CTVn, CTVp and the Uterus, which makes up the most significant proportion of `illegal' overlap. The Uterus is a necessary subset of the CTVp, which implies that this segmentation of CTVp does not include microscopic spread, including in the Cervix and GTVp. By eliminating this style of error from the model, it might be possible to obtain more general segmentations that align with the clinical team's rules.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.7\linewidth]{../figures/percentage_of_illegal_overlap.png}
+  \caption{Total frequency and percentage overlap of non-zero occurrences of `illegal' overlap between the CTVn, CTVp, and Anorectum.}\label{fig:illegal_overlap}
+\end{figure}
+
 \subsubsection{With Rule Enforcement}
 
 We implement the rules with the hypothesis of generalisation despite the rules not strictly followed in practice. Therefore, an augmentation of the nnUNet trainer is necessary to capture this result. Specifically, we introduce an additional loss component dubbed `custom\_loss' during training. This custom loss parameter implements two of the many rules that the Royal Marsden Hospital clinical staff provided. The two rules are thoroughly discussed in Section~\ref{sec:rules} and are Equation~\ref{eq:ctvn-ctvp-anorectum} and Equation~\ref{eq:ctvp2}. 
@@ -604,6 +612,19 @@ For training, only one box may be fed into the model for inference. Therefore, w
   }
   \caption{The process of selection bounding box for a given boxed tumor with an augmented ground truth used at training time for the MedSAM bax-based prompt model.}\label{fig:box-prompt-sam-selection}
 \end{figure}
+
+\subsection{Training Bottlenecks}
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Raw epoch time before optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres/Anorectum/progress.png}}
+  \subfigure[Epoch time after pipeline optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres_2/Anorectum/progress.png}}
+  \caption{Comparison of epoch times for an expensive MedSAM model before and after pipeline optimizations.}\label{fig:training-comparison-med}
+\end{figure}
+
+This model requires three channels of $1024 \times 1024$ image slices, making each input image in its raw state a costly sample to send over the network. Similarly, this makes training on commodity hardware a difficult thing to accomplish. Training times can be very long without adding changes to the training pipeline. Figure~\ref{fig:training-comparison-med} compares training pipelines and performance improvements. 
+
+Firstly, image slices were stored in a $(1 \times 512 \times 512)$ resolution and upsampled before the forward pass. Furthermore, caching stored these smaller images on the training node to avoid repeated and expensive reads over the network. This improved training epoch times by 50 times.
 
 \subsection{Evaluation}
 
@@ -751,10 +772,24 @@ For this project, we shall select an evaluation measurement more biased towards 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Results and Discussion}\label{sect:results}\label{sect:discussion}
 
-% Mention SAM's argument about ignoring small structures
+\section{Baseline -- nnUNet}
+
+% The results of the baseline for each anatomy will be displayed alongside the result of the transfer to make it easier to reason about the effectiveness of the transfer technique. 
+
+
+
+\section{Many-shot Transfer -- TotalSegmentator}
 
 % total segmentator had 500 females to 700 males which may explain the struggle to locate the uterus and vagina.
 
+\section{Few-shot Transfer -- UniverSeg}
+
+\section{Zero-shot Transfer -- MedSAM}
+
+
+
+
+% Mention SAM's argument about ignoring small structures
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Conclusion}
