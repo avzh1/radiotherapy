@@ -95,13 +95,13 @@ Then, Chapter~\ref{sect:methodology} describes the experiments used to evaluate 
 
 \section{Clinical Context}\label{sect:clinical-context}
 
-This project will have its foundation for experimentation in a dataset provided by the Royal Marsden Hospital. The real-world clinical dataset segments key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the widespread segmentation challenges and has uncommon and limited segmentation patterns. This dataset will act as the pillar for justifying the success of the transferability of knowledge between medical domains.
+This project will have its foundation for experimentation in a dataset provided by the Royal Marsden Hospital~\cite{AMLART-data}. The real-world clinical dataset segments key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the widespread segmentation challenges and has uncommon and limited segmentation patterns. This dataset will act as the pillar for justifying the success of the transferability of knowledge between medical domains.
 
 In this section, we discuss the clinical context behind cervical cancer in the population, the Hospital's pipeline for segmenting patients in preparation for radiotherapy treatment, and the Hospital's motivation for recruiting an AI tool to assist in its treatment pipeline. 
 
 \subsection{Cervical Cancer}\label{sect:cervical-cancer}
 
-Cancer is a burden around the globe that has been a driver for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer for 157 countries in 2022~\cite{Global-cancer-2022}. Furthermore, an estimated 1 million maternal orphans who lose their mothers to cancer suffer long-term disadvantages in health and education~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}, which inspires further complete clinical understanding of the disease. Paired with quality improvements offered by medical imaging models, this forms the motivation for total control over cervical cancer drive this research project to explore transfer knowledge in this field. % TODO: have you mentioned that transfer learning is a gap in the field?
+Cancer is a burden around the globe that has been a driver for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer for 157 countries in 2022~\cite{Global-cancer-2022}. Furthermore, an estimated 1 million maternal orphans who lose their mothers to cancer suffer long-term disadvantages in health and education~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}, which inspires further complete clinical understanding of the disease. Paired with quality improvements offered by medical imaging models, this forms the motivation for total control over cervical cancer.
 
 \subsection{Radiotherapy Treatment}
 
@@ -149,7 +149,7 @@ Therefore, because the HU scale is relative, different windows may be taken for 
   \caption{Simplified representation of the clinical target volumes. Figure~\ref{fig:gtv-macroscopic} shows the visible tumor, Figure~\ref{fig:ctv-microscopic} shows microscopic spread of the tumor, Figure~\ref{fig:ptv-area} shows area to account for short-term organ misalignment.}\label{fig:planning-areas}
 \end{figure}
 
-Oncologist use the CT scans to draw clinical volumes by combining their knowledge about the particular cancer to determine target structures, organs-at-risk structures, and areas where the cancer will likely spread to~\cite{AMLART-data}. We provide a simplified representation on Figure~\ref{fig:planning-areas}.
+Oncologists use CT scans to draw clinical volumes by combining their knowledge about the particular cancer to determine target structures, organs-at-risk structures, and areas where the cancer will likely spread to~\cite{AMLART-data}. We provide a simplified representation in Figure~\ref{fig:planning-areas}.
 
 The first area is the macroscopic delineated area of the visible tumour area. This Gross Target Volume (GTV) has a high probability of containing the tumour. Secondly, the Clinical Target Volume (CTV) is derived to account for potential microscopic spread. The CTV will be an area at least as big as the GTV with an optional margin surrounding it containing a 'rind' of non-zero probability of tumour spread. Lastly, the Primary Target Volume (PTV) contains residual geometric uncertainties and safety margins surrounding the CTV, ensuring the radiotherapy dose gets delivered to the CTV~\cite{tumor-delineation,defining-target-volumes,Lin2021-oz,personalised-PTV-strategies}. The PTV is a necessary extension of the CTV since geometric uncertainties are impossible and not advised to eliminate; after all, static scans are only estimations, subject to short-term organ misalignment, relative movement between structures of reference and tumours, partial volume effects and skewed anisotropic resolution~\cite{VANHERK200452}.
 
@@ -163,11 +163,11 @@ The final volumes have no internationally agreed-upon guidelines, which leaves i
 
 \subsection{Data Aquisition}
 
-The Royal Marsden Hospital provides the dataset as a set of `Neuroimaging Informatics Technology Initiative' files (NIfTI)~\cite{file-formats}. It is a lightweight alternative to other formats such as DICOM and eliminates ambiguity from spatial orientation information~\cite{dicom-to-nifti-conversion}. Libraries exist for handling these files, such as SimpleITK~\cite{SimpleITK-paper}, which we use to read and manipulate the data in this project. % The library reads, manipulates, and handles the image as a set of points in a grid occupying a physical region in space defined by the metadata to remove ambiguity from the origin, size, spacing, and so on that might vary between patient scans.
+The Royal Marsden Hospital provides the dataset as a set of `Neuroimaging Informatics Technology Initiative' files (NIfTI)~\cite{file-formats}. It is a lightweight alternative to other formats such as DICOM (Digital Imaging and Communications in Medicine)~\cite{file-formats} and eliminates ambiguity from spatial orientation information~\cite{dicom-to-nifti-conversion}. Libraries exist for handling these files, such as SimpleITK~\cite{SimpleITK-paper}, which we use to read and manipulate the data in this project. % The library reads, manipulates, and handles the image as a set of points in a grid occupying a physical region in space defined by the metadata to remove ambiguity from the origin, size, spacing, and so on that might vary between patient scans.
 
 The training data provides one hundred female patients that have been diagnosed with similar types of cervical cancer. Each patient comes with seven relevant segmentation classes which contribute to radiotherapy planning for cervical cancer. For reproducibility, all delineated anatomies were labelled consistently by the Oncologists to improve chances that an AI model can learn cervical cancer patterns~\cite{AMLART-data}. 
 
-Finally, the dataset comes with ten hold-out data items, which are patients with only the raw CT scan information without labels.
+Finally, the dataset comes with ten held-out data items, which are patients with only the raw CT scan information without labels.
 
 % \subsubsection{Notes}
 
@@ -179,9 +179,7 @@ Finally, the dataset comes with ten hold-out data items, which are patients with
 
 \subsection{Delineation classes}
 
-The clinicians at the Royal Marsden Hospital have provided segmentation labels for seven high-priority regions of interest (roi). These are the Bladder, Anorectum, CTVn, CTVp, Parametrium, Uterus, and Vagina. The function of these anatomies is irrelevant to this project and is left to the reader to research further.
-
-
+The clinicians at the Royal Marsden Hospital have provided segmentation labels for seven high-priority regions of interest (ROI). These are the Bladder, Anorectum, CTVn, CTVp, Parametrium, Uterus, and Vagina. The function of these anatomies is irrelevant to this project and is left to the reader to research further.
 
 \subsubsection{Organs At Risk}\label{sec:data-organs-at-risk}
 
@@ -286,7 +284,7 @@ The top seven priority structures have been selected to identify and plan an are
   \item The CTVn is defined as a compound structure containing:
 
         \begin{equation}
-          C_n = G_n \cup L_i \cup L_p + L_{pa}
+          C_n = G_n \cup L_i \cup L_p \cup L_{pa}
         \end{equation}
 
   Similarly, we are not provided segmentations for these areas, therefore, operating under no clinical knoweldge apart from the provided, cannot make any claims as to the composition of the CTVn.
@@ -295,15 +293,15 @@ The top seven priority structures have been selected to identify and plan an are
 
 \subsection{Motivation in AI}
 
-The medical sector has been a hotbed for AI research since researchers realised they could apply Convolutional Neural Networks (Section~\ref{sect:image-segmentation}) to medical image data. A branch of research dedicated itself to segmentation, which involves labelling individual pixels in the image according to which object or class they belong to. In dense classification, a model assigns every pixel to a specific class. Relevant to the direction of this project is determining the precise location and extent of organs or certain types of tissue, like ORs, CTV volumes, or other anatomies. 
+The medical sector has been a hotbed for AI research since  Convolutional Neural Networks (Section~\ref{sect:image-segmentation}) have been applied on medical image data by researchers. A branch of research dedicated itself to segmentation, which involves labelling individual pixels in the image according to which object or class they belong to. In dense classification, a model assigns every pixel to a specific class. Relevant to the direction of this project is determining the precise location and extent of organs or certain types of tissue, like ORs, CTV volumes, or other anatomies. 
 
-The key objective of models trained for delineating target structures for this project is to see if an AI model can learn cervical cancer CTV pattern detection. The decision is complex as clinicians use information beyond the CT-imaging modality, such as how far along the tumour has progressed, and other clinical intuition to make proper judgements about the CTV volumes. Therefore, with this information missing from AI models, it is likely to misjudge target volumes, and a clinician will have to select which components of the CTV are required. However, a clinician will likely benefit from the time saved and improved consistency with the planning process if a trained model can produce the substructures required within the CTV that a clinician can review~\cite{AMLART-data}.
+The key objective of models trained for delineating target structures for this project is to see if an AI model can learn cervical cancer CTV pattern detection. The decision is complex as clinicians use information beyond the CT-imaging modality, such as how far along the tumour has progressed, and other clinical intuition to make proper judgements about the CTV volumes. Therefore, with this information missing from AI models, it is likely to misjudge target volumes, and a clinician will have to select which components of the CTV are required. However, a clinician will benefit from the time saved and improved consistency with the planning process if a trained model can produce the substructures required within the CTV that a clinician can review~\cite{AMLART-data}.
 
 \section{Machine learning for image segmentation}\label{sect:machine-learning-for-image-segmentation}
 
-Before popularising machine learning algorithms, strict and convoluted rule sets defined algorithms. These heuristically defined algorithms struggled to scale to complex problems and were often complicated or confusing to maintain. The typical task, however, does not warp easily into human intuition.
+Before the popularization of machine learning, algorithms used to be defined by strict and convoluted rules. These heuristically defined algorithms struggled to scale to complex problems and were often complicated or confusing to maintain. The typical task, however, does not warp easily into human intuition.
 
-As a consequence of poor scalability, a new genre of algorithms began to emerge that fell into the classification of neural network models. Observations were rephrased and morphed into vectorised inputs, where each constituent of the vector represented a particular feature of the observation. For instance, the California Housing dataset~\cite{kelleypace1997} contains an input of 9 features (longitude, latitude, number of bathrooms, \dots) and one target feature (house price). After pre-processing and strategising, this input would be vectorised and fed into a network with several layers. Within each layer, sets of tunable parameters would optionally change the number of features and learn a relationship between parameters using weights until the $1 \times 9$ vector finally translates into a scalar value indicating the house price. After many repetitions of learning from examples, the model would learn an approximation to the solution. These models were termed Multi-Layered Perceptrons (MLPs).
+As a consequence of poor scalability, a new genre of algorithms began to emerge that fell into the classification of neural network models. Observations were rephrased and morphed into vectorised inputs, where each constituent of the vector represented a particular feature of the observation. For instance, the California Housing dataset~\cite{kelleypace1997} contains an input of 9 features (longitude, latitude, number of bathrooms, \dots) and one target feature (house price). After pre-processing and strategising, this input would be vectorised and fed into a network with several layers. Within each layer, sets of tunable parameters would optionally change the number of features and learn a relationship between parameters using weights until the $1 \times 9$ vector finally translates into a scalar value indicating the house price. After many repetitions of learning from examples, the model would learn an approximation to the complex objective. These models were termed Multi-Layered Perceptrons (MLPs).
 
 \subsection{Image Segmentation}\label{sect:image-segmentation}
 
@@ -314,7 +312,7 @@ At the same time, J. Hull, sponsored by the United States Postal Service, publis
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{../figures/sobel.png}
-  \caption{Example application of a convolution. From left to right, the input image with a region outlined in a red box, the boxed region magnified with a convolutional (sobel) filter being applied to a part of the magnified region, and lastly the output after the filter has passed over the entire image. The output represents a new feature map encoding features of the original (input) feature.}\label{fig:sobel}
+  \caption{Example application of a convolution. From left to right, the input image with a region outlined in a red box, the boxed region magnified with a convolutional (Sobel) filter being applied to a part of the magnified region, and lastly the output after the filter has passed over the entire image. The output represents a new feature map encoding features of the original (input) feature.}\label{fig:sobel}
 \end{figure}
 
 Convolutional layers are rectangular blocks that are recipes for translating an image (alternatively known as the input feature). The algorithm centres the block over a specific pixel and uses a square radius of neighbouring pixels. It multiplies and sums the pixels along the corresponding pixel positions according to the recipe to produce a transformed resulting pixel that encodes the reference pixel's information and the surrounding receptive field around it. Figure~\ref{fig:sobel} demonstrates this concept. Specifically the middle tile, which shows an example $3 \times 3$ convolutional filter being applied to a zoomed in part of the image. This filter slides across the entire image and encodes it which produces the output on the right of Figure~\ref{fig:sobel}. 
@@ -346,6 +344,8 @@ The strategy of downsampling and upsampling for image segmentation is a common t
 Simultaneously, a unique architecture was under development. This architecture mirrored the hourglass structure of contracting and upsampling sections of the FCN, only this time, the illustration of its architecture led to its name, the U-Net~\cite{U-Net}.
 
 The U-Net similarly consists of a contractive and expansive side, with the added feature of so-called `skip-connections'. As shown in Figure~\ref{fig:unet}, at each stage of the contracting/expansive side, these copy operations help localise high-resolution features from the contracting path~\cite{U-Net}. The network yielded great results for a few training images and more precise segmentations.
+
+% TODO: skip connections glue the output of previous layer on
 
 The U-Net was now very close to being a staple choice in biomedical data for anatomy segmentation. A limitation of its current implementation is that slices along the third dimension would most certainly contain contextual information that would influence the decision of the current design. Therefore, an identical network topology with extended 3D convolutions was proposed by \c{C}i{\c{c}}ek et al.~\cite{DBLP:journals/corr/CicekALBR16}.
 
@@ -383,7 +383,7 @@ Convolutional architectures like those discussed above utilize many-shot learnin
   \caption{The UniverSeg architecture~\cite{universeg}. Diagram illustrates the freezing of model parameters while providing a support set of images which follows the query image through the segmentation pipeline.}\label{fig:universeg}
 \end{figure}
 
-Butoi et al. present UniverSeg, a model that breaks away from the traditional approach; instead of training a model on a single task (e.g. bone delineation) and freezing parameters during inference, this architecture uses a support set of images to provide a practical few-shot approach to inferring segmentations from input images. Figure~\ref{fig:universeg} shows an example of this efficient querying, which manifests itself in a U-Net architecture where the support set passes through the network along the query to influence the final segmentation. This way, Butoi et al. attempt to provide segmentation on a target image based on examples of other samples with the same anatomy contoured in a selection of other images. This way, the model can learn to segment both bone and organ segmentation tasks without the need for fine-tuning~\cite{universeg}.
+Butoi et al. present UniverSeg, a model that breaks away from the traditional approach; instead of training a model on a single task (e.g. bone delineation) and freezing parameters during inference, this architecture uses a support set of images to provide a practical few-shot approach to inferring segmentations from input images. Figure~\ref{fig:universeg} shows an example of this efficient querying, which manifests itself in a U-Net architecture where the support set passes through the network along the query to influence the final segmentation. This way, Butoi et al. attempt to provide segmentation on a target image based on examples of other samples with the same anatomy contoured in a selection of other images. Therefore, the model can learn to segment both bone and organ segmentation tasks without the need for fine-tuning~\cite{universeg}.
 
 This model operates on 2D slices of images and directly avoids the finetuning argument for medical imaging. They argue that finetuning can be unhelpful due to the differences between medical domains, features, and data fingerprints. As such, UniverSeg avoids significant retaining for each subtask.
 
@@ -406,7 +406,7 @@ This model operates on 2D slices of images and directly avoids the finetuning ar
 Advances in NLP, with attention-based mechanisms, have questioned whether convolutional-based methods like those above are the best approach for segmentation. Transformers from NLP were adapted to form the Vision Transformer (ViT)~\cite{ViT}. This model views the image as a grid of tokens; in the original paper, Dosovitskiy et al. separate the image into a grid of patches and read in these grid cells as individual tokens. The tokens pass through the attention mechanism as with NLP and into a classification mechanism~\cite{ViT}. 
 
 % TODO search and replace normalize -> normalise
-The SAM model implemented a modification of the transformer architecture~\cite{SAM} as seen in Figure~\ref{fig:sam}. However, the task was reformulated as a promotable segmentation problem to allow for zero-shot generalisation (the model can generalise to unseen examples with no re-training or fine-tuning). As seen in Figure~\ref{fig:sam}, the model inputs an image along with either points in the image or boxes. This reduces the search space SAM has to perform to segment an object into an area or a set of points.
+The SAM (Segment Anything Model) model implemented a modification of the transformer architecture~\cite{SAM} as seen in Figure~\ref{fig:sam}. However, the task was reformulated as a promotable segmentation problem to allow for zero-shot generalisation (the model can generalise to unseen examples with no re-training or fine-tuning). As seen in Figure~\ref{fig:sam}, the model inputs an image along with either points in the image or boxes. This reduces the search space SAM has to perform to segment an object into an area or a set of points.
 
 \subsection{MedSAM}\label{sect:medsam}
 
@@ -613,19 +613,6 @@ For training, only one box may be fed into the model for inference. Therefore, w
   \caption{The process of selection bounding box for a given boxed tumor with an augmented ground truth used at training time for the MedSAM bax-based prompt model.}\label{fig:box-prompt-sam-selection}
 \end{figure}
 
-\subsection{Training Bottlenecks}
-
-\begin{figure}[H]
-  \centering
-  \subfigure[Raw epoch time before optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres/Anorectum/progress.png}}
-  \subfigure[Epoch time after pipeline optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres_2/Anorectum/progress.png}}
-  \caption{Comparison of epoch times for an expensive MedSAM model before and after pipeline optimizations.}\label{fig:training-comparison-med}
-\end{figure}
-
-This model requires three channels of $1024 \times 1024$ image slices, making each input image in its raw state a costly sample to send over the network. Similarly, this makes training on commodity hardware a difficult thing to accomplish. Training times can be very long without adding changes to the training pipeline. Figure~\ref{fig:training-comparison-med} compares training pipelines and performance improvements. 
-
-Firstly, image slices were stored in a $(1 \times 512 \times 512)$ resolution and upsampled before the forward pass. Furthermore, caching stored these smaller images on the training node to avoid repeated and expensive reads over the network. This improved training epoch times by 50 times.
-
 \subsection{Evaluation}
 
 During training, the test set is divided by ID to ensure that a portion of an image is not both trained and validated. This way, the model's transferability is not questioned because it is trained on a disjoint set of patients; otherwise, quantitative measurements would skew and not represent the model's adaptability to unseen data.
@@ -786,7 +773,22 @@ For this project, we shall select an evaluation measurement more biased towards 
 
 \section{Zero-shot Transfer -- MedSAM}
 
+\subsection{Training Bottlenecks}
 
+\begin{figure}[H]
+  \centering
+  \subfigure[Raw epoch time before optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres/Anorectum/progress.png}}
+  \subfigure[Epoch time after pipeline optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres_2/Anorectum/progress.png}}
+  \caption{Comparison of epoch times for an expensive MedSAM model before and after pipeline optimizations.}\label{fig:training-comparison-med}
+\end{figure}
+
+This model requires three channels of $1024 \times 1024$ image slices, making each input image in its raw state a costly sample to send over the network especially after considering that each channel is a duplicate to match the requirements of the SAM model. This makes training on commodity hardware a difficult thing to accomplish. Training times can be very long without adding changes to the training pipeline. Figure~\ref{fig:training-comparison-med} compares training pipelines and performance improvements. 
+
+Firstly, image slices were stored in a $(1 \times 512 \times 512)$ resolution and upsampled before the forward pass. Furthermore, caching~\cite{charlie-caching} stored these smaller images on the training node to avoid repeated and expensive reads over the network. This improved training epoch times by 50 times.
+
+\subsection{Point Based Transfer}
+
+\subsection{Box Based Transfer}
 
 
 % Mention SAM's argument about ignoring small structures
