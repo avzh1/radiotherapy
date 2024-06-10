@@ -485,9 +485,7 @@ Therefore, the nnUNet avoids this complication by processing voxel properties en
 
 The default strategy is to consider each anatomy separately and attempt to learn segmentation patterns without considering constraints mentioned in Section~\ref{sec:rules}. These models can be used in an ensemble system to produce thorough segmentations of the target volumes, oblivious to clinical constraints. 
 
-This will act as the baseline capabilities of models with no transfer of knowledge.
-
-% TODO folds and validation
+We set up the learning pipeline to follow a five-fold cross-validation process. Each fold involves splitting the data into five subsets. Then, the model is trained on four subsets and validated on the fifth subset. The process repeats for each of the five subsets, with each subset used exactly once as the validation set. Cross-validation helps assess the model's performance and generalize it to new data. Ultimately, the model with the best validation performance represents the anatomy.
 
 \section{Many-shot Transfer -- TotalSegmentator}
 
@@ -505,18 +503,6 @@ The natural extension of separate training is to consider training each class si
 
 For the purposes of evaluation, the following methods will be applied to the baseline nnUNet model to assess the success.
 
-\subsubsection{No Rule Enforcement}
-
-A sensible and calibrated set of ids could be drawn based on the rules in Section~\ref{sec:rules}. However, practical experience and the recalcitrant and challenging nature of defining logical expressions to generalize something as complex as organs and something as fuzzy as microscopic cancer spread mean that, in practice, these rules cannot be implemented strictly.
-
-Please refer to Equation~\ref{eq:ctvn-ctvp-anorectum} ``There should be no overlap between the CTVn, CTVp or Anorectum''. We see marginal overlap between the structures in Figure~\ref{fig:combined-labels-region-based} in ids 55, 94. These are almost not visible on the figure, but captured by the legend. 
-
-\subsubsection{With Rule Enforcement}
-
-We can conclude that these rules are not strictly followed in practice but should be implemented for generalisation. Therefore, an augmentation of the nnUNet trainer, specifically the [TODO], is necessary to capture this result.
-
-We hypothesise that although the baseline model attempts to approximate the ground truth, which may call for marginal overlap, with the rules in place, this may generalise better over other cases.
-
 \begin{figure}[H]
   \centering
   \subfigure[Anorectum]{\includegraphics[width=.24\linewidth, trim=0 0 4400px 110px, clip]{../figures/check_if_worked_axis_1.png}}
@@ -533,17 +519,21 @@ We hypothesise that although the baseline model attempts to approximate the grou
   \caption{New IDs generated for a single slice as a consequence of practical experience show non-conformity to rules in Section~\ref{sec:rules}.}\label{fig:check-if-worked-axis-1}
 \end{figure}
 
+\subsubsection{No Rule Enforcement}
+
+A sensible and calibrated set of ids could be drawn based on the rules in Section~\ref{sec:rules}. However, practical experience and the recalcitrant and challenging nature of defining logical expressions to generalize something as complex as organs and something as fuzzy as microscopic cancer spread mean that, in practice, these rules cannot be implemented strictly.
+
+Please refer to Equation~\ref{eq:ctvn-ctvp-anorectum} ``There should be no overlap between the CTVn, CTVp or Anorectum''. We see marginal overlap between the structures in Figure~\ref{fig:combined-labels-region-based} in ids 55, 94. These are almost not visible on the figure, but captured by the legend. 
+
+\subsubsection{With Rule Enforcement}
+
+We implement the rules with the hypothesis of generalisation despite the rules not strictly followed in practice. Therefore, an augmentation of the nnUNet trainer is necessary to capture this result. Specifically, we introduce an additional loss component dubbed `custom\_loss' during training. This custom loss parameter implements two of the many rules that the Royal Marsden Hospital clinical staff provided. The two rules are thoroughly discussed in Section~\ref{sec:rules} and are Equation~\ref{eq:ctvn-ctvp-anorectum} and Equation~\ref{eq:ctvp2}. 
+
+To consistently include the loss parameter, we have two sub-loss objectives operating on dice loss (Section~\ref{sect:spatial-overlap-based}). The first captures Equation~\ref{eq:ctvn-ctvp-anorectum}, which focuses on the strict requirement that the CTVn, the CTVp, and the anorectum do not overlap. The loss term is minimal when the dice score is the lowest, indicating minimal overlap; thus, to calculate this result on the intersection, the implementation of vanilla dice loss applies to the rule's three permutations independently. Secondly, Equation~\ref{eq:ctvp2} insights more overlap between the vagina and uterus with the CTVp, which is equivalent to 1 minus the previous learning objective. As a hyperparameter, we attribute a weight of 0.3 to this term, while other loss terms (dice and binary cross-entropy) are assigned weights of 1 to keep the original objective function reasonably unchanged.
+
+We hypothesise that although the rule-free model attempts to approximate the ground truth, which may call for marginal overlap, with the rules in place, this may generalise better over other cases.
+
 \section{Few-shot Transfer -- UniverSeg}
-
-UniverSeg operates on 2-dimensional data. As a result, to provide automatic radiotherapy planning volumes, it is essential to provide slices for the model as input alongside a sufficient support size of similar slices. 
-
-\subsection{Preprocessing}
-
-Images are normalized to match UniverSeg's training properties. Specifically image intensities are clipped to the range $[-500, 1000]$ and normalize to be between $[0,1]$ and finally scaled down to a $128 \times 128$ resolution~\cite{universeg}.
-
-For the purpose of the experiment, this was repeated along each axis to produce a
-
-\subsection{Selecting support}
 
 \begin{figure}[H]
   \centering
@@ -554,9 +544,19 @@ For the purpose of the experiment, this was repeated along each axis to produce 
   \caption{The distribution of the start and ending slices of the tumor in a normalized batch of images across axes 0 (axial dimension) and the corresponding sampled support extracted.}\label{fig:start-end-distribution-universeg}
 \end{figure}
 
-However, for an unseen example, the location of the tumour can only be determined by referring to assisting models that provide estimates. In a secluded environment where only one's model transferability is assessed, we instead analyse the properties of the tumour from the examples.
+UniverSeg operates on 2-dimensional data. As a result, to provide automatic radiotherapy planning volumes, it is essential to provide slices for the model as input alongside a sufficient support size of similar slices. 
 
-We begin by analysing the tumour locations along each axis. The intuition is that the normalised images of equal dimensions and spacings should contain the tumour at approximately the same location. Figure~\ref{fig:start-end-distribution-universeg} shows the distribution of start and end slices for the tumor and the corresponding sampled support set.
+\subsection{Preprocessing}
+
+Images are normalised to match UniverSeg's training properties. Specifically, image intensities are clipped to the range $[-500, 1000]$ and normalised to be between $[0,1]$ and finally scaled down to a $128 \times 128$ resolution~\cite{universeg}. Slice pre-processing is repeated along each axis to evaluate the effectiveness of one slice over another. 
+
+\subsection{Selecting support}
+
+The most screaming disadvantage of such a model when applied to a three-dimensional unseen segmentation task is tumour localisation; we do not know where the tumour starts or ends. The tumour's location can only be determined by referring to assisting models that provide estimates or make assumptions about tumour location based on previous examples. In a secluded environment where only one's model transferability is assessed, we instead analyse the properties of the tumour from the examples.
+
+We begin by analysing the tumour locations along each axis. The intuition is that the pre-processed images of equal dimensions and spacings should contain the tumour at approximately the same location. Figure~\ref{fig:start-end-distribution-universeg} shows the tumour's distribution of start and end slices and the corresponding sampled support set.
+
+By sampling a support set concerning slice positions, we include an approximation of a binary classification of `does this slice contain a tumour or not'; if for slice n there is a 20\% chance that the support contains a tumour, then we can also assume that for an unseen patient, this chance is also the same. However, this does not generalise to boundary cases where tumours or organs may begin sooner or later than all others, which may cause a misclassification.
 
 \section{Zero-shot Transfer -- MedSAM}
 
@@ -566,7 +566,7 @@ Zero-shot learning, a promising feature of MedSAM, could potentially enable it t
 
 \subsection{Preprocessing}
 
-MedSAM takes two-dimensional images as input, much like UniverSeg. Therefore, we similarly preprocess the data to a resolution of $1024 \times 1024$ along each slice where the ground truth is present. We clip the ranges of the CT scan to Hounsfield units centred around the 40 value, with a window radius of 400 units and later normalized to the range of $[0,1]$. 
+MedSAM takes two-dimensional images as input, much like UniverSeg. Therefore, we similarly preprocess the data to a resolution of $1024 \times 1024$ along each slice where the ground truth is present. We clip the ranges of the CT scan to Hounsfield units centred around the 40 value, with a window radius of 400 units and later normalized to the range of $[0,1]$. In contrast to UniverSeg, we resize a slice after selecting the index instead of resizing the whole image. Thus, we do not introduce any anisotropic uncertainties along our sampling axis.
 
 \subsection{Point based transfer}
 
@@ -582,6 +582,8 @@ We first experimented with the MedSAM architecture to test the effectiveness of 
 The two strategies are shown in Figure~\ref{fig:point-prompt}. The sparse point prompt is a single point in the image, while the dense point prompt is a set of $n$ points randomly sampled from the ground truth segmentation.
 
 The hypothesis is that point prompts may work well with structures such as the bladder which are trivial to identify. However, for the CTV, the point prompt may not segment the full extent of the structure.
+
+Points are sampled with a higher probability of being towards the centre of the segmented area by calculating the Euclidean distances of all points from the centroid. This heuristic dispels any ambiguity that may be caused when selecting points closer towards the outline of the segmentation, which may occur when boundaries of different objects bleed into one another, causing a higher error.
 
 \subsection{Box based transfer}
 
@@ -602,6 +604,12 @@ For training, only one box may be fed into the model for inference. Therefore, w
   }
   \caption{The process of selection bounding box for a given boxed tumor with an augmented ground truth used at training time for the MedSAM bax-based prompt model.}\label{fig:box-prompt-sam-selection}
 \end{figure}
+
+\subsection{Evaluation}
+
+During training, the test set is divided by ID to ensure that a portion of an image is not both trained and validated. This way, the model's transferability is not questioned because it is trained on a disjoint set of patients; otherwise, quantitative measurements would skew and not represent the model's adaptability to unseen data.
+
+Secondly, the MedSAM architecture selects points and boxes for inference from the ground truth. Because MedSAM is an interactive tool, its application will likely adapt as an assisting tool for clinicians. However, for unseen examples, the concept of auto planning is uncertain. The authors of the paper measure performance according to the ground truth~\cite{SAM, Ma2024}. Refining the model pipeline to include bounding box predictions extracted from a baseline like nnUNet is possible, where MedSAM acts as a refinement to an already reasonably accurate guess. This allows for noise to be permeated into the model, thus allowing for a better auto-contour planning pipeline.
 
 \section{Quantiative Evaluation of Segmentation}\label{sect:performance-evaluation}
 
