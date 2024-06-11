@@ -422,8 +422,7 @@ Therefore, Ma et al. enhanced the architecture provided by SAM by training it on
 
 \section{Transfer Learning}
 
-Transfer Learning involves using a model trained on a large dataset. This pre-trained model accelerates the initial learning process by serving as the starting point for learning an unseen task. Transfer learning is successful because, in the early layers of a model, it typically learns very low-level features. At 
-this scale, the objective of the original domain does not matter; regardless of the initialisation, a model working on a similar problem will inevitably learn similar low-level features. 
+Transfer Learning involves using a model trained on a large dataset. The pre-trained model serves as the starting point for a second task where data acquisition is limited or improbable. Transfer learning is successful because, in the early layers of a model, it typically learns very low-level features. At this scale, the objective of the original domain does not matter; regardless of the initialisation, a model working on a similar problem will inevitably learn similar low-level features. 
 
 Arguably, the universality of the parameters learnt in a model with prosperous access to data will have richer and better patterns that another with less data did not have enough information to learn~\cite{deep-learning-book, survey-on-transfer-learning}.
 
@@ -431,9 +430,21 @@ Transfer Learning has the potential to improve initial performance using only th
 
 Transfer Learning has been seen to prevent overfitting in domains where data volume is low and where generality without overfitting is hard to come by. The prevention is because the model has already learnt features likely to be helpful in the second task~\cite{geeks-transfer-learning}. Overfitting may still occurr if the model is fine-tuned too much on the second task, as it may `learn task-specific features that do not generalise well to new data'~\cite{geeks-transfer-learning}.
 
+\subsection{Mathematical Definition}
+
+Transfer Learning can be formalised mathematically~\cite{concise-review-of-transfer-learning, survey-on-transfer-learning}.
+
+\begin{itemize}
+  \item Define the starting domain the model trains on initially as $\mathcal{D} = \{\mathcal{X}, P(X)\}$ with feature space $\mathcal{X}$ and a marginal probability distribution $P(X)$. $X$ is defined as an instance set, and $X = \{x_1, x_2, \cdots, x_n\} \in \mathcal{X}$.
+  
+  \item The original task attempts to predict data from domain $\mathcal{D}$ through a mapping $\mathcal{T} = \{\mathcal{Y}, f(\cdot)\}$ composed of a label space $\mathcal{Y}$ and an objective predictive function $f(\cdot)$. Given a domain $\mathcal{D} = \{\mathcal{X}, P(X)\}$ the sample data consists of pairs $\{x_i, y_i\}$ where $x_i \in X$ and $y_i \in \mathcal{Y}$. The objective function $f$ is supposed to learn from sample data to predict the corresponding label for the new instances. $f$ can be rewritten as $f(x)=P(y|x)$.
+  
+  \item The transfer learning task involves a source domain $\mathcal{D}_S$ with corresponding source tasks $\mathcal{T}_S$, and a target domain $\mathcal{D}_T$ with corresponding target task $\mathcal{T}_T$. The goal is to transfer the related knowledge to boost the performance of the target predictive function $f_T(\cdot)$.
+\end{itemize}
+
 \subsection{Shot based learning}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \raisebox{-0.5\height}{
     \subfigure[Zero-shot]{
@@ -469,9 +480,27 @@ Many-shot models can generalize to unseen tasks with many examples. The nnUNet b
 
 Improvements over the transfer from models trained on other domains could hypothetically allow the segmentation of delineated areas more accurately. To investigate this claim, we iterate over the three types of shot learning, zero-shot, few-shot, and many-shot learning, to determine the effectiveness of transfer learning in the radiotherapy domain.
 
+\section{Transfer Strategy}
+
+When transferring knowledge from one domain to another, three questions are key: (1) What to transfer, (2) How to transfer, and (3) When to transfer.
+
+\subsection{General Strategy}
+
+\begin{enumerate}
+    \item Obtain a pre-trained ``base'' model trained on extensive data which identifies general features and patterns relevant to the target domain.
+    
+    \item Identify the transfer layers. These layers capture general information relevant to both the new and previous tasks. The selected layers are 'frozen' during training. This means parameters are not changed, preserving the low-level learnt feature functions. 
+    
+ The number of frozen layers depends on how much inheritance is required from the pre-trained model. For unrelated domains, like car vs. face detection, only low-level features should be transferred. However, the amount of information transferred in related domains is more generous, and the quantity is tunable.
+    
+    \item Fine-tune and retrain the remaining layers. The goal is to preserve the knowledge from the pre-training while enabling the model to modify its parameters to suit the demands of the current assignment better~\cite{geeks-transfer-learning}.
+    
+ For smaller datasets, there may be an issue of overfitting because the number of available samples to train on has decreased. Thus, we must set the learning rate to be low; when fine-tuning a new model you want to readjust the pre-trained weights, and if the learning rate is too high, the model may rapidly overfit~\cite{geeks-transfer-learning}. Furthermore, this is done for a low number of iterations for the same reasons~\cite{deep-learning-book}.
+\end{enumerate}
+
 \section{Baseline -- nnUNet}
 
-The provided examples of the objective are enough to train an nnUNet model from scratch to segment anatomy and radiotherapy target volumes accurately. This nnUNet model has been shown to provide more robust results in external stress tests than other comparable architectures on a set of different datasets~\cite{isensee2024nnunet}. Also, in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}.
+The provided examples of the objective are enough to train an nnUNet model from scratch. It has been shown that in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}. Therefore, we first train a baseline nnUNet model on the provided examples to establish a benchmark for the transfer models.
 
 \subsection{Preprocessing}
 
