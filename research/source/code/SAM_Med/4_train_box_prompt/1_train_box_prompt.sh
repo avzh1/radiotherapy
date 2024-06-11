@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Example of running python script in a batch mode
-#SBATCH -c 16                            # Number of CPU Cores
+#SBATCH -c 4                             # Number of CPU Cores
 #SBATCH -p gpus                          # Partition (queue)
 #SBATCH --gres gpu:1                     # gpu:n, where n = number of GPUs
 #SBATCH --mem 35G                        # memory pool for all cores
