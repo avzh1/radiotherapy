@@ -422,8 +422,7 @@ Therefore, Ma et al. enhanced the architecture provided by SAM by training it on
 
 \section{Transfer Learning}
 
-Transfer Learning involves using a model trained on a large dataset. This pre-trained model accelerates the initial learning process by serving as the starting point for learning an unseen task. Transfer learning is successful because, in the early layers of a model, it typically learns very low-level features. At 
-this scale, the objective of the original domain does not matter; regardless of the initialisation, a model working on a similar problem will inevitably learn similar low-level features. 
+Transfer Learning involves using a model trained on a large dataset. The pre-trained model serves as the starting point for a second task where data acquisition is limited or improbable. Transfer learning is successful because, in the early layers of a model, it typically learns very low-level features. At this scale, the objective of the original domain does not matter; regardless of the initialisation, a model working on a similar problem will inevitably learn similar low-level features. 
 
 Arguably, the universality of the parameters learnt in a model with prosperous access to data will have richer and better patterns that another with less data did not have enough information to learn~\cite{deep-learning-book, survey-on-transfer-learning}.
 
@@ -431,9 +430,21 @@ Transfer Learning has the potential to improve initial performance using only th
 
 Transfer Learning has been seen to prevent overfitting in domains where data volume is low and where generality without overfitting is hard to come by. The prevention is because the model has already learnt features likely to be helpful in the second task~\cite{geeks-transfer-learning}. Overfitting may still occurr if the model is fine-tuned too much on the second task, as it may `learn task-specific features that do not generalise well to new data'~\cite{geeks-transfer-learning}.
 
+\subsection{Mathematical Definition}
+
+Transfer Learning can be formalised mathematically~\cite{concise-review-of-transfer-learning, survey-on-transfer-learning}.
+
+\begin{itemize}
+  \item Define the starting domain the model trains on initially as $\mathcal{D} = \{\mathcal{X}, P(X)\}$ with feature space $\mathcal{X}$ and a marginal probability distribution $P(X)$. $X$ is defined as an instance set, and $X = \{x_1, x_2, \cdots, x_n\} \in \mathcal{X}$.
+  
+  \item The original task attempts to predict data from domain $\mathcal{D}$ through a mapping $\mathcal{T} = \{\mathcal{Y}, f(\cdot)\}$ composed of a label space $\mathcal{Y}$ and an objective predictive function $f(\cdot)$. Given a domain $\mathcal{D} = \{\mathcal{X}, P(X)\}$ the sample data consists of pairs $\{x_i, y_i\}$ where $x_i \in X$ and $y_i \in \mathcal{Y}$. The objective function $f$ is supposed to learn from sample data to predict the corresponding label for the new instances. $f$ can be rewritten as $f(x)=P(y|x)$.
+  
+  \item The transfer learning task involves a source domain $\mathcal{D}_S$ with corresponding source tasks $\mathcal{T}_S$, and a target domain $\mathcal{D}_T$ with corresponding target task $\mathcal{T}_T$. The goal is to transfer the related knowledge to boost the performance of the target predictive function $f_T(\cdot)$.
+\end{itemize}
+
 \subsection{Shot based learning}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \raisebox{-0.5\height}{
     \subfigure[Zero-shot]{
@@ -469,9 +480,25 @@ Many-shot models can generalize to unseen tasks with many examples. The nnUNet b
 
 Improvements over the transfer from models trained on other domains could hypothetically allow the segmentation of delineated areas more accurately. To investigate this claim, we iterate over the three types of shot learning, zero-shot, few-shot, and many-shot learning, to determine the effectiveness of transfer learning in the radiotherapy domain.
 
+\section{Transfer Strategy}
+
+Transfer learning involves obtaining a pre-trained "base" model, identifying transfer layers, and fine-tuning the remaining layers. Key considerations include preventing overfitting on smaller datasets and making decisive adjustments to learning rates during the fine-tuning phase.
+
+\begin{enumerate}
+  \item Obtain a pre-trained ``base'' model trained on extensive data which identifies general features and patterns relevant to the target domain.
+  
+  \item Identify the transfer layers. These layers capture general information relevant to both the new and previous tasks. The selected layers are 'frozen' during training. This means parameters are not changed, preserving the low-level learnt feature functions. 
+  
+  The number of frozen layers depends on how much inheritance is required from the pre-trained model. For unrelated domains, like car vs. face detection, only low-level features should be transferred. However, the amount of information transferred in related domains is more generous, and the quantity is tunable.
+  
+  \item Fine-tune and retrain the remaining layers. The goal is to preserve the knowledge from the pre-training while enabling the model to modify its parameters to suit the demands of the current assignment better~\cite{geeks-transfer-learning}.
+  
+  For smaller datasets, there may be an issue of overfitting because the number of available samples to train on has decreased. Thus, we must set the learning rate to be low; when fine-tuning a new model you want to readjust the pre-trained weights, and if the learning rate is too high, the model may rapidly overfit~\cite{geeks-transfer-learning}. Furthermore, this is done for a low number of iterations for the same reasons~\cite{deep-learning-book}.
+\end{enumerate}
+
 \section{Baseline -- nnUNet}
 
-The provided examples of the objective are enough to train an nnUNet model from scratch to segment anatomy and radiotherapy target volumes accurately. This nnUNet model has been shown to provide more robust results in external stress tests than other comparable architectures on a set of different datasets~\cite{isensee2024nnunet}. Also, in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}.
+The provided examples of the objective are enough to train an nnUNet model from scratch. It has been shown that in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}. Therefore, we first train a baseline nnUNet model on the provided examples to establish a benchmark for the transfer models.
 
 \subsection{Preprocessing}
 
@@ -499,10 +526,6 @@ Like the nnUNet, we apply the default fine-tuning strategy to a pre-trained Tota
 
 \subsection{Region Based Training}
 
-The natural extension of separate training is to consider training each class simultaneously. Region-based training is a noninvasive method offered by the nnUNet. This training style combines the 3D segmentation maps for each of the seven classes into one 3D segmentation by introducing new IDs wherever there is a new overlap. An example slice can be seen in Figure~\ref{fig:check-if-worked-axis-1}.
-
-For the purposes of evaluation, the following methods will be applied to the baseline nnUNet model to assess the success.
-
 \begin{figure}[H]
   \centering
   \subfigure[Anorectum]{\includegraphics[width=.24\linewidth, trim=0 0 4400px 110px, clip]{../figures/check_if_worked_axis_1.png}}
@@ -519,19 +542,24 @@ For the purposes of evaluation, the following methods will be applied to the bas
   \caption{New IDs generated for a single slice as a consequence of practical experience show non-conformity to rules in Section~\ref{sec:rules}.}\label{fig:check-if-worked-axis-1}
 \end{figure}
 
+The natural extension of separate training is to consider training each class simultaneously. Region-based training is a noninvasive method offered by the nnUNet. This training style combines the 3D segmentation maps for each of the seven classes into one 3D segmentation by introducing new IDs wherever there is a new overlap. An example slice can be seen in Figure~\ref{fig:check-if-worked-axis-1}.
+
+For the purposes of evaluation, the following methods will be applied to the baseline nnUNet model to assess the success.
+
+
 \subsubsection{No Rule Enforcement}
 
 A sensible and calibrated set of ids could be drawn based on the rules in Section~\ref{sec:rules}. However, practical experience and the recalcitrant and challenging nature of defining logical expressions to generalize something as complex as organs and something as fuzzy as microscopic cancer spread mean that, in practice, these rules cannot be implemented strictly.
 
 Please refer to Equation~\ref{eq:ctvn-ctvp-anorectum} ``There should be no overlap between the CTVn, CTVp or Anorectum''. We see marginal overlap between the structures in Figure~\ref{fig:combined-labels-region-based} in ids 55, 94. These are almost not visible on the figure, but captured by the legend. 
 
-When considering the total sample set, the overlap makes up a minimal percentage of the total volume with non-background label classification. Take, for instance, Figure~\ref{fig:illegal_overlap}, which shows all cases of `illegal' overlap found within the samples. The most frequent culprit overlap that breaks the condition is between the CTVn, CTVp and the Uterus, which makes up the most significant proportion of `illegal' overlap. The Uterus is a necessary subset of the CTVp, which implies that this segmentation of CTVp does not include microscopic spread, including in the Cervix and GTVp. By eliminating this style of error from the model, it might be possible to obtain more general segmentations that align with the clinical team's rules.
-
 \begin{figure}[H]
   \centering
   \includegraphics[width=.7\linewidth]{../figures/percentage_of_illegal_overlap.png}
   \caption{Total frequency and percentage overlap of non-zero occurrences of `illegal' overlap between the CTVn, CTVp, and Anorectum.}\label{fig:illegal_overlap}
 \end{figure}
+
+When considering the total sample set, the overlap makes up a minimal percentage of the total volume with non-background label classification. Take, for instance, Figure~\ref{fig:illegal_overlap}, which shows all cases of `illegal' overlap found within the samples. The most frequent culprit overlap that breaks the condition is between the CTVn, CTVp and the Uterus, which makes up the most significant proportion of `illegal' overlap. The Uterus is a necessary subset of the CTVp, which implies that this segmentation of CTVp does not include microscopic spread, including in the Cervix and GTVp. By eliminating this style of error from the model, it might be possible to obtain more general segmentations that align with the clinical team's rules.
 
 \subsubsection{With Rule Enforcement}
 
@@ -543,7 +571,7 @@ We hypothesise that although the rule-free model attempts to approximate the gro
 
 \section{Few-shot Transfer -- UniverSeg}
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=.8\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_0_anorectum.png}
   \includegraphics[width=\linewidth, trim=0 0 340px 0, clip]{../../research/source/code/UniverSeg/support_anorectum_axis_0.png}
