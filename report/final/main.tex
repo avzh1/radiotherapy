@@ -526,10 +526,6 @@ Like the nnUNet, we apply the default fine-tuning strategy to a pre-trained Tota
 
 \subsection{Region Based Training}
 
-The natural extension of separate training is to consider training each class simultaneously. Region-based training is a noninvasive method offered by the nnUNet. This training style combines the 3D segmentation maps for each of the seven classes into one 3D segmentation by introducing new IDs wherever there is a new overlap. An example slice can be seen in Figure~\ref{fig:check-if-worked-axis-1}.
-
-For the purposes of evaluation, the following methods will be applied to the baseline nnUNet model to assess the success.
-
 \begin{figure}[H]
   \centering
   \subfigure[Anorectum]{\includegraphics[width=.24\linewidth, trim=0 0 4400px 110px, clip]{../figures/check_if_worked_axis_1.png}}
@@ -546,19 +542,24 @@ For the purposes of evaluation, the following methods will be applied to the bas
   \caption{New IDs generated for a single slice as a consequence of practical experience show non-conformity to rules in Section~\ref{sec:rules}.}\label{fig:check-if-worked-axis-1}
 \end{figure}
 
+The natural extension of separate training is to consider training each class simultaneously. Region-based training is a noninvasive method offered by the nnUNet. This training style combines the 3D segmentation maps for each of the seven classes into one 3D segmentation by introducing new IDs wherever there is a new overlap. An example slice can be seen in Figure~\ref{fig:check-if-worked-axis-1}.
+
+For the purposes of evaluation, the following methods will be applied to the baseline nnUNet model to assess the success.
+
+
 \subsubsection{No Rule Enforcement}
 
 A sensible and calibrated set of ids could be drawn based on the rules in Section~\ref{sec:rules}. However, practical experience and the recalcitrant and challenging nature of defining logical expressions to generalize something as complex as organs and something as fuzzy as microscopic cancer spread mean that, in practice, these rules cannot be implemented strictly.
 
 Please refer to Equation~\ref{eq:ctvn-ctvp-anorectum} ``There should be no overlap between the CTVn, CTVp or Anorectum''. We see marginal overlap between the structures in Figure~\ref{fig:combined-labels-region-based} in ids 55, 94. These are almost not visible on the figure, but captured by the legend. 
 
-When considering the total sample set, the overlap makes up a minimal percentage of the total volume with non-background label classification. Take, for instance, Figure~\ref{fig:illegal_overlap}, which shows all cases of `illegal' overlap found within the samples. The most frequent culprit overlap that breaks the condition is between the CTVn, CTVp and the Uterus, which makes up the most significant proportion of `illegal' overlap. The Uterus is a necessary subset of the CTVp, which implies that this segmentation of CTVp does not include microscopic spread, including in the Cervix and GTVp. By eliminating this style of error from the model, it might be possible to obtain more general segmentations that align with the clinical team's rules.
-
 \begin{figure}[H]
   \centering
   \includegraphics[width=.7\linewidth]{../figures/percentage_of_illegal_overlap.png}
   \caption{Total frequency and percentage overlap of non-zero occurrences of `illegal' overlap between the CTVn, CTVp, and Anorectum.}\label{fig:illegal_overlap}
 \end{figure}
+
+When considering the total sample set, the overlap makes up a minimal percentage of the total volume with non-background label classification. Take, for instance, Figure~\ref{fig:illegal_overlap}, which shows all cases of `illegal' overlap found within the samples. The most frequent culprit overlap that breaks the condition is between the CTVn, CTVp and the Uterus, which makes up the most significant proportion of `illegal' overlap. The Uterus is a necessary subset of the CTVp, which implies that this segmentation of CTVp does not include microscopic spread, including in the Cervix and GTVp. By eliminating this style of error from the model, it might be possible to obtain more general segmentations that align with the clinical team's rules.
 
 \subsubsection{With Rule Enforcement}
 
@@ -570,7 +571,7 @@ We hypothesise that although the rule-free model attempts to approximate the gro
 
 \section{Few-shot Transfer -- UniverSeg}
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=.8\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_0_anorectum.png}
   \includegraphics[width=\linewidth, trim=0 0 340px 0, clip]{../../research/source/code/UniverSeg/support_anorectum_axis_0.png}
