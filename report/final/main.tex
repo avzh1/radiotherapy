@@ -780,24 +780,60 @@ Similarly, the APL score predicts ``the path length of a contour that has to be 
 
 \subsection{Summary}
 
-This is why we settle at the Surface DSC (Section~\ref{sect:surface-dice}), which prioritizes deviation along the boundary to a certain degree while measuring the fraction of the surface that needs to be redrawn, thus favouring a more conservative prediction of Figure~\ref{fig:segmentation-cases-1}(d) instead of (e).
 
 For this project, we shall select an evaluation measurement more biased towards conservative boundary estimates not to touch the organs at risk. The clinician's review pipeline, in part, influenced this choice; it would be easier to correct Figure~\ref{fig:segmentation-cases-1}(d) instead of Figure~\ref{fig:segmentation-cases-1}(e) because correcting the latter would likely take a considerable amount of time as it would require redrawing almost all of the boundary, whereas the former could be corrected much faster~\cite{Nikolov2021-xe}.
+
+This is why we settle at the Surface DSC (Section~\ref{sect:surface-dice}), which prioritizes deviation along the boundary to a certain degree while measuring the fraction of the surface that needs to be redrawn. Furthermore, to keep in tradition with previous studies, we will also report the DICE and RVD scores to broaden the scope of evaluation into all three categories of evaluation metrics discussed above. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Results and Discussion}\label{sect:results}\label{sect:discussion}
 
-\section{Baseline -- nnUNet}
-
 % The results of the baseline for each anatomy will be displayed alongside the result of the transfer to make it easier to reason about the effectiveness of the transfer technique. 
-
-
 
 \section{Many-shot Transfer -- TotalSegmentator}
 
 % total segmentator had 500 females to 700 males which may explain the struggle to locate the uterus and vagina.
 
 \section{Few-shot Transfer -- UniverSeg}
+
+The main limitation of the UniverSeg model is the large memory requirements for the model. On a typical 11GB RAM device, the support size was kept low from what was required. Therefore, this experiment gave inconclusive results.
+
+Specifically, a support size of 9 was used, and slices were sampled from patients not included in the query batch to reduce bias in the model's segmentations. The approache's evaluation stopped shy of its quantitative evaluation due to upsetting results from the qualitative assessment of model outputs. An example of inference is provided in Table~\ref{tab:universeg-inference}.
+
+\begin{table}[H]
+  \centering
+  \caption{Sample UniverSeg inference over a random patient}\label{tab:universeg-inference}
+  \begin{tabular}{p{.5cm} >{\centering\arraybackslash}m{4cm} >{\centering\arraybackslash}m{4cm} >{\centering\arraybackslash}m{4cm}}
+    \toprule
+    & query & label & prediction \\ 
+    \midrule
+    {\rotatebox{90}{slice 42}} 
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=0 0 530 15, clip]{../figures/universeg_results/prediction_img_1_slice_42.png}}}
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=180 0 355 15, clip]{../figures/universeg_results/prediction_img_1_slice_42.png}}}
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=530 0 0 15, clip]{../figures/universeg_results/prediction_img_1_slice_42.png}}}  \\
+    
+    {\rotatebox{90}{slice 65}} 
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=0 0 530 15, clip]{../figures/universeg_results/prediction_img_1_slice_65.png}}} 
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=180 0 355 15, clip]{../figures/universeg_results/prediction_img_1_slice_65.png}}}
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=530 0 0 15, clip]{../figures/universeg_results/prediction_img_1_slice_65.png}}}  \\
+
+    {\rotatebox{90}{slice 69}} 
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=0 0 530 15, clip]{../figures/universeg_results/prediction_img_1_slice_69.png}}} 
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=180 0 355 15, clip]{../figures/universeg_results/prediction_img_1_slice_69.png}}}
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=530 0 0 15, clip]{../figures/universeg_results/prediction_img_1_slice_69.png}}}  \\
+
+    {\rotatebox{90}{slice 80}} 
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=0 0 530 15, clip]{../figures/universeg_results/prediction_img_1_slice_80.png}}} 
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=180 0 355 15, clip]{../figures/universeg_results/prediction_img_1_slice_80.png}}}
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=530 0 0 15, clip]{../figures/universeg_results/prediction_img_1_slice_80.png}}}  \\
+
+    {\rotatebox{90}{slice 87}} 
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=0 0 530 15, clip]{../figures/universeg_results/prediction_img_1_slice_87.png}}} 
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=180 0 355 15, clip]{../figures/universeg_results/prediction_img_1_slice_87.png}}}
+    & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=530 0 0 15, clip]{../figures/universeg_results/prediction_img_1_slice_87.png}}}  \\
+
+  \end{tabular}
+\end{table}
 
 \section{Zero-shot Transfer -- MedSAM}
 
@@ -817,6 +853,8 @@ Firstly, image slices were stored in a $(1 \times 512 \times 512)$ resolution an
 \subsection{Point Based Transfer}
 
 \subsection{Box Based Transfer}
+
+
 
 
 % Mention SAM's argument about ignoring small structures
