@@ -37,7 +37,7 @@
 
   We, therefore, analyse the effectiveness of transfer learning techniques in leveraging knowledge learned from one domain into another. Variants of transfer include zero-shot, few-shot and many-shot transfer learning. The evaluation of n-shot approaches of transfer learning onto the radiotherapy planning objective will clarify whether the transfer is a valid strategy for increasing performance over models learnt from scratch.
 
-  We represent three distinct model architectures for each type of transfer. We conclude that a many-shot transfer using TotalSegmentator [TODO]. We find that few-shot transfer using UinverSeg does not apply to the complexity of 3-D volume delineations for cervical cancer. Finally, the finetuning of zero-shot models, represented by MedSAM, offers local bounded improvements of volume delineation independently of tumour localisation.
+  We represent three distinct model architectures for each type of transfer. We conclude that a many-shot transfer using TotalSegmentator remains a robust method for transfering knowledge. We find that few-shot transfer using UinverSeg does not apply to the complexity of 3-D volume delineations for cervical cancer. Finally, the finetuning of zero-shot models, represented by MedSAM, offers local bounded improvements of volume delineation independently of tumour localisation.
 
   % The repo is available at \url{https://github.com/AntonZhitomirsky/radiotherapy}.
 \end{abstract}
@@ -82,34 +82,32 @@ Firstly, we select a dataset from The Royal Marsden Hospital, which will act as 
 
 Secondly, we analyse the effectiveness of Transfer learning in radiotherapy planning. To research the application of this technique in the medical context, we study three types of modern training approaches to study their transferability. These types are zero-shot, few-shot, and many-shot learning transfers.
 
-\section{Results and Conclusions}
-
 \section{Outline of Report}
 
 The report will first discuss the relevant background knowledge required for this project in Chapter~\ref{sect:motivation}. Within, we provide a high-level overview of anatomies and the clinical context (Section~\ref{sect:clinical-context}) as well as core existing academic knowledge in the Computer-assisted vision in the Medical Imaging field (Section~\ref{sect:machine-learning-for-image-segmentation}-\ref{sect:performance-evaluation}). 
 
-Then, Chapter~\ref{sect:methodology} describes the experiments used to evaluate how well different architectures transfer knowledge into the target domain, as well as an overview of the results (Chapter~\ref{sect:results}) and a discussion of their implications (Chapter~\ref{sect:discussion}).
+Then, Chapter~\ref{sect:methodology} describes the experiments used to evaluate how well different architectures transfer knowledge into the target domain, as well as an overview of the results (Chapter~\ref{sect:results}) and a discussion of their implications (Chapter~\ref{sect:discussion}). Finally, we discuss the conclusion and future work in Chapter~\ref{sect:conclusion}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Motivation}\label{sect:motivation}
 
 \section{Clinical Context}\label{sect:clinical-context}
 
-This project will have its foundation for experimentation in a dataset provided by the Royal Marsden Hospital~\cite{AMLART-data}. The real-world clinical dataset segments key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the widespread segmentation challenges and has uncommon and limited segmentation patterns. This dataset will act as the pillar for justifying the success of the transferability of knowledge between medical domains.
+This project will have its foundation for experimentation in a dataset provided by the Royal Marsden Hospital~\cite{AMLART-data}. The real-world clinical dataset segments key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the public eye and has uncommon and limited segmentation patterns. This dataset will act as the pillar for justifying the success of the transferability of knowledge between medical domains.
 
 In this section, we discuss the clinical context behind cervical cancer in the population, the Hospital's pipeline for segmenting patients in preparation for radiotherapy treatment, and the Hospital's motivation for recruiting an AI tool to assist in its treatment pipeline. 
 
 \subsection{Cervical Cancer}\label{sect:cervical-cancer}
 
-Cancer is a burden around the globe that has been a driver for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer for 157 countries in 2022~\cite{Global-cancer-2022}. Furthermore, an estimated 1 million maternal orphans who lose their mothers to cancer suffer long-term disadvantages in health and education~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}, which inspires further complete clinical understanding of the disease. Paired with quality improvements offered by medical imaging models, this forms the motivation for total control over cervical cancer.
+Cancer is a burden around the globe that has been a driver for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer for 157 countries in 2022~\cite{Global-cancer-2022}. Furthermore, an estimated 1 million maternal orphans who lose their mothers to cancer suffer long-term disadvantages in health and education~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}. Paired with quality improvements offered by medical imaging models, this forms the motivation for total control over cervical cancer.
 
 \subsection{Radiotherapy Treatment}
 
-A mechanism available for cancer treatment involves radiation therapy. High beams of radiation energy are tuned to hone in to target cancerous cells in a clinically defined `target area'. The cells killed by the energy experience interphase or proliferative death depending on the cell cycle stage. Death occurs when the damage to genetic material within the cell prevents it from dividing, or the cell's accumulation of genetic aberrations leads to a ``mitotic catastrophe''~\cite{cell-death}. In Europe, radiotherapy treatment was used on average for 70\% of cases, with a curative rate of 40\%~\cite{radiotherapy-advances, Thompson2018}.
+A mechanism available for cancer treatment involves radiation therapy. High beams of radiation energy are tuned to hone in to target cancerous cells in a clinically defined `target area'. The cells killed by the energy experience interphase or proliferative death depending on the cell cycle stage. Death occurs when the damage to genetic material within the cell prevents it from dividing, or the cell's accumulation of genetic aberrations leads to a ``mitotic catastrophe''~\cite{cell-death}. In Europe, such radiotherapy treatment was used on average for 70\% of cases, with a curative rate of 40\%~\cite{radiotherapy-advances, Thompson2018}.
 
 This death is characteristic of any cell subjected to high energy beams, placing much responsibility on the Oncologist to deliver an accurate treatment area so that healthy cells are unaffected; any adverse alteration of an organ's standard functionality may cause grave implications for the already compromised patient. Therefore, the precise and complex nature of the task is estimated to take oncologists 90--120 mins to delineate target areas for radiotherapy~\cite{LIU2020184}.
 
-This time-consuming endeavour is never favourable for a patient already in a dangerous situation. For mid-low-income countries, where this may not be an available resource, this leaves them with a death rate 18 times that of a higher-income country~\cite{cervical-cancer-epidemic}. 
+This time-consuming endeavour is never favourable for a patient already in a dangerous situation; for mid-low-income countries, where this may not be an available resource, this leaves them with a death rate 18 times that of a higher-income country~\cite{cervical-cancer-epidemic}. 
 
 \subsection{CT modality}\label{sect:ct-modality}
 
@@ -167,7 +165,7 @@ The Royal Marsden Hospital provides the dataset as a set of `Neuroimaging Inform
 
 The training data provides one hundred female patients that have been diagnosed with similar types of cervical cancer. Each patient comes with seven relevant segmentation classes which contribute to radiotherapy planning for cervical cancer. For reproducibility, all delineated anatomies were labelled consistently by the Oncologists to improve chances that an AI model can learn cervical cancer patterns~\cite{AMLART-data}. 
 
-Finally, the dataset comes with ten held-out data items, which are patients with only the raw CT scan information without labels.
+% Finally, the dataset comes with ten held-out data items, which are patients with only the raw CT scan information without labels.
 
 % \subsubsection{Notes}
 
@@ -193,16 +191,17 @@ The CTVp stands for the Primary Clinical Target Volume; see the example at Figur
 
 The CTVn stands for Nodal Clinical Target Volume; see the example at Figure~\ref{fig:example-CTVn}. This CTV surrounds areas that may contain microscopic spread to lymph nodes. It is drawn based on set margins around pelvic blood vessels and includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes~\cite{AMLART-data}.
 
-Similarly to CTVp, this is a compound area with three groups of lymph nodes. In clinical practice, the number of these groups in the CTV varies in each patient, depending on the advanced disease. % TODO: reference notes? They say that depending on the development of the disease, different patients may get different extents of contouring of this structure.
-However, in contrast to the CTVp, this area is drawn depending on the development of the disease.
+Similarly to CTVp, this is a compound area with three groups of lymph nodes. However, in contrast to the CTVp, in clinical practice the area is drawn depending on the development of the disease.
 
 \subsubsection{Parametrium, Vagina, and Uterus}\label{sec:data-Parametrium}
 
 The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina at risk of local spread; see Figure~\ref{fig:example-Parametrium}. The Parametrium is drawn as a complete structure and edited back to the level of the vagina to be included~\cite{AMLART-data}.
 
-Finally, the clinical significane of the Vagina and Uterus is to help define encapsulating structures like the CTVn (see Section~\ref{sec:rules}). Example for the Uterus and Vagina structures can be seen at Figure~\ref{fig:example-uterus-axial}-~\ref{fig:example-anorectum-sagittal} and Figure~\ref{fig:example-vagina-axial}-~\ref{fig:example-vagina-sagittal} respectively.
+Finally, the clinical significance of the Vagina and Uterus is to help define encapsulating structures like the CTVn (see Section~\ref{sec:rules}). Example for the Uterus and Vagina structures can be seen at Figure~\ref{fig:example-uterus-axial}-~\ref{fig:example-anorectum-sagittal} and Figure~\ref{fig:example-vagina-axial}-~\ref{fig:example-vagina-sagittal} respectively.
 
 \subsection{Rules}\label{sec:rules}
+
+The top seven priority structures have been selected to identify and plan an area where radiotherapy should be used. With these structures, there are rules that the clinicians have outlined that affect the final segmentation. They are quoted below. Note, the structures do not refer to more than one patient in one rule.
 
 Let us represent each organ anatomy as the first letter of its name, specifically: ($A$)norectum, ($B$)ladder, ($C$)ervix, ($P$)arametrium, ($U$)terus, ($V$)agina. Further, define:
 
@@ -247,8 +246,6 @@ Let us represent each organ anatomy as the first letter of its name, specificall
   \end{enumerate}
 
   % \vspace{4em}
-
-The top seven priority structures have been selected to identify and plan an area where radiotherapy should be used. With these structures, there are rules that the clinicians have outlined, they are quoted for clarification (these structures only refer to each independent patient):
 
 \begin{enumerate}
   \item There should be no overlap between the CTVn, CTVp or Anorectum.
@@ -397,7 +394,7 @@ This model operates on 2D slices of images and directly avoids the finetuning ar
 
 \subsection{SAM}\label{sect:sam}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{../figures/SAM.png}
   \caption{The SAM model involves a transformer architecture that embeds points and bounding boxes into a promptable encoding, which is used in tandem with the image encoding to produce the most likely segmentation of the described area~\cite{SAM}.}\label{fig:sam}
@@ -432,7 +429,7 @@ Transfer Learning has been seen to prevent overfitting in domains where data vol
 
 \subsection{Mathematical Definition}
 
-Transfer Learning can be formalised mathematically~\cite{concise-review-of-transfer-learning, survey-on-transfer-learning}.
+Transfer Learning can be formalised mathematically~\cite{survey-on-transfer-learning, concise-review-of-transfer-learning}.
 
 \begin{itemize}
   \item Define the starting domain the model trains on initially as $\mathcal{D} = \{\mathcal{X}, P(X)\}$ with feature space $\mathcal{X}$ and a marginal probability distribution $P(X)$. $X$ is defined as an instance set, and $X = \{x_1, x_2, \cdots, x_n\} \in \mathcal{X}$.
@@ -573,11 +570,11 @@ We hypothesise that although the rule-free model attempts to approximate the gro
 
 \begin{figure}
   \centering
-  \includegraphics[width=.8\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_0_anorectum.png}
-  \includegraphics[width=\linewidth, trim=0 0 340px 0, clip]{../../research/source/code/UniverSeg/support_anorectum_axis_0.png}
-  % \subfigure[]{\includegraphics[width=.45\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_1_anorectum.png}}
+  % \includegraphics[width=.8\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_0_anorectum.png}
+  \includegraphics[width=.8\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_1_anorectum.png}
+  \includegraphics[width=\linewidth, trim=0 0 340px 0, clip]{../../research/source/code/UniverSeg/support_anorectum_axis_1.png}
   % \subfigure[]{\includegraphics[width=.45\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_2_anorectum.png}}
-  \caption{The distribution of the start and ending slices of the tumor in a normalized batch of images across axes 0 (axial dimension) and the corresponding sampled support extracted.}\label{fig:start-end-distribution-universeg}
+  \caption{The distribution of the start and ending slices of the tumor in a normalized batch of images across axes 1 (sagittal dimension) and the corresponding sampled support extracted.}\label{fig:start-end-distribution-universeg}
 \end{figure}
 
 UniverSeg operates on 2-dimensional data. As a result, to provide automatic radiotherapy planning volumes, it is essential to provide slices for the model as input alongside a sufficient support size of similar slices. 
@@ -586,13 +583,17 @@ UniverSeg operates on 2-dimensional data. As a result, to provide automatic radi
 
 Images are normalised to match UniverSeg's training properties. Specifically, image intensities are clipped to the range $[-500, 1000]$ and normalised to be between $[0,1]$ and finally scaled down to a $128 \times 128$ resolution~\cite{universeg}. Slice pre-processing is repeated along each axis to evaluate the effectiveness of one slice over another. 
 
-\subsection{Selecting support}
+\subsection{Automated Support Set Sampling}
 
 The most screaming disadvantage of such a model when applied to a three-dimensional unseen segmentation task is tumour localisation; we do not know where the tumour starts or ends. The tumour's location can only be determined by referring to assisting models that provide estimates or make assumptions about tumour location based on previous examples. In a secluded environment where only one's model transferability is assessed, we instead analyse the properties of the tumour from the examples.
 
 We begin by analysing the tumour locations along each axis. The intuition is that the pre-processed images of equal dimensions and spacings should contain the tumour at approximately the same location. Figure~\ref{fig:start-end-distribution-universeg} shows the tumour's distribution of start and end slices and the corresponding sampled support set.
 
 By sampling a support set concerning slice positions, we include an approximation of a binary classification of `does this slice contain a tumour or not'; if for slice n there is a 20\% chance that the support contains a tumour, then we can also assume that for an unseen patient, this chance is also the same. However, this does not generalise to boundary cases where tumours or organs may begin sooner or later than all others, which may cause a misclassification.
+
+\subsection{Supervised Support Set Sampling}
+
+To consider the overall transfer ability of this model, we also consider a supervised setting; the model is fine-tuned on each axis of every anatomy across a spectrum of tumour locations across a specific axis. The main difference from the previous implementation is that we always expect a contour to be produced from the query, and we always know the support will have variable segmentations across the axis.
 
 \section{Zero-shot Transfer -- MedSAM}
 
@@ -604,11 +605,13 @@ Zero-shot learning, a promising feature of MedSAM, could potentially enable it t
 
 MedSAM takes two-dimensional images as input, much like UniverSeg. Therefore, we similarly preprocess the data to a resolution of $1024 \times 1024$ along each slice where the ground truth is present. We clip the ranges of the CT scan to Hounsfield units centred around the 40 value, with a window radius of 400 units and later normalized to the range of $[0,1]$. In contrast to UniverSeg, we resize a slice after selecting the index instead of resizing the whole image. Thus, we do not introduce any anisotropic uncertainties along our sampling axis.
 
+Further, in contrast to previous strategies, the MedSAM preprocessing step also removes ground truth segmentations that occupy an area below a specified threshold. The idea here is that the challenge with locating the small areas of the region of interest is an entirely different classification of the problem; the issue is with object detection instead of object segmentation~\cite{SAM, Ma2024}. This detail of the preprocessing is critical to consider for discussion and use as this would increase the proposed surface distance along an axis.
+
 \subsection{Point based transfer}
 
-We first experimented with the MedSAM architecture to test the effectiveness of prompting on points. We formulated this task into two categories: a sparse and dense point experiment. 
+We first experimented with the MedSAM architecture to test the effectiveness of prompting on points. The baseline MedSAM implementation offers a point based prompt and also a box based prompt. To consider both mediums of prompt encoding, we can consider a sparse and desnse point planning. % We formulated this task into two categories: a sparse and dense point experiment.  
 
-\begin{figure}[H]
+\begin{figure}
   \centering
   \raisebox{-0.5\height}{\subfigure[Sparse point prompt]{\includegraphics[width=.45\linewidth, trim=850 850 0 0, clip]{../../research/source/code/SAM_Med/3_train_point_prompt/point_batch_example.png}}}
   \raisebox{-0.5\height}{\subfigure[Dense point prompt]{\includegraphics[width=.45\linewidth, trim=0 0 850 850, clip]{../../research/source/code/SAM_Med/3_train_point_prompt/point_dense_batch_example.png}}}
@@ -620,6 +623,8 @@ The two strategies are shown in Figure~\ref{fig:point-prompt}. The sparse point 
 The hypothesis is that point prompts may work well with structures such as the bladder which are trivial to identify. However, for the CTV, the point prompt may not segment the full extent of the structure.
 
 Points are sampled with a higher probability of being towards the centre of the segmented area by calculating the Euclidean distances of all points from the centroid. This heuristic dispels any ambiguity that may be caused when selecting points closer towards the outline of the segmentation, which may occur when boundaries of different objects bleed into one another, causing a higher error.
+
+This strategy, however, is not enough; the MedSAM model often provides whispy boundaries in a response to the point prompts as it must work harder at guessing the boundaries of the object. Therefore, this strategy is dispelled from consideration.
 
 \subsection{Box based transfer}
 
@@ -635,11 +640,13 @@ For training, only one box may be fed into the model for inference. Therefore, w
   \subfigure[Selected tumor boxed]{
     {\includegraphics[width=.3\linewidth, trim=340 30 310 30, clip]{../../research/source/code/SAM_Med/4_train_box_prompt/select_top_n_largest_structures.png}}
   }
-  \subfigure[Ground truth augmentation]{
+  \subfigure[Adjusted Ground truth]{
     {\includegraphics[width=.3\linewidth, trim=630 30 20 30, clip]{../../research/source/code/SAM_Med/4_train_box_prompt/select_top_n_largest_structures.png}}
   }
   \caption{The process of selection bounding box for a given boxed tumor with an augmented ground truth used at training time for the MedSAM bax-based prompt model.}\label{fig:box-prompt-sam-selection}
 \end{figure}
+
+Furthermore, images are augmented with a random rotation, scaling, and translation to improve generalisation. Data augmentation ensures that the model does not overfit the training data and can generalise to unseen examples.
 
 \subsection{Evaluation}
 
@@ -788,21 +795,53 @@ This is why we settle at the Surface DSC (Section~\ref{sect:surface-dice}), whic
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Results and Discussion}\label{sect:results}\label{sect:discussion}
 
-% The results of the baseline for each anatomy will be displayed alongside the result of the transfer to make it easier to reason about the effectiveness of the transfer technique. 
+In this chapter, we present the results and discussion regarding the experiments carried out with each type of transfer learning strategy. The baseline in each will be displayed alongside the model performance for evaluation. Finally, we step back and consider the performance of different transfer strategies across the anatomies.
 
 \section{Many-shot Transfer -- TotalSegmentator}
+
+\subsection{Separate Training}
+
+\subsection{Region-based Training}
+
+\subsection{Rule enforced Region-based Training}
+
+% Todo, compare numbers of illegal overlap before and after.
+
+% /vol/biomedic3/bglocker/ugproj2324/az620/radiotherapy/research/source/code/data/metrics/metricsanorectum_2_combinednotable_TotalSegmentator_analysis.png
+
+% ../../research/source/code/data/metrics/metricsanorectum_2_combinednotable_TotalSegmentator_analysis.png
 
 % total segmentator had 500 females to 700 males which may explain the struggle to locate the uterus and vagina.
 
 \section{Few-shot Transfer -- UniverSeg}
 
-The main limitation of the UniverSeg model is the large memory requirements for the model. On a typical 11GB RAM device, the support size was kept low from what was required. Therefore, this experiment gave inconclusive results.
+\subsection{Automated Support Set Sampling}
 
-Specifically, a support size of 9 was used, and slices were sampled from patients not included in the query batch to reduce bias in the model's segmentations. The approache's evaluation stopped shy of its quantitative evaluation due to upsetting results from the qualitative assessment of model outputs. An example of inference is provided in Table~\ref{tab:universeg-inference}.
+Automated support set sampling is not a successful technique for unseen patients. First, there is significant variability, and limited examples do not fully address non-trivial segmentations. Provided is an additional plot for the distribution of starting and ending slices for the Anorectum class at Figure~\ref{fig:start-end-distribution-universeg}.
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.8\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_0_anorectum.png}
+  \includegraphics[width=\linewidth, trim=0 0 340px 0, clip]{../../research/source/code/UniverSeg/support_anorectum_axis_0.png}
+  \caption{The distribution of the start and ending slices of the tumor in a normalized batch of images across axes 0 (axial dimension) and the corresponding sampled support extracted.}\label{fig:start-end-distribution-universeg-ax-0}
+\end{figure}
+
+% TODO: whispy segmentations
+
+Overlapping regions in the distribution of slice numbers for the support set indicate significant variability in where tumours become visible and disappear across different patients. This overlap suggests that the tumours' start and end points are inconsistent, leading to challenges in creating a reliable support set for segmentation. When the tails of these distributions significantly overlap, it means that for some patients, the end of a tumour in one slice might coincide with the beginning of a tumour in another, or there could be significant gaps between the start and end points of tumours across different slices. This variability can confuse the model, as the support set may not provide clear and consistent examples of tumour boundaries, reducing segmentation accuracy. 
+
+Second, automatic slice generation can often lead to confusion, as the UniverSeg model was always trained to predict a segmentation. That is, their training procedure for CT was to take the central slice of anatomy, thus ignoring more complex and ambiguous areas of the anatomy. 
+
+A qualitative assessment of the technique as a whole concludes that it is not applicable and that a more supervised approach is required for the UniverSeg architecture, because examples fuel the prediction process.
+
+We provide for review a selection of slices in Table~\ref{tab:universeg-inference} from an example inference on a single patient. An additional example of a support set is provided at the appendix at Figure~\ref{fig:appendix:universeg-support}.
+
+% TODO
 
 \begin{table}[H]
   \centering
-  \caption{Sample UniverSeg inference over a random patient}\label{tab:universeg-inference}
+  \caption{Qualitative assessment of UniverSeg inference for a random patient}\label{tab:universeg-inference}
   \begin{tabular}{p{.5cm} >{\centering\arraybackslash}m{4cm} >{\centering\arraybackslash}m{4cm} >{\centering\arraybackslash}m{4cm}}
     \toprule
     & query & label & prediction \\ 
@@ -835,6 +874,10 @@ Specifically, a support size of 9 was used, and slices were sampled from patient
   \end{tabular}
 \end{table}
 
+\subsection{Supervised Support Set Sampling}
+
+
+
 \section{Zero-shot Transfer -- MedSAM}
 
 \subsection{Training Bottlenecks}
@@ -850,17 +893,12 @@ This model requires three channels of $1024 \times 1024$ image slices, making ea
 
 Firstly, image slices were stored in a $(1 \times 512 \times 512)$ resolution and upsampled before the forward pass. Furthermore, caching~\cite{charlie-caching} stored these smaller images on the training node to avoid repeated and expensive reads over the network. This improved training epoch times by 50 times.
 
-\subsection{Point Based Transfer}
-
 \subsection{Box Based Transfer}
-
-
-
 
 % Mention SAM's argument about ignoring small structures
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Conclusion}
+\chapter{Conclusion}\label{sect:conclusion}
 
 Transfer works!
 
@@ -991,6 +1029,322 @@ Therefore, before integrating tools into workflows, a committee must establish t
     \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Sagittal.png}\label{fig:example-vagina-sagittal}
   }
   \caption{Views of the segmentation (in red) of the Uterus (\ref{fig:example-uterus-axial}-\ref{fig:example-uterus-sagittal}) and  the segmentation (in red) of the Vagina (\ref{fig:example-vagina-axial}-\ref{fig:example-vagina-sagittal}) of an arbitrary patient}
+\end{figure}
+
+\section{Metrics}
+
+\subsection{Total Segmentator}
+
+\begin{table}[h!]
+  \centering
+  \caption{Added Path Length scores across each anatomy}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{TotalSegmentator out-of-the-box}} & \multicolumn{3}{c}{\textbf{TotalSegmentator Fine-tuned}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \midrule
+        Anorectum     & 1.06 & 1.96 & 0.45 & - & - & - & 0.66 & 1.02 & 0.31 \\
+        Bladder       & 1.21 & 2.06 & 0.71 & 5.87 & 4.98 & 4.18 & 1.32 & 1.72 & 0.76 \\
+        CTVn          & 3.89 & 3.01 & 3.07 & - & - & - & 4.02 & 4.01 & 2.65 \\
+        CTVp          & 1.25 & 1.51 & 0.80 & - & - & - & 1.58 & 1.74 & 1.05 \\
+        Parametrium   & 2.97 & 2.14 & 2.45 & - & - & - & 2.90 & 3.22 & 1.72 \\
+        Uterus        & 1.11 & 1.17 & 0.80 & - & - & - & 1.51 & 1.59 & 0.93 \\
+        Vagina        & 0.34 & 0.42 & 0.20 & - & - & - & 0.41 & 0.97 & 0.10 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:totalsegmentator-apl}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{DICE scores across each anatomy}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{TotalSegmentator out-of-the-box}} & \multicolumn{3}{c}{\textbf{TotalSegmentator Fine-tuned}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \midrule
+        Anorectum     & 0.91 & 0.03 & 0.92 & - & - & - & 0.92 & 0.04 & 0.93 \\
+        Bladder       & 0.94 & 0.06 & 0.97 & 0.90 & 0.13 & 0.94 & 0.95 & 0.10 & 0.97 \\
+        CTVn          & 0.93 & 0.01 & 0.94 & - & - & - & 0.94 & 0.01 & 0.94 \\
+        CTVp          & 0.94 & 0.01 & 0.94 & - & - & - & 0.93 & 0.02 & 0.94 \\
+        Parametrium   & 0.93 & 0.01 & 0.93 & - & - & - & 0.93 & 0.04 & 0.94 \\
+        Uterus        & 0.94 & 0.01 & 0.94 & - & - & - & 0.93 & 0.02 & 0.94 \\
+        Vagina        & 0.89 & 0.04 & 0.90 & - & - & - & 0.86 & 0.10 & 0.90 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:totalsegmentator-dice}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{Haussdorf scores across each anatomy}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{TotalSegmentator out-of-the-box}} & \multicolumn{3}{c}{\textbf{TotalSegmentator Fine-tuned}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \midrule
+        Anorectum     & 12.14 & 27.81 & 5.05 & - & - & - & 6.37 & 5.73 & 4.30 \\
+        Bladder       & 77.16 & 71.94 & 96.79 & 8.26 & 8.35 & 5.39 & 15.66 & 37.98 & 3.74 \\
+        CTVn          & 8.92 & 2.90 & 8.30 & - & - & - & 8.81 & 2.71 & 8.31 \\
+        CTVp          & 8.88 & 26.86 & 5.92 & - & - & - & 7.33 & 7.68 & 6.40 \\
+        Parametrium   & 11.28 & 19.53 & 8.06 & - & - & - & 9.85 & 15.19 & 7.42 \\
+        Uterus        & 6.01 & 2.61 & 5.79 & - & - & - & 6.71 & 3.25 & 6.04 \\
+        Vagina        & 6.75 & 21.72 & 4.12 & - & - & - & 5.61 & 4.09 & 4.12 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:totalsegmentator-hd}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{Relative volume difference across each anatomy}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{TotalSegmentator out-of-the-box}} & \multicolumn{3}{c}{\textbf{TotalSegmentator Fine-tuned}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \midrule
+        Anorectum     & 0.04 & 0.06 & 0.03 & - & - & - & -0.00 & 0.06 & 0.00 \\
+        Bladder       & -0.04 & 0.12 & -0.02 & -0.07 & 0.19 & -0.03 & 0.01 & 0.21 & 0.00 \\
+        CTVn          & -0.01 & 0.03 & -0.01 & - & - & - & 0.00 & 0.02 & 0.00 \\
+        CTVp          & -0.01 & 0.04 & -0.00 & - & - & - & -0.00 & 0.04 & -0.00 \\
+        Parametrium   & 0.01 & 0.03 & 0.01 & - & - & - & 0.00 & 0.06 & 0.01 \\
+        Uterus        & 0.00 & 0.05 & 0.00 & - & - & - & -0.00 & 0.05 & -0.00 \\
+        Vagina        & 0.11 & 0.09 & 0.09 & - & - & - & -0.02 & 0.16 & -0.00 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:totalsegmentator-rvd}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{Surface DSC across each anatomy}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{TotalSegmentator out-of-the-box}} & \multicolumn{3}{c}{\textbf{TotalSegmentator Fine-tuned}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \midrule
+        Anorectum     & 0.99 & 0.02 & 1.00 & - & - & - & 0.99 & 0.03 & 1.00 \\
+        Bladder       & 0.97 & 0.06 & 1.00 &  0.95 & 0.11 & 0.99 & 0.98 & 0.10 & 1.00 \\
+        CTVn          & 0.99 & 0.01 & 0.99 & - & - & - & 0.99 & 0.01 & 1.00 \\
+        CTVp          & 0.99 & 0.01 & 0.99 & - & - & - & 0.99 & 0.01 & 0.99 \\
+        Parametrium   & 0.99 & 0.01 & 0.99 & - & - & - & 0.98 & 0.04 & 1.00 \\
+        Uterus        & 0.99 & 0.01 & 0.99 & - & - & - & 0.99 & 0.02 & 0.99 \\
+        Vagina        & 0.99 & 0.01 & 1.00 & - & - & - & 0.98 & 0.06 & 1.00 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:totalsegmentator-sdc}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsanorectum_1_combinednotable_TotalSegmentator_analysis.png}
+  \caption{Anorectum Metrics}\label{fig:totalsegmentator-metrics-anorectum}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_TotalSegmentator_analysis.png}
+  \caption{Bladder Metrics}\label{fig:totalsegmentator-metrics-bladder}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_TotalSegmentator_analysis.png}
+  \caption{CTVn Metrics}\label{fig:totalsegmentator-metrics-ctvn}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_TotalSegmentator_analysis.png}
+  \caption{CTVp Metrics}\label{fig:totalsegmentator-metrics-ctvp}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_TotalSegmentator_analysis.png}
+  \caption{Parametrium Metrics}\label{fig:totalsegmentator-metrics-parametrium}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_TotalSegmentator_analysis.png}
+  \caption{Uterus Metrics}\label{fig:totalsegmentator-metrics-uterus}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_TotalSegmentator_analysis.png}
+  \caption{Vagina Metrics}\label{fig:totalsegmentator-metrics-vagina}
+\end{figure}
+
+\subsection{Region Based}
+
+\subsection{UniverSeg Metrics}
+
+% TODO
+
+\subsection{MedSAM Box Prompt Metrics}
+
+\begin{table}[h!]
+  \centering
+  \caption{Added Path Length scores across each anatomy}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \midrule
+        Anorectum    & 1.06 & 1.96 & 0.45 & 20.01 & 27.69 & 8.69 & 5.31 & 11.28 & 0.00 \\
+        Bladder      & 1.21 & 2.06 & 0.71 & 9.12 & 13.14 & 3.52 & 3.59 & 6.98 & 0.00 \\
+        CTVn         & 3.89 & 3.01 & 3.07 & 101.75 & 65.19 & 92.27 & 27.49 & 27.36 & 18.95 \\
+        CTVp         & 1.25 & 1.51 & 0.80 & 20.61 & 22.34 & 13.39 & 7.04 & 11.74 & 1.49 \\
+        Parametrium  & 2.97 & 2.14 & 2.45 & 56.33 & 33.69 & 52.09 & 16.41 & 18.67 & 11.72 \\
+        Uterus       & 1.11 & 1.17 & 0.80 & 18.03 & 20.13 & 11.91 & 6.42 & 10.18 & 1.49 \\
+        Vagina       & 0.34 & 0.42 & 0.20 & 14.11 & 9.84 & 12.89 & 3.08 & 5.49 & 0.00 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:medsam-apl}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{DICE scores across each anatomy}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \midrule
+        Anorectum    & 0.91 & 0.03 & 0.92 & 0.77 & 0.15 & 0.81 & 0.91 & 0.05 & 0.92 \\
+        Bladder      & 0.94 & 0.06 & 0.97 & 0.92 & 0.08 & 0.94 & 0.95 & 0.05 & 0.97 \\
+        CTVn         & 0.93 & 0.01 & 0.94 & 0.52 & 0.13 & 0.53 & 0.88 & 0.05 & 0.89 \\
+        CTVp         & 0.94 & 0.01 & 0.94 & 0.82 & 0.12 & 0.86 & 0.90 & 0.06 & 0.92 \\
+        Parametrium  & 0.93 & 0.01 & 0.93 & 0.66 & 0.14 & 0.68 & 0.87 & 0.07 & 0.88 \\
+        Uterus       & 0.94 & 0.01 & 0.94 & 0.85 & 0.09 & 0.88 & 0.92 & 0.05 & 0.93 \\
+        Vagina       & 0.89 & 0.04 & 0.90 & 0.65 & 0.14 & 0.67 & 0.84 & 0.08 & 0.84 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:medsam-dice}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{Haussdorf Distance across each anatomy}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \midrule
+        Anorectum    & 12.14 & 27.81 & 5.05 & 4.98 & 3.34 & 4.00 & 2.57 & 1.51 & 2.00 \\
+        Bladder      & 77.16 & 71.94 & 96.79 & 3.09 & 1.55 & 2.54 & 3.00 & 7.69 & 2.00 \\
+        CTVn         & 8.92 & 2.90 & 8.30 & 12.34 & 5.56 & 10.64 & 4.63 & 2.71 & 3.97 \\
+        CTVp         & 8.88 & 26.86 & 5.92 & 5.48 & 3.74 & 4.39 & 3.07 & 1.71 & 2.54 \\
+        Parametrium  & 11.28 & 19.53 & 8.06 & 8.92 & 3.62 & 8.39 & 4.28 & 2.36 & 3.81 \\
+        Uterus       & 6.01 & 2.61 & 5.79 & 4.79 & 2.86 & 4.00 & 3.40 & 6.66 & 2.50 \\
+        Vagina       & 6.75 & 21.72 & 4.12 & 4.80 & 1.65 & 4.56 & 2.65 & 1.28 & 2.23 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:medsam-hd}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{Relative volume difference across each anatomy}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \midrule
+        Anorectum    & 0.04 & 0.06 & 0.03 & 0.04 & 0.29 & 0.02 & -0.00 & 0.11 & 0.01 \\
+        Bladder      & -0.04 & 0.12 & -0.02 & -0.05 & 0.13 & -0.04 & -0.03 & 0.09 & -0.01 \\
+        CTVn         & -0.01 & 0.03 & -0.01 & 0.34 & 0.50 & 0.37 & -0.07 & 0.10 & -0.06 \\
+        CTVp         & -0.01 & 0.04 & -0.00 & 0.05 & 0.23 & 0.04 & -0.02 & 0.11 & -0.01 \\
+        Parametrium  & 0.01 & 0.03 & 0.01 & 0.32 & 0.33 & 0.32 & -0.05 & 0.14 & -0.03 \\
+        Uterus       & 0.00 & 0.05 & 0.00 & 0.09 & 0.19 & 0.07 & -0.02 & 0.10 & -0.01 \\
+        Vagina       & 0.11 & 0.09 & 0.09 & 0.11 & 0.38 & 0.10 & -0.04 & 0.19 & -0.02 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:medsam-rvd}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{Surface DSC across each anatomy}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \midrule
+        Anorectum    & 0.99 & 0.02 & 1.00 & 0.46 & 0.19 & 0.46 & 0.68 & 0.17 & 0.70 \\
+        Bladder      & 0.97 & 0.06 & 1.00 & 0.54 & 0.16 & 0.55 & 0.68 & 0.14 & 0.69 \\
+        CTVn         & 0.99 & 0.01 & 0.99 & 0.17 & 0.09 & 0.16 & 0.52 & 0.17 & 0.51 \\
+        CTVp         & 0.99 & 0.01 & 0.99 & 0.47 & 0.18 & 0.47 & 0.63 & 0.17 & 0.63 \\
+        Parametrium  & 0.99 & 0.01 & 0.99 & 0.26 & 0.13 & 0.23 & 0.49 & 0.16 & 0.48 \\
+        Uterus       & 0.99 & 0.01 & 0.99 & 0.48 & 0.18 & 0.48 & 0.63 & 0.16 & 0.64 \\
+        Vagina       & 0.99 & 0.01 & 1.00 & 0.39 & 0.16 & 0.37 & 0.62 & 0.17 & 0.62 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:medsam-sdc}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsanorectum_1_combinednotable_MedSAM_analysis.png}
+  \caption{Anorectum Metrics}\label{fig:medsam-metrics-anorectum}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_MedSAM_analysis.png}
+  \caption{Bladder Metrics}\label{fig:medsam-metrics-bladder}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_MedSAM_analysis.png}
+  \caption{CTVn Metrics}\label{fig:medsam-metrics-ctvn}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_MedSAM_analysis.png}
+  \caption{CTVp Metrics}\label{fig:medsam-metrics-ctvp}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_MedSAM_analysis.png}
+  \caption{Parametrium Metrics}\label{fig:medsam-metrics-parametrium}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_MedSAM_analysis.png}
+  \caption{Uterus Metrics}\label{fig:medsam-metrics-uterus}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_MedSAM_analysis.png}
+  \caption{Vagina Metrics}\label{fig:medsam-metrics-vagina}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
