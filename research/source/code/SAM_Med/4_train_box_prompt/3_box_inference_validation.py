@@ -274,8 +274,9 @@ for i, batch in tqdm(enumerate(dlh.val_loader), total=length_of_val_loader):
 
     # print(y_gt_sitk.GetSize(), ypred_sitk.GetSize())
     # print(y_gt_sitk.GetSpacing(), ypred_sitk.GetSpacing())
-
-    y_gt_sitk, ypred_sitk = upsample_sitk_image_to_original(y_gt_sitk, ypred_sitk, image_name, image_axis)
+    
+    # TODO REMOVE THIS
+    # y_gt_sitk, ypred_sitk = upsample_sitk_image_to_original(y_gt_sitk, ypred_sitk, image_name, image_axis)
 
     # print(y_gt_sitk.GetSize(), ypred_sitk.GetSize())
     # print(y_gt_sitk.GetSpacing(), ypred_sitk.GetSpacing())

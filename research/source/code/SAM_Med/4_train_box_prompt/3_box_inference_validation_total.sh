@@ -8,10 +8,10 @@
 ./3_box_inference_validation.sh Uterus 0
 ./3_box_inference_validation.sh Vagina 0
 
-# ./3_box_inference_validation.sh Anorectum True
-# ./3_box_inference_validation.sh Bladder True
-# ./3_box_inference_validation.sh CTVn True
-# ./3_box_inference_validation.sh CTVp True
-# ./3_box_inference_validation.sh Parametrium True
-# ./3_box_inference_validation.sh Uterus True
-# ./3_box_inference_validation.sh Vagina True
+./3_box_inference_validation.sh Anorectum 1
+./3_box_inference_validation.sh Bladder 1
+./3_box_inference_validation.sh CTVn 1
+./3_box_inference_validation.sh CTVp 1
+./3_box_inference_validation.sh Parametrium 1
+./3_box_inference_validation.sh Uterus 1
+./3_box_inference_validation.sh Vagina 1
