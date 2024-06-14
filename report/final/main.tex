@@ -897,13 +897,13 @@ The total summary of results for the Supervised UniverSeg architecture is availa
 
 \section{Zero-shot Transfer -- MedSAM}
 
-The total summary of results for the MedSAM architecture is available at the Appendix; Metric Tables~\ref{tab:medsam-apl}-~\ref{tab:medsam-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:medsam-metrics-anorectum}-~\ref{fig:medsam-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
+The total summary of results for the MedSAM architecture, both fine-tuned and out-of-the-box, is available at the Appendix; Metric Tables~\ref{tab:medsam-apl}-~\ref{tab:medsam-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:medsam-metrics-anorectum}-~\ref{fig:medsam-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
 
 \subsection{MedSAM's claim to zero-shot transferability}
 
 The authors of MedSAM engineer the model to be zero-shot transferable by providing a secondary input method. The method studied is the box-based spatial prompt. Results across anatomies show that a out-of-the-box zero-shot MedSAM model cannot outperform most of the segmentation scores of the nnUNet.
 
-\subsubsection{Obvious Delineations}
+\subsubsection{Obvious Delineations}\label{icantbeaskedtocomeupwithalabelhopethisdoesntcomebacktobitmeintheass}
 
 The bladder is arguably the most apparent organ delineation within the dataset; across all models, the bladder has outperformed other anatomies. However, the MedSAM out-of-the-box solution consistently performed worse than its baseline apart from the Haussdorf Distance metric. Table~\ref{tab:medsam-bladder-performance} aggregates data at Appendix~\ref{sect:medsam-appendix} from Figure~\ref{fig:medsam-metrics-bladder}.
 
@@ -976,10 +976,102 @@ Indeed, the Haussdorf distance improvement can be seen across a range of anatomi
 
 Thus, the zero-shot transfer is unsuccessful in domains with tumour areas of microscopic or highly customised segmentation. 
 
-
 \subsection{The performance of a transferred MedSAM model}
 
-% Mention SAM's argument about ignoring small structures
+A separate MedSAM model was trained for 100 epochs on training data across all axes. Models were monitored over the training period and stopped early due to signs of overfitting in the training curves. Examples of two cases are displayed at~\ref{fig:medsam-training-curves}. By freezing the encoder of the model, and fine-tuning the expansive section, we see an initial rapid improvement of performance.
+
+\begin{figure}[H]
+  \centering
+  \subfigure[CTVn training curve]{
+    \includegraphics[width=.45\linewidth, trim=0 360px 0 20px, clip]{../../data/MedSAM_finetuned/boxed_lowres_2/CTVn/progress.png}
+  }
+  \subfigure[Vagina training curve]{
+    \includegraphics[width=.45\linewidth, trim=0 360px 0 20px, clip]{../../data/MedSAM_finetuned/boxed_lowres_2/Vagina/progress.png}
+  }
+  \caption{Two out of seven training curves. The CTVn shows continuous improvement, whereas the Vagina shows signs of overfitting.}\label{fig:medsam-training-curves}
+\end{figure}
+
+\subsubsection{Obvious delineations}
+
+We have shown in Section~\ref{icantbeaskedtocomeupwithalabelhopethisdoesntcomebacktobitmeintheass} that the base-line model has competitive performance on visible anatomies when compared to the baseline. This only improves once the MedSAM model is fine-tuned on the data. Figure~\ref{fig:medsam-finetune-dice} shows the extent of competitive performance among the Anorectum and the Bladder.
+
+\begin{figure}
+  \centering
+  \subfigure[Anorectum]{\includegraphics[width=.3\linewidth, trim=310 0 975 60, clip]{../../research/source/code/data/metrics/metricsanorectum_1_combinednotable_MedSAM_analysis.png}}
+  \vspace*{1em}
+  \subfigure[Bladder]{\includegraphics[width=.3\linewidth, trim=305 0 975 60, clip]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_MedSAM_analysis.png}}
+  \caption{DICE Metrics for the MedSAM architectures across key anatomies after fine-tuning.}\label{fig:medsam-finetune-dice}
+\end{figure}
+
+DICE scores indicate that the zero-shot model transfer of MedSAM has transferred onto the anatomies with better or comparable average performance than the nnUNet baseline. Indeed, for the Bladder, both the median and the mean outperform the baseline with $\hat{x}_m = 0.95 \pm 0.05$ vs $\hat{x}_{nn} = 0.94 \pm 0.06$ with some segmentations in the validation set achieving top marks from the DICE metric. 
+
+The contrast between the anatomical structure and surrounding tissue makes the bladder and anorectum more distinct, with more explicit boundaries on a CT scan. The enhanced visibility facilitates the model's ability to detect and segment these regions accurately. Furthermore, a fairly consistent shape and location simplify the model's task of learning their features. Finally, anatomies like the bladder and anorectum have likely received a lot of accurate segmentation during pre-training due to their relevance in other medical domains.
+
+Therefore, zero-shot transfer provides a robust starting point for anatomies with a previous history in pre-training. However, the success of this model is likely misleading, as typical anatomies like the bladder and anorectum are likely to have appeared in the MedSAM model's training data. This lends the success of this approach to credit the many-shot transfer offered by a bladder and anorectum-aware model.
+
+\subsubsection{Intuitive volume performance}
+
+The dataset contains less straightforward, and more intuitive segmentations which segment microscopic spreads of the tumour. An example for consideration is the CTVn volume, which, as described in Section~\ref{sect:delineation-classes}, outlines lymphatic nodes with variable contouring depending on the progression of the disease. Table~\ref{tab:medsam-finetuned-ctvn-performance} aggregates data at Appendix~\ref{sect:medsam-appendix} from Figure~\ref{fig:medsam-metrics-ctvn}.
+
+\begin{table}[h!]
+  \centering
+  \caption{Performance of models on the CTVn delineation.}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \midrule
+        Added Path Length           & 3.89 & 3.01 & 3.07 & 115.82 & 74.00 & 102.00 & 29.49 & 36.71 & 17.00 \\
+        DICE                        & 0.93 & 0.01 & 0.94 & 0.52 & 0.13 & 0.53 & 0.89 & 0.05 & 0.90 \\
+        Haussdorf Distance          & 8.92 & 2.90 & 8.30 & 12.24 & 5.44 & 10.77 & 4.34 & 3.24 & 3.61 \\
+        Relative volume difference  & -0.01 & 0.03 & -0.01 & 0.33 & 0.50 & 0.37 & -0.06 & 0.10 & -0.05 \\
+        Surface DSC                 & 0.99 & 0.01 & 0.99 & 0.12 & 0.06 & 0.11 & 0.48 & 0.13 & 0.47 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:medsam-finetuned-ctvn-performance}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[height=.23\textheight, trim=1350px 0 5220px 0, clip]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_MedSAM_split_analysis.png}
+  \includegraphics[height=.23\textheight, trim=2125px 0 4040px 0, clip]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_MedSAM_split_analysis.png}
+
+  \caption{Dice Similarity coefficient of the MedSAM model split by axis (0: axial, 1: coronal, 2: sagittal)}\label{fig:medsam-finetuned-axis-split}
+\end{figure}
+
+The figures suggest a competitive performance of structures in the axial (0) and sagittal (2) axes. The qualitative evaluation in Figure~\ref{fig:ctvn-medsam-prediction-all-three-axis} gains an insight into why the performance might be the way it is. The hypothesised reason for this upset in performance is that the coronal view contains, on average, more disjoint areas and, therefore, more bounding boxes are passed as input into the model. Indeed, a dataset review shows that, on average, the corresponding number of boxes on each axis is 1.27, 1.78, and 1.12, respectively. 
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Axial slice]{\includegraphics[width=.85\linewidth, trim=0 60px 0 80px, clip]{../figures/ctvn-medsam-ax0.png}}
+  \subfigure[Coronal slice]{\scalebox{1}[-1]{\includegraphics[width=.85\linewidth, trim=0 60px 0 60px, clip]{../figures/ctvn-medsam-ax1.png}}}
+  \subfigure[Sgittal slice]{\scalebox{1}[-1]{\includegraphics[width=.85\linewidth, trim=0 15 0 100, clip]{../figures/ctvn-medsam-ax2.png}}}
+  \caption{Examples of arbitrary patients with the CTVn anatomy. From left to right, the slice of an arbitrary patient CT scan, the ground truth segmentation, and the MedSAM fine-tuned prediction.}\label{fig:ctvn-medsam-prediction-all-three-axis}
+\end{figure}
+
+Therefore, MedSAM has provided great promise for outperforming an nnUNet baseline; the performance gap is minor considering the CTVn anatomy was trained on \~100 epochs, whereas the nnUNet was trained on 500. The training curve of the CTVn in Figure~\ref{fig:medsam-training-curves} gives good evidence to suggest that a zero-shot transfer onto anatomies with microscopic spread may outperform a baseline if permitted to run for longer and on more compute power. 
+
+
+\subsubsection{Segmenting invisible boundaries}
+
+We have previously discussed why MedSAM has good initial out-of-the-box performance on anatomies that are clear on a scan. However, pre-processing images into slices, you run the risk of drawing a contour around an anatomy that is invisible to the eye.
+
+% TODO MAKE BIGGER AND SUBFIGURES
+\begin{figure}[H]
+  \centering
+  % \subfigure[]{\includegraphics[width=.3\linewidth, trim=50px 50px 760px 125px, clip]{../../research/source/code/SAM_Med/4_train_box_prompt/invisible-vagina.png}}
+  \includegraphics[width=.85\linewidth]{../../research/source/code/SAM_Med/4_train_box_prompt/invisible-vagina.png}
+
+  \caption{From left to right, the slice of an aribtrary patient along the coronal (0) axis, the ground truth segmentation, and the MedSAM fine-tuned prediction.}\label{fig:invisible-vagina}
+\end{figure}
+
+Take, for instance, Figure~\ref{fig:invisible-vagina}, which shows the prediction of a Vagina against the ground truth. When zooming in on the region of interest provided by the box prompt, no obvious area matches the outline of the ground truth. Therefore, the model is sometimes forced to give predictions to an otherwise uniform area. It is situations like these where the MedSAM model struggles, and it is the likely source of many poor scores on its plots.
+
+The training curve started to overfit precisely due to these cases. It is possible that the model learnt to move towards a global average across the training set, which would decrease the training loss but cause the validation loss to stay still or rise. This memorisation of the average shape and relative positioning within the box based on the axis would, therefore, not apply to unseen data because the ground truth segmentations would not have impacted the 'moving average' of the model. This is evidenced by Figure~\ref{fig:medsam-training-curves} when the green Dice loss starts to creep up towards later epochs.
+
+On paper, the metrics for the vagina are promising, as they offer improvements over the out-of-the-box solution, and the upper quartile of its distribution matches the bottom half of the baselines. However, as evidenced by the qualitative assessment of the vagina, MedSAM has not shown transferability to all types of segmentation. Specifically, the model doesn't transfer well to small anatomies amongst a background of similar tissue types. % TODO mention nnunet preprocessor.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Conclusion}\label{sect:conclusion}
@@ -987,6 +1079,8 @@ Thus, the zero-shot transfer is unsuccessful in domains with tumour areas of mic
 % the annotation time cost between the two pipelines (Fig. 5b). The results demonstrate that with the assistance of MedSAM, the annotation time is substantially reduced by 82.37% and 82.95% for the two experts, respectively (medsam)
 
 % because of the way the CTV is drawn based on the progression of the tumor and how far along the patient is, this influences the contour drawen. Perhaps, the metrics suggest that a model with only one modality is not enough to make a decision which sparks the idea of a model which is capable of multi-modal analysis.
+
+% Maybe run inference on a nnUNet preprocessed image where the normalization affects only the ground truth region. (especially vagina case in the MedSAM fine-tuned discussion)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Ethics}
