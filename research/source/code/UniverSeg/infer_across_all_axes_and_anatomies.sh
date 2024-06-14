@@ -21,7 +21,7 @@ jupyter nbconvert --to script '2_inference.ipynb'
 
 # python3 2_inference.py Anorectum 0
 # python3 2_inference.py Anorectum 1
-# python3 2_inference.py Anorectum 2
+python3 2_inference.py Anorectum 2 # TODO
 # python3 2_inference.py Bladder 0
 # python3 2_inference.py Bladder 1
 # python3 2_inference.py Bladder 2
@@ -31,12 +31,12 @@ jupyter nbconvert --to script '2_inference.ipynb'
 # python3 2_inference.py CTVp 0
 # python3 2_inference.py CTVp 1
 # python3 2_inference.py CTVp 2
-python3 2_inference.py Parametrium 0
+# python3 2_inference.py Parametrium 0
 # python3 2_inference.py Parametrium 1
 # python3 2_inference.py Parametrium 2
 # python3 2_inference.py Vagina 0
 # python3 2_inference.py Vagina 1
 # python3 2_inference.py Vagina 2
 # python3 2_inference.py Uterus 0
-# python3 2_inference.py Uterus 1
-# python3 2_inference.py Uterus 2
+python3 2_inference.py Uterus 1
+python3 2_inference.py Uterus 2

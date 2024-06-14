@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 import os, sys
@@ -11,7 +11,7 @@ from utils.environment import setup_data_vars
 setup_data_vars()
 
 
-# In[ ]:
+# In[2]:
 
 
 import argparse
@@ -28,7 +28,7 @@ args = parser.parse_args(
 )
 
 
-# In[ ]:
+# In[3]:
 
 
 anatomy = args.anatomy # 'Anorectum'
@@ -37,14 +37,14 @@ axis = int(args.axis) # 0
 batch_size = 3
 
 
-# In[ ]:
+# In[4]:
 
 
 print(f'Infering on {anatomy} along axis {axis}')
 print(f'Using support size {support_size} and batch size {batch_size}')
 
 
-# In[1]:
+# In[5]:
 
 
 from torch.utils.data import Dataset
@@ -133,7 +133,7 @@ class UniverSegDataSet(Dataset):
         }
 
 
-# In[ ]:
+# In[6]:
 
 
 from torch.utils.data import DataLoader
@@ -152,7 +152,7 @@ for i, batch in enumerate(my_dataloder):
     break
 
 
-# In[ ]:
+# In[7]:
 
 
 from universeg import universeg
@@ -161,14 +161,14 @@ dataset = UniverSegDataSet(support_size=support_size, anatomy=anatomy, axis=axis
 dataloader = DataLoader(my_dataset, batch_size=batch_size, shuffle=True)
 
 
-# In[ ]:
+# In[8]:
 
 
 from platipy.imaging.label.comparison import compute_metric_total_apl, compute_surface_dsc, compute_metric_hd
 import SimpleITK as sitk
 
 
-# In[ ]:
+# In[9]:
 
 
 import pandas as pd
@@ -177,11 +177,11 @@ import os
 
 df = pd.DataFrame(columns=['name', 'dice', 'volume_similarity', 'apl', 'surface_distance', 'hausdorff_distance'])
 
-save_dir = os.path.join('results', anatomy, f'axis{axis}')
+save_dir = os.path.join('results_finetuned', anatomy, f'axis{axis}')
 os.makedirs(save_dir, exist_ok=True)
 
 
-# In[ ]:
+# In[11]:
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -191,6 +191,11 @@ overlap_measures_filter = sitk.LabelOverlapMeasuresImageFilter()
 # Run the inference
 model = universeg(pretrained=True)
 model = model.to(device)
+
+# load in parameters from the trained model
+checkpoint = torch.load('results_finetuned/finetuning/model_checkpoint_best.pth')
+
+model.load_state_dict(checkpoint['model'])
 
 for i, batch in tqdm(enumerate(dataloader)):
     try:
