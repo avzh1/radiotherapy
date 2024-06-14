@@ -20,8 +20,22 @@ SOURCE_DIR=$(git rev-parse --show-toplevel)
 source ${SOURCE_DIR}/.venv/bin/activate
 source ${SOURCE_DIR}/data/data_vars.sh
 
+
+if [ -z "$1" ]; then
+    echo "Error: FOLD is not provided."
+    exit -1
+fi
+
+if [ -z "$2" ]; then
+    echo "Error: TRAINER_NAME is not provided."
+    exit -1
+fi
+
+# nnUNetTrainer_500epochs__nnUNetPlans__3d_fullres
+# nnUNetTrainerCervical_500epochs__nnUNetPlans__3d_fullres
+
 # Convert Python Script
 jupyter nbconvert --to script '3_inference.ipynb'
 
 # Run python script
-python3 3_inference.py
+python3 3_inference.py $1 $2

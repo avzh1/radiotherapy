@@ -30,5 +30,5 @@ fi
 
 # Run python script
 # nnUNetv2_train DATASET_NAME_OR_ID UNET_CONFIGURATION FOLD [additional options, see -h]
-nnUNetv2_train 8 3d_fullres $1 -tr nnUNetTrainerCervical_500epochs --npz --val_best # --c
+nnUNetv2_train 8 3d_fullres $1 -tr nnUNetTrainerCervical_500epochs --npz --val_best --c
 

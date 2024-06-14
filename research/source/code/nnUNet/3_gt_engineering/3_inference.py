@@ -81,8 +81,8 @@ def predict_file(input_file, output_file, predictor):
 
     predictor.predict_from_files(input_file,
                                  output_file,
-                                 save_probabilities=False,
-                                 flatten_prediction=False,
+                                 save_probabilities=True,
+                                #  flatten_prediction=False,
                                  overwrite=False,
                                  num_processes_preprocessing=2,
                                  num_processes_segmentation_export=2,
@@ -107,25 +107,41 @@ def predict_file(input_file, output_file, predictor):
 
 import multiprocessing
 
+import argparse
+
 if __name__ == '__main__':
     multiprocessing.freeze_support()
 
     setup_data_vars()
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('fold', type=int, help='fold to predict from, set to -1 to infer automatically')
+    parser.add_argument('trainer_name', type=str, help='name of the trainer to use (e.g. nnUNetTrainer_500epochs__nnUNetPlans__3d_fullres)')
+
+    args = parser.parse_args()
+    
+    fold = args.fold
+    trainer_name = args.trainer_name
+
+    assert trainer_name in ['nnUNetTrainer_500epochs__nnUNetPlans__3d_fullres', 'nnUNetTrainerCervical_500epochs__nnUNetPlans__3d_fullres']
+
     class_of_interest = os.environ.get('TotalBinary')
     input_data_path = os.path.join(os.environ.get('nnUNet_raw'), class_of_interest, os.environ.get('data_trainingImages'))
-    output_path = os.path.join(os.environ.get('nnUNet_inference'), class_of_interest, 'nnUNetTrainer_500epochs__nnUNetPlans__3d_fullres_unflattened')
-    model_path = os.path.join(class_of_interest, 'nnUNetTrainer_500epochs__nnUNetPlans__3d_fullres')
+    output_path = os.path.join(os.environ.get('nnUNet_inference'), class_of_interest, trainer_name)
+    model_path = os.path.join(class_of_interest, trainer_name)    
 
-    folds_for_model = set()
-    full_path = os.path.join(os.environ.get('nnUNet_results'), model_path)
-    _, subdirs, _ = next(os.walk(full_path))
-    for folds in sorted(subdirs):
-        for checkpoints in os.listdir(os.path.join(full_path, folds)):
-            if '.pth' in checkpoints:
-                folds_for_model.add(folds.split('_')[1])
+    if fold == -1:
+        folds_for_model = set()
+        full_path = os.path.join(os.environ.get('nnUNet_results'), model_path)
+        _, subdirs, _ = next(os.walk(full_path))
+        for folds in sorted(subdirs):
+            for checkpoints in os.listdir(os.path.join(full_path, folds)):
+                if '.pth' in checkpoints:
+                    folds_for_model.add(folds.split('_')[1])
 
-    fold = tuple(folds_for_model)
+        fold = tuple(folds_for_model)
+    else:
+        fold = tuple([fold])
     
     print(f'initialising predictor with class {class_of_interest}, and folds {fold}')
     predictor = initialise_predictor(model_path, fold)
@@ -137,23 +153,3 @@ if __name__ == '__main__':
 
 
 # ## Custom predictor
-
-# In[7]:
-
-
-# from nnunetv2.imageio.simpleitk_reader_writer import SimpleITKIO
-# from nnunetv2.inference.predict_from_raw_data import nnUNetPredictor
-
-# img, props = SimpleITKIO().read_images([os.path.join(os.environ.get('nnUNet_raw'), os.environ.get('TotalBinary'), os.environ.get('data_trainingImages'), 'zzAMLART_011_0000.nii.gz')])
-
-# ret = predictor.predict_single_npy_array(
-#         input_image = img, 
-#         image_properties = props, 
-#         segmentation_previous_stage = None,
-#         output_file_truncated = None,
-#         save_or_return_probabilities = True,
-#         flatten_prediction = False)
-
-# # iterator = predictor.get_data_iterator_from_raw_npy_data([img], None, [props], None, 1)
-# # ret = predictor.predict_from_data_iterator(iterator, False, 1)
-
