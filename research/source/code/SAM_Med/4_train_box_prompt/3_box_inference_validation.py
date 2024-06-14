@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # Imports
@@ -10,6 +10,7 @@ import sys
 import torch
 import numpy as np
 from tqdm import tqdm
+import SimpleITK as sitk
 from matplotlib import pyplot as plt
 
 # Add the setup_data_vars function as we will need it to find the directory for the training data.
@@ -29,7 +30,7 @@ device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 device
 
 
-# In[ ]:
+# In[9]:
 
 
 import argparse
@@ -40,31 +41,43 @@ parser = argparse.ArgumentParser()
 
 # 1. Add the anatomy on which we will fine-tune
 parser.add_argument(
-    '--anatomy',
+    'anatomy',
     type=str,
     help='Anatomy on which to fine-tune the model. Note: this is case sensitive, please capitalize the first letter and accronyms such as CTVn or CTVp.',
-    required=True
+)
+
+parser.add_argument(
+    'checkpoint',
+    type=int,
+    help='Whether to use the checkpoint for the anatomy or whether to use the vanialla model the model comes with (True means use checkpoint)',
 )
 
 
-# In[ ]:
+# In[13]:
 
 
 args = parser.parse_args(
-    # ['--anatomy', 'CTVn']
+    # ['CTVn', '1']
 )
 
 anatomy = args.anatomy
+checkpoint_arg = bool(args.checkpoint)
+
+print('Anatomy: ', anatomy)
+print('Checkpoint: ', checkpoint_arg)
 
 
 # ## Setup classes for loading up the stuff
 
-# In[ ]:
+# In[40]:
 
 
 lowres = True
 save_dir = os.path.join(os.environ.get('MedSAM_finetuned'), 'boxed_lowres_2', anatomy)
 checkpoint_path = os.path.join(os.environ['PROJECT_DIR'], 'models', 'MedSAM', 'work_dir', 'MedSAM', 'medsam_vit_b.pth')
+
+
+
 model_path = os.path.join(save_dir, 'checkpoint_best.pth')
 data_split = os.path.join(save_dir, 'data_splits.json')
 img_dir = os.path.join(os.environ.get('MedSAM_preprocessed_lowres'), 'imgs')
@@ -81,7 +94,7 @@ assert os.path.exists(img_dir), f"Raw data {img_dir} does not exist."
 assert os.path.exists(gt_dir), f"Ground truth data {gt_dir} does not exist."
 
 
-# In[ ]:
+# In[41]:
 
 
 dlh = DataLoaderHandler(save_dir = save_dir,
@@ -98,18 +111,21 @@ dlh.setup_specific_dataloader('validation')
 dlh.validation_image_ids
 
 
-# In[ ]:
+# In[42]:
 
 
 cph = CheckpointHandler(save_dir, checkpoint_path, device)
-if cph.checkpoint_exists():
-    model, optimizer, epoch, best_loss = cph.load_checkpoint()
+if checkpoint_arg and cph.checkpoint_exists():
+    model, optimizer, epoch, _ = cph.load_checkpoint()
     print(f'Loaded the model for anatomy {anatomy} from epoch {epoch}')
+else:
+    model, optimizer = cph.load_base_checkpoint()
+    print(f'Loaded the base model of MedSAM')
 
 
 # ## Main validaiton loop
 
-# In[ ]:
+# In[43]:
 
 
 import pandas as pd
@@ -118,31 +134,110 @@ import pandas as pd
 
 df = pd.DataFrame(columns=['name', 'axis', 'dice', 'jaccard', 'volume_similarity', 'apl', 'surface_distance', 'hausdorff_distance'])
 
+validation_file_name = f'validation{"_checkpoint" if checkpoint_arg else "_base"}.csv'
+
 # load in the processed data if it already exists
-if os.path.exists(os.path.join(save_dir, 'validation.csv')):
-    df = pd.read_csv(os.path.join(save_dir, 'validation.csv'))
+# if os.path.exists(os.path.join(save_dir, 'validation.csv')):
+#     df = pd.read_csv(os.path.join(save_dir, 'validation.csv'))
 
 
-# In[ ]:
+# In[44]:
 
 
 df
 
 
-# In[ ]:
+# In[45]:
 
 
 import SimpleITK as sitk
+import os
+
+def upsample_sitk_image_to_original(y_gt_sitk, y_pred_sitk, image_name, axis_num):
+    # Get image id from image_name
+    image_id = int(image_name.split('_')[2].split('-')[0])
+    original_file_path = os.path.join(
+        os.environ.get('nnUNet_raw'),
+        os.environ.get('Anorectum'),
+        os.environ.get('data_trainingImages'),
+        # f'zzAMLART_{image_id:03d}.nii.gz'
+        f'zzAMLART_{image_id:03d}_0000.nii.gz'
+    )
+    # slice_num = int(image_name.split('_')[2].split('-')[1][:-4])
+
+    # Read the original image
+    reader = sitk.ImageFileReader()
+    reader.SetFileName(original_file_path)
+    reader.LoadPrivateTagsOn()
+    reader.ReadImageInformation()
+    original_spacing = list(reader.GetSpacing())
+    original_size = list(reader.GetSize())
+    
+    # reshape so that the original axis order is preserved
+
+    # (X, X, 1)
+
+    if axis_num == 0:
+        y_gt_sitk = sitk.PermuteAxes(y_gt_sitk, [2, 0, 1])
+        y_pred_sitk = sitk.PermuteAxes(y_pred_sitk, [2, 0, 1])
+    elif axis_num == 1:
+        y_gt_sitk = sitk.PermuteAxes(y_gt_sitk, [0, 2, 1])
+        y_pred_sitk = sitk.PermuteAxes(y_pred_sitk, [0, 2, 1])
+
+    original_size[axis_num] = 1
+    # original_spacing[axis_num] = 1
+
+    y_gt_sitk_new = sitk.Resample(y_gt_sitk, original_size, sitk.Transform(), sitk.sitkNearestNeighbor, y_gt_sitk.GetOrigin(), original_spacing, y_gt_sitk.GetDirection(), 0.0, y_gt_sitk.GetPixelID())
+    y_pred_sitk_new = sitk.Resample(y_pred_sitk, original_size, sitk.Transform(), sitk.sitkNearestNeighbor, y_pred_sitk.GetOrigin(), original_spacing, y_pred_sitk.GetDirection(), 0.0, y_pred_sitk.GetPixelID())
+
+    if axis_num == 0:
+        y_gt_sitk_new = sitk.PermuteAxes(y_gt_sitk_new, [1, 2, 0])
+        y_pred_sitk_new = sitk.PermuteAxes(y_pred_sitk_new, [1, 2, 0])
+    elif axis_num == 1:
+        y_gt_sitk_new = sitk.PermuteAxes(y_gt_sitk_new, [0, 2, 1])
+        y_pred_sitk_new = sitk.PermuteAxes(y_pred_sitk_new, [0, 2, 1])
+
+    return y_gt_sitk_new, y_pred_sitk_new
+    
+# gt_up, pred_up = upsample_sitk_image_to_original(y_gt_sitk, ypred_sitk, image_name, image_axis)
+# print(y_gt_sitk.GetSize(), gt_up.GetSize(), ypred_sitk.GetSize(), pred_up.GetSize())
+# print(np.unique(sitk.GetArrayFromImage(gt_up)), np.unique(sitk.GetArrayFromImage(pred_up)))
+
+# # plot the comparison between upsampled and original images
+
+# def plot_comparison(gt, pred, gt_up, pred_up):
+#     fig, ax = plt.subplots(2, 2, figsize=(10, 10))
+#     ax[0, 0].imshow(sitk.GetArrayFromImage(gt)[0], cmap='gray')
+#     ax[0, 0].set_title('Original GT')
+#     ax[0, 1].imshow(sitk.GetArrayFromImage(pred)[0], cmap='gray')
+#     ax[0, 1].set_title('Original Pred')
+#     ax[1, 0].imshow(sitk.GetArrayFromImage(gt_up)[0], cmap='gray')
+#     ax[1, 0].set_title('Upsampled GT')
+#     ax[1, 1].imshow(sitk.GetArrayFromImage(pred_up)[0], cmap='gray')
+#     ax[1, 1].set_title('Upsampled Pred')
+#     plt.show()
+
+# plot_comparison(y_gt_sitk, ypred_sitk, gt_up, pred_up)
+
+
+# In[ ]:
+
+
 from platipy.imaging.label.comparison import compute_metric_total_apl, compute_surface_dsc, compute_metric_hd
+import cv2
+import numpy as np
+
 overlap_measures_filter = sitk.LabelOverlapMeasuresImageFilter()
 
 length_of_val_loader = len(dlh.val_loader)
 
 # iterate through the validation loader
 for i, batch in tqdm(enumerate(dlh.val_loader), total=length_of_val_loader):
+    image_name = batch["image_name"][0]
+    image_axis = batch["axis"].item()
 
     # check if we have already processed this name and axis
-    if batch["image_name"][0] in df.name.values and batch["axis"].item() in df.axis.values:
+    if image_name in df.name.values and image_axis in df.axis.values:
         continue
 
     # Get data
@@ -151,7 +246,7 @@ for i, batch in tqdm(enumerate(dlh.val_loader), total=length_of_val_loader):
     # coords_torch = batch["coords"].squeeze().to(device) # ([B, Ps, 2])
     boxes_torch = batch["boxes"].squeeze().reshape(batch_size, -1, 4).to(device) # ([B, Ps, 4])
     axis = batch["axis"].squeeze() # ([B])
-
+    
     medsam_preds = []
     medsam_segs = []
 
@@ -177,29 +272,142 @@ for i, batch in tqdm(enumerate(dlh.val_loader), total=length_of_val_loader):
     y_gt_sitk = sitk.GetImageFromArray(gt2D[0].detach().cpu().numpy().astype(np.uint8))
     ypred_sitk = sitk.GetImageFromArray(medsam_seg[None, :, :].numpy().astype(np.uint8))
 
+    # print(y_gt_sitk.GetSize(), ypred_sitk.GetSize())
+    # print(y_gt_sitk.GetSpacing(), ypred_sitk.GetSpacing())
+
+    y_gt_sitk, ypred_sitk = upsample_sitk_image_to_original(y_gt_sitk, ypred_sitk, image_name, image_axis)
+
+    # print(y_gt_sitk.GetSize(), ypred_sitk.GetSize())
+    # print(y_gt_sitk.GetSpacing(), ypred_sitk.GetSpacing())
+
+    # ##############################################################
+
+    # plot the the prediction vs the ground truth zoomed into the area of interest
+
+    # Find contours in the segmentation map
+    # contours, _ = cv2.findContours(np.uint8(sitk.GetArrayFromImage(ypred_sitk)[0]), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # # Initialize list to store bounding boxes
+    # bounding_boxes = []
+
+    # x_min, y_min, x_max, y_max = float('inf'), float('inf'), 0, 0
+
+    # # Loop through contours to find bounding boxes
+    # for contour in contours:
+    #     # Get bounding box coordinates
+    #     x, y, w, h = cv2.boundingRect(contour)
+    #     x_min, y_min, x_max, y_max = min(x, x_min), min(y, y_min), max(x + w, x_max), max(y + h, y_max)
+    #     # bounding_boxes.append([x - 20, y - 20, x + w + 20, y + h + 20])  # Format: (x_min, y_min, x_max, y_max)
+
+    # # plot the ROI
+
+    # fig, ax = plt.subplots(1, 2, figsize=(10, 5))
+
+    # p = 15
+
+    # ax[0].imshow(sitk.GetArrayFromImage(y_gt_sitk)[0][max(0, y_min - p):y_max + p, max(0, x_min - p):x_max + p], cmap='gray')
+    # ax[0].set_title('Ground Truth')
+    # ax[0].axis('off')
+
+    # ax[1].imshow(sitk.GetArrayFromImage(ypred_sitk)[0][max(0, y_min - p):y_max + p, max(0, x_min - p):x_max + p], cmap='gray')
+    # ax[1].set_title('Prediction')
+    # ax[1].axis('off')
+
+    # plt.show()
+
+    # ##############################################################
+
     overlap_measures_filter.Execute(y_gt_sitk, ypred_sitk)
                 
     dice = overlap_measures_filter.GetDiceCoefficient()
     jaccard = overlap_measures_filter.GetJaccardCoefficient()
     volume_similarity = overlap_measures_filter.GetVolumeSimilarity()
 
-    apl = compute_metric_total_apl(y_gt_sitk, ypred_sitk)
-    surface_dsc = compute_surface_dsc(y_gt_sitk, ypred_sitk)
+    apl = compute_metric_total_apl(y_gt_sitk, ypred_sitk, 0.5)
+    surface_dsc = compute_surface_dsc(y_gt_sitk, ypred_sitk, 0.5)
     hd = compute_metric_hd(y_gt_sitk, ypred_sitk)
 
     # add metrics to dataframe
 
     new_record = pd.DataFrame([
-        {'name': batch["image_name"][0], 'axis': batch["axis"].item(), 'dice': dice, 'jaccard': jaccard, 'volume_similarity': volume_similarity, 'apl': apl, 'surface_distance': surface_dsc, 'hausdorff_distance': hd}
+        {'name': image_name, 'axis': image_axis, 'dice': dice, 'jaccard': jaccard, 'volume_similarity': volume_similarity, 'apl': apl, 'surface_distance': surface_dsc, 'hausdorff_distance': hd}
     ])
 
     df = pd.concat([df, new_record], ignore_index=True)
 
     if i % 10 == 0:
         # save the dataframe to a csv file
-        df.to_csv(os.path.join(save_dir, 'validation.csv'), index=False)
+        df.to_csv(os.path.join(save_dir, validation_file_name), index=False)
 
-df.to_csv(os.path.join(save_dir, 'validation.csv'), index=False)
+df.to_csv(os.path.join(save_dir, validation_file_name), index=False)
+
+
+# In[ ]:
+
+
+fig, ax = plt.subplots(1, 2, figsize=(10, 5))
+
+p = 15
+
+ax[0].imshow(sitk.GetArrayFromImage(y_gt_sitk)[0][max(0, y_min - p):y_max + p, max(0, x_min - p):x_max + p], cmap='gray')
+ax[0].set_title('Ground Truth')
+ax[0].axis('off')
+
+ax[1].imshow(sitk.GetArrayFromImage(ypred_sitk)[0][max(0, y_min - p):y_max + p, max(0, x_min - p):x_max + p], cmap='gray')
+ax[1].set_title('Prediction')
+ax[1].axis('off')
+
+plt.show()
+
+
+# In[ ]:
+
+
+def compute_apl(label_ref, label_test, distance_threshold_mm=3):
+    """
+    helper function for computing the added path length
+
+    Args:
+        label_ref (sitk.Image): The reference (ground-truth) label
+        label_test (sitk.Image): The test label
+        distance_threshold_mm (float): Distances under this threshold will not contribute to the
+            added path length
+
+    Returns:
+        float: The total (slice-wise) added path length in mm
+    """
+    added_path_length_list = []
+    n_slices = label_ref.GetSize()[2]
+
+    # convert the distance threshold to voxel units
+    distance = int(np.ceil(distance_threshold_mm / np.mean(label_ref.GetSpacing()[:2])))
+
+    # iterate over each slice
+    for i in range(n_slices):
+
+        if (
+            sitk.GetArrayViewFromImage(label_ref)[i].sum()
+            + sitk.GetArrayViewFromImage(label_test)[i].sum()
+        ) == 0:
+            continue
+
+        label_ref_contour = sitk.LabelContour(label_ref[:, :, i])
+        label_test_contour = sitk.LabelContour(label_test[:, :, i])
+
+        if distance_threshold_mm > 0:
+            kernel = [int(distance) for k in range(2)]
+            label_test_contour = sitk.BinaryDilate(label_test_contour, kernel)
+
+        # mask out the locations in agreement
+        added_path = sitk.MaskNegated(label_ref_contour, label_test_contour)
+
+        # add up the voxels on the added path
+        added_path_length = sitk.GetArrayViewFromImage(added_path).sum()
+        added_path_length_list.append(added_path_length)
+
+    return added_path_length_list
+
+compute_apl(y_gt_sitk, ypred_sitk, 1.0)
 
 
 # ## plot the metrics per axis and total

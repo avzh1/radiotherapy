@@ -32,6 +32,8 @@ class SAM_Dataset(Dataset):
         self.max_points = max_points
         self.box_padding = box_padding
         self.max_box_points = max_box_points
+
+        self.anatomy = os.path.basename(gt_path)
         
         # Assume that axese 0 1 and 2 have been processed.
         filter_fn = lambda x : x.endswith('.npy') and int(re.search(image_id_from_file_name_regex, x).group(1)) in id_split
@@ -231,8 +233,11 @@ class SAM_Dataset(Dataset):
 
         # if axis == 1 or axis == 2:
         #     # invert the y-axis
-        #     array_copy = array.copy()
-        #     return np.flipud(array_copy)
+        #     # if the array is a torch tensor
+        #     if isinstance(array, torch.Tensor):
+        #         return torch.flipud(array)
+        #     else:
+        #         return np.flipud(array)
 
         return array
 
@@ -300,3 +305,21 @@ class SAM_Dataset(Dataset):
         gt = np.logical_and(box_mask, gt).astype(np.uint8)
 
         return np.array(bounding_boxes), gt
+    
+    def get_specific_sample(self, patient_id, axis, slice_number):
+        query_image = f'CT_{self.anatomy}_zzAMLART_{patient_id:03d}-{slice_number:03d}.npy'
+        
+        if axis == 0:
+            image_index = self.axis0_imgs.index(query_image)
+            assert image_index >= 0, f"Image {query_image} not found in axis0 images"
+            idx = image_index
+        elif axis == 1:
+            image_index = self.axis1_imgs.index(query_image)
+            assert image_index >= 0, f"Image {query_image} not found in axis1 images"
+            idx = len(self.axis0_imgs) + image_index
+        else:
+            image_index = self.axis2_imgs.index(query_image)
+            assert image_index >= 0, f"Image {query_image} not found in axis2 images"
+            idx = len(self.axis0_imgs) + len(self.axis1_imgs) + image_index
+
+        return self.__getitem__(idx)

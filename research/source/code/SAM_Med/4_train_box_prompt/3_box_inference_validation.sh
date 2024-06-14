@@ -22,6 +22,11 @@ if [ -z "$1" ]; then
     return -1
 fi
 
+if [ -z "$2" ]; then
+    echo "Error: USE_CHECKPOINT bool is not provided."
+    return -1
+fi
+
 # Load the virtual environment
 source ${SOURCE_DIR}/.venv/bin/activate
 # source ${SOURCE_DIR}/data/data_vars.sh
@@ -31,4 +36,4 @@ jupyter nbconvert --to script '3_box_inference_validation.ipynb'
 echo "Converted Python Script"
 
 # Run python script
-python3 3_box_inference_validation.py --anatomy $1
+python3 3_box_inference_validation.py $1 $2
