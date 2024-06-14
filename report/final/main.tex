@@ -648,6 +648,19 @@ For training, only one box may be fed into the model for inference. Therefore, w
 
 Furthermore, images are augmented with a random rotation, scaling, and translation to improve generalisation. Data augmentation ensures that the model does not overfit the training data and can generalise to unseen examples.
 
+\subsection{Training Bottlenecks}
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Raw epoch time before optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres/Anorectum/progress.png}}
+  \subfigure[Epoch time after pipeline optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres_2/Anorectum/progress.png}}
+  \caption{Comparison of epoch times for an expensive MedSAM model before and after pipeline optimizations.}\label{fig:training-comparison-med}
+\end{figure}
+
+This model requires three channels of $1024 \times 1024$ image slices, making each input image in its raw state a costly sample to send over the network especially after considering that each channel is a duplicate to match the requirements of the SAM model. This makes training on commodity hardware a difficult thing to accomplish. Training times can be very long without adding changes to the training pipeline. Figure~\ref{fig:training-comparison-med} compares training pipelines and performance improvements. 
+
+Firstly, image slices are stored in a $(1 \times 512 \times 512)$ resolution and upsampled before the forward pass. Furthermore, caching~\cite{charlie-caching} stored these smaller images on the training node to avoid repeated and expensive reads over the network. This improved training epoch times by 50 times.
+
 \subsection{Evaluation}
 
 During training, the test set is divided by ID to ensure that a portion of an image is not both trained and validated. This way, the model's transferability is not questioned because it is trained on a disjoint set of patients; otherwise, quantitative measurements would skew and not represent the model's adaptability to unseen data.
@@ -801,7 +814,11 @@ In this chapter, we present the results and discussion regarding the experiments
 
 \subsection{Separate Training}
 
+The total summary of results for the separate training TotalSegmentator transferral is available at the Appendix; Metric Tables~\ref{tab:totalsegmentator-apl}-~\ref{tab:totalsegmentator-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:totalsegmentator-metrics-anorectum}-~\ref{fig:totalsegmentator-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
+
 \subsection{Region-based Training}
+
+The total summary of results for the region based transferral for nnUNet back-bone architectures is available at the Appendix; Metric Tables~\ref{tab:region-based-apl}-~\ref{tab:region-based-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:region-based-metrics-anorectum}-~\ref{fig:region-based-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
 
 \subsection{Rule enforced Region-based Training}
 
@@ -876,34 +893,19 @@ We provide for review a selection of slices in Table~\ref{tab:universeg-inferenc
 
 \subsection{Supervised Support Set Sampling}
 
-The total summary of results for the Supervised UniverSeg architecture is available at the Appendix; Metric Tables~\ref{tab:medsam-apl}-~\ref{tab:medsam-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figure~\ref{fig:medsam-metrics-anorectum}-~\ref{fig:medsam-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
+The total summary of results for the Supervised UniverSeg architecture is available at the Appendix; Metric Tables~\ref{tab:universeg-apl}-~\ref{tab:universeg-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:universeg-metrics-anorectum}-~\ref{fig:universeg-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
 
 \section{Zero-shot Transfer -- MedSAM}
 
-The total summary of results for the MedSAM architecture is available at the Appendix; Metric Tables~\ref{tab:medsam-apl}-~\ref{tab:medsam-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figure~\ref{fig:medsam-metrics-anorectum}-~\ref{fig:medsam-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
-
-\subsection{Training Bottlenecks}
-
-\begin{figure}[H]
-  \centering
-  \subfigure[Raw epoch time before optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres/Anorectum/progress.png}}
-  \subfigure[Epoch time after pipeline optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres_2/Anorectum/progress.png}}
-  \caption{Comparison of epoch times for an expensive MedSAM model before and after pipeline optimizations.}\label{fig:training-comparison-med}
-\end{figure}
-
-This model requires three channels of $1024 \times 1024$ image slices, making each input image in its raw state a costly sample to send over the network especially after considering that each channel is a duplicate to match the requirements of the SAM model. This makes training on commodity hardware a difficult thing to accomplish. Training times can be very long without adding changes to the training pipeline. Figure~\ref{fig:training-comparison-med} compares training pipelines and performance improvements. 
-
-Firstly, image slices were stored in a $(1 \times 512 \times 512)$ resolution and upsampled before the forward pass. Furthermore, caching~\cite{charlie-caching} stored these smaller images on the training node to avoid repeated and expensive reads over the network. This improved training epoch times by 50 times.
+The total summary of results for the MedSAM architecture is available at the Appendix; Metric Tables~\ref{tab:medsam-apl}-~\ref{tab:medsam-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:medsam-metrics-anorectum}-~\ref{fig:medsam-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
 
 \subsection{MedSAM's claim to zero-shot transferability}
 
-The authors of MedSAM engineer the model to be zero-shot transferable by providing a secondary input domain. The domain studied is the box-based spatial prompt. Results across anatomies show that a baseline model cannot outperform the segmentation scores of the nnUNet. 
-
-% TODO: careful, only works under strict supervision setting
+The authors of MedSAM engineer the model to be zero-shot transferable by providing a secondary input method. The method studied is the box-based spatial prompt. Results across anatomies show that a out-of-the-box zero-shot MedSAM model cannot outperform most of the segmentation scores of the nnUNet.
 
 \subsubsection{Obvious Delineations}
 
-Arguably, the most apparent organ delineation within the dataset is the bladder. Across the range of metrics used to evaluate the segmentation's performance, the bladder consistently performed worse apart from the Haussdorf Distance metric. Table~\ref{tab:medsam-bladder-performance} aggregates data at Appendix~\ref{sect:medsam-appendix} from Figure~\ref{fig:medsam-metrics-bladder}.
+The bladder is arguably the most apparent organ delineation within the dataset; across all models, the bladder has outperformed other anatomies. However, the MedSAM out-of-the-box solution consistently performed worse than its baseline apart from the Haussdorf Distance metric. Table~\ref{tab:medsam-bladder-performance} aggregates data at Appendix~\ref{sect:medsam-appendix} from Figure~\ref{fig:medsam-metrics-bladder}.
 
 \begin{table}[h!]
   \centering
@@ -927,19 +929,52 @@ Arguably, the most apparent organ delineation within the dataset is the bladder.
 
 This promising performance spike over the non-finetuned model is due to the nature of the box prompts supplied to the model during inference. The MedSAM model heavily relies on good supervision. Otherwise, invalid or imprecise definitions of areas of interest will lead to wrong results. Therefore, this result alone cannot be used to determine the transferability of this model when put into the context of the other metrics; this metric is heavily influenced and biased by the ground truth object's location. Therefore, areas segmented by the MedSAM model at any fine-tuning stage will return masks close to the gold standard.
 
-The Haussdorf discrepancy with the baseline is explained by its difficult objective of also localising the search area to the region where the tumour is; where this was provided for MedSAM, the baseline model had to learn to locate and segment the object. An example has been provided in Figure~\ref{fig:bladder-nnunet-innacuracy} which shows how the nnUNet has hallucinated a bladder in the stomach, thus causing a huge spike in the Haussdorf distance metric. This problem would not appear in the MedSAM model because the box prompt would have localised the search area to the region around the pelvis.
+The Haussdorf discrepancy with the baseline is explained by its difficult objective of also localising the search area to the region where the tumour is; where this was provided for MedSAM, the baseline model had to learn to locate and segment the object. An example has been provided in Figure~\ref{fig:bladder-nnunet-innacuracy}, which shows how the nnUNet has hallucinated a bladder in the stomach, thus causing a massive spike in the Haussdorf distance metric. This problem would not appear in the MedSAM model because the box prompt would have localised the search area to the region around the pelvis as illustrated by the red bounding box in the rightmost cell in Figure~\ref{fig:bladder-nnunet-innacuracy}. Therefore, a base-line MedSAM model does provide benefits for conventional anatomies.
 
 \begin{figure}[H]
   \centering
  \includegraphics[width=.7\linewidth]{../figures/bladder-nnunet-innacuracy.png}
   \includegraphics[width=.226\linewidth, trim=1000px 45px 0 0px, clip]{../figures/medsam-bladder-prediction.png}
-  \caption{From left to right, a slice of a patients CT scan, the ground truth overlayed onto the slice in yellow, and the nnUNet prediction overlayed onto the slice, MedSAM prediction}\label{fig:bladder-nnunet-innacuracy}
-\end{figure}
+  \caption{From left to right, a slice of a patients CT scan, the ground truth overlayed onto the slice in yellow, and the nnUNet prediction overlayed onto the slice, MedSAM prediction along with the additional box prompt in red.}\label{fig:bladder-nnunet-innacuracy}
+\end{figure}% TODO change in the inference script to use just the baseline model for consistency.
 
-% TODO change in the inference script to use just the baseline model for consistency.
+Therefore, a baseline MedSAM model benefits conventional anatomies by binding the region of interest around the target with strict supervision. However, zero-shot inference still falls short of the baseline accuracy across other metrics used and thus still requires fine-tuning even when applied to obvious delineations such as the bladder.
 
 \subsubsection{Niche Delineations}
 
+Indeed, the Haussdorf distance improvement can be seen across a range of anatomies, yet even with localisation assistance provided by a bounding box, some anatomies still fail to beat the baseline. See Table~\ref{tab:medsam-hd-duplicate}, which has been pulled from Table~\ref{tab:medsam-hd} along with a supporting graphical representation at Figure~\ref{fig:medsam-hausdorf-analysis}. Information from the MedSAM publication suggests that the dataset (which was not provided to the public) contains segmentation targets such as `popular' tumours and organ segmentations~\cite{Ma2024}. We judge that coupled with other relevant scores, such as DICE ($\hat{x} = 0.52 \pm 0.13$), the poor performance across the board for the CTVn is due to its complex outlining constraints regarding lymph node information and disease development. Similarly, the Parametrium is a compound structure of further microscopic spread surrounding the cervix and results in poor DICE ($\hat{x} = 0.66 \pm 0.14)$ and a splayed Haussdorf distance for the same reason.
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Bladder]{\includegraphics[width=.3\linewidth, trim=650 0 650 60, clip]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_MedSAM_analysis.png}}
+  \subfigure[CTVn]{\includegraphics[width=.3\linewidth, trim=650 0 650 60, clip]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_MedSAM_analysis.png}}
+  \subfigure[Parametrium]{\includegraphics[width=.3\linewidth, trim=650 0 650 60, clip]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_MedSAM_analysis.png}}
+  \caption{Haussdorf Metrics for the MedSAM architectures across key anatomies}\label{fig:medsam-hausdorf-analysis}
+\end{figure}
+
+\begin{table}[h!]
+  \centering
+  \caption{Duplicate table from the Appendix Figure~\ref{tab:medsam-hd}: Haussdorf Distance across each anatomy. In bold are the anatomies where the MedSAM model has performed better than the baseline.}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \midrule
+        Anorectum     & 12.14 & 27.81 & 5.05 & \textbf{4.83} & 3.35 & 3.61 & \textbf{2.36} & 1.61 & 2.00 \\
+        Bladder       & 77.16 & 71.94 & 96.79 & \textbf{2.96} & 1.60 & 2.24 & \textbf{2.82} & 7.93 & 2.00 \\
+        CTVn          & \textbf{8.92} & 2.90 & 8.30 & 12.24 & 5.44 & 10.77 & \textbf{4.34} & 3.24 & 3.61 \\
+        CTVp          & 8.88 & 26.86 & 5.92 & \textbf{5.38} & 3.70 & 4.24 & \textbf{2.89} & 1.83 & 2.24 \\
+        Parametrium   & 11.28 & 19.53 & 8.06 & \textbf{8.92} & 3.60 & 8.49 & \textbf{4.30} & 2.63 & 3.61 \\
+        Uterus        & 6.01 & 2.61 & 5.79 & \textbf{4.79} & 3.08 & 4.00 & \textbf{3.16} & 6.11 & 2.24 \\
+        Vagina        & 6.75 & 21.72 & 4.12 & \textbf{4.81} & 1.60 & 5.00 & \textbf{2.48} & 1.35 & 2.24 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:medsam-hd-duplicate}
+\end{table}
+
+Thus, the zero-shot transfer is unsuccessful in domains with tumour areas of microscopic or highly customised segmentation. 
 
 
 \subsection{The performance of a transferred MedSAM model}
@@ -949,7 +984,7 @@ The Haussdorf discrepancy with the baseline is explained by its difficult object
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Conclusion}\label{sect:conclusion}
 
-Transfer works!
+% the annotation time cost between the two pipelines (Fig. 5b). The results demonstrate that with the assistance of MedSAM, the annotation time is substantially reduced by 82.37% and 82.95% for the two experts, respectively (medsam)
 
 % because of the way the CTV is drawn based on the progression of the tumor and how far along the patient is, this influences the contour drawen. Perhaps, the metrics suggest that a model with only one modality is not enough to make a decision which sparks the idea of a model which is capable of multi-modal analysis.
 
