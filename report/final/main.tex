@@ -812,15 +812,13 @@ This is why we settle at the Surface DSC (Section~\ref{sect:surface-dice}), whic
 
 In this chapter, we present the results and discussion regarding the experiments carried out with each type of transfer learning strategy. The baseline in each will be displayed alongside the model performance for evaluation. Finally, we step back and consider the performance of different transfer strategies across the anatomies.
 
-\section{Many-shot Transfer -- TotalSegmentator}
-
-\subsection{Separate Training}
+\section{TotalSegmentator -- Binary Classifier}
 
 The total summary of results for the separate training TotalSegmentator transferral is available at the Appendix; Metric Tables~\ref{tab:totalsegmentator-apl}-~\ref{tab:totalsegmentator-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:totalsegmentator-metrics-anorectum}-~\ref{fig:totalsegmentator-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
 
 % TODO: add legend to the metrics to say what the green dotted line is and what the orange line is.
 
-\subsubsection{Many-shot transfer success}
+\subsection{Many-shot transfer success}
 
 TotalSegmentator offers a promising potential for transferral into segmentation tasks for radiotherapy planning. As mentioned in Section~\ref{sect:totalsegmentator}, the model trains on many segmentation organ tasks. The lower levels and encoding layers can be frozen, and the expansive layer can be fine-tuned to utilize many shot segmentation advantages. 
 
@@ -871,7 +869,7 @@ The success of the TotalSegmentator model can be reduced to two factors. The vas
 
 We conclude that many-shot transfer learning techniques improve the performance on baselines due to their increased exposure to the class it is segmenting.
 
-\subsubsection{Zero-shot transferral with the TotalSegmentator}
+\subsection{Zero-shot transferral with the TotalSegmentator}
 
 The model that is used for transferal segments 24 anatomies randing from the bladder, to the esophagus~\cite{totalsegmentor-git}. Therefore, this acts as a firm foundation for zero-shot transferral onto the unseen anatomies. The Anorectum, CTVn, and Parametrium all benefited from zero-shot transferral using Totalsegmentator. A Table aggregating the DICE scores is lifted from the Table~\ref{tab:totalsegmentator-dice} for convenience in Table~\ref{tab:totalsegmentator-dice-copy}.
 
@@ -899,18 +897,15 @@ The resulting anatomies that didn't benefit are the Uterus, Vagina, and CTVp. Th
 
 We conclude that the effectiveness of transfer relies heavily on good contrast; anatomies with visible boundaries and visible anchor points benefit from transferal and score highly on baseline performance. However, to accurately segment poor contrast regions clinicians may have to employ a many-shot transferral of similar networks.
 
-
-\subsection{Region-based Training}
+\section{TotalSegmentator -- Multi-class segmentation}
 
 The total summary of results for the region based transferral for nnUNet back-bone architectures is available at the Appendix; Metric Tables~\ref{tab:region-based-apl}-~\ref{tab:region-based-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:region-based-metrics-anorectum}-~\ref{fig:region-based-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
+
+\subsection{Basic Region-based Training}
 
 \subsection{Rule enforced Region-based Training}
 
 % Todo, compare numbers of illegal overlap before and after.
-
-% /vol/biomedic3/bglocker/ugproj2324/az620/radiotherapy/research/source/code/data/metrics/metricsanorectum_2_combinednotable_TotalSegmentator_analysis.png
-
-% ../../research/source/code/data/metrics/metricsanorectum_2_combinednotable_TotalSegmentator_analysis.png
 
 % total segmentator had 500 females to 700 males which may explain the struggle to locate the uterus and vagina.
 
