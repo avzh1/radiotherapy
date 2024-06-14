@@ -1,4 +1,4 @@
-\documentclass[12pt,twoside]{report}
+\documentclass[11pt,twoside]{report}
 
 % some definitions for the title page
 \newcommand{\reporttitle}{Transfer Learning for Deep Learning Radiotherapy Planning}
@@ -61,32 +61,30 @@
 
 \section{Technical Context}
 
-Transfer Learning is a technique in which a model trained on one task is repurposed and fine-tuned on a second task. Thus, the model can leverage the knowledge gained from the first task to improve performance on the second task. An accrual of literature across PubMed in 2023-2024 was conducted with a search string displayed in Figure~\ref{fig:pubmed-search-string}, which found a gap in technical research surrounding Transfer Learning in the radiotherapy planning domain. 
+% Transfer Learning is a technique in which a model trained on one task is repurposed and fine-tuned on a second task. Thus, the model can leverage the knowledge gained from the first task to improve performance on the second task. 
 
-\begin{figure}[H]
-  \begin{lstlisting}
-    ``radiotherapy'' AND ``contour'' AND (``cervix'' OR ``cervical'') AND ``cancer'' AND (``Deep Learning'' OR ``DeepLearning'' OR ``Machine Learning'' OR ``ML'' OR ``Artificial Intelligence'' OR ``AI'' OR ``Computer assisted'')  
-   \end{lstlisting}
-   \caption{Search string used in PubMed accrual in 2023-2024}\label{fig:pubmed-search-string}  
-\end{figure}
 
-The conclusion of the accrual confirmed that the most common network structure for radiotherapy planning was the U-Net architecture~\cite{Samarasinghe2021-ps,Lin2021-oz,Sartor2020-et,LIU2020184,Rhee2020-ms,LIU2020172}. However, each segmentation benchmark required modifications such as specialized architectures or bespoke training schemes to achieve competitive performance. These tailored modifications contribute little to the overall development in medical segmentation~\cite{isensee2024nnunet}, as it becomes increasingly challenging for researchers to identify methods that live up to their promised superiority beyond the limited scenarios they are demonstrated on~\cite{nnunet}.
+Currently, the most common network architecture backbone for radiotherapy planning is the U-Net architecture~\cite{Samarasinghe2021-ps, Lin2021-oz, Sartor2020-et, LIU2020184, Rhee2020-ms, LIU2020172}. However, each network requires specialized architectures or bespoke training schemes to achieve competitive performance. These tailored modifications contribute little to the overall development in medical segmentation~\cite{isensee2024nnunet}, as it becomes increasingly challenging for researchers to identify methods that live up to their promised superiority beyond the limited scenarios they are demonstrated on~\cite{nnunet}.
 
-The publications from the accrual also reveal that the bespoke trained model assumes a sufficient sample size, representing the entire population of all individuals under the same circumstances. However, the underrepresented users of these models cannot apply this assumption; most hospital teams work in a specialized medical field with only in-house patients who follow specific hospital guidelines. A simple plug-and-play approach is unsuitable in this scenario because segmentation guidelines often differ between facilities. Therefore, specific recalibration is necessary to effectively use these models because incorrect or inaccurate contours are the primary factors contributing to treatment failures in radiotherapy~\cite{Rhee2020-ms}.
-
-We therefore analyse the effectiveness of Transfer Learning in radiotherapy planning. The Transfer Learning approach aims to leverage other trained models with great performance and lift low-level features for the target domain. A PubMed search for publications mentioning transfer learning in the radiotherapy planning field returned no relevant matches. Therefore, research on transfer in the medical domain will also fill the literature gap, which has yet to consider solving the auto-contouring problem for radiotherapy planning volumes. 
+Furthermore, the bespoke architectures assume a sufficient sample size representing the entire population of all individuals under the same circumstances. However, the underrepresented users of these models cannot apply this assumption; most hospital teams work in a specialized medical field with only in-house patients who follow specific hospital guidelines. A simple plug-and-play approach is unsuitable because segmentation guidelines often differ between facilities. Therefore, specific recalibration is necessary to effectively use these models because incorrect or inaccurate contours are the primary factors contributing to treatment failures in radiotherapy~\cite{Rhee2020-ms}.
 
 \section{Objective and Methodology}
 
+We therefore analyse the effectiveness of Transfer Learning in radiotherapy planning. The Transfer Learning approach aims to leverage other trained models with great performance and lift low-level features for the target domain. A PubMed accrual for deep learning solutions in radiotherapy planning found a gap in technical research surrounding Transfer Learning in the radiotherapy planning field\footnote{Search string used in the PubMed accrual in 2023-2024 is available at Figure~\ref{fig:pubmed-search-string}}. Therefore, research on transfer in the medical domain will also fill the literature gap, which has yet to consider transfer learning as a solution for radiotherapy planning volumes. 
+
 Firstly, we select a dataset from The Royal Marsden Hospital, which will act as the pillar for advocating the success and use of transfer learning in radiotherapy planning. The real-world clinical dataset provides segmentations for key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the widespread segmentation challenges and has uncommon and limited segmentation patterns specified by internal team-wide guidelines.
 
-Secondly, we analyse the effectiveness of Transfer learning in radiotherapy planning. To research the application of this technique in the medical context, we study three types of modern training approaches to study their transferability. These types are zero-shot, few-shot, and many-shot learning transfers.
+Secondly, we analyse the effectiveness of transfer learning in radiotherapy planning. To research the application of this technique in the medical context, we utilize three popular architectures and their applications in transfer learning. These models are nnUNet~\cite{nnunet}, UniverSeg~\cite{universeg}, and MedSAM~\cite{Ma2024}. In tandem with the effectiveness of transferring knowledge from these models, we comment on the type of transfer, be it zero-shot, few-shot, or many-shot learning.
+
+\section{Results}
+
+% TODO
 
 \section{Outline of Report}
 
-The report will first discuss the relevant background knowledge required for this project in Chapter~\ref{sect:motivation}. Within, we provide a high-level overview of anatomies and the clinical context (Section~\ref{sect:clinical-context}) as well as core existing academic knowledge in the Computer-assisted vision in the Medical Imaging field (Section~\ref{sect:machine-learning-for-image-segmentation}-\ref{sect:performance-evaluation}). 
+The report will commence by delving into the essential background knowledge needed for this project in Chapter~\ref{sect:motivation}. This chapter provides a high-level overview of anatomies and the clinical context (Section~\ref{sect:clinical-context}), as well as the fundamental existing academic knowledge in the field of Computer-assisted vision in Medical Imaging (Section~\ref{sect:machine-learning-for-image-segmentation}).
 
-Then, Chapter~\ref{sect:methodology} describes the experiments used to evaluate how well different architectures transfer knowledge into the target domain, as well as an overview of the results (Chapter~\ref{sect:results}) and a discussion of their implications (Chapter~\ref{sect:discussion}). Finally, we discuss the conclusion and future work in Chapter~\ref{sect:conclusion}.
+Following this, Chapter~\ref{sect:methodology} will detail the experiments utilized to assess the effectiveness of different architectures in transferring knowledge into the target domain. Chapter~\ref{sect:results} presents and dissects the results of the experiment as well as their implications onto the medical community. Finally, Chapter~\ref{sect:conclusion} will cover the conclusion and future work.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Motivation}\label{sect:motivation}
@@ -103,11 +101,13 @@ Cancer is a burden around the globe that has been a driver for almost one-sixth 
 
 \subsection{Radiotherapy Treatment}
 
-A mechanism available for cancer treatment involves radiation therapy. High beams of radiation energy are tuned to hone in to target cancerous cells in a clinically defined `target area'. The cells killed by the energy experience interphase or proliferative death depending on the cell cycle stage. Death occurs when the damage to genetic material within the cell prevents it from dividing, or the cell's accumulation of genetic aberrations leads to a ``mitotic catastrophe''~\cite{cell-death}. In Europe, such radiotherapy treatment was used on average for 70\% of cases, with a curative rate of 40\%~\cite{radiotherapy-advances, Thompson2018}.
+Radiation therapy is an option for cancer treatment where high beams of radiation energy are tuned to hone in to target cancerous cells in a clinically defined `target area'. The cells killed by the energy experience interphase or proliferative death depending on the cell cycle stage. Death occurs when the damage to genetic material within the cell prevents it from dividing, or the cell's accumulation of genetic aberrations leads to a ``mitotic catastrophe''~\cite{cell-death}. In Europe, such radiotherapy treatment was used on average for 70\% of cases, with a curative rate of 40\%~\cite{radiotherapy-advances, Thompson2018}.
 
-This death is characteristic of any cell subjected to high energy beams, placing much responsibility on the oncologist to deliver an accurate treatment area so that healthy cells are unaffected; any adverse alteration of an organ's standard functionality may cause grave implications for the already compromised patient. Therefore, the precise and complex nature of the task is estimated to take oncologists 90--120 mins to delineate target areas for radiotherapy~\cite{LIU2020184}.
+All cells subjected to high-energy beams experience death. This places much responsibility on the oncologist to deliver an accurate treatment area so that healthy cells are unaffected. The death of healthy cells may cause adverse alterations to an organ's standard functionality.
 
-This time-consuming endeavour is never favourable for a patient already in a dangerous situation; for mid-low-income countries, where this may not be an available resource, this leaves them with a death rate 18 times that of a higher-income country~\cite{cervical-cancer-epidemic}. 
+% This death is characteristic of any cell subjected to high energy beams, placing much responsibility on the oncologist to deliver an accurate treatment area so that healthy cells are unaffected; any adverse alteration of an organ's standard functionality may cause grave implications for the already compromised patient. 
+
+Therefore, the care required causes oncologists to spend 90--120 mins to delineate target areas for radiotherapy~\cite{LIU2020184}. This time-consuming endeavour is never favourable for a patient already in a dangerous situation; for mid-low-income countries, where this may not be an available resource, this leaves them with a death rate 18 times that of a higher-income country~\cite{cervical-cancer-epidemic}. 
 
 \subsection{CT modality}\label{sect:ct-modality}
 
@@ -147,7 +147,7 @@ Therefore, because the HU scale is relative, different windows may be taken for 
   \caption{Simplified representation of the clinical target volumes. Figure~\ref{fig:gtv-macroscopic} shows the visible tumor, Figure~\ref{fig:ctv-microscopic} shows microscopic spread of the tumor, Figure~\ref{fig:ptv-area} shows area to account for short-term organ misalignment.}\label{fig:planning-areas}
 \end{figure}
 
-oncologists use CT scans to draw clinical volumes by combining their knowledge about the particular cancer to determine target structures, organs-at-risk structures, and areas where the cancer will likely spread to~\cite{AMLART-data}. We provide a simplified representation in Figure~\ref{fig:planning-areas}.
+Oncologists use CT scans to draw clinical volumes by combining their knowledge about the particular cancer to determine target structures, organs-at-risk structures, and areas where the cancer will likely spread to~\cite{AMLART-data}. We provide a simplified representation in Figure~\ref{fig:planning-areas}.
 
 The first area is the macroscopic delineated area of the visible tumour area. This Gross Target Volume (GTV) has a high probability of containing the tumour. Secondly, the Clinical Target Volume (CTV) is derived to account for potential microscopic spread. The CTV will be an area at least as big as the GTV with an optional margin surrounding it containing a 'rind' of non-zero probability of tumour spread. Lastly, the Primary Target Volume (PTV) contains residual geometric uncertainties and safety margins surrounding the CTV, ensuring the radiotherapy dose gets delivered to the CTV~\cite{tumor-delineation,defining-target-volumes,Lin2021-oz,personalised-PTV-strategies}. The PTV is a necessary extension of the CTV since geometric uncertainties are impossible and not advised to eliminate; after all, static scans are only estimations, subject to short-term organ misalignment, relative movement between structures of reference and tumours, partial volume effects and skewed anisotropic resolution~\cite{VANHERK200452}.
 
@@ -550,7 +550,8 @@ For the purposes of evaluation, the following methods will be applied to the bas
 
 A sensible and calibrated set of ids could be drawn based on the rules in Section~\ref{sec:rules}. However, practical experience and the recalcitrant and challenging nature of defining logical expressions to generalize something as complex as organs and something as fuzzy as microscopic cancer spread mean that, in practice, these rules cannot be implemented strictly.
 
-Please refer to Equation~\ref{eq:ctvn-ctvp-anorectum} ``There should be no overlap between the CTVn, CTVp or Anorectum''. We see marginal overlap between the structures in Figure~\ref{fig:combined-labels-region-based} in ids 55, 94. These are almost not visible on the figure, but captured by the legend. 
+
+Please refer to Equation~\ref{eq:ctvn-ctvp-anorectum} ``there should be no overlap between the CTVn, CTVp or Anorectum''. We see marginal overlap between the structures in Figure~\ref{fig:combined-labels-region-based} in ids 55, 94. These are almost not visible on the figure, but captured by the legend. 
 
 \begin{figure}[H]
   \centering
@@ -609,32 +610,30 @@ MedSAM takes two-dimensional images as input, much like UniverSeg. Therefore, we
 
 Further, in contrast to previous strategies, the MedSAM preprocessing step also removes ground truth segmentations that occupy an area below a specified threshold. The idea here is that the challenge with locating the small areas of the region of interest is an entirely different classification of the problem; the issue is with object detection instead of object segmentation~\cite{SAM, Ma2024}. This detail of the preprocessing is critical to consider for discussion and use as this would increase the proposed surface distance along an axis.
 
-\subsection{Point based transfer}
+% \subsection{Point based transfer}
 
-We first experimented with the MedSAM architecture to test the effectiveness of prompting on points. The baseline MedSAM implementation offers a point based prompt and also a box based prompt. To consider both mediums of prompt encoding, we can consider a sparse and desnse point planning. % We formulated this task into two categories: a sparse and dense point experiment.  
+% The default MedSAM architecture offers a point based prompt, and also a box based prompt. However, points are not a consideration for this 
 
-\begin{figure}
-  \centering
-  \raisebox{-0.5\height}{\subfigure[Sparse point prompt]{\includegraphics[width=.45\linewidth, trim=850 850 0 0, clip]{../../research/source/code/SAM_Med/3_train_point_prompt/point_batch_example.png}}}
-  \raisebox{-0.5\height}{\subfigure[Dense point prompt]{\includegraphics[width=.45\linewidth, trim=0 0 850 850, clip]{../../research/source/code/SAM_Med/3_train_point_prompt/point_dense_batch_example.png}}}
-  \caption{The two strategies for sampling structures in the MedSAM model.}\label{fig:point-prompt}
-\end{figure}
+% We first experimented with the MedSAM architecture to test the effectiveness of prompting on points. The baseline MedSAM implementation offers a point based prompt and also a box based prompt. To consider both mediums of prompt encoding, we can consider a sparse and desnse point planning. % We formulated this task into two categories: a sparse and dense point experiment.  
 
-The two strategies are shown in Figure~\ref{fig:point-prompt}. The sparse point prompt is a single point in the image, while the dense point prompt is a set of $n$ points randomly sampled from the ground truth segmentation.
+% \begin{figure}
+%   \centering
+%   \raisebox{-0.5\height}{\subfigure[Sparse point prompt]{\includegraphics[width=.45\linewidth, trim=850 850 0 0, clip]{../../research/source/code/SAM_Med/3_train_point_prompt/point_batch_example.png}}}
+%   \raisebox{-0.5\height}{\subfigure[Dense point prompt]{\includegraphics[width=.45\linewidth, trim=0 0 850 850, clip]{../../research/source/code/SAM_Med/3_train_point_prompt/point_dense_batch_example.png}}}
+%   \caption{The two strategies for sampling structures in the MedSAM model.}\label{fig:point-prompt}
+% \end{figure}
 
-The hypothesis is that point prompts may work well with structures such as the bladder which are trivial to identify. However, for the CTV, the point prompt may not segment the full extent of the structure.
+% The two strategies are shown in Figure~\ref{fig:point-prompt}. The sparse point prompt is a single point in the image, while the dense point prompt is a set of $n$ points randomly sampled from the ground truth segmentation.
 
-Points are sampled with a higher probability of being towards the centre of the segmented area by calculating the Euclidean distances of all points from the centroid. This heuristic dispels any ambiguity that may be caused when selecting points closer towards the outline of the segmentation, which may occur when boundaries of different objects bleed into one another, causing a higher error.
+% The hypothesis is that point prompts may work well with structures such as the bladder which are trivial to identify. However, for the CTV, the point prompt may not segment the full extent of the structure.
 
-This strategy, however, is not enough; the MedSAM model often provides whispy boundaries in a response to the point prompts as it must work harder at guessing the boundaries of the object. Therefore, this strategy is dispelled from consideration.
+% Points are sampled with a higher probability of being towards the centre of the segmented area by calculating the Euclidean distances of all points from the centroid. This heuristic dispels any ambiguity that may be caused when selecting points closer towards the outline of the segmentation, which may occur when boundaries of different objects bleed into one another, causing a higher error.
+
+% This strategy, however, is not enough; the MedSAM model often provides whispy boundaries in a response to the point prompts as it must work harder at guessing the boundaries of the object. Therefore, this strategy is dispelled from consideration.
 
 \subsection{Box based transfer}
 
-A box prompted solution will define the area where the tumour is likely to be. Box prompts for training are obtained from the ground truth, with a margin surrounding the box. 
-
-For training, only one box may be fed into the model for inference. Therefore, we select a random structure from the boxes encompassing the tumour for a given slice. Figure~\ref{fig:box-prompt-sam-selection} demonstrates the tumour box selection at training time. 
-
-\begin{figure}[H]
+\begin{figure}
   \centering
   \subfigure[Boxed ground truth image]{
     {\includegraphics[width=.3\linewidth, trim=40 30 610 30, clip]{../../research/source/code/SAM_Med/4_train_box_prompt/select_top_n_largest_structures.png}}
@@ -648,20 +647,24 @@ For training, only one box may be fed into the model for inference. Therefore, w
   \caption{The process of selection bounding box for a given boxed tumor with an augmented ground truth used at training time for the MedSAM bax-based prompt model.}\label{fig:box-prompt-sam-selection}
 \end{figure}
 
+A box prompted solution will define the area where the tumour is likely to be. Box prompts for training are obtained from the ground truth, with a margin surrounding the box. 
+
+For training, only one box may be fed into the model for inference. Therefore, we select a random structure from the boxes encompassing the tumour for a given slice. Figure~\ref{fig:box-prompt-sam-selection} demonstrates the tumour box selection at training time. 
+
 Furthermore, images are augmented with a random rotation, scaling, and translation to improve generalisation. Data augmentation ensures that the model does not overfit the training data and can generalise to unseen examples.
 
-\subsection{Training Bottlenecks}
+% \subsection{Training Bottlenecks}
 
-\begin{figure}[H]
-  \centering
-  \subfigure[Raw epoch time before optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres/Anorectum/progress.png}}
-  \subfigure[Epoch time after pipeline optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres_2/Anorectum/progress.png}}
-  \caption{Comparison of epoch times for an expensive MedSAM model before and after pipeline optimizations.}\label{fig:training-comparison-med}
-\end{figure}
+% \begin{figure}[H]
+%   \centering
+%   \subfigure[Raw epoch time before optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres/Anorectum/progress.png}}
+%   \subfigure[Epoch time after pipeline optimizations]{\includegraphics[width=.45\linewidth, trim=0 0 0 360px, clip]{../../data/MedSAM_finetuned/boxed_lowres_2/Anorectum/progress.png}}
+%   \caption{Comparison of epoch times for an expensive MedSAM model before and after pipeline optimizations.}\label{fig:training-comparison-med}
+% \end{figure}
 
-This model requires three channels of $1024 \times 1024$ image slices, making each input image in its raw state a costly sample to send over the network especially after considering that each channel is a duplicate to match the requirements of the SAM model. This makes training on commodity hardware a difficult thing to accomplish. Training times can be very long without adding changes to the training pipeline. Figure~\ref{fig:training-comparison-med} compares training pipelines and performance improvements. 
+% This model requires three channels of $1024 \times 1024$ image slices, making each input image in its raw state a costly sample to send over the network especially after considering that each channel is a duplicate to match the requirements of the SAM model. This makes training on commodity hardware a difficult thing to accomplish. Training times can be very long without adding changes to the training pipeline. Figure~\ref{fig:training-comparison-med} compares training pipelines and performance improvements. 
 
-Firstly, image slices are stored in a $(1 \times 512 \times 512)$ resolution and upsampled before the forward pass. Furthermore, caching~\cite{charlie-caching} stored these smaller images on the training node to avoid repeated and expensive reads over the network. This improved training epoch times by 50 times.
+% Firstly, image slices are stored in a $(1 \times 512 \times 512)$ resolution and upsampled before the forward pass. Furthermore, caching~\cite{charlie-caching} stored these smaller images on the training node to avoid repeated and expensive reads over the network. This improved training epoch times by 50 times.
 
 \subsection{Evaluation}
 
@@ -834,7 +837,7 @@ The only candidate of this pre-trained network for many-shot transfer is the Bla
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{TotalSegmentator out-of-the-box}} & \multicolumn{3}{c}{\textbf{TotalSegmentator Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Added Path Length       & 1.21 & 2.06 & 0.71 & 5.87 & 4.98 & 4.18 & 1.32 & 1.72 & 0.76 \\
         DICE        & 0.94 & 0.06 & 0.97 & 0.90 & 0.13 & 0.94 & 0.95 & 0.10 & 0.97 \\
@@ -869,7 +872,7 @@ The success of the TotalSegmentator model can be reduced to two factors. The vas
 
 We conclude that many-shot transfer learning techniques improve the performance on baselines due to their increased exposure to the class it is segmenting.
 
-\subsection{Zero-shot transferral with the TotalSegmentator}
+\subsection{Zero-shot transferral}
 
 The model that is used for transferal segments 24 anatomies randing from the bladder, to the esophagus~\cite{totalsegmentor-git}. Therefore, this acts as a firm foundation for zero-shot transferral onto the unseen anatomies. The Anorectum, CTVn, and Parametrium all benefited from zero-shot transferral using Totalsegmentator. A Table aggregating the DICE scores is lifted from the Table~\ref{tab:totalsegmentator-dice} for convenience in Table~\ref{tab:totalsegmentator-dice-copy}.
 
@@ -880,7 +883,7 @@ The model that is used for transferal segments 24 anatomies randing from the bla
     \begin{tabular}{l*{6}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{TotalSegmentator Fine-tuned}} \\
-        \cmidrule(lr){2-4} \cmidrule(lr){5-7} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 0.91 & 0.03 & 0.92 &\textbf{ 0.92} & \textbf{0.04} & \textbf{0.93} \\
         CTVn          & 0.93 & 0.01 & 0.94 & \textbf{0.94} & \textbf{0.01} & \textbf{0.94} \\
@@ -901,9 +904,28 @@ We conclude that the effectiveness of transfer relies heavily on good contrast; 
 
 The total summary of results for the region based transferral for nnUNet back-bone architectures is available at the Appendix; Metric Tables~\ref{tab:region-based-apl}-~\ref{tab:region-based-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:region-based-metrics-anorectum}-~\ref{fig:region-based-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
 
+
+
 \subsection{Basic Region-based Training}
 
 \subsection{Rule enforced Region-based Training}
+
+\subsubsection{Illegal Overlap Review}
+
+Figure~\ref{fig:illegal_overlap} shows the illegal overlap of the ground truth labels.
+
+
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Basic multi-class nnUNet]{\includegraphics[width=.45\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_nnunet_cervical.png}} % TODO
+  \subfigure[Rule enforced multi-class nnUNet]{\includegraphics[width=.45\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_nnunet_cervical.png}} % TODO
+  \subfigure[Rule enforced multi-class nnUNet]{\includegraphics[width=.45\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_nnunet_cervical.png}}
+  \subfigure[Rule enforced multi-class TotalSegmentator]{\includegraphics[width=.45\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_nnunet_cervical.png}}  % TODO
+  \caption{Illegal overlap of inference in class labels.}\label{fig:illegal-overlap-custom-trainers}
+\end{figure}
+
+
 
 % Todo, compare numbers of illegal overlap before and after.
 
@@ -998,7 +1020,7 @@ The bladder is arguably the most apparent organ delineation within the dataset; 
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Added Path Length & 1.21 & 2.06 & 0.71 & 9.12 & 13.14 & 3.52 & 3.59 & 6.98 & 0.00 \\ 
         DICE & 0.94 & 0.06 & 0.97 & 0.92 & 0.08 & 0.94 & 0.95 & 0.05 & 0.97 \\
@@ -1043,7 +1065,7 @@ Indeed, the Haussdorf distance improvement can be seen across a range of anatomi
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 12.14 & 27.81 & 5.05 & \textbf{4.83} & 3.35 & 3.61 & \textbf{2.36} & 1.61 & 2.00 \\
         Bladder       & 77.16 & 71.94 & 96.79 & \textbf{2.96} & 1.60 & 2.24 & \textbf{2.82} & 7.93 & 2.00 \\
@@ -1104,7 +1126,7 @@ The dataset contains less straightforward, and more intuitive segmentations whic
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Added Path Length           & 3.89 & 3.01 & 3.07 & 115.82 & 74.00 & 102.00 & 29.49 & 36.71 & 17.00 \\
         DICE                        & 0.93 & 0.01 & 0.94 & 0.52 & 0.13 & 0.53 & 0.89 & 0.05 & 0.90 \\
@@ -1169,26 +1191,23 @@ On paper, the metrics for the vagina are promising, as they offer improvements o
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Ethics}
 
-The lack of effort to protect the identities and confidentiality of patients during research projects may result in ``stigma, embarrassment, and discrimination''~\cite{health-privacy} if the data is misused.
-This project involves the intimate and personal information of many female patients whose privacy must be protected before research occurs.
+\subsubsection{Patient Disclosures}
 
-\section{Patient disclosures}
+Researchers may collaborate with third parties, such as Imperial College London, by providing data that is anonymised so that third parties cannot reverse-engineer to identify the patient. The collaborating hospital, The Royal Marsden Hospital, does not require ``explicit consent'' for sharing collected clinical data with outside entities as long as the patient is made aware of the ways their ``de-identified/anonymised'' data may be used.~\cite{royal-marsden-privacy-note}. 
 
-Researchers may collaborate with third parties, such as Imperial College London, by providing anonymised data that third parties cannot reverse-engineer to identify the patient. The collaborating hospital, The Royal Marsden Hospital, does not require ``explicit consent'' for sharing collected clinical data with outside entities as long as the patient is made aware of the ways their ``de-identified/anonymised'' data may be used.~\cite{royal-marsden-privacy-note}. Imperial College's Medical Imaging team also arranges formalities, such as acting as "ethical data stewards"~\cite{Larson2020-ib}. 
+Without such disclosure, anonymisation, and a security guarantee of the data, patients may be reluctant to provide candid and complete disclosures of their sensitive information, even to physicians, which may prevent a complete diagnosis if their data is not maintained anonymously. Otherwise, breaches in anonymity may result in ``stigma, embarrassment, and discrimination''~\cite{health-privacy}.
 
-The MIRA team acts as responsible data stewards by storing anonymised data within a folder on the college network. They received all provided data in the \texttt{NIfTI} file format, which discloses no personally identifiable information, as defined by the GOV website~\cite{gov-gdpr}. Specific access rights limit data availability in this folder, ensuring security measures. Moreover, taking the data outside this folder reduces individual patient risk through the exchange of de-identified data.
+The MIRA team acts as responsible data stewards by storing anonymised data within a restricted folder on the college network~\cite{Larson2020-ib}. Data is received and stored in the \texttt{NIfTI} file format, which discloses no personally identifiable information~\cite{gov-gdpr}.
 
-Without such disclosure, anonymisation, and a security guarnatee of the data, patients may be reluctant to provide candid and complete disclosures of their sensitive information, even to physicians, which may prevent a complete diagnosis if their data is not maintained anonymously.
-
-\section{Using the tool}\label{sect:using-the-tool}
+\subsubsection{Using the tool}
 
 The applications of this tool bode well in the healthcare ecosystem as the community slowly accepts the involvement of AI-powered medical tools. Radiology is one application that has been most welcoming of the new technological advances as there is potential for substantial aid by reducing manual labour, increasing precision and freeing up the primary care physician's time~\cite{Amisha2019-ki}.
 
-However, it is too early to take the results of the medical tool as gospel. For current cervical radiotherapy delineation tools, only 90\% of the output is acceptable for clinical use~\cite{LIU2020172}. Therefore, The remainder can potentially cause more harm than good if not checked properly. For example, the overlap of a PTV with an organ-at-risk may invoke a cascade of adverse effects for the patient. The remaining 10\% of outputs may score incorrectly because the model uses a single modality, but physicians may base their final judgement on a multivariate analysis. Therefore, clinicians should use the tool as a second opinion rather than a primary source of information. Otherwise, an ethical dilemma of establishing the responsible party for incorrect decisions made by DL tools should also be determined~\cite{Chen2021-dg}.
+However, it is too early to take the results of the medical tool as gospel. For current cervical radiotherapy delineation tools, only 90\% of the output is acceptable for clinical use~\cite{LIU2020172}. Therefore, The remainder can cause more harm than good if not checked properly. For example, the overlap of a PTV with an organ-at-risk may invoke a cascade of adverse effects for the patient. The remaining 10\% of outputs may score incorrectly because the model uses a single modality, but physicians may base their final judgement on a multivariate analysis. Therefore, clinicians should use the tool as a second opinion rather than a primary source of information. Otherwise, an ethical dilemma of establishing the responsible party for incorrect decisions made by DL tools should also be determined~\cite{Chen2021-dg}.
 
 Clinicians can fall into the trap of automation bias as AI becomes more commonplace in clinical environments~\cite{STRAW2020101965}. However, many models of this age codify the existing bias in common cases, which often will fail those patients who do not fit the majority's expectations. 
 
-Therefore, before integrating tools into workflows, a committee must establish the degree of supervision required from physicians if this tool is to be used in practice. Currently, oncologists will be required to reverse-engineer the `black box' results to verify why a decision has been made. 
+Therefore, before integrating tools into workflows, a committee must establish the degree of supervision physicians require if this tool is to be used in practice. Currently, oncologists will be required to reverse-engineer the `black box' results to verify why a decision has been made. All cells subjected to high-energy beams experience death. This places much responsibility on the oncologist to deliver an accurate treatment area so that healthy cells are unaffected. The death of healthy cells may cause adverse alterations to an organ's standard functionality.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1197,6 +1216,15 @@ Therefore, before integrating tools into workflows, a committee must establish t
 \appendix
 
 \chapter{Appendix}
+
+\section{Search String for PubMed Accrual in 2023-2024}
+
+\begin{figure}[H]
+  \begin{lstlisting}
+    ``radiotherapy'' AND ``contour'' AND (``cervix'' OR ``cervical'') AND ``cancer'' AND (``Deep Learning'' OR ``DeepLearning'' OR ``Machine Learning'' OR ``ML'' OR ``Artificial Intelligence'' OR ``AI'' OR ``Computer assisted'')  
+   \end{lstlisting}
+   \caption{Search string used in PubMed accrual in 2023-2024}\label{fig:pubmed-search-string}  
+\end{figure}
 
 \section{Ground Truth Organ Delineations}
 
@@ -1307,7 +1335,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{TotalSegmentator out-of-the-box}} & \multicolumn{3}{c}{\textbf{TotalSegmentator Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 1.06 & 1.96 & 0.45 & - & - & - & 0.66 & 1.02 & 0.31 \\
         Bladder       & 1.21 & 2.06 & 0.71 & 5.87 & 4.98 & 4.18 & 1.32 & 1.72 & 0.76 \\
@@ -1329,7 +1357,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{TotalSegmentator out-of-the-box}} & \multicolumn{3}{c}{\textbf{TotalSegmentator Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 0.91 & 0.03 & 0.92 & - & - & - & 0.92 & 0.04 & 0.93 \\
         Bladder       & 0.94 & 0.06 & 0.97 & 0.90 & 0.13 & 0.94 & 0.95 & 0.10 & 0.97 \\
@@ -1351,7 +1379,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{TotalSegmentator out-of-the-box}} & \multicolumn{3}{c}{\textbf{TotalSegmentator Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 12.14 & 27.81 & 5.05 & - & - & - & 6.37 & 5.73 & 4.30 \\
         Bladder       & 77.16 & 71.94 & 96.79 & 8.26 & 8.35 & 5.39 & 15.66 & 37.98 & 3.74 \\
@@ -1373,7 +1401,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{TotalSegmentator out-of-the-box}} & \multicolumn{3}{c}{\textbf{TotalSegmentator Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 0.04 & 0.06 & 0.03 & - & - & - & -0.00 & 0.06 & 0.00 \\
         Bladder       & -0.04 & 0.12 & -0.02 & -0.07 & 0.19 & -0.03 & 0.01 & 0.21 & 0.00 \\
@@ -1395,7 +1423,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{TotalSegmentator out-of-the-box}} & \multicolumn{3}{c}{\textbf{TotalSegmentator Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 0.99 & 0.02 & 1.00 & - & - & - & 0.99 & 0.03 & 1.00 \\
         Bladder       & 0.97 & 0.06 & 1.00 &  0.95 & 0.11 & 0.99 & 0.98 & 0.10 & 1.00 \\
@@ -1455,119 +1483,119 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \end{landscape}
 
+\subsection{Region Based}\label{sect:region-based-appendix}
+
+\begin{table}[h!]
+  \centering
+  \caption{Added Path Length scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUNet baseline}} & \multicolumn{3}{c}{\textbf{nnUNet RB}} & \multicolumn{3}{c}{\textbf{nnUNet RB CL}} & \multicolumn{3}{c}{\textbf{TS RB}} & \multicolumn{3}{c}{\textbf{TS RB CL}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13} \cmidrule(lr){14-16}
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
+        \midrule
+        Anorectum     & 1.06 & 1.96 & 0.45 & 0.82 & 0.92 & 0.50 & 1.19 & 3.75 & 0.37 & 1.05 & 1.34 & 0.52 & 1.14 & 3.96 & 0.29 \\
+        Bladder       & 1.21 & 2.06 & 0.71 & 0.85 & 0.99 & 0.52 & 0.86 & 1.54 & 0.48 & 0.94 & 1.14 & 0.64 & 0.86 & 1.62 & 0.51 \\
+        CTVn          & 3.89 & 3.01 & 3.07 & 6.90 & 4.40 & 5.60 & 7.09 & 5.75 & 5.51 & 7.68 & 4.22 & 6.45 & 6.28 & 5.65 & 5.03 \\
+        CTVp          & 1.25 & 1.51 & 0.80 & 0.98 & 1.47 & 0.51 & 1.09 & 2.13 & 0.46 & 1.16 & 1.96 & 0.68 & 1.15 & 2.37 & 0.40 \\
+        Parametrium   & 2.97 & 2.14 & 2.45 & 5.14 & 3.52 & 4.10 & 4.14 & 3.69 & 3.12 & 4.81 & 3.63 & 3.93 & 3.90 & 3.53 & 2.96 \\
+        Uterus        & 1.11 & 1.17 & 0.80 & 0.84 & 1.15 & 0.45 & 0.80 & 1.28 & 0.38 & 0.89 & 1.55 & 0.45 & 0.86 & 1.54 & 0.37 \\
+        Vagina        & 0.34 & 0.42 & 0.20 & 0.50 & 0.86 & 0.27 & 0.64 & 1.67 & 0.09 & 0.68 & 1.09 & 0.40 & 0.57 & 1.48 & 0.05 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:region-based-apl}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{DICE scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUNet baseline}} & \multicolumn{3}{c}{\textbf{nnUNet RB}} & \multicolumn{3}{c}{\textbf{nnUNet RB CL}} & \multicolumn{3}{c}{\textbf{TS RB}} & \multicolumn{3}{c}{\textbf{TS RB CL}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13} \cmidrule(lr){14-16}
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
+        \midrule
+        Anorectum     & 0.91 & 0.03 & 0.92 & 0.91 & 0.02 & 0.91 & 0.91 & 0.06 & 0.93 & 0.91 & 0.03 & 0.92 & 0.91 & 0.06 & 0.93 \\
+        Bladder       & 0.94 & 0.06 & 0.97 & 0.97 & 0.02 & 0.97 & 0.97 & 0.02 & 0.97 & 0.96 & 0.02 & 0.97 & 0.97 & 0.02 & 0.97 \\
+        CTVn          & 0.93 & 0.01 & 0.94 & 0.91 & 0.01 & 0.92 & 0.92 & 0.01 & 0.92 & 0.91 & 0.01 & 0.92 & 0.92 & 0.01 & 0.93 \\
+        CTVp          & 0.94 & 0.01 & 0.94 & 0.94 & 0.02 & 0.95 & 0.94 & 0.03 & 0.95 & 0.94 & 0.02 & 0.94 & 0.94 & 0.02 & 0.95 \\
+        Parametrium   & 0.93 & 0.01 & 0.93 & 0.91 & 0.02 & 0.91 & 0.91 & 0.05 & 0.93 & 0.91 & 0.03 & 0.91 & 0.91 & 0.05 & 0.93 \\
+        Uterus        & 0.94 & 0.01 & 0.94 & 0.94 & 0.03 & 0.95 & 0.94 & 0.04 & 0.95 & 0.94 & 0.03 & 0.95 & 0.95 & 0.04 & 0.95 \\
+        Vagina        & 0.89 & 0.04 & 0.90 & 0.87 & 0.06 & 0.88 & 0.86 & 0.13 & 0.91 & 0.85 & 0.08 & 0.87 & 0.87 & 0.12 & 0.92 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:region-based-dice}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{Haussdorf scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUNet baseline}} & \multicolumn{3}{c}{\textbf{nnUNet RB}} & \multicolumn{3}{c}{\textbf{nnUNet RB CL}} & \multicolumn{3}{c}{\textbf{TS RB}} & \multicolumn{3}{c}{\textbf{TS RB CL}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13} \cmidrule(lr){14-16}
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
+        \midrule
+        Anorectum     & 12.14 & 27.81 & 5.05 & 7.13 & 5.14 & 5.29 & 7.28 & 7.29 & 4.47 & 7.76 & 5.51 & 5.61 & 7.40 & 8.11 & 4.24 \\
+        Bladder       & 77.16 & 71.94 & 96.79 & 3.98 & 3.40 & 3.32 & 3.77 & 2.08 & 3.32 & 5.12 & 10.42 & 3.46 & 3.70 & 2.02 & 3.16 \\
+        CTVn          & 8.92 & 2.90 & 8.30 & 10.04 & 2.73 & 9.49 & 10.20 & 3.08 & 9.49 & 10.31 & 2.79 & 9.85 & 9.78 & 2.83 & 9.16 \\
+        CTVp          & 8.88 & 26.86 & 5.92 & 5.54 & 2.25 & 5.00 & 5.88 & 3.22 & 5.10 & 5.63 & 2.42 & 5.00 & 6.17 & 3.12 & 5.43 \\
+        Parametrium   & 11.28 & 19.53 & 8.06 & 12.24 & 15.14 & 10.30 & 11.33 & 15.21 & 9.08 & 11.47 & 15.21 & 9.57 & 10.85 & 15.23 & 8.54 \\
+        Uterus        & 6.01 & 2.61 & 5.79 & 5.69 & 2.44 & 5.00 & 5.77 & 3.27 & 4.69 & 5.77 & 2.89 & 5.00 & 5.95 & 3.19 & 5.00 \\
+        Vagina        & 6.75 & 21.72 & 4.12 & 5.34 & 4.10 & 4.24 & 4.97 & 3.52 & 4.00 & 6.09 & 4.33 & 5.00 & 5.08 & 3.67 & 4.00 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:region-based-hd}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{Relative Volume Difference across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUNet baseline}} & \multicolumn{3}{c}{\textbf{nnUNet RB}} & \multicolumn{3}{c}{\textbf{nnUNet RB CL}} & \multicolumn{3}{c}{\textbf{TS RB}} & \multicolumn{3}{c}{\textbf{TS RB CL}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13} \cmidrule(lr){14-16}
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
+        \midrule
+        Anorectum     & 0.04 & 0.06 & 0.03 & -0.03 & 0.06 & -0.03 & 0.03 & 0.12 & 0.02 & 0.02 & 0.06 & 0.02 & 0.01 & 0.11 & -0.00 \\
+        Bladder       & -0.04 & 0.12 & -0.02 & -0.01 & 0.03 & -0.01 & 0.00 & 0.03 & 0.00 & -0.01 & 0.04 & -0.00 & 0.01 & 0.03 & 0.01 \\
+        CTVn          & -0.01 & 0.03 & -0.01 & -0.03 & 0.04 & -0.03 & -0.01 & 0.03 & -0.01 & 0.01 & 0.04 & 0.01 & -0.00 & 0.03 & 0.00 \\
+        CTVp          & -0.01 & 0.04 & -0.00 & 0.02 & 0.03 & 0.01 & -0.00 & 0.05 & 0.00 & -0.01 & 0.04 & -0.01 & 0.02 & 0.04 & 0.02 \\
+        Parametrium   & 0.01 & 0.03 & 0.01 & 0.04 & 0.06 & 0.03 & -0.01 & 0.10 & 0.01 & 0.00 & 0.07 & -0.00 & -0.01 & 0.10 & 0.00 \\
+        Uterus        & 0.00 & 0.05 & 0.00 & 0.01 & 0.06 & 0.01 & -0.01 & 0.08 & -0.00 & -0.02 & 0.07 & -0.02 & 0.01 & 0.07 & 0.02 \\
+        Vagina        & 0.11 & 0.09 & 0.09 & 0.07 & 0.13 & 0.03 & 0.05 & 0.15 & 0.01 & 0.08 & 0.18 & 0.05 & 0.04 & 0.13 & 0.02 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:region-based-rbd}
+\end{table}
+
+\begin{table}[h!]
+  \centering
+  \caption{Surface DSC across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
+        \toprule
+        \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUNet baseline}} & \multicolumn{3}{c}{\textbf{nnUNet RB}} & \multicolumn{3}{c}{\textbf{nnUNet RB CL}} & \multicolumn{3}{c}{\textbf{TS RB}} & \multicolumn{3}{c}{\textbf{TS RB CL}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13} \cmidrule(lr){14-16}
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
+        \midrule
+        Anorectum     & 0.99 & 0.02 & 1.00 & 0.99 & 0.02 & 1.00 & 0.98 & 0.05 & 1.00 & 0.99 & 0.02 & 0.99 & 0.98 & 0.06 & 1.00 \\
+        Bladder       & 0.97 & 0.06 & 1.00 & 1.00 & 0.00 & 1.00 & 1.00 & 0.00 & 1.00 & 1.00 & 0.02 & 1.00 & 1.00 & 0.01 & 1.00 \\
+        CTVn          & 0.99 & 0.01 & 0.99 & 0.98 & 0.01 & 0.98 & 0.98 & 0.02 & 0.98 & 0.98 & 0.01 & 0.98 & 0.98 & 0.02 & 0.99 \\
+        CTVp          & 0.99 & 0.01 & 0.99 & 0.99 & 0.01 & 1.00 & 0.99 & 0.03 & 1.00 & 0.99 & 0.02 & 1.00 & 0.99 & 0.02 & 1.00 \\
+        Parametrium   & 0.99 & 0.01 & 0.99 & 0.97 & 0.04 & 0.98 & 0.97 & 0.05 & 0.99 & 0.97 & 0.05 & 0.98 & 0.97 & 0.05 & 0.99 \\
+        Uterus        & 0.99 & 0.01 & 0.99 & 0.99 & 0.02 & 1.00 & 0.99 & 0.03 & 1.00 & 0.99 & 0.03 & 1.00 & 0.99 & 0.03 & 1.00 \\
+        Vagina        & 0.99 & 0.01 & 1.00 & 0.99 & 0.04 & 1.00 & 0.97 & 0.08 & 1.00 & 0.98 & 0.06 & 0.99 & 0.98 & 0.07 & 1.00 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:region-based-sdc}
+\end{table}
 
 \begin{landscape}
-  \subsection{Region Based}\label{sect:region-based-appendix}
-
-  \begin{table}[h!]
-    \centering
-    \caption{Added Path Length scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
-    \resizebox{\textheight}{!}{
-      \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{2cm}}}
-          \toprule
-          \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUNet baseline}} & \multicolumn{3}{c}{\textbf{nnUNet RB}} & \multicolumn{3}{c}{\textbf{nnUNet RB CL}} & \multicolumn{3}{c}{\textbf{TS RB}} & \multicolumn{3}{c}{\textbf{TS RB CL}} \\
-          \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13} \cmidrule(lr){14-16}
-          & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
-          \midrule
-          Anorectum     & 1.06 & 1.96 & 0.45 & 0.82 & 0.92 & 0.50 & 1.19 & 3.75 & 0.37 & 1.05 & 1.34 & 0.52 & 1.14 & 3.96 & 0.29 \\
-          Bladder       & 1.21 & 2.06 & 0.71 & 0.85 & 0.99 & 0.52 & 0.86 & 1.54 & 0.48 & 0.94 & 1.14 & 0.64 & 0.86 & 1.62 & 0.51 \\
-          CTVn          & 3.89 & 3.01 & 3.07 & 6.90 & 4.40 & 5.60 & 7.09 & 5.75 & 5.51 & 7.68 & 4.22 & 6.45 & 6.28 & 5.65 & 5.03 \\
-          CTVp          & 1.25 & 1.51 & 0.80 & 0.98 & 1.47 & 0.51 & 1.09 & 2.13 & 0.46 & 1.16 & 1.96 & 0.68 & 1.15 & 2.37 & 0.40 \\
-          Parametrium   & 2.97 & 2.14 & 2.45 & 5.14 & 3.52 & 4.10 & 4.14 & 3.69 & 3.12 & 4.81 & 3.63 & 3.93 & 3.90 & 3.53 & 2.96 \\
-          Uterus        & 1.11 & 1.17 & 0.80 & 0.84 & 1.15 & 0.45 & 0.80 & 1.28 & 0.38 & 0.89 & 1.55 & 0.45 & 0.86 & 1.54 & 0.37 \\
-          Vagina        & 0.34 & 0.42 & 0.20 & 0.50 & 0.86 & 0.27 & 0.64 & 1.67 & 0.09 & 0.68 & 1.09 & 0.40 & 0.57 & 1.48 & 0.05 \\
-          \bottomrule
-      \end{tabular}
-    }\label{tab:region-based-apl}
-  \end{table}
-
-  \begin{table}[h!]
-    \centering
-    \caption{DICE scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
-    \resizebox{\textwidth}{!}{
-      \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{2cm}}}
-          \toprule
-          \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUNet baseline}} & \multicolumn{3}{c}{\textbf{nnUNet RB}} & \multicolumn{3}{c}{\textbf{nnUNet RB CL}} & \multicolumn{3}{c}{\textbf{TS RB}} & \multicolumn{3}{c}{\textbf{TS RB CL}} \\
-          \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13} \cmidrule(lr){14-16}
-          & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
-          \midrule
-          Anorectum     & 0.91 & 0.03 & 0.92 & 0.91 & 0.02 & 0.91 & 0.91 & 0.06 & 0.93 & 0.91 & 0.03 & 0.92 & 0.91 & 0.06 & 0.93 \\
-          Bladder       & 0.94 & 0.06 & 0.97 & 0.97 & 0.02 & 0.97 & 0.97 & 0.02 & 0.97 & 0.96 & 0.02 & 0.97 & 0.97 & 0.02 & 0.97 \\
-          CTVn          & 0.93 & 0.01 & 0.94 & 0.91 & 0.01 & 0.92 & 0.92 & 0.01 & 0.92 & 0.91 & 0.01 & 0.92 & 0.92 & 0.01 & 0.93 \\
-          CTVp          & 0.94 & 0.01 & 0.94 & 0.94 & 0.02 & 0.95 & 0.94 & 0.03 & 0.95 & 0.94 & 0.02 & 0.94 & 0.94 & 0.02 & 0.95 \\
-          Parametrium   & 0.93 & 0.01 & 0.93 & 0.91 & 0.02 & 0.91 & 0.91 & 0.05 & 0.93 & 0.91 & 0.03 & 0.91 & 0.91 & 0.05 & 0.93 \\
-          Uterus        & 0.94 & 0.01 & 0.94 & 0.94 & 0.03 & 0.95 & 0.94 & 0.04 & 0.95 & 0.94 & 0.03 & 0.95 & 0.95 & 0.04 & 0.95 \\
-          Vagina        & 0.89 & 0.04 & 0.90 & 0.87 & 0.06 & 0.88 & 0.86 & 0.13 & 0.91 & 0.85 & 0.08 & 0.87 & 0.87 & 0.12 & 0.92 \\
-          \bottomrule
-      \end{tabular}
-    }\label{tab:region-based-dice}
-  \end{table}
-
-  \begin{table}[h!]
-    \centering
-    \caption{Haussdorf scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
-    \resizebox{\textwidth}{!}{
-      \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{2cm}}}
-          \toprule
-          \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUNet baseline}} & \multicolumn{3}{c}{\textbf{nnUNet RB}} & \multicolumn{3}{c}{\textbf{nnUNet RB CL}} & \multicolumn{3}{c}{\textbf{TS RB}} & \multicolumn{3}{c}{\textbf{TS RB CL}} \\
-          \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13} \cmidrule(lr){14-16}
-          & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
-          \midrule
-          Anorectum     & 12.14 & 27.81 & 5.05 & 7.13 & 5.14 & 5.29 & 7.28 & 7.29 & 4.47 & 7.76 & 5.51 & 5.61 & 7.40 & 8.11 & 4.24 \\
-          Bladder       & 77.16 & 71.94 & 96.79 & 3.98 & 3.40 & 3.32 & 3.77 & 2.08 & 3.32 & 5.12 & 10.42 & 3.46 & 3.70 & 2.02 & 3.16 \\
-          CTVn          & 8.92 & 2.90 & 8.30 & 10.04 & 2.73 & 9.49 & 10.20 & 3.08 & 9.49 & 10.31 & 2.79 & 9.85 & 9.78 & 2.83 & 9.16 \\
-          CTVp          & 8.88 & 26.86 & 5.92 & 5.54 & 2.25 & 5.00 & 5.88 & 3.22 & 5.10 & 5.63 & 2.42 & 5.00 & 6.17 & 3.12 & 5.43 \\
-          Parametrium   & 11.28 & 19.53 & 8.06 & 12.24 & 15.14 & 10.30 & 11.33 & 15.21 & 9.08 & 11.47 & 15.21 & 9.57 & 10.85 & 15.23 & 8.54 \\
-          Uterus        & 6.01 & 2.61 & 5.79 & 5.69 & 2.44 & 5.00 & 5.77 & 3.27 & 4.69 & 5.77 & 2.89 & 5.00 & 5.95 & 3.19 & 5.00 \\
-          Vagina        & 6.75 & 21.72 & 4.12 & 5.34 & 4.10 & 4.24 & 4.97 & 3.52 & 4.00 & 6.09 & 4.33 & 5.00 & 5.08 & 3.67 & 4.00 \\
-          \bottomrule
-      \end{tabular}
-    }\label{tab:region-based-hd}
-  \end{table}
-
-  \begin{table}[h!]
-    \centering
-    \caption{Relative Volume Difference across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
-    \resizebox{\textwidth}{!}{
-      \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{2cm}}}
-          \toprule
-          \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUNet baseline}} & \multicolumn{3}{c}{\textbf{nnUNet RB}} & \multicolumn{3}{c}{\textbf{nnUNet RB CL}} & \multicolumn{3}{c}{\textbf{TS RB}} & \multicolumn{3}{c}{\textbf{TS RB CL}} \\
-          \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13} \cmidrule(lr){14-16}
-          & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
-          \midrule
-          Anorectum     & 0.04 & 0.06 & 0.03 & -0.03 & 0.06 & -0.03 & 0.03 & 0.12 & 0.02 & 0.02 & 0.06 & 0.02 & 0.01 & 0.11 & -0.00 \\
-          Bladder       & -0.04 & 0.12 & -0.02 & -0.01 & 0.03 & -0.01 & 0.00 & 0.03 & 0.00 & -0.01 & 0.04 & -0.00 & 0.01 & 0.03 & 0.01 \\
-          CTVn          & -0.01 & 0.03 & -0.01 & -0.03 & 0.04 & -0.03 & -0.01 & 0.03 & -0.01 & 0.01 & 0.04 & 0.01 & -0.00 & 0.03 & 0.00 \\
-          CTVp          & -0.01 & 0.04 & -0.00 & 0.02 & 0.03 & 0.01 & -0.00 & 0.05 & 0.00 & -0.01 & 0.04 & -0.01 & 0.02 & 0.04 & 0.02 \\
-          Parametrium   & 0.01 & 0.03 & 0.01 & 0.04 & 0.06 & 0.03 & -0.01 & 0.10 & 0.01 & 0.00 & 0.07 & -0.00 & -0.01 & 0.10 & 0.00 \\
-          Uterus        & 0.00 & 0.05 & 0.00 & 0.01 & 0.06 & 0.01 & -0.01 & 0.08 & -0.00 & -0.02 & 0.07 & -0.02 & 0.01 & 0.07 & 0.02 \\
-          Vagina        & 0.11 & 0.09 & 0.09 & 0.07 & 0.13 & 0.03 & 0.05 & 0.15 & 0.01 & 0.08 & 0.18 & 0.05 & 0.04 & 0.13 & 0.02 \\
-          \bottomrule
-      \end{tabular}
-    }\label{tab:region-based-rbd}
-  \end{table}
-
-  \begin{table}[h!]
-    \centering
-    \caption{Surface DSC across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
-    \resizebox{\textwidth}{!}{
-      \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{2cm}}}
-          \toprule
-          \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUNet baseline}} & \multicolumn{3}{c}{\textbf{nnUNet RB}} & \multicolumn{3}{c}{\textbf{nnUNet RB CL}} & \multicolumn{3}{c}{\textbf{TS RB}} & \multicolumn{3}{c}{\textbf{TS RB CL}} \\
-          \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13} \cmidrule(lr){14-16}
-          & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
-          \midrule
-          Anorectum     & 0.99 & 0.02 & 1.00 & 0.99 & 0.02 & 1.00 & 0.98 & 0.05 & 1.00 & 0.99 & 0.02 & 0.99 & 0.98 & 0.06 & 1.00 \\
-          Bladder       & 0.97 & 0.06 & 1.00 & 1.00 & 0.00 & 1.00 & 1.00 & 0.00 & 1.00 & 1.00 & 0.02 & 1.00 & 1.00 & 0.01 & 1.00 \\
-          CTVn          & 0.99 & 0.01 & 0.99 & 0.98 & 0.01 & 0.98 & 0.98 & 0.02 & 0.98 & 0.98 & 0.01 & 0.98 & 0.98 & 0.02 & 0.99 \\
-          CTVp          & 0.99 & 0.01 & 0.99 & 0.99 & 0.01 & 1.00 & 0.99 & 0.03 & 1.00 & 0.99 & 0.02 & 1.00 & 0.99 & 0.02 & 1.00 \\
-          Parametrium   & 0.99 & 0.01 & 0.99 & 0.97 & 0.04 & 0.98 & 0.97 & 0.05 & 0.99 & 0.97 & 0.05 & 0.98 & 0.97 & 0.05 & 0.99 \\
-          Uterus        & 0.99 & 0.01 & 0.99 & 0.99 & 0.02 & 1.00 & 0.99 & 0.03 & 1.00 & 0.99 & 0.03 & 1.00 & 0.99 & 0.03 & 1.00 \\
-          Vagina        & 0.99 & 0.01 & 1.00 & 0.99 & 0.04 & 1.00 & 0.97 & 0.08 & 1.00 & 0.98 & 0.06 & 0.99 & 0.98 & 0.07 & 1.00 \\
-          \bottomrule
-      \end{tabular}
-    }\label{tab:region-based-sdc}
-  \end{table}
 
   \begin{figure}[H]
     \centering
@@ -1625,7 +1653,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{UniverSeg out-of-the-box}} & \multicolumn{3}{c}{\textbf{Universeg Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 1.06 & 1.96 & 0.45 & 4.15 & 9.72 & 0.00 & 2.65 & 6.11 & 0.00 \\
         Bladder       & 1.21 & 2.06 & 0.71 & 1.37 & 4.30 & 0.00 & 0.61 & 3.11 & 0.00 \\
@@ -1647,7 +1675,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{UniverSeg out-of-the-box}} & \multicolumn{3}{c}{\textbf{Universeg Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 0.91 & 0.03 & 0.92 & 0.55 & 0.23 & 0.59 & 0.68 & 0.17 & 0.73 \\
         Bladder       & 0.94 & 0.06 & 0.97 & 0.81 & 0.23 & 0.91 & 0.89 & 0.15 & 0.94 \\
@@ -1669,7 +1697,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{UniverSeg out-of-the-box}} & \multicolumn{3}{c}{\textbf{Universeg Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 12.14 & 27.81 & 5.05 & 7.11 & 5.67 & 5.39 & 6.16 & 5.42 & 4.24 \\
         Bladder       & 77.16 & 71.94 & 96.79 & 4.17 & 4.87 & 2.24 & 2.38 & 2.72 & 1.41 \\
@@ -1691,7 +1719,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{UniverSeg out-of-the-box}} & \multicolumn{3}{c}{\textbf{Universeg Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 0.04 & 0.06 & 0.03 & -0.33 & 0.60 & -0.35 & -0.13 & 0.44 & -0.10 \\
         Bladder       & -0.04 & 0.12 & -0.02 & -0.24 & 0.43 & -0.10 & -0.04 & 0.26 & -0.03 \\
@@ -1713,7 +1741,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{UniverSeg out-of-the-box}} & \multicolumn{3}{c}{\textbf{Universeg Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 0.99 & 0.02 & 1.00 & 0.82 & 0.21 & 0.88 & 0.90 & 0.14 & 0.96 \\
         Bladder       & 0.97 & 0.06 & 1.00 & 0.92 & 0.19 & 1.00 & 0.97 & 0.10 & 1.00 \\
@@ -1783,7 +1811,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 1.06 & 1.96 & 0.45 & 23.98 & 26.87 & 15.00 & 6.94 & 11.51 & 1.00 \\
         Bladder       & 1.21 & 2.06 & 0.71 & 13.88 & 13.99 & 10.00 & 5.46 & 8.52 & 2.00 \\
@@ -1805,7 +1833,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 0.91 & 0.03 & 0.92 & 0.78 & 0.14 & 0.81 & 0.91 & 0.05 & 0.92 \\
         Bladder       & 0.94 & 0.06 & 0.97 & 0.92 & 0.07 & 0.94 & 0.95 & 0.05 & 0.97 \\
@@ -1827,7 +1855,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 12.14 & 27.81 & 5.05 & 4.83 & 3.35 & 3.61 & 2.36 & 1.61 & 2.00 \\
         Bladder       & 77.16 & 71.94 & 96.79 & 2.96 & 1.60 & 2.24 & 2.82 & 7.93 & 2.00 \\
@@ -1849,7 +1877,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 0.04 & 0.06 & 0.03 & 0.04 & 0.29 & 0.02 & -0.00 & 0.11 & 0.01 \\
         Bladder       & -0.04 & 0.12 & -0.02 & -0.05 & 0.12 & -0.04 & -0.03 & 0.08 & -0.01 \\
@@ -1871,7 +1899,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
         \toprule
         \textbf{Anatomy} & \multicolumn{3}{c}{\textbf{nnUnet baseline}} & \multicolumn{3}{c}{\textbf{MedSAM out-of-the-box}} & \multicolumn{3}{c}{\textbf{MedSAM Fine-tuned}} \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
-        & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} & \textbf{Mean} & \textbf{Std Dev} & \textbf{Median} \\
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Median} \\
         \midrule
         Anorectum     & 0.99 & 0.02 & 1.00 & 0.35 & 0.15 & 0.33 & 0.58 & 0.15 & 0.58 \\
         Bladder       & 0.97 & 0.06 & 1.00 & 0.44 & 0.13 & 0.44 & 0.59 & 0.12 & 0.60 \\
