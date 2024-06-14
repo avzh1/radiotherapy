@@ -1,24 +1,8 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # Fine-tune Structures
-# 
-# Assuming that the pre-processed data is available, run the fine-tuning process on the data
-# we have for 50 epochs so that we may see it afterwards in due corse. We can increase the
-# number of epochs later.
-
-# In[ ]:
-
-
 import os, sys
 dir1 = os.path.abspath(os.path.join(os.path.abspath(''), '..'))
 if not dir1 in sys.path: sys.path.append(dir1)
 from utils.environment import setup_data_vars
 setup_data_vars()
-
-
-# In[ ]:
-
 
 def get_raw_and_gt_data_paths():
     
@@ -38,10 +22,6 @@ def get_raw_and_gt_data_paths():
     gt_labels = [os.path.join(os.environ.get('nnUNet_raw'), x, os.environ.get('data_trainingLabels')) for x in classes]
 
     return classes, raw_data, gt_labels
-
-
-# In[ ]:
-
 
 from totalsegmentator.config import setup_nnunet, setup_totalseg
 from totalsegmentator.libs import download_pretrained_weights
@@ -69,10 +49,6 @@ def fetch_pretrained_totalsegmentator_model():
     # for organ segmentation. Note there is also potential for cropping the image.
     task_id = 291
     download_pretrained_weights(task_id)
-
-
-# In[4]:
-
 
 import sys
 import argparse
@@ -143,7 +119,7 @@ if __name__ == '__main__':
     print('-----------')
 
     # !nnUNetv2_train TARGET_DATASET CONFIG FOLD -pretrained_weights PATH_TO_CHECKPOINT
-    sys.argv = [original_sys_argv[0], str(TARGET_DATASET), CONFIG, str(FOLD), '-tr', 'nnUNetTrainer_500epochs', '--npz', '-p', 'totseg_nnUNetPlans']
+    sys.argv = [original_sys_argv[0], str(TARGET_DATASET), CONFIG, str(FOLD), '-tr', 'nnUNetTrainerCervical_500epochs', '--npz', '-p', 'totseg_nnUNetPlans']
     if args.continue_trianing:
         sys.argv += ['--c']
     else:
@@ -152,4 +128,3 @@ if __name__ == '__main__':
     run_training_entry()
 
     sys.argv = original_sys_argv
-
