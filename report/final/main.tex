@@ -1,7 +1,8 @@
 \documentclass[11pt,twoside]{report}
 
 % some definitions for the title page
-\newcommand{\reporttitle}{Transfer Learning for Deep Learning Radiotherapy Planning}
+\newcommand{\reporttitle}{Transfer Learning in Computer-Assisted Contouring for Radiotherapy Planning} % Transfer Learning in Computer-Assisted Contouring for Radiotherapy Planning
+
 \newcommand{\reportauthor}{Anton Zhitomirsky}
 \newcommand{\supervisor}{Prof Ben Glocker}
 \newcommand{\secondMarker}{Dr Thomas Heinis}
@@ -12,6 +13,7 @@
 
 % load some macros
 \input{../.latex-templates/notation}
+\usepackage[T1]{fontenc}
 
 % load title page
 \begin{document}
@@ -22,6 +24,7 @@
 \clearpage{\pagestyle{empty}\cleardoublepage}
 \setcounter{page}{1}
 \pagestyle{fancy}
+
 
 % \cleardoublepage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,7 +39,7 @@
   Radiotherapy planning involves outlining the macro and microscopic spreads of a cancer. Previously, bespoke models were trained on sufficient sample sizes of architectures that vary significantly in design to address distinct segmentation objectives. However, this makes models inaccessible to departments with limited datasets, increasing the barrier to experiencing the promised superiority beyond a model's specific use case.
 
   We, therefore, analyse the effectiveness of transfer learning techniques in leveraging knowledge learned from one domain into another. Variants of transfer include zero-shot, few-shot and many-shot transfer learning. The evaluation of n-shot approaches of transfer learning onto the radiotherapy planning objective will clarify whether the transfer is a valid strategy for increasing performance over models learnt from scratch.
-
+  % TODO: Add more about the results
   We represent three distinct model architectures for each type of transfer. We conclude that a many-shot transfer using TotalSegmentator remains a robust method for transfering knowledge. We find that few-shot transfer using UinverSeg does not apply to the complexity of 3-D volume delineations for cervical cancer. Finally, the finetuning of zero-shot models, represented by MedSAM, offers local bounded improvements on volume delineation independently of tumour localisation when compared to the baseline.
 
   % The repo is available at \url{https://github.com/AntonZhitomirsky/radiotherapy}.
@@ -66,13 +69,13 @@
 
 Currently, the most common network architecture backbone for radiotherapy planning is the U-Net architecture~\cite{Samarasinghe2021-ps, Lin2021-oz, Sartor2020-et, LIU2020184, Rhee2020-ms, LIU2020172}. However, each network requires specialized architectures or bespoke training schemes to achieve competitive performance. These tailored modifications contribute little to the overall development in medical segmentation~\cite{isensee2024nnunet}, as it becomes increasingly challenging for researchers to identify methods that live up to their promised superiority beyond the limited scenarios they are demonstrated on~\cite{nnunet}.
 
-Furthermore, the bespoke architectures assume a sufficient sample size representing the entire population of all individuals under the same circumstances. However, the underrepresented users of these models cannot apply this assumption; most hospital teams work in a specialized medical field with only in-house patients who follow specific hospital guidelines. A simple plug-and-play approach is unsuitable because segmentation guidelines often differ between facilities. Therefore, specific recalibration is necessary to effectively use these models because incorrect or inaccurate contours are the primary factors contributing to treatment failures in radiotherapy~\cite{Rhee2020-ms}.
+Furthermore, the bespoke architectures assume a sufficient sample size representing a sound representation of the population of all individuals under the same circumstances. However, the underrepresented users of these models cannot apply this assumption; most hospital teams work in a specialized medical field with only in-house patients who follow specific hospital guidelines. A simple plug-and-play approach is unsuitable because segmentation guidelines often differ between facilities. Therefore, specific recalibration is necessary to effectively use these models because incorrect or inaccurate contours are the primary factors contributing to treatment failures in radiotherapy~\cite{Rhee2020-ms}.
 
 \section{Objective and Methodology}
 
 We therefore analyse the effectiveness of Transfer Learning in radiotherapy planning. The Transfer Learning approach aims to leverage other trained models with great performance and lift low-level features for the target domain. A PubMed accrual for deep learning solutions in radiotherapy planning found a gap in technical research surrounding Transfer Learning in the radiotherapy planning field\footnote{Search string used in the PubMed accrual in 2023-2024 is available at Figure~\ref{fig:pubmed-search-string}}. Therefore, research on transfer in the medical domain will also fill the literature gap, which has yet to consider transfer learning as a solution for radiotherapy planning volumes. 
 
-Firstly, we select a dataset from The Royal Marsden Hospital, which will act as the pillar for advocating the success and use of transfer learning in radiotherapy planning. The real-world clinical dataset provides segmentations for key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the widespread segmentation challenges and has uncommon and limited segmentation patterns specified by internal team-wide guidelines.
+Firstly, we select a dataset from The Royal Marsden Hospital, which will act as the pillar for advocating the success and use of transfer learning in radiotherapy planning. The real-world clinical dataset provides segmentations for key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the public segmentation community and has uncommon and limited segmentation patterns specified by internal team-wide guidelines.
 
 Secondly, we analyse the effectiveness of transfer learning in radiotherapy planning. To research the application of this technique in the medical context, we utilize three popular architectures and their applications in transfer learning. These models are nnUNet~\cite{nnunet}, UniverSeg~\cite{universeg}, and MedSAM~\cite{Ma2024}. In tandem with the effectiveness of transferring knowledge from these models, we comment on the type of transfer, be it zero-shot, few-shot, or many-shot learning.
 
@@ -84,7 +87,7 @@ Secondly, we analyse the effectiveness of transfer learning in radiotherapy plan
 
 The report will commence by delving into the essential background knowledge needed for this project in Chapter~\ref{sect:motivation}. This chapter provides a high-level overview of anatomies and the clinical context (Section~\ref{sect:clinical-context}), as well as the fundamental existing academic knowledge in the field of Computer-assisted vision in Medical Imaging (Section~\ref{sect:machine-learning-for-image-segmentation}).
 
-Following this, Chapter~\ref{sect:methodology} will detail the experiments utilized to assess the effectiveness of different architectures in transferring knowledge into the target domain. Chapter~\ref{sect:results} presents and dissects the results of the experiment as well as their implications onto the medical community. Finally, Chapter~\ref{sect:conclusion} will cover the conclusion and future work.
+Following this, Chapter~\ref{sect:methodology} will detail the experiments utilized to assess the effectiveness of different architectures in transferring knowledge into the target domain. Chapter~\ref{sect:results} presents and dissects the results of the experiment as well as their implications onto the medical community. Finally, Chapter~\ref{sect:conclusion} will cover the conclusion and future work Chapter~\ref{sect:conclusion}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Motivation}\label{sect:motivation}
@@ -103,17 +106,15 @@ Cancer is a burden around the globe that has been a driver for almost one-sixth 
 
 Radiation therapy is an option for cancer treatment where high beams of radiation energy are tuned to hone in to target cancerous cells in a clinically defined `target area'. The cells killed by the energy experience interphase or proliferative death depending on the cell cycle stage. Death occurs when the damage to genetic material within the cell prevents it from dividing, or the cell's accumulation of genetic aberrations leads to a ``mitotic catastrophe''~\cite{cell-death}. In Europe, such radiotherapy treatment was used on average for 70\% of cases, with a curative rate of 40\%~\cite{radiotherapy-advances, Thompson2018}.
 
-All cells subjected to high-energy beams experience death. This places much responsibility on the oncologist to deliver an accurate treatment area so that healthy cells are unaffected. The death of healthy cells may cause adverse alterations to an organ's standard functionality.
+All cells subjected to high-energy beams experience death. This places much responsibility on the oncologist to deliver an accurate treatment area so that healthy cells are unaffected, as the compromise of healthy cells' function may cause adverse alterations to an organ's standard functionality.
 
 % This death is characteristic of any cell subjected to high energy beams, placing much responsibility on the oncologist to deliver an accurate treatment area so that healthy cells are unaffected; any adverse alteration of an organ's standard functionality may cause grave implications for the already compromised patient. 
 
-Therefore, the care required causes oncologists to spend 90--120 mins to delineate target areas for radiotherapy~\cite{LIU2020184}. This time-consuming endeavour is never favourable for a patient already in a dangerous situation; for mid-low-income countries, where this may not be an available resource, this leaves them with a death rate 18 times that of a higher-income country~\cite{cervical-cancer-epidemic}. 
+Therefore, the care required causes oncologists to spend 90--120 mins to delineate target areas for radiotherapy~\cite{LIU2020184}. This time-consuming endeavour is never favourable for a patient already in a dangerous situation. For mid-low-income countries, where this may not be an available resource, this leaves them with a death rate 18 times that of a higher-income country~\cite{cervical-cancer-epidemic}. 
 
-\subsection{CT modality}\label{sect:ct-modality}
+\subsection{CT modality and Hounsfield Units}\label{sect:ct-modality}
 
 High-resolution and high-contrast computed tomography (CT) machines have further benefited cancer treatment due to their noninvasive nature and ability to view patients' internal organs. X-ray devices rotate around a specified body part, and computer-generated cross-sectional images are produced~\cite{file-formats}. Whilst the scanner rotates, the patient's table slowly moves up and down inside the tube to produce different cross-section images. The images show damaged and surrounding soft tissue, allowing physicians to propose clinical target volumes more accurately.
-
-\subsubsection{Hounsfield Units}
 
 \begin{figure}[H]
     \centering
@@ -123,11 +124,9 @@ High-resolution and high-contrast computed tomography (CT) machines have further
     \caption{Coronal view the same image slice of a CT image, with different window cropping (Patient id: 49, slice 251). White (radiopaque) areas represent high-density tissues, and black (radiolucent) areas represent low-density tissues within the window range.}\label{fig:ct-windows}
 \end{figure}
 
-The operator or physician decides the granularity or image slice thickness, which ranges from 1mm to 10mm. Therefore, the precision along each axis creates a cube, or voxel, representing the value on a grid in three-dimensional space. The voxel values are measured in Hounsfield Units (HU)~\cite{diagnostic-radiology-physics}. 
+The operator or physician selects the image slice thickness from 1mm to 10mm. This choice determines the resolution of the image, with the cubes (voxels) measuring Hounsfield Units (HU)~\cite{diagnostic-radiology-physics}. The Hounsfield scale is a quantitative scale used in medical imaging to describe radiodensity. Unlike natural images, where the pixel's intensity determines a colour's intensity between 0 and 255, the voxel's intensity reflects the average tissue type for the cube and ranges between -1000 and 3000. Positive values (white) indicate denser tissue with greater X-ray beam absorption, while negative values (black) represent less dense tissue with less X-ray beam absorption~\cite{Statpearls}.
 
-Contrary to natural images, where pixel values vary from 0 to 255 in 3 channels representing Red, Blue and Green, the Hounsfield scale is a quantitative scale describing radiodensity. The image intensity reflects tissue type; each voxel intensity refers to a specific tissue composition. The positive values (white) result from more dense tissue with greater X-ray beam absorption, and negative values (black) are less dense tissue with less X-ray beam absorption~\cite{Statpearls}.  
-
-Therefore, because the HU scale is relative, different windows may be taken for a CT scan to highlight different tissues. Those voxels within the window will likely be tissues of a specific classification. For example, as shown in Figure~\ref{fig:ct-windows}, we display three such windows: muscle, cancellous bone and fat.
+Therefore, because the HU scale is relative; different windows may be taken for a CT scan to highlight different tissues. Those voxels within the window will likely be tissues of a specific classification. An example is illustrated in Figure~\ref{fig:ct-windows}.
 
 \subsection{Radiotherapy Planning}\label{sect:radiotherapy-planning}
 
@@ -149,17 +148,19 @@ Therefore, because the HU scale is relative, different windows may be taken for 
 
 Oncologists use CT scans to draw clinical volumes by combining their knowledge about the particular cancer to determine target structures, organs-at-risk structures, and areas where the cancer will likely spread to~\cite{AMLART-data}. We provide a simplified representation in Figure~\ref{fig:planning-areas}.
 
+\subsubsection{Target Volumes}
+
 The first area is the macroscopic delineated area of the visible tumour area. This Gross Target Volume (GTV) has a high probability of containing the tumour. Secondly, the Clinical Target Volume (CTV) is derived to account for potential microscopic spread. The CTV will be an area at least as big as the GTV with an optional margin surrounding it containing a 'rind' of non-zero probability of tumour spread. Lastly, the Primary Target Volume (PTV) contains residual geometric uncertainties and safety margins surrounding the CTV, ensuring the radiotherapy dose gets delivered to the CTV~\cite{tumor-delineation,defining-target-volumes,Lin2021-oz,personalised-PTV-strategies}. The PTV is a necessary extension of the CTV since geometric uncertainties are impossible and not advised to eliminate; after all, static scans are only estimations, subject to short-term organ misalignment, relative movement between structures of reference and tumours, partial volume effects and skewed anisotropic resolution~\cite{VANHERK200452}.
 
-In parallel, the oncologist constantly considers critical healthy tissue structures that need to be preserved during irradiation. These are referred to as organs-at-risk (ORs). In some specific circumstances, adding a margin analogous to the PTV margin around an OR is necessary to ensure that the organ cannot receive a higher-than-safe dose; this gives a planning OR volume~\cite{defining-target-volumes}.
+\subsubsection{Organs at Risk}
 
-\subsection{International Guidelines}
+In parallel, the oncologist constantly considers critical healthy tissue structures that need to be preserved during irradiation. These are referred to as organs-at-risk (ORs). These are organs that, despite being healthy, are substantially likely to be within the PTV. In some specific circumstances, adding a margin analogous to the PTV margin around an OR is necessary to ensure that the organ cannot receive a higher-than-safe dose; this gives a planning OR volume~\cite{defining-target-volumes}.
+
+\subsubsection{International Guidelines}
 
 The final volumes have no internationally agreed-upon guidelines, which leaves it up to the interpretation of the oncologists and Hospitals to use their heuristics when drawing areas.  This time-consuming process has high variability, causing it to suffer significantly from inter and intra-observer variability~\cite{Lin2021-oz}. 
 
-% However, the data provided has been standardised as a gold standard; see Section~\ref{sect:data}.
-
-\subsection{Data Aquisition}
+\subsection{Data Acquisition}
 
 The Royal Marsden Hospital provides the dataset as a set of `Neuroimaging Informatics Technology Initiative' files (NIfTI)~\cite{file-formats}. It is a lightweight alternative to other formats such as Digital Imaging and Communications in Medicine (DICOM)~\cite{file-formats} and eliminates ambiguity from spatial orientation information~\cite{dicom-to-nifti-conversion}. Libraries exist for handling these files, such as SimpleITK~\cite{SimpleITK-paper}, which we use to read and manipulate the data in this project. % The library reads, manipulates, and handles the image as a set of points in a grid occupying a physical region in space defined by the metadata to remove ambiguity from the origin, size, spacing, and so on that might vary between patient scans.
 
@@ -177,75 +178,90 @@ The training data provides 100 female patients that have been diagnosed with sim
 
 \subsection{Delineation classes}\label{sect:delineation-classes}
 
-The clinicians at the Royal Marsden Hospital have provided segmentation labels for seven high-priority regions of interest (ROI). These are the anorectum, bladder, CTVn, CTVp, parametrium, uterus, and vagina. The function of these anatomies is irrelevant to this project and is left to the reader to research further.
+The clinicians at the Royal Marsden Hospital have provided segmentation labels for seven high-priority regions of interest (ROI). These are the anorectum, bladder, CTVn, CTVp, parametrium, uterus, and vagina. The function of these anatomies is irrelevant to this project and is left to the reader to research further at their own discression. A high-level overview table and illustration has been supplied to provide important clinical context surrounding the anatomies [\ref{fig:delineation-classes}].
 
-\subsubsection{Organs At Risk}\label{sec:data-organs-at-risk}
+\begin{landscape}
+  \begin{table}[h!]
+    \centering
+    \begin{tabularx}{\linewidth}{l l l l X}
+      \toprule
+      \textbf{Anatomy} & \textbf{Type} & \textbf{Fig} & \textbf{Equ} & \textbf{Details} \\
+      \midrule
+      % \textit{Illustration available at Figure~\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}}
+      Anorectum & OR & \ref{fig:example-anorectum} & \ref{eq:ctvn-ctvp-anorectum}, \ref{eq:parametrium} \\
+      \midrule
+      % \textit{Illustration available at Figure~\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}}
+      Bladder & OR & \ref{fig:example-bladder}  & \ref{eq:parametrium}, \ref{eq:bladder-ctvn} & -- \\
+      \midrule     
+      % \textit{Illustration available at Figure~\ref{fig:example-CTVp}}. 
+      CTVp & CTV & \ref{fig:example-ctvp} & \ref{eq:parametrium}, \ref{eq:ctvp2} &      
+      The primary CTV. This is an area comprised of areas where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour)~\cite{AMLART-data}.
+      \\
+      \midrule
+      % \textit{Illustration available at Figure~\ref{fig:example-CTVn}}.
+      CTVn & CTV & \ref{fig:example-ctvn} & \ref{eq:ctvn-ctvp-anorectum}, \ref{eq:parametrium}, \ref{eq:bladder-ctvn}, \ref{eq:ctvn-lymph} & 
+      
+      The nodal CTV is drawn according to the progression of the disease. It encompasses areas that may contain microscopic spread to lymph nodes and margins around pelic blood vessels~\cite{AMLART-data}.
+      \\
+      \midrule
+      % \textit{Illustration available at Figure~\ref{fig:example-Parametrium}}.
+      Parametrium & CTV & \ref{fig:example-parametrium} & \ref{eq:parametrium} & 
+      
+      The tissue surrounding the cervix/vagina at risk of local spread. The Parametrium is drawn as a complete structure and edited back to the level of the vagina to be included~\cite{AMLART-data}. \\
+      \midrule
+      % \textit{Illustration available at Figure~\ref{fig:example-uterus-axial}-~\ref{fig:example-uterus-sagittal}}.
+      Uterus & CTV & \ref{fig:example-uterus} & \ref{eq:parametrium}, \ref{eq:ctvp2} & The whole Uterus with no editing back used to generate CTVp. \\
+      \midrule
+      %  \textit{Illustration available at Figure~\ref{fig:example-vagina-axial}-~\ref{fig:example-vagina-sagittal}}.
+      Vagina & CTV & \ref{fig:example-vagina} & \ref{eq:parametrium}, \ref{eq:ctvp2} & From the whole vagina contour, slices deleted to leave either the upper 2cm of vagina, or 2cm below the tumour (contoured as 2cm from either cervix/ GTVp, whichever is lower)~\cite{AMLART-data}. \\
+      \bottomrule
+    \end{tabularx}
+  \end{table}
+  
+  \begin{figure}[H]
+    \centering
+    \setlength{\fboxsep}{0pt} % Remove padding around the images (if any)
+    \setlength{\fboxrule}{0pt} % Remove border around the images (if any)
+    \includegraphics[width=0.14\linewidth, trim=0 0 240 0, clip]{../figures/PatientStructureExamples/Anorectum_003/51-2-266.png}%
+    \includegraphics[width=0.14\linewidth, trim=0 0 240 0, clip]{../figures/PatientStructureExamples/Bladder_088/67-1-255.png}%
+    \includegraphics[width=0.14\linewidth, trim=0 0 270 0, clip]{../figures/PatientStructureExamples/CTVp_096/73-1-279.png}%
+    \includegraphics[width=0.14\linewidth, trim=0 0 269 0, clip]{../figures/PatientStructureExamples/CTVn_007/67-1-239.png}%
+    \includegraphics[width=0.14\linewidth, trim=0 0 299 0, clip]{../figures/PatientStructureExamples/Parametrium_088/9-2-234.png}%
+    \includegraphics[width=0.14\linewidth, trim=0 0 301 0, clip]{../figures/PatientStructureExamples/Uterus_012/9-1-306.png}%
+    \includegraphics[width=0.14\linewidth, trim=0 0 301 0, clip]{../figures/PatientStructureExamples/Vagina_69/79-1-267.png}%
+  
+    \vspace{-0.5\baselineskip} % Adjust the space between rows
+  
+    \subfigure[Anorectum]{\includegraphics[width=0.14\linewidth, trim=238 0 2 0, clip]{../figures/PatientStructureExamples/Anorectum_003/51-2-266.png}\label{fig:example-anorectum}}%
+    \subfigure[Bladder]{\includegraphics[width=0.14\linewidth, trim=240 0 0 0, clip]{../figures/PatientStructureExamples/Bladder_088/67-1-255.png}\label{fig:example-bladder}}%
+    \subfigure[CTVp]{\includegraphics[width=0.14\linewidth, trim=270 0 0 0, clip]{../figures/PatientStructureExamples/CTVp_096/73-1-279.png}\label{fig:example-ctvp}}%
+    \subfigure[CTVn]{\includegraphics[width=0.14\linewidth, trim=269 0 0 0, clip]{../figures/PatientStructureExamples/CTVn_007/67-1-239.png}\label{fig:example-ctvn}}%
+    \subfigure[Parametrium]{\includegraphics[width=0.14\linewidth, trim=299 0 0 0, clip]{../figures/PatientStructureExamples/Parametrium_088/9-2-234.png}\label{fig:example-parametrium}}%
+    \subfigure[Uterus]{\includegraphics[width=0.14\linewidth, trim=301 0 0 0, clip]{../figures/PatientStructureExamples/Uterus_012/9-1-306.png}\label{fig:example-uterus}}%
+    \subfigure[Vagina]{\includegraphics[width=0.14\linewidth, trim=301 0 0 0, clip]{../figures/PatientStructureExamples/Vagina_69/79-1-267.png}\label{fig:example-vagina}}
+    \caption{A high-level overview of delineation classes with details regarding each if it deviates from typical objectives, e.g. see Vagina.}\label{fig:delineation-classes}
+  \end{figure}
 
-An organ at risk is an organ that, despite being healthy, is substantially likely to be within the PTV. Any areas created around the area should actively avoid these organs because overlapping with them risks complicating treatment and compromising the health of functioning organs. The key supplied anatomies at risk are the  Anorectum (Figure~\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}) and the Bladder (Figure~\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}).
+% TODO: totalsegmentator is region based, so the bladder would have been predicted in context of 24 other structures to help it guide it into the right general serach area.
 
-\subsubsection{CTVp}\label{sec:data-CTVp}
 
-The CTVp stands for the Primary Clinical Target Volume; see the example at Figure~\ref{fig:example-CTVp}. This is an area comprised from areas where there may be local microscopic spread (uterus, cervix, upper vagina, primary tumour)~\cite{AMLART-data}.
-
-\subsubsection{CTVn}\label{sec:data-CTVn}
-
-The CTVn stands for Nodal Clinical Target Volume; see the example at Figure~\ref{fig:example-CTVn}. This CTV surrounds areas that may contain microscopic spread to lymph nodes. It is drawn based on set margins around pelvic blood vessels and includes pelvic lymph nodes, common iliac lymph nodes and para-aortic lymph nodes~\cite{AMLART-data}.
-
-Similarly to CTVp, this is a compound area with three groups of lymph nodes. However, in contrast to the CTVp, in clinical practice the area is drawn depending on the development of the disease.
-
-\subsubsection{Parametrium, Vagina, and Uterus}\label{sec:data-Parametrium}
-
-The Parametrium (or Paravagina) is the tissue surrounding the cervix/vagina at risk of local spread; see Figure~\ref{fig:example-Parametrium}. The Parametrium is drawn as a complete structure and edited back to the level of the vagina to be included~\cite{AMLART-data}.
-
-Finally, the clinical significance of the Vagina and Uterus is to help define encapsulating structures like the CTVn (see Section~\ref{sec:rules}). Example for the Uterus and Vagina structures can be seen at Figure~\ref{fig:example-uterus-axial}-~\ref{fig:example-anorectum-sagittal} and Figure~\ref{fig:example-vagina-axial}-~\ref{fig:example-vagina-sagittal} respectively.
+\end{landscape}
 
 \subsection{Rules}\label{sec:rules}
 
-The top seven priority structures have been selected to identify and plan an area where radiotherapy should be used. With these structures, there are rules that the clinicians have outlined that affect the final segmentation. They are quoted below. Note, the structures do not refer to more than one patient in one rule.
+With the delineated areas, the clinicians outlined rules that affect the final segmentation~\cite{AMLART-data}. Note, if multiple organs are referenced, they pertain to the same patient.
 
 Let us represent each organ anatomy as the first letter of its name, specifically: ($A$)norectum, ($B$)ladder, ($C$)ervix, ($P$)arametrium, ($U$)terus, ($V$)agina. Further, define:
 
 \begin{enumerate}
   \item The CTVn and CTVp as $C_n$ and $C_p$ respectively
   \item The GTVn and GTVp as $G_n$ and $G_p$ respectively
-  \item The Pelvic, Common and Para-aortic Lymph Node as $L_p$, $L_c$, and $L_{pa}$ respectively
+  \item The Pelvic, Common and Para-aortic Lymph Node as $L_p$, $L_c$, and $L_{pa}$ respectively  
+  \item The overlap of two structures is denoted by the set intersect symbol $\cap$.
+  \item The joint area of two structures is denoted by the set union symbol $\cup$.
 \end{enumerate}
 
-% \begin{minipage}{0.5\textwidth}
-%   \subsubsection{Notation of Structures}
-%   \begin{enumerate}
-%     \item Let the Anorectum be denoted as $A$
-%     \item Let the Bladder be denoted as $B$
-%     \item Let the Cervix be denoted with $C$
-%     \item Let the CTVn be denoted with $C_n$
-%     \item Let the CTVp be denoted with $C_p$
-%     \item Let the GTVp be denoted with $G_p$
-%     \item Let the GTVn be denoted with $G_n$
-%   \end{enumerate}
-% \end{minipage}%
-% \begin{minipage}{0.5\textwidth}
-
-%   \begin{enumerate}
-%     \setcounter{enumi}{7}
-%     \item Let the Pelvic Lymph Node be denoted as $L_p$
-%     \item Let the Common Iliac Lymph Node be denoted as $L_i$
-%     \item Let the Para-aortic Lymph Node be denoted as $L_{pa}$
-%     \item Let the Parametrium be denoted with $P$
-%     \item Let the Uterus be denoted with $U$
-%     \item Let the Vagina be denoted with $V$
-%   \end{enumerate}
-
-% \end{minipage}
-
 \subsubsection{Relationship between Structures}
-
-  \begin{enumerate}
-    % \item If we want to talk about a specific patient, we should use the super-script notation to differentiate patients, e.g., $B^i$ for the Bladder of patient $i$.
-    \item Let the overlap of two structures be denoted by the set intersect symbol $\cap$.
-    \item Let the joint area of two structures be denoted by the set union symbol $\cup$.
-  \end{enumerate}
-
-  % \vspace{4em}
 
 \begin{enumerate}
   \item There should be no overlap between the CTVn, CTVp or Anorectum.
@@ -256,14 +272,14 @@ Let us represent each organ anatomy as the first letter of its name, specificall
 
   \item The Parametrium may overlap with all of the other structures.
 
-        \begin{equation}
+        \begin{equation}\label{eq:parametrium}
           \forall i \in S, \quad (P \cap S \neq \emptyset) \vee (P \cap S = \emptyset), \quad \text{where } S = \{A, B, C, C_n, C_p, U, V\}
         \end{equation}
 
   \item The Bladder may overlap with the CTVn.
 
-        \begin{equation}
-          B \cap C_n \neq \emptyset \vee B \cap C_n = \emptyset\label{eq:ctvn}
+        \begin{equation}\label{eq:bladder-ctvn}
+          B \cap C_n \neq \emptyset \vee B \cap C_n = \emptyset
         \end{equation}
 
   \item The CTVp is defined as a compound structure containing:
@@ -280,7 +296,7 @@ Let us represent each organ anatomy as the first letter of its name, specificall
 
   \item The CTVn is defined as a compound structure containing:
 
-        \begin{equation}
+        \begin{equation}\label{eq:ctvn-lymph}
           C_n = G_n \cup L_i \cup L_p \cup L_{pa}
         \end{equation}
 
@@ -555,7 +571,7 @@ Please refer to Equation~\ref{eq:ctvn-ctvp-anorectum} ``there should be no overl
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.7\linewidth]{../figures/percentage_of_illegal_overlap.png}
+  \includegraphics[height=.4\textheight]{../figures/percentage_of_illegal_overlap.png}
   \caption{Total frequency and percentage overlap of non-zero occurrences of `illegal' overlap between the CTVn, CTVp, and Anorectum.}\label{fig:illegal_overlap}
 \end{figure}
 
@@ -779,7 +795,7 @@ Selecting a measurement that can reflect a clinician's acceptability score is di
 
 The study at~\cite{Sherer2021-le} helped drive an initiative to combine aspects of surface Based evaluation (Section~\ref{sect:surface-based}) and Spatial Overlap Based evaluation (Section~\ref{sect:spatial-overlap-based}) into a Surface DICE which assesses the specified tolerance instead of the overlap of the two volumes.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.3\linewidth]{../figures/Surface-dice.png}
   \caption{Taken from~\cite{Nikolov2021-xe}. Illustrates the computation of the surface DICE, where the continuous line is the predicted surface, and the dashed line is the ground truth. The black arrows show the maximum deviation tolerated without penalty; therefore, in pink are the unacceptable deviations and green otherwise.}\label{fig:surface-dice}
@@ -918,10 +934,10 @@ Figure~\ref{fig:illegal_overlap} shows the illegal overlap of the ground truth l
 
 \begin{figure}[H]
   \centering
-  \subfigure[Basic multi-class nnUNet]{\includegraphics[width=.45\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_nnunet_cervical.png}} % TODO
-  \subfigure[Rule enforced multi-class nnUNet]{\includegraphics[width=.45\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_nnunet_cervical.png}} % TODO
+  % \subfigure[Basic multi-class nnUNet]{\includegraphics[width=.45\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_nnunet_cervical.png}} % TODO
   \subfigure[Rule enforced multi-class nnUNet]{\includegraphics[width=.45\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_nnunet_cervical.png}}
-  \subfigure[Rule enforced multi-class TotalSegmentator]{\includegraphics[width=.45\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_nnunet_cervical.png}}  % TODO
+  % \subfigure[Basic multi-class TotalSegmentator]{\includegraphics[width=.45\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_nnunet_cervical.png}} % TODO
+  \subfigure[Rule enforced multi-class TotalSegmentator]{\includegraphics[width=.45\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_totalsegmentator_cervical.png}}
   \caption{Illegal overlap of inference in class labels.}\label{fig:illegal-overlap-custom-trainers}
 \end{figure}
 
@@ -1225,103 +1241,6 @@ Therefore, before integrating tools into workflows, a committee must establish t
    \end{lstlisting}
    \caption{Search string used in PubMed accrual in 2023-2024}\label{fig:pubmed-search-string}  
 \end{figure}
-
-\section{Ground Truth Organ Delineations}
-
-\subsection{Organs At Risk}
-
-\begin{figure}[H]
-  \centering
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Axial.png}\label{fig:example-anorectum-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Coronal.png}\label{fig:example-anorectum-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Anorectum_003/Sagittal.png}\label{fig:example-anorectum-sagittal}
-  }
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Axial.png}\label{fig:example-bladder-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Coronal.png}\label{fig:example-bladder-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Bladder_088/Sagittal.png}\label{fig:example-bladder-sagittal}
-  }
-  \caption{Views of the segmentation (in red) of the Anorectum (\ref{fig:example-anorectum-axial}-\ref{fig:example-anorectum-sagittal}) and  the segmentation (in red) of the Bladder (\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}) of an arbitrary patient}
-\end{figure}
-
-\subsection{CTV volumes}
-
-\begin{figure}[H]
-  \centering
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Axial.png}\label{fig:example-CTVp-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Coronal.png}\label{fig:example-CTVp-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVp_096/Sagittal.png}\label{fig:example-CTVp-sagittal}
-  }
-  \caption{Views of a segmented (in red) CTVp of an arbitrary patient}\label{fig:example-CTVp}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Axial.png}\label{fig:example-CTVn-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Coronal.png}\label{fig:example-CTVn-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/CTVn_007/Sagittal.png}\label{fig:example-CTVn-sagittal}
-  }
-  \caption{Views of a segmented (in red) CTVn of an arbitrary patient}\label{fig:example-CTVn}
-\end{figure}
-
-\subsection{Parametrium, Uteurs, and Vagina}
-
-\begin{figure}[H]
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Axial.png}\label{fig:example-Parametrium-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Coronal.png}\label{fig:example-Parametrium-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Parametrium_088/Sagittal.png}\label{fig:example-Parametrium-saggital}
-  }
-  \caption{Views of a segmented (in red) Parametrium of an arbitrary patient}\label{fig:example-Parametrium}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Axial.png}\label{fig:example-uterus-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Coronal.png}\label{fig:example-uterus-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Uterus_012/Sagittal.png}\label{fig:example-uterus-sagittal}
-  }
-  \subfigure[Axial]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Axial.png}\label{fig:example-vagina-axial}
-  }
-  \subfigure[Coronal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Coronal.png}\label{fig:example-vagina-coronal}
-  }
-  \subfigure[Sagittal]{
-    \includegraphics[width=0.3\textwidth]{../figures/PatientStructureExamples/Vagina_69/Sagittal.png}\label{fig:example-vagina-sagittal}
-  }
-  \caption{Views of the segmentation (in red) of the Uterus (\ref{fig:example-uterus-axial}-\ref{fig:example-uterus-sagittal}) and  the segmentation (in red) of the Vagina (\ref{fig:example-vagina-axial}-\ref{fig:example-vagina-sagittal}) of an arbitrary patient}
-\end{figure}
-
-\clearpage
 
 \section{Metrics}
 
