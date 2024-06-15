@@ -317,9 +317,10 @@ Before the popularization of machine learning, algorithms used to be defined by 
 \begin{figure}[H]
   \centering
   \includegraphics[width=.7\linewidth]{../figures/california.jpeg}
+  \caption{An illustration of a multi-layered perceptron (MLP) for the California Housing dataset. Information is vectorised and fed into a network. Different weights/strengths are learnt for each feature. Ultimately, the model learns a relationship between the features and the target.}\label{fig:california-housing}
 \end{figure}
 
-As a consequence of poor scalability, a new genre of algorithms began to emerge that fell into the classification of neural network models. Observations were rephrased and morphed into vectorised inputs, where each constituent of the vector represented a particular feature of the observation. For instance, the California Housing dataset~\cite{kelleypace1997} contains an input of 9 features (longitude, latitude, number of bathrooms, \dots) and one target feature (house price). After pre-processing and strategising, this input would be vectorised and fed into a network with several layers. Within each layer, sets of tunable parameters would optionally change the number of features and learn a relationship between parameters using weights until the $1 \times 9$ vector finally translates into a scalar value indicating the house price. After many repetitions of learning from examples, the model would learn an approximation to the complex objective. These models were termed Multi-Layered Perceptrons (MLPs).
+Due to poor scalability, a new genre of algorithms emerged that fell into the classification of neural network models. Observations were rephrased and morphed into vectorised inputs, where each constituent of the vector represented a particular feature of the observation. For instance, the California Housing dataset~\cite{kelleypace1997} contains an input of 9 features (number of bedrooms, number of toilets, longitude, latitude, square footage, \dots) and one target feature (house price). After pre-processing and strategising, this input would be vectorised and fed into a network with several layers. Within each layer, sets of tunable parameters would optionally change the number of features and learn a relationship between parameters using weights until the $1 \times 9$ vector finally translates into a scalar value indicating the house price -- a simplified illustration of the process is shown in Figure~\ref{fig:california-housing}. After many repetitions of learning from examples, the model would learn an approximation to the complex objective. These models were termed Multi-Layered Perceptrons (MLPs).
 
 \subsection{Image Segmentation}\label{sect:image-segmentation}
 
@@ -337,7 +338,7 @@ Convolutional layers are rectangular blocks that are recipes for translating an 
 
 The CNN operates by having multiple learnable convolutional filters stacked on top of each other. The values within the square convolutional filter are \textit{learned} during training; the values learnt are those that, in combination with the layers before and after, encode the image's features according to the training objective the best. When stacked with many other convolutional filters that piggyback off the encoded features produced by filters before it, this allows for dense feature representations that encode the entire image.
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \subfigure{\includegraphics[width=.49\linewidth, trim=0 230px 0 0, clip]{../figures/fcnupsample.png}}
   \subfigure{\includegraphics[width=.49\linewidth, trim=0 33px 0 200px, clip]{../figures/fcnupsample.png}}
@@ -982,29 +983,22 @@ Unfortunately, the benefits of transfer in a multi-class domain are not prevalen
   \caption{DICE metric evaluation for anatomies that experienced performance improvements after region based transfer.}\label{fig:dice-region-based-vanilla} 
 \end{figure}
 
-
-
-\subsubsection{Illegal Overlap Review}
-
-Figure~\ref{fig:illegal-overlap-basic} shows the illegal overlap of the ground truth labels.
-
-\begin{figure}[H]
-  \centering
-  \subfigure[Basic multi-class nnUNet]{\includegraphics[width=.45\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_nnunet_baseline.png}} 
-  \caption{Illegal overlap of inference in class labels for basic region-based training.}\label{fig:illegal-overlap-basic}
-\end{figure}
-
 \subsection{Rule enforced Region-based Training}
+\clearpage
 
-\subsubsection{Illegal Overlap Review}
-
-Figure~\ref{fig:illegal-overlap-rule-enforced} shows the illegal overlap of the ground truth labels.
+\subsection{Reflection on Illegal Overlap}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_cervical_combined.png}
-  \caption{Illegal overlap of inference in class labels for rule enforced region-based training.}\label{fig:illegal-overlap-rule-enforced}
+  \includegraphics[height=.7\textheight]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_combined.png}
+  \caption{Illegal overlap of the classes generated from the multi-class segmentation models that would be be in violation of the rules in Section~\ref{sec:rules}}\label{fig:illegal-overlap-total}
 \end{figure}
+
+From Figure~\ref{fig:illegal-overlap-total}, the total number of illegal overlaps has gone down, especially those that appeared infrequently and were likely a source of noise. Overlaps that appeared the most were decreased in both the custom loss and the vanilla region-based models.
+
+Notably, by introducing an additional loss term, this performs as expected by reducing the number of `illegal' overlaps. However, the performance across all 100 samples is comparable to that of a vanilla region-based model which is contains marginally more illegal overlaps across the major culprits.
+
+When comparing transferred models, we see no difference. Therefore, when transfering data between domains, it is inadvisable to use a custom loss function to enforce rules as the time commitment is not worth the marginal performance improvement.
 
 % total segmentator had 500 females to 700 males which may explain the struggle to locate the uterus and vagina.
 
@@ -1075,7 +1069,7 @@ Figure~\ref{fig:illegal-overlap-rule-enforced} shows the illegal overlap of the 
 
 % The total summary of results for the Supervised UniverSeg architecture is available at the Appendix; Metric Tables~\ref{tab:universeg-apl}-~\ref{tab:universeg-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:universeg-metrics-anorectum}-~\ref{fig:universeg-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
 
-% \clearpage
+\clearpage
 
 \section{MedSAM}
 
@@ -1287,6 +1281,11 @@ However, it is too early to take the results of the medical tool as gospel. For 
 Clinicians can fall into the trap of automation bias as AI becomes more commonplace in clinical environments~\cite{STRAW2020101965}. However, many models of this age codify the existing bias in common cases, which often will fail those patients who do not fit the majority's expectations. 
 
 Therefore, before integrating tools into workflows, a committee must establish the degree of supervision physicians require if this tool is to be used in practice. Currently, oncologists will be required to reverse-engineer the `black box' results to verify why a decision has been made. All cells subjected to high-energy beams experience death. This places much responsibility on the oncologist to deliver an accurate treatment area so that healthy cells are unaffected. The death of healthy cells may cause adverse alterations to an organ's standard functionality.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% bibliography
+\bibliography{../.latex-templates/references}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1942,10 +1941,5 @@ Therefore, before integrating tools into workflows, a committee must establish t
    \end{lstlisting}
    \caption{Search string used in PubMed accrual in 2023-2024}\label{fig:pubmed-search-string}  
 \end{figure}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% bibliography
-\bibliography{../.latex-templates/references}
 
 \end{document}
