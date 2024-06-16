@@ -853,9 +853,9 @@ TotalSegmentator offers a promising potential for transferral into segmentation 
 
 % TODO look for other ~
 
-The only candidate of this pre-trained network for many-shot transfer is the Bladder. The bladder appeared in all of the approximately 1200 CT scans of both the male and female samples. To evaluate the effectiveness of transfer we evaluate both the pre-trained model, and a transferred many-shot finetuning on the bladder class. The results are lifted from the Appendix for convenient discussion.
+The only candidate of this pre-trained network for many-shot transfer is the Bladder. The bladder appeared in all of the approximately 1200 CT scans of both the male and female samples. To evaluate the effectiveness of transfer we evaluate both the pre-trained model, and a transferred many-shot finetuning on the bladder class.
 
-Initial transferal without fine-tuning does not beat the baseline in many benchmarks, apart from the Surface DSC and the Haussdorf distance metrics (Table~\ref{tab:totalsegmentator-bladder-transfer-stats}, Figure~\ref{fig:totalsegmentator-metrics-bladder-copy}); Totalsegmentator has had more training examples of bladder labels, and therefore, it possesses more spatial context about where to look for and where to find the bladder. Furthermore, the model was trained on a multi-class segmentation problem. This improves the model's object localisation and prevents it from searching for the bladder in unlikely areas because, during training, its location was contextualised amongst other organs, so neighbouring anatomies anchored the region of interest of the bladder to the correct parts. An example of beneficial object localisation can be seen by comparing the third and fourth columns of Figure~\ref{fig:totseg-bladder-stomach-correction} in the qualitative evaluation of all TotalSegmentator methods.
+Initial transferal without fine-tuning does not beat the baseline in many benchmarks, apart from the Surface DSC and the Haussdorf distance metrics (Table~\ref{tab:totalsegmentator-bladder-transfer-stats}, Figure~\ref{fig:totalsegmentator-metrics-bladder-copy}); Totalsegmentator has had more training examples of bladder labels, and therefore, it possesses more spatial context about where to look for and where to find the bladder. Furthermore, the model was trained on a multi-class segmentation problem. It is possible that this improves the model's object localisation and prevents it from searching for the bladder in unlikely areas because, during training, its location was contextualised amongst other organs, so neighbouring anatomies anchored the region of interest of the bladder to the correct parts. An example of beneficial object localisation can be seen by comparing the third and fourth columns of Figure~\ref{fig:totseg-bladder-stomach-correction} in the qualitative evaluation of all TotalSegmentator methods.
 
 After fine-tuning, TotalSegmentator experienced more accurate segmentations. By comparing the fourth and fifth columns in Figure~\ref{fig:bladder-totalsegmentator-qualitative}, TotalSegmentator was able to adjust to the niche and abnormal cases. Quantitative evaluation between the baseline, the out-of-the-box TotalSegmentator, and the fine-tuned TotalSegmentator demonstrates the improvement in performance for metrics across the board.
 
@@ -902,7 +902,7 @@ We conclude that many-shot transfer learning techniques improve the performance 
 
 \subsection{Zero-shot transferral}\label{sec:totseg-zero-shot-transfer}
 
-The baseline TotalSegmentator model segments 24 anatomies from the bladder to the esophagus~\cite{totalsegmentor-git}. Therefore, this is a firm foundation for zero-shot transferral onto the unseen anatomies. The Anorectum, CTVn, and Parametrium all benefited from zero-shot transferral using Totalsegmentator. A Table aggregating the DICE scores is lifted from the Table~\ref{tab:totalsegmentator-dice} for convenience in Table~\ref{tab:totalsegmentator-dice-copy}.
+The baseline TotalSegmentator model segments 24 anatomies ranging betweenthe bladder and the esophagus~\cite{totalsegmentor-git}. Therefore, this is a firm foundation for zero-shot transferral onto unseen anatomies. The Anorectum, CTVn, and Parametrium all benefited from zero-shot transferral using Totalsegmentator. A Table aggregating the DICE scores is lifted from the Table~\ref{tab:totalsegmentator-dice} for convenience in Table~\ref{tab:totalsegmentator-dice-copy}.
 
 \begin{table}[h!]
   \centering
@@ -926,7 +926,7 @@ The baseline TotalSegmentator model segments 24 anatomies from the bladder to th
 
 The resulting anatomies that did not benefit are the Uterus, Vagina, and CTVp. These structures are not independent -- from Section~\ref{sec:rules}, the CTVp consists of the Uterus and Vagina with marginal microscopic tumour regions surrounding these organs. The Uterus and Vagina (and, by extension, the CTVp) all suffer from poor contrast; see `Segmenting invisible boundaries' at Section~\ref{sec:medsam-transfer-performance}. 
 
-In contrast, the Anorectum, CTVn, and Parametrium transfer well onto unseen anatomies, demonstrating that it can segment Organs at Risk and CTV volumes (see Section~\ref{sect:delineation-classes} for OR and CTV anatomies).
+In contrast, the Anorectum, CTVn, and Parametrium transfer well onto unseen anatomies, demonstrating that it can segment Organs at Risk and CTV classes (see Section~\ref{sect:delineation-classes} for OR and CTV anatomies).
 
 We conclude that transfer effectiveness relies heavily on good contrast; anatomies with visible boundaries and anchor points benefit from transfer and score highly on transferred performance. This is good evidence that networks can segment microscopic delineations, especially in CTV volumes such as the CTVn, where the progression of the disease influences the segmentation. However, to segment poor contrast regions accurately, clinicians may have to employ a many-shot transferral of similar networks.
 
@@ -950,7 +950,7 @@ The total summary of results for the region based transferral for nnUNet back-bo
 
 Region-based methods consistently gave competitive metrics across all categories and anatomies thanks to the engineered pipeline of the nnUNet. All results fell within a similar range of the original baseline, with some reporting benefits and some performing worse. To perform meaningful analysis, an nnUNet was trained from scratch with a similar region-based pipeline for the sound evaluation of transfer.
 
-A recurring character in the transfer story experienced performance improvements with a multi-class segmentation pipeline in both learnt and transferred methods. The bladder experienced immediate performance improvements across evaluation metrics. Table~\ref{tab:nnunet-region-baseline-bladder} summarises these improvements from Figure~\ref{fig:dice-region-based-vanilla-bladder} with grey columns highlighting the vanilla Region-based models.
+A recurring character in the transfer story experienced performance improvements with a multi-class segmentation pipeline in both learnt and transferred methods. This anatomy is the bladder. Table~\ref{tab:nnunet-region-baseline-bladder} summarises these improvements from Figure~\ref{fig:dice-region-based-vanilla-bladder} with grey columns highlighting the vanilla Region-based models.
 
 \begin{table}[h!]
   \centering
@@ -989,27 +989,79 @@ Unfortunately, the benefits of transfer in a multi-class domain are not prevalen
 
 \subsection{Rule enforced Region-based Training}
 
-A custom loss term was added to both the nnUNet and TotalSegmentator models to enforce the rules in Section~\ref{sec:rules}. We find that in most cases, the custom loss term provides marginal improvements over unmodified region-based models.
+\begin{minipage}[c]{.4\linewidth}
+  \vspace{-\fboxsep}
+  \begin{figure}[H]
+    \centering
+    \subfigure[CTVn]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
+    \subfigure[CTVp]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
+    \subfigure[Parametrium]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
+    % \subfigure[Uterus]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
+    % \subfigure[Vagina]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
+    \caption{Comparison between TotalSegmentator transfer for CTV segmentations.}\label{fig:region-based-metrics-ctv-totseg}
+  \end{figure}%%
+\end{minipage}%
+\hspace{1cm}
+\begin{minipage}[c]{.55\linewidth}
+    % \vspace{0pt}
 
-\begin{table}[h!]
-  \centering
-  \caption{Points of improvement of each multi-class segmentation model with comparison to the nnUNet binary segmentation baseline.}
-  \resizebox{\textwidth}{!}{
-    \begin{tabular}{l*{10}{>{\centering\arraybackslash}p{2.3cm}}}
-        \toprule
-        \textbf{Metric} & \multicolumn{2}{c}{\textbf{nnUNet RB}} & \multicolumn{2}{c}{\textbf{nnUNet RB CL}} & \multicolumn{2}{c}{\textbf{TS RB}} & \multicolumn{2}{c}{\textbf{TS RB CL}} \\
-        \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
-        & $\hat{\textbf{x}} \pm \mathbf\sigma$ & \textbf{Med} & $\hat{\textbf{x}} \pm \mathbf\sigma$ & \textbf{Med} & $\hat{\textbf{x}} \pm \mathbf\sigma$ & \textbf{Med} & $\hat{\textbf{x}} \pm \mathbf\sigma$ & \textbf{Med} \\
-        \midrule
-        Added Path Length & $ \textcolor{red}{0.6} \pm \textcolor{red}{0.15} $ & \textcolor{red}{0.5} & $ \textcolor{red}{0.57} \pm \textcolor{red}{1.08} $ &	\textcolor{red}{0.28} &	$ \textcolor{red}{0.77} \pm \textcolor{red}{0.38} $ &	\textcolor{red}{0.66} & $ \textcolor{red}{0.42} \pm \textcolor{red}{1.13} $ &	\textcolor{red}{0.16} \\ 
-        DICE & $ 0 \pm 0 $	& \textcolor{red}{-0.01} &	$ 0 \pm \textcolor{red}{0.02} $ &	0	& $ \textcolor{red}{-0.01} \pm \textcolor{red}{0.01} $ &	\textcolor{red}{-0.01} &	$ 0 \pm \textcolor{red}{0.02} $ &	\textcolor{green}{0.01} \\
-        Haussdorf & $ \textcolor{green}{-11.6} \pm \textcolor{green}{-19.7} $ &	\textcolor{green}{-13.06} &	$ \textcolor{green}{-11.7} \pm \textcolor{green}{-19.4} $ &	\textcolor{green}{-13.41} &	$ \textcolor{green}{-11.3} \pm \textcolor{green}{-18.5} $ &	\textcolor{green}{-12.93} &	$ \textcolor{green}{-11.7} \pm \textcolor{green}{-19.3} $ &	\textcolor{green}{-13.5} \\
-        RVD & $ 0 \pm 0 $ &	-0.01	& $ -0.01 \pm 0.02 $ &	-0.01 &	$ 0 \pm 0.01 $ &	-0.01 &	$ 0 \pm 0.01 $ & 0 \\
-        Surface DSC & $ 0 \pm 0 $ &	0 &	$ 0 \pm 0.02 $ &	0 &	$ 0 \pm 0.01 $ &	0	 &$ 0 \pm 0.02 $ &	0 \\
-        \bottomrule
-    \end{tabular}
-  }\label{tab:points-change-in-each-metric-per-model}
-\end{table}
+    A custom loss term was added to the nnUNet and TotalSegmentator models to enforce the rules in Section~\ref{sec:rules}. We find that in all cases, defining the rules in the loss function improves the corresponding un-modified architecture in the averages of the metrics and in the robustness of the span of their quartiles. In particular, among the four region-based models, the best performer is always the zero-shot transferred TotalSegmentator model (see Section~\ref{sect:region-based-appendix} and Figures~\ref{fig:region-based-metrics-anorectum} - \ref{fig:region-based-metrics-vagina}). In isolation, we demonstrate that multi-class segmentation tasks benefit from transfer from other domains.
+    
+    \vspace{1em}
+
+    If they exist, defining heuristical rules can benefit a single-model solution in a clinical environment. Rules can be supplied in clinical settings as auxiliary objectives, such as defining non-overlapping structure combinations, which is common in organ segmentation tasks across radiotherapy domains.
+
+    \vspace{1em}
+
+    However, a definitive conclusion regarding multi-class segmentation cannot be made for all anatomies; compared to a binary-segmentation transfer, the effects of multi-class transfer vary between classes. Figure~\ref{fig:region-based-metrics-ctv-totseg} summarises the performance of TotalSegmentator-based transfer models using the DICE metric (other metrics follow similar relative performance). For example, multi-class segmentation has not benefited complex CTV cases such as the CTVn and the parametrium. 
+
+    \vspace{1em}
+
+    The suspected reason lies in the nnUNet, which defines two loss strategies depending on the number of regions it must segment. The model assigns equal contributions to the loss from each class for region-based approaches. This leaves some anatomies underrepresented in the loss figure because the model assigns equal importance to learning to segment obvious structures vs nuanced volumes. However, in binary-segmentation tasks, the loss function penalises misclassifications of nuanced volumes with greater force, which moves the performance towards a better approximation.
+
+    \vspace{1em}
+
+    Therefore, we conclude that transfer learning in multi-class segmentation tasks is not a one-size-fits-all solution. Despite the success of transfer learning in multi-class segmentation tasks, the complexity of the anatomy may call for a binary segmentation task to achieve the best results, from which further transfer will boost results even further.
+
+\end{minipage}%
+
+
+% (-?\d+\.?\d*) *\t*(-?\d+\.?\d*) *\t*(-?\d+\.?\d*)
+% $ $1 \pm $2 $ & $ $3 $ & 
+
+% \begin{table}[h!]
+%   \centering
+%   \caption{Points of improvement of each multi-class segmentation model with comparison to the nnUNet binary segmentation baseline.}
+%   \resizebox{\textwidth}{!}{
+%     \begin{tabular}{>{\centering\arraybackslash}p{2cm} l*{8}{>{\centering\arraybackslash}p{2.3cm}}}
+%         \toprule
+%         & \textbf{Metric} & \multicolumn{2}{c}{\textbf{nnUNet RB}} & \multicolumn{2}{c}{\textbf{nnUNet RB CL}} & \multicolumn{2}{c}{\textbf{TS RB}} & \multicolumn{2}{c}{\textbf{TS RB CL}} \\
+%         \cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(lr){7-8} \cmidrule(lr){9-10}
+%         & & $\hat{\textbf{x}} \pm \mathbf{\sigma}$ & \textbf{Med} & $\hat{\textbf{x}} \pm \mathbf{\sigma}$ & \textbf{Med} & $\hat{\textbf{x}} \pm \mathbf{\sigma}$ & \textbf{Med} & $\hat{\textbf{x}} \pm \mathbf{\sigma}$ & \textbf{Med} \\
+%         \midrule
+%         \multirow{5}{*}{\rotatebox[origin=c]{90}{Anorectum}} & Added Path Length & $ -0.24 \pm -1.04 $ & $ 0.05 $ &  $ 0.13 \pm 1.79 $ & $ -0.08 $ & 	$ -0.01 \pm -0.62 $ & $ 0.07 $ & 	$ 0.08 \pm 2 $ & $ -0.16 $ \\
+%         & DICE & $ 0 \pm -0.01 $ & $ -0.01 $ & 	$ 0 \pm 0.03 $ & $ 0.01 $ & 	$ 0 \pm 0 $ & $ 0 $ & 	$ 0 \pm 0.03 $ & $ 0.01 $ \\
+%         & Haussdorf & $ -5 \pm -22.7 $ & $ 0.24 $ & 	$ -4.86 \pm -20.5 $ & $ -0.58 $ & 	$ -4.38 \pm -22.3 $ & $ 0.56 $ & 	$ -4.74 \pm -19.7 $ & $ -0.81 $ \\
+%         & RVD & $ -0.07 \pm 0 $ & $ -0.06 $ & 	$ -0.01 \pm 0.06 $ & $ -0.01 $ & 	$ -0.02 \pm 0 $ & $ -0.01 $ & 	$ -0.03 \pm 0.05 $ & $ -0.03 $ \\
+%         & Surface DSC & $ 0 \pm 0 $ & $ 0 $ & 	$ -0.01 \pm 0.03 $ & $ 0 $ & 	$ 0 \pm 0 $ & $ -0.01 $ & 	$ -0.01 \pm 0.04 $ & $ 0 $ \\
+%         \midrule
+%         \multirow{5}{*}{\rotatebox[origin=c]{90}{Bladder}} & Added Path Length & $ -0.36 \pm -1.07 $ & $ -0.19 $ & 	$ -0.35 \pm -0.52 $ & $ -0.23 $ & 	$ -0.27 \pm -0.92 $ & $ -0.07 $ & 	$ -0.35 \pm -0.44 $ & $ -0.2 $ \\
+%         & DICE & $ 0.03 \pm -0.04 $ & $ 0 $ & 	$ 0.03 \pm -0.04 $ & $ 0 $ & 	$ 0.02 \pm -0.04 $ & $ 0 $ & 	$ 0.03 \pm -0.04 $ & $ 0 $ \\
+%         & Haussdorf & $ -73.18 \pm -68.54 $ & $ -93.47 $ & 	$ -73.39 \pm -69.86 $ & $ -93.47 $ & 	$ -72.04 \pm -61.52 $ & $ -93.33 $ & 	$ -73.46 \pm -69.92 $ & $ -93.63 $ \\				
+%         & RVD & $ 0.03 \pm -0.09 $ & $ 0.01 $ & 	$ 0.04 \pm -0.09 $ & $ 0.02 $ & 	$ 0.03 \pm -0.08 $ & $ 0.02 $ & 	$ 0.05 \pm -0.09 $ & $ 0.03 $ \\
+%         & Surface DSC & $ 0.03 \pm -0.06 $ & $ 0 $ & 	$ 0.03 \pm -0.06 $ & $ 0 $ & 	$ 0.03 \pm -0.04 $ & $ 0 $ & 	$ 0.03 \pm -0.05 $ & $ 0 $ \\
+%         \midrule
+%         \multirow{5}{*}{\rotatebox[origin=c]{90}{CTVn}} & Added Path Length & $ 3.01 \pm 1.39 $ & $ 2.53 $ & 	$ 3.2 \pm 2.74 $ & $ 2.44 $ & 	$ 3.79 \pm 1.21 $ & $ 3.38 $ & 	$ 2.39 \pm 2.64 $ & $ 1.96 $ \\
+%         & DICE & $ -0.02 \pm 0 $ & $ -0.0199999999999999 $ & 	$ -0.01 \pm 0 $ & $ -0.0199999999999999 $ & 	$ -0.02 \pm 0 $ & $ -0.0199999999999999 $ & 	$ -0.01 \pm 0 $ & $ -0.0099999999999999 $ \\
+%         & Haussdorf & $ 1.12 \pm -0.17 $ & $ 1.19 $ & 	$ 1.28 \pm 0.18 $ & $ 1.19 $ & 	$ 1.39 \pm -0.11 $ & $ 1.55 $ & 	$ 0.859999999999999 \pm -0.0699999999999998 $ & $ 0.859999999999999 $ \\										
+%         & RVD & $ -0.02 \pm 0.01 $ & $ -0.02 $ & 	$ 0 \pm 0 $ & $ 0 $ & 	$ 0.02 \pm 0.01 $ & $ 0.02 $ & 	$ 0.01 \pm 0 $ & $ 0.01 $ \\								
+%         & Surface DSC & $ -0.01 \pm 0 $ & $ -0.01 $ & 	$ -0.01 \pm 0.01 $ & $ -0.01 $ & 	$ -0.01 \pm 0 $ & $ -0.01 $ & 	$ -0.01 \pm 0.01 $ & $ 0 $ \\
+
+%         \bottomrule
+%     \end{tabular}
+%   }
+%   \label{tab:points-change-in-each-metric-per-model}
+% \end{table}
 
 \clearpage
 
@@ -1018,14 +1070,14 @@ A custom loss term was added to both the nnUNet and TotalSegmentator models to e
 \begin{figure}[H]
   \centering
   \includegraphics[height=.65\textheight, trim=0 0 0 20, clip]{../../research/source/code/nnUNet/3_gt_engineering/overlap_frequency_combined.png}
-  \caption{Illegal overlap of the classes generated from the multi-class segmentation models that would be be in violation of the rules in Section~\ref{sec:rules}}\label{fig:illegal-overlap-total}
+  \caption{Illegal overlap of the classes generated from the multi-class segmentation models that would be be in violation of the rules in Section~\ref{sec:rules} acquired as a cumulative sum over all data samples.}\label{fig:illegal-overlap-total}
 \end{figure}
 
 From Figure~\ref{fig:illegal-overlap-total}, the total number of illegal overlaps has gone down, especially those that appeared infrequently and were likely a source of noise. Overlaps that appeared the most were decreased in both the custom loss and the vanilla region-based models.
 
 Notably, by introducing an additional loss term, this performs as expected by reducing the number of `illegal' overlaps. However, the performance across all 100 samples is comparable to that of a vanilla region-based model which is contains marginally more illegal overlaps across the major culprits.
 
-When comparing transferred models, we see no difference. Therefore, when transfering data between domains, it is inadvisable to use a custom loss function to enforce rules as the time commitment is not worth the marginal performance improvement; the improvements in overlap is likely a symptom of generalisation of a model, as minor cases that appear less than 1000 times would result from overfitting. 
+When comparing transferred models, we see no difference. Therefore, when transfering data between domains, it is inadvisable to use a custom loss function with the sole objective to enforce rules; the decrease in overlap is likely a symptom of generalisation of a model, as minor cases that appear less than 1000 times would result from overfitting, rather than a direct result of an auxiliary heuristic in the loss function. 
 
 % total segmentator had 500 females to 700 males which may explain the struggle to locate the uterus and vagina.
 
