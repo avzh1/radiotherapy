@@ -39,7 +39,7 @@
   Radiotherapy planning involves outlining the macro and microscopic spreads of a cancer. Previously, bespoke models were trained on sufficient sample sizes of architectures that vary significantly in design to address distinct segmentation objectives. However, this makes models inaccessible to departments with limited datasets, increasing the barrier to experiencing the promised superiority beyond a model's specific use case.
 
   We, therefore, analyse the effectiveness of transfer learning techniques in leveraging knowledge learned from one domain into another. Variants of transfer include zero-shot, few-shot and many-shot transfer learning. The evaluation of n-shot approaches of transfer learning onto the radiotherapy planning objective will clarify whether the transfer is a valid strategy for increasing performance over models learnt from scratch.
-  % TODO: Add more about the results
+
   We represent three distinct model architectures for each type of transfer. We conclude that a many-shot transfer using TotalSegmentator remains a robust method for transfering knowledge. We find that few-shot transfer using UinverSeg does not apply to the complexity of 3-D volume delineations for cervical cancer. Finally, the finetuning of zero-shot models, represented by MedSAM, offers local bounded improvements on volume delineation independently of tumour localisation when compared to the baseline.
 
   % The repo is available at \url{https://github.com/AntonZhitomirsky/radiotherapy}.
@@ -1079,65 +1079,6 @@ When comparing transferred models, we see no difference. Therefore, when transfe
 
 \section{UniverSeg}
 
-% \subsection{Automated Support Set Sampling}
-
-% Automated support set sampling is not a successful technique for unseen patients. First, there is significant variability, and limited examples do not fully address non-trivial segmentations. Provided is an additional plot for the distribution of starting and ending slices for the Anorectum class at Figure~\ref{fig:start-end-distribution-universeg}.
-
-
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[width=.8\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_0_anorectum.png}
-%   \includegraphics[width=\linewidth, trim=0 0 340px 0, clip]{../../research/source/code/UniverSeg/support_anorectum_axis_0.png}
-%   \caption{The distribution of the start and ending slices of the tumor in a normalised batch of images across axes 0 (axial dimension) and the corresponding sampled support extracted.}\label{fig:start-end-distribution-universeg-ax-0}
-% \end{figure}
-
-% % TODO: whispy segmentations
-
-% Overlapping regions in the distribution of slice numbers for the support set indicate significant variability in where tumours become visible and disappear across different patients. This overlap suggests that the tumours' start and end points are inconsistent, leading to challenges in creating a reliable support set for segmentation. When the tails of these distributions significantly overlap, it means that for some patients, the end of a tumour in one slice might coincide with the beginning of a tumour in another, or there could be significant gaps between the start and end points of tumours across different slices. This variability can confuse the model, as the support set may not provide clear and consistent examples of tumour boundaries, reducing segmentation accuracy. 
-
-% Second, automatic slice generation can often lead to confusion, as the UniverSeg model was always trained to predict a segmentation. That is, their training procedure for CT was to take the central slice of anatomy, thus ignoring more complex and ambiguous areas of the anatomy. 
-
-% A qualitative assessment of the technique as a whole concludes that it is not applicable and that a more supervised approach is required for the UniverSeg architecture, because examples fuel the prediction process.
-
-% We provide for review a selection of slices in Table~\ref{tab:universeg-inference} from an example inference on a single patient. An additional example of a support set is provided at the appendix at Figure~\ref{fig:appendix:universeg-support}. %TODO
-
-% % TODO
-
-% \begin{table}[H]
-%   \centering
-%   \caption{Qualitative assessment of UniverSeg inference for a random patient}\label{tab:universeg-inference}
-%   \begin{tabular}{p{.5cm} >{\centering\arraybackslash}m{4cm} >{\centering\arraybackslash}m{4cm} >{\centering\arraybackslash}m{4cm}}
-%     \toprule
-%     & query & label & prediction \\ 
-%     \midrule
-%     {\rotatebox{90}{slice 42}} 
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=0 0 530 15, clip]{../figures/universeg_results/prediction_img_1_slice_42.png}}}
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=180 0 355 15, clip]{../figures/universeg_results/prediction_img_1_slice_42.png}}}
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=530 0 0 15, clip]{../figures/universeg_results/prediction_img_1_slice_42.png}}}  \\
-    
-%     {\rotatebox{90}{slice 65}} 
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=0 0 530 15, clip]{../figures/universeg_results/prediction_img_1_slice_65.png}}} 
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=180 0 355 15, clip]{../figures/universeg_results/prediction_img_1_slice_65.png}}}
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=530 0 0 15, clip]{../figures/universeg_results/prediction_img_1_slice_65.png}}}  \\
-
-%     {\rotatebox{90}{slice 69}} 
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=0 0 530 15, clip]{../figures/universeg_results/prediction_img_1_slice_69.png}}} 
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=180 0 355 15, clip]{../figures/universeg_results/prediction_img_1_slice_69.png}}}
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=530 0 0 15, clip]{../figures/universeg_results/prediction_img_1_slice_69.png}}}  \\
-
-%     {\rotatebox{90}{slice 80}} 
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=0 0 530 15, clip]{../figures/universeg_results/prediction_img_1_slice_80.png}}} 
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=180 0 355 15, clip]{../figures/universeg_results/prediction_img_1_slice_80.png}}}
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=530 0 0 15, clip]{../figures/universeg_results/prediction_img_1_slice_80.png}}}  \\
-
-%     {\rotatebox{90}{slice 87}} 
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=0 0 530 15, clip]{../figures/universeg_results/prediction_img_1_slice_87.png}}} 
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=180 0 355 15, clip]{../figures/universeg_results/prediction_img_1_slice_87.png}}}
-%     & \reflectbox{\rotatebox[origin=c]{180}{\includegraphics[width=\linewidth, trim=530 0 0 15, clip]{../figures/universeg_results/prediction_img_1_slice_87.png}}}  \\
-
-%   \end{tabular}
-% \end{table}
-
 The total summary of results for the Supervised UniverSeg architecture is available at the Appendix; Metric Tables~\ref{tab:universeg-apl}-~\ref{tab:universeg-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:universeg-metrics-anorectum}-~\ref{fig:universeg-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
 
 \subsection{Supervised Support Set Sampling}
@@ -1401,6 +1342,8 @@ On paper, the metrics for the vagina are promising, as they offer improvements o
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Conclusion}\label{sect:conclusion}
+
+In progress
 
 % the annotation time cost between the two pipelines (Fig. 5b). The results demonstrate that with the assistance of MedSAM, the annotation time is substantially reduced by 82.37% and 82.95% for the two experts, respectively (medsam)
 
