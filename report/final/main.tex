@@ -79,9 +79,9 @@ Firstly, we select a dataset from The Royal Marsden Hospital, which will act as 
 
 Secondly, we analyse the effectiveness of transfer learning in radiotherapy planning. To research the application of this technique in the medical context, we utilize three popular architectures and their applications in transfer learning. These models are nnUNet~\cite{nnunet}, UniverSeg~\cite{universeg}, and MedSAM~\cite{Ma2024}. In tandem with the effectiveness of transferring knowledge from these models, we comment on the type of transfer, be it zero-shot, few-shot, or many-shot learning.
 
-\section{Results}
-
-Fill in after conclusion (pending)
+% \section{Results}
+% TODO
+% Fill in after conclusion (pending)
 
 \section{Outline of Report}
 
@@ -1384,7 +1384,15 @@ Few-shot learning strategies currently fall short of strict 3-dimensional radiot
 
 Lastly, zero-shot models perform suboptimally out-of-the-box but transfer to levels comparable to the many-shot methods. Prompt encoding by MedSAM moulds the original auto-contouring objective of many researchers to play more into the current ethical issues and international guidelines on using AI-assisted segmentation tools. Transformer-based methods can provide supervised suggestions that improve annotation time by 80\%~\cite{Ma2024}. After the transferal, this time will surely improve. However, further experiments with clinicians are required to justify whether zero-shot transferral is a technique that can significantly assist medical professionals.
 
-\subsection{Further Work}
+\section{Further Work}
+
+\subsubsection{Scale up the dimensions in few and zero shot methods.}
+
+A robust 3D U-net architecture solidifies the benefit of many-shot transferred models. This adds the third dimension to the pool of potential reasons for TotalSegmentator's success over the two-dimensional MedSAM and UniverSeg. Therefore, it is still being determined whether transfer performance favours many-shot transfer over added contextual information given by convolutions over a third dimension.
+
+Either the nnUNet architecture should be reduced to operate along the two-dimensional plane, or the few and zero-shot models should be extended to answer whether these methods can outperform a many-shot transfer concretely. However, because removing an axis of information from a 3D U-Net decreases available helpful information, it would not make sense to dampen the state-of-the-art performance of 3D models to put it in the same ballpark as less performative methods.
+
+Once the axes along which a model can extract information are standardised, more confidence can be made in which type of n-shot transfer is the most effective.
 
 % the annotation time cost between the two pipelines (Fig. 5b). The results demonstrate that with the assistance of MedSAM, the annotation time is substantially reduced by 82.37% and 82.95% for the two experts, respectively (medsam)
 
