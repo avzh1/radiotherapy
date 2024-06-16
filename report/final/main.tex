@@ -242,9 +242,6 @@ The clinicians at the Royal Marsden Hospital have provided segmentation labels f
     \caption{A high-level overview of delineation classes with details regarding each if it deviates from typical objectives, e.g. see Vagina.}\label{fig:delineation-classes}
   \end{figure}
 
-% TODO: totalsegmentator is region based, so the bladder would have been predicted in context of 24 other structures to help it guide it into the right general serach area.
-
-
 \end{landscape}
 
 \subsection{Rules}\label{sec:rules}
@@ -381,7 +378,7 @@ Until now, architectures have operated on data pre-processed to a particular exp
 
 Therefore, the nnUNet analyses the fingerprint of the dataset and the device to deliver a tailored experience and force a more codependent relationship; now, the architecture depends on the data and the data is pre-processed to conform to the network~\cite{nnunet}. Furthermore, hardware restrictions mean networks may be inaccessible to those with worse specifications or, at the other end of the spectrum, may underutilize powerful computation still available~\cite{nnunet}; the nnUNet analyses GPU constraints used to influence batch sizes and more~\cite{nnunet-git-paper}.
 
-The automated method configuration is classified into three categories. A dataset fingerprint extracts training data distributions such as shape, spacing and intensity distributions. Rule-based parameters estimate the most common robust parameters for resampling and normalization. Finally, the Empirical Parameters learn parameters, such as ensemble selection, which is not derivable from the dataset fingerprint.
+The automated method configuration is classified into three categories. A dataset fingerprint extracts training data distributions such as shape, spacing and intensity distributions. Rule-based parameters estimate the most common robust parameters for resampling and normalisation. Finally, the Empirical Parameters learn parameters, such as ensemble selection, which is not derivable from the dataset fingerprint.
 
 \subsubsection{Critical Review of the nnUNet}
 
@@ -427,7 +424,6 @@ This model operates on 2D slices of images and directly avoids the finetuning ar
 
 Advances in NLP, with attention-based mechanisms, have questioned whether convolutional-based methods like those above are the best approach for segmentation. Transformers from NLP were adapted to form the Vision Transformer (ViT)~\cite{ViT}. This model views the image as a grid of tokens; in the original paper, Dosovitskiy et al. separate the image into a grid of patches and read in these grid cells as individual tokens. The tokens pass through the attention mechanism as with NLP and into a classification mechanism~\cite{ViT}. 
 
-% TODO search and replace normalize -> normalise
 The SAM (Segment Anything Model) model implemented a modification of the transformer architecture~\cite{SAM} as seen in Figure~\ref{fig:sam}. However, the task was reformulated as a promotable segmentation problem to allow for zero-shot generalisation (the model can generalise to unseen examples with no re-training or fine-tuning). As seen in Figure~\ref{fig:sam}, the model inputs an image along with either points in the image or boxes. This reduces the search space SAM has to perform to segment an object into an area or a set of points.
 
 \subsection{MedSAM}\label{sect:medsam}
@@ -524,11 +520,11 @@ The provided examples of the objective are enough to train an nnUNet model from 
 
 \subsection{Preprocessing}\label{sec:nnunet-preprocessing}
 
-Prior to training, necessary normalization must take place to standardize each input. Firstly, CT scans can produce results for different spacings, resolutions, and dimensions. Because the model samples data in batches, the batch properties must align within the model's body. Therefore, the fingerprint taken by the preprocessing pipeline resamples input data towards the median dimension. 
+Prior to training, necessary normalisation must take place to standardize each input. Firstly, CT scans can produce results for different spacings, resolutions, and dimensions. Because the model samples data in batches, the batch properties must align within the model's body. Therefore, the fingerprint taken by the preprocessing pipeline resamples input data towards the median dimension. 
 
-The traditional method of normalization involves normalizing the entire image corpus. However, this method does not take into account the skew that might affect the outcome. This is because the background value occurs most frequently, and artifacts such as metal cause outlier peaks. As a result, traditional normalization could overlook important tissues as it attempts to treat background and outlier values equally with foreground values.
+The traditional method of normalisation involves normalising the entire image corpus. However, this method does not take into account the skew that might affect the outcome. This is because the background value occurs most frequently, and artifacts such as metal cause outlier peaks. As a result, traditional normalisation could overlook important tissues as it attempts to treat background and outlier values equally with foreground values.
 
-Therefore, the nnUNet avoids this complication by processing voxel properties encased by the ground truth segmentation. The values are clipped to their 0.5 and 99.5 percentile, followed by traditional normalization with the mean and standard deviation. This way, the target structure properties remain relative to their original, and the background label conforms to the normalization inspired by the region of interest.
+Therefore, the nnUNet avoids this complication by processing voxel properties encased by the ground truth segmentation. The values are clipped to their 0.5 and 99.5 percentile, followed by traditional normalisation with the mean and standard deviation. This way, the target structure properties remain relative to their original, and the background label conforms to the normalisation inspired by the region of interest.
 
 \subsection{Separate Training}\label{sec:train-nnunet}
 
@@ -600,7 +596,7 @@ We hypothesise that although the rule-free model attempts to approximate the gro
 %   \includegraphics[width=.8\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_1_anorectum.png}
 %   \includegraphics[width=\linewidth, trim=0 0 340px 0, clip]{../../research/source/code/UniverSeg/support_anorectum_axis_1.png}
 %   % \subfigure[]{\includegraphics[width=.45\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_2_anorectum.png}}
-%   \caption{The distribution of the start and ending slices of the tumor in a normalized batch of images across axes 1 (sagittal dimension) and the corresponding sampled support extracted.}\label{fig:start-end-distribution-universeg}
+%   \caption{The distribution of the start and ending slices of the tumor in a normalised batch of images across axes 1 (sagittal dimension) and the corresponding sampled support extracted.}\label{fig:start-end-distribution-universeg}
 % \end{figure}
 
 UniverSeg operates on 2-dimensional data. As a result, to provide automatic radiotherapy planning volumes, it is essential to provide slices for the model as input alongside a sufficient support size of similar slices. This network allows discussions for few-shot transfer into the radiotherapy domain.
@@ -634,7 +630,7 @@ Zero-shot learning, a promising feature of MedSAM, could potentially enable it t
 
 \subsection{Preprocessing}
 
-MedSAM takes two-dimensional images as input, much like UniverSeg. Therefore, we similarly preprocess the data to a resolution of $1024 \times 1024$ along each slice where the ground truth is present. We clip the ranges of the CT scan to Hounsfield units centred around the 40 value, with a window radius of 400 units and later normalized to the range of $[0,1]$. In contrast to UniverSeg, we resize a slice after selecting the index instead of resizing the whole image. Thus, we do not introduce any anisotropic uncertainties along our sampling axis.
+MedSAM takes two-dimensional images as input, much like UniverSeg. Therefore, we similarly preprocess the data to a resolution of $1024 \times 1024$ along each slice where the ground truth is present. We clip the ranges of the CT scan to Hounsfield units centred around the 40 value, with a window radius of 400 units and later normalised to the range of $[0,1]$. In contrast to UniverSeg, we resize a slice after selecting the index instead of resizing the whole image. Thus, we do not introduce any anisotropic uncertainties along our sampling axis.
 
 Further, in contrast to previous strategies, the MedSAM preprocessing step also removes ground truth segmentations that occupy an area below a specified threshold. The idea here is that the challenge with locating the small areas of the region of interest is an entirely different classification of the problem; the issue is with object detection instead of object segmentation~\cite{SAM, Ma2024}. This detail of the preprocessing is critical to consider for discussion and use as this would increase the proposed surface distance along an axis.
 
@@ -851,8 +847,6 @@ The total summary of results for the separate training of TotalSegmentator trans
 
 TotalSegmentator offers a promising potential for transferral into segmentation tasks for radiotherapy planning. As mentioned in Section~\ref{sect:totalsegmentator}, the model trains on many segmentation organ tasks. The lower levels and encoding layers can be frozen, and the expansive layer can be fine-tuned to utilize many shot segmentation advantages. 
 
-% TODO look for other ~
-
 The only candidate of this pre-trained network for many-shot transfer is the Bladder. The bladder appeared in all of the approximately 1200 CT scans of both the male and female samples. To evaluate the effectiveness of transfer we evaluate both the pre-trained model, and a transferred many-shot finetuning on the bladder class.
 
 Initial transferal without fine-tuning does not beat the baseline in many benchmarks, apart from the Surface DSC and the Haussdorf distance metrics (Table~\ref{tab:totalsegmentator-bladder-transfer-stats}, Figure~\ref{fig:totalsegmentator-metrics-bladder-copy}); Totalsegmentator has had more training examples of bladder labels, and therefore, it possesses more spatial context about where to look for and where to find the bladder. Furthermore, the model was trained on a multi-class segmentation problem. It is possible that this improves the model's object localisation and prevents it from searching for the bladder in unlikely areas because, during training, its location was contextualised amongst other organs, so neighbouring anatomies anchored the region of interest of the bladder to the correct parts. An example of beneficial object localisation can be seen by comparing the third and fourth columns of Figure~\ref{fig:totseg-bladder-stomach-correction} in the qualitative evaluation of all TotalSegmentator methods.
@@ -896,7 +890,7 @@ After fine-tuning, TotalSegmentator experienced more accurate segmentations. By 
 
 \clearpage
 
-Another reason for TotalSegmentators transferral success is the nnUNet fingerprint extraction pipeline; after a more significant proportion of the population is analysed, a more robust training pipeline is established in TotalSegmentator. The normalization becomes more robust as more meaningful data is extracted from the fingerprint, such as intensity values of the bladder, which are more consistent across the population\footnote{Normalization techniques are discussed in Sections~\ref{sect:nnunet-automated-method-configuration} and \ref{sec:nnunet-preprocessing}}.
+Another reason for TotalSegmentators transferral success is the nnUNet fingerprint extraction pipeline; after a more significant proportion of the population is analysed, a more robust training pipeline is established in TotalSegmentator. The normalisation becomes more robust as more meaningful data is extracted from the fingerprint, such as intensity values of the bladder, which are more consistent across the population\footnote{normalisation techniques are discussed in Sections~\ref{sect:nnunet-automated-method-configuration} and \ref{sec:nnunet-preprocessing}}.
 
 We conclude that many-shot transfer learning techniques improve the performance on baselines due to their increased exposure to the class it is segmenting. Coupled with a strong and robust nnUNet network~\cite{isensee2024nnunet, nnunet} this improves segmentation performance after transferral.
 
@@ -1094,7 +1088,7 @@ When comparing transferred models, we see no difference. Therefore, when transfe
 %   \centering
 %   \includegraphics[width=.8\linewidth]{../../research/source/code/UniverSeg/start_end_distribution_axis_0_anorectum.png}
 %   \includegraphics[width=\linewidth, trim=0 0 340px 0, clip]{../../research/source/code/UniverSeg/support_anorectum_axis_0.png}
-%   \caption{The distribution of the start and ending slices of the tumor in a normalized batch of images across axes 0 (axial dimension) and the corresponding sampled support extracted.}\label{fig:start-end-distribution-universeg-ax-0}
+%   \caption{The distribution of the start and ending slices of the tumor in a normalised batch of images across axes 0 (axial dimension) and the corresponding sampled support extracted.}\label{fig:start-end-distribution-universeg-ax-0}
 % \end{figure}
 
 % % TODO: whispy segmentations
@@ -1312,15 +1306,12 @@ The dataset contains less straightforward, and more intuitive segmentations whic
 
 The figures suggest a competitive performance of structures in the axial (0) and sagittal (2) axes. The qualitative evaluation in Figure~\ref{fig:ctvn-medsam-prediction-all-three-axis} gains an insight into why the performance might be the way it is. The hypothesised reason for this upset in performance is that the coronal view contains, on average, more disjoint areas and, therefore, more bounding boxes are passed as input into the model. Indeed, a dataset review shows that, on average, the corresponding number of boxes on each axis is 1.27, 1.78, and 1.12, respectively. 
 
-
-
-Therefore, MedSAM has provided great promise for outperforming an nnUNet baseline; the performance gap is minor considering the CTVn anatomy was trained on \~100 epochs, whereas the nnUNet was trained on 500. The training curve of the CTVn in Figure~\ref{fig:medsam-training-curves} gives good evidence to suggest that a zero-shot transfer onto anatomies with microscopic spread may outperform a baseline if permitted to run for longer and on more compute power. 
+Therefore, MedSAM has provided great promise for outperforming an nnUNet baseline; the performance gap is minor considering the CTVn anatomy was trained on approximately 100 epochs, whereas the nnUNet was trained on 500. The training curve of the CTVn in Figure~\ref{fig:medsam-training-curves} gives good evidence to suggest that a zero-shot transfer onto anatomies with microscopic spread may outperform a baseline if permitted to run for longer and on more compute power. 
 
 \subsubsection{Segmenting invisible boundaries}
 
 We have previously discussed why MedSAM has good initial out-of-the-box performance on anatomies that are clear on a scan. However, pre-processing images into slices, you run the risk of drawing a contour around an anatomy that is invisible to the eye.
 
-% TODO MAKE BIGGER AND SUBFIGURES
 \begin{figure}[H]
   \centering
   % \subfigure[]{\includegraphics[width=.3\linewidth, trim=50px 50px 760px 125px, clip]{../../research/source/code/SAM_Med/4_train_box_prompt/invisible-vagina.png}}
@@ -1358,7 +1349,7 @@ On paper, the metrics for the vagina are promising, as they offer improvements o
 
 % because of the way the CTV is drawn based on the progression of the tumor and how far along the patient is, this influences the contour drawen. Perhaps, the metrics suggest that a model with only one modality is not enough to make a decision which sparks the idea of a model which is capable of multi-modal analysis.
 
-% Maybe run inference on a nnUNet preprocessed image where the normalization affects only the ground truth region. (especially vagina case in the MedSAM fine-tuned discussion)
+% Maybe run inference on a nnUNet preprocessed image where the normalisation affects only the ground truth region. (especially vagina case in the MedSAM fine-tuned discussion)
 
 % for MedSAM have a low resolution image and try to predict where the anatomy is, this box is general and accounts for noise for more automatic segmentation.
 
@@ -1717,8 +1708,6 @@ Therefore, before integrating tools into workflows, a committee must establish t
 \end{landscape}
 
 \subsection{UniverSeg Metrics}\label{sect:universeg-appendix}
-
-% TODO
 
 \begin{table}[h!]
   \centering
