@@ -28,21 +28,29 @@
 
 % \cleardoublepage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section*{Acknowledgments}
-% Comment this out if not needed.
+\renewcommand{\abstractname}{Acknowledgements}
+\begin{abstract}
+  \centering 
+  I want to thank my supervisor, Ben, and his colleagues in the MIRA team for dedicating their indispensable time to helping and advising my project. I wish you the best in your professional careers and your groundbreaking research!
 
-% \clearpage{\pagestyle{empty}\cleardoublepage}
+  \vspace{1em}
+
+  I want to thank my mother and father, who have been loving and firm role models during my upbringing. I hope I can continue to make you proud of your son.
+
+  \vspace{1em}
+
+  I want to thank Thalita for her unrelenting belief and support that is felt across the globe.
+
+\end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{abstract}\label{sect:abstract}
-  Radiotherapy planning involves outlining the macro and microscopic spreads of a cancer. Previously, bespoke models were trained on sufficient sample sizes of architectures that vary significantly in design to address distinct segmentation objectives. However, this makes models inaccessible to departments with limited datasets, increasing the barrier to experiencing the promised superiority beyond a model's specific use case.
+  Radiotherapy planning involves outlining the macro and microscopic spreads of a cancer. Current literature proposes custom models trained on large sample sizes. The custom models vary significantly in design to address distinct segmentation objectives. However, this makes models inaccessible to departments with limited datasets, increasing the barrier to experiencing the promised superiority beyond a model's specific use case.
 
-  We, therefore, analyse the effectiveness of transfer learning techniques in leveraging knowledge learned from one domain into another. Variants of transfer include zero-shot, few-shot and many-shot transfer learning. The evaluation of n-shot approaches of transfer learning onto the radiotherapy planning objective will clarify whether the transfer is a valid strategy for increasing performance over models learnt from scratch.
-
-  We present three distinct model architectures for each type of transfer. We conclude that a many-shot transfer using TotalSegmentator remains a robust method for transferring knowledge. We find that few-shot transfer using UniverSeg does not apply to the complexity of 3-D volume delineations for cervical cancer. Finally, the finetuning of zero-shot models, represented by MedSAM, offers local bounded improvements on volume delineation independently of tumour localisation when compared to the baseline.
-
-  % The repo is available at \url{https://github.com/AntonZhitomirsky/radiotherapy}.
+  We, therefore, analyse the effectiveness of transfer learning techniques in leveraging knowledge learnt from one domain into another. Variants of transfer include zero-shot, few-shot and many-shot transfer learning. The evaluation of n-shot approaches of transfer learning onto the radiotherapy planning objective will clarify whether the transfer is a valid strategy for increasing performance over models learnt from scratch.
+  
+  Our study presents three distinct model architectures for each type of transfer. We found that many-shot transfer using TotalSegmentator remains a robust method for transferring knowledge in binary and multi-class segmentation objectives. It is the only approach providing transferred improvements for segmenting nuanced Clinical Target Volumes. Additionally, few-shot transfer methods, represented by UniverSeg, do not currently handle the complexity of 3-D volume delineations. Lastly, we observed that the finetuning of zero-shot models, represented by MedSAM, offers local bounded improvements on volume delineation, regardless of tumour localisation, compared to the baseline.
 \end{abstract}
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -69,7 +77,7 @@
 
 Currently, the most common network architecture backbone for radiotherapy planning is the U-Net architecture~\cite{Samarasinghe2021-ps, Lin2021-oz, Sartor2020-et, LIU2020184, Rhee2020-ms, LIU2020172}. However, each network requires specialized architectures or bespoke training schemes to achieve competitive performance. These tailored modifications contribute little to the overall development in medical segmentation~\cite{isensee2024nnunet}, as it becomes increasingly challenging for researchers to identify methods that live up to their promised superiority beyond the limited scenarios they are demonstrated on~\cite{nnunet}.
 
-Furthermore, the bespoke architectures assume a sufficient sample size representing a sound representation of the population of all individuals under the same circumstances. However, the underrepresented users of these models cannot apply this assumption; most hospital teams work in a specialized medical field with only in-house patients who follow specific hospital guidelines. A simple plug-and-play approach is unsuitable because segmentation guidelines often differ between facilities. Therefore, specific recalibration is necessary to effectively use these models because incorrect or inaccurate contours are the primary factors contributing to treatment failures in radiotherapy~\cite{Rhee2020-ms}.
+These bespoke segmentation architectures assume a sufficient sample size representative of the population of all individuals under the same circumstance. Thus, the assumption obstructs the utilisation of modern machine-assisted models for teams with small sample sizes. Additionally, because segmentation guidelines or biases may not match between teams, this means a plug-and-play solution from a pre-trained model is not always a perfect fit. Therefore, specific recalibration is necessary to effectively use these models because incorrect or inaccurate contours are the primary factors contributing to treatment failures in radiotherapy~\cite{Rhee2020-ms}.
 
 \section{Objective and Methodology}
 
@@ -77,7 +85,7 @@ We therefore analyse the effectiveness of Transfer Learning in radiotherapy plan
 
 Firstly, we select a dataset from The Royal Marsden Hospital, which will act as the pillar for advocating the success and use of transfer learning in radiotherapy planning. The real-world clinical dataset provides segmentations for key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the public segmentation community and has uncommon and limited segmentation patterns specified by internal team-wide guidelines.
 
-Secondly, we analyse the effectiveness of transfer learning in radiotherapy planning. To research the application of this technique in the medical context, we utilize three popular architectures and their applications in transfer learning. These models are nnUNet~\cite{nnunet}, UniverSeg~\cite{universeg}, and MedSAM~\cite{Ma2024}. In tandem with the effectiveness of transferring knowledge from these models, we comment on the type of transfer, be it zero-shot, few-shot, or many-shot learning.
+Secondly, we analyse the effectiveness of transfer learning in radiotherapy planning. To research the application of this technique in the medical context, we utilize three popular architectures and their applications in transfer learning. These models are TotalSegmentator~\cite{nnunet,totalsegmentor-paper}, UniverSeg~\cite{universeg}, and MedSAM~\cite{Ma2024}. In tandem with the effectiveness of transferring knowledge from these models, we comment on the type of transfer, be it zero-shot, few-shot, or many-shot learning.
 
 % \section{Results}
 % TODO
@@ -1379,7 +1387,7 @@ On paper, the metrics for the vagina are promising, as they offer improvements o
 
 % In conclusion, many-shot transfer strategies are the most effective at improving performance over baseline models in radiotherapy planning. Furthermore, the nnUNet backbone provides a robust foundation for learning from scratch and robust transferral without overfitting. 
 
-The TotalSegmentator model, with its demonstrated adaptability, has shown the most promise in improving the DICE score across all anatomies. It has learnt low-level features of Organs at Risk volumes that transfer well onto the dataset, instilling confidence in its potential. In Clinical Target Volumes, the story is less consistent, but the zero-shot transfer of TotalSegmentator models has shown improvements among specific anatomies, further reinforcing its adaptability to unseen nuanced volumes. For CTV delineations that did not transfer well, the transfer performed competitively against the nnUNet baseline but underperformed on the average due to poor contrast. In future work, many-shot transfer onto CTV volumes should be investigated by selecting radiotherapy tasks with similar microscopic spread contouring to see if it can duplicate its performance improvements as it did with the bladder.
+The TotalSegmentator model, with its demonstrated adaptability, has shown the most promise in improving the quantitative metrics across all anatomies. It has learnt low-level features of Organs at Risk volumes that transfer well onto the dataset, instilling confidence in its potential. In Clinical Target Volumes, the story is less consistent, but the zero-shot transfer of TotalSegmentator models has shown improvements among specific anatomies, further reinforcing its adaptability to unseen nuanced volumes. For CTV delineations that did not transfer well, the transfer performed competitively against the nnUNet baseline but underperformed on the average due to poor contrast. In future work, many-shot transfer onto CTV volumes should be investigated by selecting radiotherapy tasks with similar microscopic spread contouring to see if it can duplicate its performance improvements as it did with the bladder.
 
 Few-shot learning strategies currently fall short of strict 3-dimensional radiotherapy requirements. In particular, because UniverSeg's performance converges in its performance as the support set volume increases, this means that the limitation in quantitative metrics is to blame on the few-shot learning strategy. UniverSeg's performance on OR volumes and CTV delineations is roughly the same, a crucial difference from other learning strategies. Current multi-shot transfer models struggle to balance performance between OR and CTV segmentations. The urgency and importance of developing few-shot learning strategies to match the performance of many-shot transfers in OR volumes is clear. We should expect equal improvements among CTV delineations once this gap is bridged.
 
