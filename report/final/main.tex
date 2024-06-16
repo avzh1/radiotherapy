@@ -702,7 +702,7 @@ During training, the test set is divided by ID to ensure that a portion of an im
 
 The authors of the paper measure performance according to the ground truth~\cite{SAM, Ma2024}. Refining the model pipeline to include bounding box predictions extracted from a baseline like nnUNet is possible, where MedSAM acts as a refinement to an already reasonably accurate guess. This allows for noise to be permeated into the model, thus allowing for a better auto-contour planning pipeline. However, we provide boxes from the ground truth because the MedSAM model is most well suited for interactive use. therefore, it is something that clinicians can use to cast a prediction, and refine it as necessary.
 
-\section{Quantiative Evaluation of Segmentation}\label{sect:performance-evaluation}
+\chapter{Quantiative Evaluation of Segmentation}\label{sect:performance-evaluation}
 
 Calculating the difference between the provided labelled data would be one way to determine if a contour can be used in a clinical context. However, we have different ways to evaluate this measure in a delineation context.
 
@@ -710,7 +710,7 @@ If we were attempting to fit a model onto a line in 2D space, the performance of
 
 The reasoning above extends to 3D and 2D in a segmentation context with variants to measure other quantities, like the minimum distance between prediction and truth or the extent of volume overlap between the two. These are examples of geometric measures, which Mackay et al. has found to be the most popular measure in segmentation tasks~\cite{review-metrics}.
 
-\subsection{Classification Based}\label{sect:classification-based}
+\section{Classification Based}\label{sect:classification-based}
 
 Assesses if voxels within and outside the auto-contour have been correctly labelled~\cite{review-metrics}. To begin, we define 'positive' to mean that the voxel selected indeed needs radiotherapy treatment and 'negative' to mean that the voxel classifies as healthy.
 
@@ -726,7 +726,7 @@ Better measures are Precision and Recall scores. The Precision (also known as th
  \text{Precision} = \frac{TP}{TP+FP}, \quad \text{Recall} = \frac{TP}{TP+FN}
 \end{equation*}
 
-\subsection{Spatial Overlap Based}\label{sect:spatial-overlap-based}
+\section{Spatial Overlap Based}\label{sect:spatial-overlap-based}
 
 Similarly to classification-based metrics in Section~\ref{sect:classification-based}, an overlap-based metric measures the extent of overlap between an auto-contour and a reference structure~\cite{review-metrics}.
 
@@ -762,7 +762,7 @@ Another popular related evaluation method is the Jaccard Index, which measures t
 
 Since the numerator for the Jaccard Index is smaller than the DICE (since we avoid the issue of counting the intersecting sections twice), the JAC is always larger than the DICE score.
 
-\subsection{Surface Based}\label{sect:surface-based}
+\section{Surface Based}\label{sect:surface-based}
 
 Also commonly known as Boundary-Distance-Based Methods~\cite{boundary-overlap-metrics} compares the distance between two structure
 surfaces. These can be maximum, average or distance at a set percentile of ordered distances~\cite{evaluation-metrics}.
@@ -775,7 +775,7 @@ A typical example is the Haussdorf Distance. Here, a directed distance metric is
 
 The HD is generally sensitive to outliers; therefore, direct HD application gives uninspiring results because noise and outliers are common in medical segmentations~\cite{boundary-overlap-metrics}. Therefore, we can calculate the average directed Haussdorf Distance.
 
-\subsection{Volume Based}
+\section{Volume Based}
 
 Volume-based metrics consider only the volume of the segmentation~\cite{evaluation-of-metrics-in-prostate,review-metrics, boundary-overlap-metrics}. However, its poor spatial descriptions make it more commonly used jointly with other metrics.
 
@@ -783,7 +783,7 @@ Volume-based metrics consider only the volume of the segmentation~\cite{evaluati
  \text{Relative Volume Difference (RVD)} = \bigg| \frac{|S_g|-|S_p|}{|S_g|}\bigg|
 \end{equation*}
 
-\subsection{Evaluation}\label{sect:evaluation-of-evaluation-methods}
+\section{Evaluation}\label{sect:evaluation-of-evaluation-methods}
 
 All these methods can be advantageous in some places rather than others. To decide which segmentation is best, we can list some challenging scenarios.
 
@@ -799,21 +799,19 @@ All these methods can be advantageous in some places rather than others. To deci
   \item Figure~\ref{fig:segmentation-cases-1}(b) would score flawlessly when using volumetric score estimation. However, it does not consider spatial placement, making this measurement poor when used individually.
 \end{itemize}
 
-\subsection{Estimated Editing Based}\label{sect:surface-dice}
+\section{Estimated Editing Based}\label{sect:surface-dice}
 
 Selecting a measurement that can reflect a clinician's acceptability score is difficult. A study found a lack of correlation between a geometric index and expert evaluation, with the JAC score having a 13\% False Positive Rate. The study's conclusion summarised that scores such as JSC and volumetric DSC ``provide limited clinical context and correlation with clinical or dosimetric quality''~\cite{Sherer2021-le}.
 
 % Because of the clinical context of evaluating the segmentation by a machine, it may sometimes be helpful to define a performance metric as the ``fraction of the surface that needs to be redrawn''~\cite{Nikolov2021-xe} since models at this point require manual review to avoid automation bias (Section~\ref{sect:using-the-tool}). This method is helpful for larger structures as it doesn't assign much weight to the large trivial internal volume, which accounts for a much more significant proportion of the score.
 
-\subsubsection{Surface DSC}\label{sect:surface-DSC}
-
-The study at~\cite{Sherer2021-le} helped drive an initiative to combine aspects of surface Based evaluation (Section~\ref{sect:surface-based}) and Spatial Overlap Based evaluation (Section~\ref{sect:spatial-overlap-based}) into a Surface DICE which assesses the specified tolerance instead of the overlap of the two volumes.
-
-\begin{figure}[H]
+\begin{figure}
   \centering
   \includegraphics[width=0.3\linewidth]{../figures/Surface-dice.png}
   \caption{Taken from~\cite{Nikolov2021-xe}. Illustrates the computation of the surface DICE, where the continuous line is the predicted surface, and the dashed line is the ground truth. The black arrows show the maximum deviation tolerated without penalty; therefore, in pink are the unacceptable deviations and green otherwise.}\label{fig:surface-dice}
 \end{figure}
+
+The study at~\cite{Sherer2021-le} helped drive an initiative to combine aspects of surface Based evaluation (Section~\ref{sect:surface-based}) and Spatial Overlap Based evaluation (Section~\ref{sect:spatial-overlap-based}) into a Surface DICE which assesses the specified tolerance instead of the overlap of the two volumes.
 
 We can formulate the Surface DSC score in a mathematical definition~\cite{Sherer2021-le} with its corresponding illustration in Figure~\ref{fig:surface-dice}.
 
@@ -823,9 +821,7 @@ We can formulate the Surface DSC score in a mathematical definition~\cite{Sherer
 
 This definition measures the agreement between just the surfaces of two structures above a clinically determined tolerance parameter, $\tau$. Here, $B_{p,\tau}$ represents the boundary region of the predicted surface within a maximum margin of deviation $\tau$ and similarly for $B_{g,\tau}$ for the ground truth.
 
-\subsubsection{Added Path Length}
-
-Similarly, the APL score predicts ``the path length of a contour that has to be added''~\cite{APL}. APL achieved similarly by considering the number of added voxels required between the prediction and the gold standard with no regard to tolerance as a pose to Surface DSC (Section~\ref{sect:surface-DSC})
+Similarly, the APL score predicts ``the path length of a contour that has to be added''~\cite{APL}. APL achieved similarly by considering the number of added voxels required between the prediction and the gold standard with no regard to tolerance as a pose to Surface DSC (Section~\ref{sct:surface-dice})
 
 % \begin{warning}
 %  For future reference, \textit{\href{https://stackoverflow.com/questions/73286639/how-to-calculate-added-path-length-apl-image-segmentation-metric}{stack overflow discussion}}
@@ -833,7 +829,7 @@ Similarly, the APL score predicts ``the path length of a contour that has to be 
 %  Implementation of surface DSC and APL: \textit{\href{https://github.com/pyplati/platipy/blob/master/platipy/imaging/label/comparison.py}{source code}}
 % \end{warning}
 
-\subsection{Summary}
+\section{Summary}
 
 
 For this project, we shall select an evaluation measurement more biased towards conservative boundary estimates not to touch the organs at risk. The clinician's review pipeline, in part, influenced this choice; it would be easier to correct Figure~\ref{fig:segmentation-cases-1}(d) instead of Figure~\ref{fig:segmentation-cases-1}(e) because correcting the latter would likely take a considerable amount of time as it would require redrawing almost all of the boundary, whereas the former could be corrected much faster~\cite{Nikolov2021-xe}.
