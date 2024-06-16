@@ -1343,8 +1343,6 @@ On paper, the metrics for the vagina are promising, as they offer improvements o
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Conclusion}\label{sect:conclusion}
 
-IN PROGRESS
-
 % \begin{figure}[H]
 %   \centering
 %   \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_All_methods.png}
@@ -1366,21 +1364,27 @@ IN PROGRESS
         \midrule
         nnUNet multi-class & 0.94	& 0.02 & 0.94 & 0.91 &	0.03 &	0.92 \\
         nnUnet multi-class + loss-term & 0.94 &	0.04 &	0.95 & 0.91 &	0.05 &	0.93 \\
+        TotalSegmentator fine-tuned & 0.94 &	0.07 &	0.95 & 0.92 &	0.04 &	0.93 \\
+        TotalSegmentator fine-tuned multi-class & 0.94 &	0.03 &	0.95 & 0.91 & 0.03 & 0.92 \\
+        TotalSegmentator fine-tuned multi-class + loss-term & 0.94 & 0.04 &	0.95 & 0.92 &	0.05 &	0.94 \\
         UniverSeg out-of-the-box & 0.68 &	0.23 &	0.75 & 0.64	& 0.21 &	0.70 \\
         UniverSeg fine-tuned & 0.79 &	0.16 &	0.84 & 0.77 &	0.15 & 0.81 \\
         MedSAM out-of-the-box & 0.85 &	0.11 &	0.88 &  0.70 &	0.12 &	0.72 \\
         MedSAM fine-tuned & 0.93 &	0.05 &	0.95 & 0.88 &	0.06	 & 0.90 \\
-        TotalSegmentator fine-tuned & 0.94 &	0.07 &	0.95 & 0.92 &	0.04 &	0.93 \\
-        TotalSegmentator fine-tuned multi-class & 0.94 &	0.03 &	0.95 & 0.91 & 0.03 & 0.92 \\
-        TotalSegmentator fine-tuned multi-class + loss-term & 0.94 & 0.04 &	0.95 & 0.92 &	0.05 &	0.94 \\
         \bottomrule
     \end{tabular}
   }\label{tab:final-conclusion-dice-metrics}
 \end{table}
 
-In conclusion, many-shot transfer strategies are the most effective at improving performance over baseline models in radiotherapy planning. Furthermore, the nnUNet backbone provides a robust foundation for learning from scratch and robust transferral without overfitting. 
+% In conclusion, many-shot transfer strategies are the most effective at improving performance over baseline models in radiotherapy planning. Furthermore, the nnUNet backbone provides a robust foundation for learning from scratch and robust transferral without overfitting. 
 
+The TotalSegmentator model, with its demonstrated adaptability, has shown the most promise in improving the DICE score across all anatomies. It has learnt low-level features of Organs at Risk volumes that transfer well onto the dataset, instilling confidence in its potential. In Clinical Target Volumes, the story is less consistent, but the zero-shot transfer of TotalSegmentator models has shown improvements among specific anatomies, further reinforcing its adaptability to unseen nuanced volumes. For CTV delineations that did not transfer well, the transfer performed competitively against the nnUNet baseline but underperformed on the average due to poor contrast. In future work, many-shot transfer onto CTV volumes should be investigated by selecting radiotherapy tasks with similar microscopic spread contouring to see if it can duplicate its performance improvements as it did with the bladder.
 
+Few-shot learning strategies currently fall short of strict 3-dimensional radiotherapy requirements. In particular, because UniverSeg's performance converges in its performance as the support set volume increases, this means that the limitation in quantitative metrics is to blame on the few-shot learning strategy. UniverSeg's performance on OR volumes and CTV delineations is roughly the same, a crucial difference from other learning strategies. Current multi-shot transfer models struggle to balance performance between OR and CTV segmentations. The urgency and importance of developing few-shot learning strategies to match the performance of many-shot transfers in OR volumes is clear. We should expect equal improvements among CTV delineations once this gap is bridged.
+
+Lastly, zero-shot models perform suboptimally out-of-the-box but transfer to levels comparable to the many-shot methods. Prompt encoding by MedSAM moulds the original auto-contouring objective of many researchers to play more into the current ethical issues and international guidelines on using AI-assisted segmentation tools. Transformer-based methods can provide supervised suggestions that improve annotation time by 80\%~\cite{Ma2024}. After the transferal, this time will surely improve. However, further experiments with clinicians are required to justify whether zero-shot transferral is a technique that can significantly assist medical professionals.
+
+\subsection{Further Work}
 
 % the annotation time cost between the two pipelines (Fig. 5b). The results demonstrate that with the assistance of MedSAM, the annotation time is substantially reduced by 82.37% and 82.95% for the two experts, respectively (medsam)
 
