@@ -619,6 +619,7 @@ To consider this model's overall transfer ability, we also consider a supervised
 
 Authors in UniverSeg tested performance on central slices along 3D volumes~\cite{universeg}. However, the model's performance on the central slice is not indicative of the model's performance on the entire volume. To investigate this further, we will continue with a heavily supervised setting. In this setting, support slices are generated from any patient's slices containing a contour, allowing us to more accurately assess the model's performance across the entire volume. 
 
+For training, and providing sufficient slice support, we provide a supoprt size of 80 images, and a batch 
 
 % The main difference from the previous implementation is that we always expect a contour to be produced from the query, and we always know the support will have variable segmentations across the axis.
 
@@ -873,7 +874,6 @@ After fine-tuning, TotalSegmentator experienced more accurate segmentations. By 
   }
 \end{table}
 
-% TODO: make bigger
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_TotalSegmentator_analysis.png}
@@ -1073,11 +1073,11 @@ Notably, by introducing an additional loss term, this performs as expected by re
 
 When comparing transferred models, we see no difference. Therefore, when transfering data between domains, it is inadvisable to use a custom loss function with the sole objective to enforce rules; the decrease in overlap is likely a symptom of generalisation of a model, as minor cases that appear less than 1000 times would result from overfitting, rather than a direct result of an auxiliary heuristic in the loss function. 
 
-% total segmentator had 500 females to 700 males which may explain the struggle to locate the uterus and vagina.
+% TODO: total segmentator had 500 females to 700 males which may explain the struggle to locate the uterus and vagina.
 
-% \clearpage
+\clearpage
 
-% \section{UniverSeg}
+\section{UniverSeg}
 
 % \subsection{Automated Support Set Sampling}
 
@@ -1138,9 +1138,61 @@ When comparing transferred models, we see no difference. Therefore, when transfe
 %   \end{tabular}
 % \end{table}
 
-% \subsection{Supervised Support Set Sampling}
+The total summary of results for the Supervised UniverSeg architecture is available at the Appendix; Metric Tables~\ref{tab:universeg-apl}-~\ref{tab:universeg-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:universeg-metrics-anorectum}-~\ref{fig:universeg-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
 
-% The total summary of results for the Supervised UniverSeg architecture is available at the Appendix; Metric Tables~\ref{tab:universeg-apl}-~\ref{tab:universeg-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:universeg-metrics-anorectum}-~\ref{fig:universeg-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
+\subsection{Supervised Support Set Sampling}
+
+% TODO: grammarly
+% TODO: An imporvmenet, nnUNet 2D to compare with medsam and UniverSeg
+UniverSeg is a U-net based architecture, which allows us to reason entirely about the performance of the transfer instead of a different method of segmentation.
+
+Original performance of the model without transfer on the data is very inconsistent, with quartiles for the DICE score ranging between 1 and 0.2 for many cases. The claim for few-shot generalisation without transfer is optimistic for 3D problems such as radiotherapy planning. 
+
+\begin{figure}[H]
+  \centering
+  \subfigure[Bladder]{
+    \includegraphics[width=.3\linewidth, trim=320 0 960 30, clip]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_UniverSeg_analysis.png}
+  }
+  \subfigure[CTVn]{
+    \includegraphics[width=.3\linewidth, trim=320 0 960 30, clip]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_UniverSeg_analysis.png}
+  }
+  \subfigure[Parametrium]{
+    \includegraphics[width=.3\linewidth, trim=320 0 960 30, clip]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_UniverSeg_analysis.png}
+  }
+  \caption{DICE score for a handful of anatomies for the UniverSeg model}\label{fig:universeg-metrics}
+\end{figure}
+
+% conclusion
+Overall, the performance of the UniverSeg architecture does not reach the competitive and cutting edge performance as offerend by the nnUNet baseline. With a support size of 80 samples pulled from random samples not present in the query return rapid and good estimations for the anatomies in the query. However, the low resolution of the query and prediction make it challenging to upsample predictions back into the original resolution.
+
+\begin{figure}
+  \centering
+  \subfigure[UniverSeg inference on the Anorectum, patient 21, slice 249, axis 2]{
+    \includegraphics[height=.16\textheight, trim=0 0 0 35, clip]{../../research/source/code/UniverSeg/results/Anorectum/axis2/CT_Anorectum_zzAMLART_021-249.png}
+    \includegraphics[height=.16\textheight, trim=720 0 0 35, clip]{../../research/source/code/UniverSeg/results_finetuned/Anorectum/axis2/CT_Anorectum_zzAMLART_021-249.png}
+  }
+  \subfigure[UniverSeg inference on the Bladder, patient 57, slice 079, axis 0]{
+    \includegraphics[height=.16\textheight, trim=0 0 0 35, clip]{../../research/source/code/UniverSeg/results/Bladder/axis0/CT_Bladder_zzAMLART_057-079.png}
+    \includegraphics[height=.16\textheight, trim=720 0 0 35, clip]{../../research/source/code/UniverSeg/results_finetuned/Bladder/axis0/CT_Bladder_zzAMLART_057-079.png}
+  }
+
+  \subfigure[UniverSeg inference on the CTVn, patient 88, slice 142, axis 0]{
+    \includegraphics[height=.16\textheight, trim=0 0 0 35, clip]{../../research/source/code/UniverSeg/results/CTVn/axis0/CT_CTVn_zzAMLART_088-142.png}
+    \includegraphics[height=.16\textheight, trim=720 0 0 35, clip]{../../research/source/code/UniverSeg/results_finetuned/CTVn/axis0/CT_CTVn_zzAMLART_088-142.png}
+  }
+
+  \subfigure[UniverSeg inference on the CTVp, patient 93, slice 248, axis 1]{
+    \includegraphics[height=.16\textheight, trim=0 0 0 35, clip]{../../research/source/code/UniverSeg/results/CTVp/axis1/CT_CTVp_zzAMLART_093-248.png}
+    \includegraphics[height=.16\textheight, trim=720 0 0 35, clip]{../../research/source/code/UniverSeg/results_finetuned/CTVp/axis1/CT_CTVp_zzAMLART_093-248.png}
+  }
+
+  \subfigure[UniverSeg inference on the Parametrium, patient 37, slice 269, axis 1]{
+    \includegraphics[height=.16\textheight, trim=0 0 0 35, clip]{../../research/source/code/UniverSeg/results/Parametrium/axis1/CT_Parametrium_zzAMLART_037-269.png}
+    \includegraphics[height=.16\textheight, trim=720 0 0 35, clip]{../../research/source/code/UniverSeg/results_finetuned/Parametrium/axis1/CT_Parametrium_zzAMLART_037-269.png}
+  }
+
+  \caption{UniverSeg inference examples. Going from left to right, a slice of a CT scan, the ground truth segmentation, the out-of-the-box UniverSeg segmentation, the transferred segmentation.}\label{fig:universeg-inference}
+\end{figure}
 
 \clearpage
 
