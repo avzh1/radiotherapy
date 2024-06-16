@@ -81,7 +81,7 @@ Secondly, we analyse the effectiveness of transfer learning in radiotherapy plan
 
 \section{Results}
 
-% TODO
+Fill in after conclusion (pending)
 
 \section{Outline of Report}
 
@@ -987,9 +987,9 @@ Unfortunately, the benefits of transfer in a multi-class domain are not prevalen
   \vspace{-\fboxsep}
   \begin{figure}[H]
     \centering
-    \subfigure[CTVn]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
-    \subfigure[CTVp]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
-    \subfigure[Parametrium]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
+    \subfigure[CTVn]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsctvn_2_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
+    \subfigure[CTVp]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsctvp_2_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
+    \subfigure[Parametrium]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsparametrium_2_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
     % \subfigure[Uterus]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
     % \subfigure[Vagina]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
     \caption{Comparison between TotalSegmentator transfer for CTV segmentations.}\label{fig:region-based-metrics-ctv-totseg}
@@ -1343,7 +1343,44 @@ On paper, the metrics for the vagina are promising, as they offer improvements o
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Conclusion}\label{sect:conclusion}
 
-In progress
+IN PROGRESS
+
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_All_methods.png}
+%   \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_All_methods.png}
+%   \caption{Two selected anatomies to represent OR volumes and CTV delineations across all tested models.}\label{fig:conclusion-all-methods}
+% \end{figure}
+
+\begin{table}[h!]
+  \centering
+  \caption{Average DICE scores across Organ at Risk anatomies and Clinical Target Volume delineations.}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{6}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Model} & \multicolumn{3}{c}{\textbf{Organs at Risk}} & \multicolumn{3}{c}{\textbf{Clinical Target Volumes}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Med} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Med}\\
+        \midrule
+        nnUNet baseline & 0.92	& 0.05 &	0.95 & 0.93	& 0.02 &	0.93 \\
+        \midrule
+        nnUNet multi-class & 0.94	& 0.02 & 0.94 & 0.91 &	0.03 &	0.92 \\
+        nnUnet multi-class + loss-term & 0.94 &	0.04 &	0.95 & 0.91 &	0.05 &	0.93 \\
+        UniverSeg out-of-the-box & 0.68 &	0.23 &	0.75 & 0.64	& 0.21 &	0.70 \\
+        UniverSeg fine-tuned & 0.79 &	0.16 &	0.84 & 0.77 &	0.15 & 0.81 \\
+        MedSAM out-of-the-box & 0.85 &	0.11 &	0.88 &  0.70 &	0.12 &	0.72 \\
+        MedSAM fine-tuned & 0.93 &	0.05 &	0.95 & 0.88 &	0.06	 & 0.90 \\
+        TotalSegmentator fine-tuned & 0.94 &	0.07 &	0.95 & 0.92 &	0.04 &	0.93 \\
+        TotalSegmentator fine-tuned multi-class & 0.94 &	0.03 &	0.95 & 0.91 & 0.03 & 0.92 \\
+        TotalSegmentator fine-tuned multi-class + loss-term & 0.94 & 0.04 &	0.95 & 0.92 &	0.05 &	0.94 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:final-conclusion-dice-metrics}
+\end{table}
+
+In conclusion, many-shot transfer strategies are the most effective at improving performance over baseline models in radiotherapy planning. Furthermore, the nnUNet backbone provides a robust foundation for learning from scratch and robust transferral without overfitting. 
+
+
 
 % the annotation time cost between the two pipelines (Fig. 5b). The results demonstrate that with the assistance of MedSAM, the annotation time is substantially reduced by 82.37% and 82.95% for the two experts, respectively (medsam)
 
