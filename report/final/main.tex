@@ -39,7 +39,7 @@
 
   \vspace{1em}
 
-  I want to thank Thalita for her unrelenting belief and support that is felt across the globe.
+  I want to thank Thalita for her unrelenting belief and support that is felt across the Ocean.
 
 \end{abstract}
 
@@ -87,9 +87,11 @@ Firstly, we select a dataset from The Royal Marsden Hospital, which will act as 
 
 Secondly, we analyse the effectiveness of transfer learning in radiotherapy planning. To research the application of this technique in the medical context, we utilize three popular architectures and their applications in transfer learning. These models are TotalSegmentator~\cite{nnunet,totalsegmentor-paper}, UniverSeg~\cite{universeg}, and MedSAM~\cite{Ma2024}. In tandem with the effectiveness of transferring knowledge from these models, we comment on the type of transfer, be it zero-shot, few-shot, or many-shot learning.
 
-% \section{Results}
-% TODO
-% Fill in after conclusion (pending)
+\section{Results}
+
+Our study evaluated the performance of several transfer learning strategies for segmenting Organs at Risk (OR) and Clinical Target Volumes (CTV) in radiotherapy planning. The TotalSegmentator model demonstrated the most significant improvements across all anatomies, showing particular adaptability in zero-shot transfer learning for specific OR volumes. However, its performance on CTV delineations was inconsistent, often competitive with but sometimes underperforming compared to the nnUNet baseline.
+
+Few-shot learning strategies, particularly with the UniverSeg model, failed to meet strict 3D radiotherapy requirements, struggling to balance performance between OR and CTV segmentations. Conversely, zero-shot models like MedSAM showed promising adaptability post-transfer, aligning with ethical guidelines and potentially reducing annotation time in the clinicians' review and application pipeline.
 
 \section{Outline of Report}
 
