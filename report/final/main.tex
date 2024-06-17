@@ -735,7 +735,7 @@ The scores above combine into a more general score $F_\beta$ to give
  \text{F}_\beta = (1+\beta^2)\cdot \frac{\text{Precision} \cdot \text{Recall}}{\beta^2 \cdot \text{Precision}+\text{Recall}}
 \end{equation*}
 
-A specific case of this equation with $\beta=1$ is mathematically equivalent to the DICE Similarity Coefficient. A review found that DICE is the most popular evaluation metric amongst 2021 studies~\cite{review-metrics,evaluation-metrics, Sherer2021-le}.
+A specific case of this equation with $\beta=1$ is mathematically equivalent to the DICE Similarity Coefficient. A review found that DICE is the most popular evaluation metric amongst 2021 studies~\cite{review-metrics,evaluation-metrics, Sherer2021-le}. Here, the best score is 1, and the worst is 0.
 
 % \begin{align*}
 %   F_1 = \text{DICE} & = \frac{2 \cdot \text{Precision} \cdot \text{Recall}} {\text{Precision} + \text{Recall}} & \\ 
@@ -751,7 +751,7 @@ A specific case of this equation with $\beta=1$ is mathematically equivalent to 
  F_1 = \text{DICE} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}} {\text{Precision} + \text{Recall}} = \frac{2 \cdot TP}{2TP + FP + FN} \quad = \quad \frac{2|S_g\cap S_p|}{|S_g|+|S_p|}
 \end{equation*}
 
-Where $S_g$ is the ground truth segmentation and $S_p$ is the predicted segmentation. From this relationship, the DICE score has found popularity in image segmentation for similar reasons that the $F_1$ score has found its popularity in classical machine learning; it can provide a fair result for imbalanced datasets. This mentality is applicable in our scenario because a tumour will make up very little of the total volume of the domain space. This argument extends to a Volumetric DSC by considering the above in all three dimensions~\cite{APL}.
+Where $S_g$ is the ground truth segmentation and $S_p$ is the predicted segmentation. From this relationship, the DICE score has found popularity in image segmentation for similar reasons that the $F_1$ score has found its popularity in classical machine learning; it can provide a fair result for imbalanced datasets. This mentality is applicable in our scenario because a tumour will make up very little of the total volume of the domain space. This argument extends to a Volumetric DSC by considering the above in all three dimensions~\cite{APL}. 
 
 Another popular related evaluation method is the Jaccard Index, which measures the intersection over the union of two sets:
 
@@ -771,7 +771,7 @@ A typical example is the Haussdorf Distance (HD). Here, a directed distance metr
  \text{HD}(A,B) = \max(h(A,B), h(B,A)), \quad \text{ and directed h}(A,B)=\max_{a\in A}\min_{b \in B} ||a-b||
 \end{equation*}
 
-The HD is generally sensitive to outliers; therefore, direct HD application gives uninspiring results because noise and outliers are common in medical segmentations~\cite{boundary-overlap-metrics}. Therefore, we can calculate the average directed Haussdorf Distance.
+The HD is generally sensitive to outliers; therefore, direct HD application gives uninspiring results because noise and outliers are common in medical segmentations~\cite{boundary-overlap-metrics}. Therefore, we can calculate the average directed Haussdorf Distance. Therefore, the best score is 0, and the worst is $\infty$.
 
 \clearpage
 
@@ -782,6 +782,8 @@ Volume-based metrics consider only the volume of the segmentation~\cite{evaluati
 \begin{equation*}
  \text{Relative Volume Difference (RVD)} = \bigg| \frac{|S_g|-|S_p|}{|S_g|}\bigg|
 \end{equation*}
+
+Therefore, the best result is 0, and results deviate around either side.
 
 \section{Evaluation}\label{sect:evaluation-of-evaluation-methods}
 
@@ -821,7 +823,9 @@ We can formulate the Surface DSC score in a mathematical definition~\cite{Sherer
 
 This definition measures the agreement between just the surfaces of two structures above a clinically determined tolerance parameter, $\tau$. Here, $B_{p,\tau}$ represents the boundary region of the predicted surface within a maximum margin of deviation $\tau$ and similarly for $B_{g,\tau}$ for the ground truth.
 
-Similarly, the APL score predicts ``the path length of a contour that has to be added''~\cite{APL}. APL was achieved similarly by considering the number of added voxels required between the prediction and the gold standard, with no regard for tolerance as opposed to surface DSC.
+Here, the best score is similar to DICE, where the best score is 1 and the worst is 0. However, the Surface DSC score is more clinically relevant as it considers the spatial distribution of the voxels and the tolerance of the clinician. 
+
+Similarly, the APL score predicts ``the path length of a contour that has to be added''~\cite{APL}. APL was achieved similarly by considering the number of added voxels required between the prediction and the gold standard, with no regard for tolerance as opposed to surface DSC. The expected values match the Haussdorf distance, where the best score is 0 and the worst is $\infty$.
 
 % \begin{warning}
 %  For future reference, \textit{\href{https://stackoverflow.com/questions/73286639/how-to-calculate-added-path-length-apl-image-segmentation-metric}{stack overflow discussion}}
@@ -839,9 +843,9 @@ However, to compare performance with other modes, we must also keep metric score
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Results and Discussion}\label{sect:results}\label{sect:discussion}
 
-In this chapter, we present the results and discussion regarding the experiments carried out with each type of transfer learning strategy. The baseline in each will be displayed alongside the model performance for evaluation. Finally, we step back and consider the performance of different transfer strategies across the anatomies.
+We present the results and discussion from experiments using each type of transfer learning strategy. The baseline in each will be displayed alongside the model performance for evaluation. Finally, we step back and consider the performance of different transfer strategies across the anatomies.
 
-\textbf{Note}: \textit{We use the convention in box-and-whisker plots that the box represents the data's interquartile range (IQR), and the whiskers represent the range of the data. Furthermore, the green dotted line represents the mean, while the solid green line represents the median.}
+\textbf{Note}: \textit{We use the convention in box-and-whisker plots that the box represents the data's interquartile range (IQR), and the whiskers represent the range of the data. The green and orange line represents the mean and median respetively. Furthermore, $\hat{x}$ represents the mean, $\mathbf\sigma$ represents the standard deviation, and \textbf{Med} represents the median.}
 
 \section{TotalSegmentator -- Binary Classifier}
 
@@ -1354,7 +1358,7 @@ On paper, the metrics for the vagina are promising, as they offer improvements o
 
 \begin{table}[h!]
   \centering
-  \caption{Average DICE scores across Organ at Risk anatomies and Clinical Target Volume delineations.}
+  \caption{Average DICE scores across Organ at Risk anatomies and Clinical Target Volume delineations. We plot the mean, standard deviation and median for each anatomy respectively. Most successful appraoches have larger values for the mean and median, and smaller values for the standard deviation.}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{6}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1380,11 +1384,11 @@ On paper, the metrics for the vagina are promising, as they offer improvements o
 
 % In conclusion, many-shot transfer strategies are the most effective at improving performance over baseline models in radiotherapy planning. Furthermore, the nnUNet backbone provides a robust foundation for learning from scratch and robust transferral without overfitting. 
 
-The TotalSegmentator model, with its demonstrated adaptability, has shown the most promise in improving the quantitative metrics across all anatomies. It has learnt low-level features of Organs at Risk volumes that transfer well onto the dataset, instilling confidence in its potential. In Clinical Target Volumes, the story is less consistent, but the zero-shot transfer of TotalSegmentator models has shown improvements among specific anatomies, further reinforcing its adaptability to unseen nuanced volumes. For CTV delineations that did not transfer well, the transfer performed competitively against the nnUNet baseline but underperformed on the average due to poor contrast. Additionally, multi-class segmentation tasks with the custom loss term did not perform exceptionally, suggesting that a model's performance is not positively influenced on the surrounding contextual information of other volumes.
+The TotalSegmentator model, with its adaptability, has shown the most promise in improving the quantitative metrics across all anatomies. It has learnt low-level features of Organs at Risk volumes that transfer well onto the dataset, instilling confidence in its potential. In Clinical Target Volumes, the story is less consistent, but the zero-shot transfer of TotalSegmentator models has shown improvements among specific anatomies, further reinforcing its adaptability to unseen nuanced volumes. For CTV delineations that did not transfer well, the transfer performed competitively against the nnUNet baseline but underperformed on the average due to poor contrast. Additionally, multi-class segmentation tasks with the custom loss term did not perform exceptionally, suggesting that a model's performance is not positively influenced by the surrounding contextual information of other volumes.
 
 Few-shot learning strategies currently fall short of strict 3-dimensional radiotherapy requirements. In particular, because UniverSeg's performance converges in its performance as the support set volume increases, this means that the limitation in quantitative metrics is to blame on the few-shot learning strategy. UniverSeg's performance on OR volumes and CTV delineations is roughly the same, a crucial difference from other learning strategies. Current multi-shot transfer models struggle to balance performance between OR and CTV segmentations. The urgency and importance of developing few-shot learning strategies to match the performance of many-shot transfers in OR volumes is clear. We should expect equal improvements among CTV delineations once this gap is bridged.
 
-Lastly, zero-shot models perform suboptimally out-of-the-box but transfer to levels comparable to the many-shot methods. Prompt encoding by MedSAM moulds the original auto-contouring objective of many researchers to play more into the current ethical issues and international guidelines on using AI-assisted segmentation tools. Transformer-based methods can provide supervised suggestions that improve annotation time by 80\%~\cite{Ma2024}. After the transferal, this time will surely improve. However, further experiments with clinicians are required to justify whether zero-shot transferral is a technique that can significantly assist medical professionals.
+Zero-shot models perform suboptimally out-of-the-box but transfer to levels comparable to the many-shot methods. Prompt encoding by MedSAM moulds the original auto-contouring objective of many researchers to play more into the current ethical issues and international guidelines on using AI-assisted segmentation tools. Transformer-based methods can provide supervised suggestions that improve annotation time by 80\%~\cite{Ma2024}. After the transferal, this time will surely improve. However, further experiments with clinicians are required to justify whether zero-shot transferral is a technique that can significantly assist medical professionals.
 
 \section{Further Work}
 
@@ -1444,11 +1448,13 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \section{Metrics}
 
+\textbf{Note}: \textit{We use the convention in box-and-whisker plots that the box represents the data's interquartile range (IQR), and the whiskers represent the range of the data. The green and orange line represents the mean and median respetively. Furthermore, $\hat{x}$ represents the mean, $\mathbf\sigma$ represents the standard deviation, and \textbf{Med} represents the median.}
+
 \subsection{TotalSegmentator}\label{sect:totalsegmentator-Appendix}
 
 \begin{table}[h!]
   \centering
-  \caption{Added Path Length scores across each anatomy}
+  \caption{Added Path Length scores across each anatomy using TotalSegmentator}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1470,7 +1476,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{DICE scores across each anatomy}
+  \caption{DICE scores across each anatomy using TotalSegmentator}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1492,7 +1498,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Haussdorf scores across each anatomy}
+  \caption{Haussdorf scores across each anatomy using TotalSegmentator}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1514,7 +1520,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Relative volume difference across each anatomy}
+  \caption{Relative volume difference across each anatomy using TotalSegmentator}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1536,7 +1542,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Surface DSC across each anatomy}
+  \caption{Surface DSC across each anatomy using TotalSegmentator}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1561,43 +1567,43 @@ Therefore, before integrating tools into workflows, a committee must establish t
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsanorectum_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{Anorectum Metrics}\label{fig:totalsegmentator-metrics-anorectum}
+    \caption{Anorectum Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-anorectum}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{Bladder Metrics}\label{fig:totalsegmentator-metrics-bladder}
+    \caption{Bladder Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-bladder}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{CTVn Metrics}\label{fig:totalsegmentator-metrics-ctvn}
+    \caption{CTVn Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-ctvn}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{CTVp Metrics}\label{fig:totalsegmentator-metrics-ctvp}
+    \caption{CTVp Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-ctvp}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{Parametrium Metrics}\label{fig:totalsegmentator-metrics-parametrium}
+    \caption{Parametrium Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-parametrium}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{Uterus Metrics}\label{fig:totalsegmentator-metrics-uterus}
+    \caption{Uterus Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-uterus}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{Vagina Metrics}\label{fig:totalsegmentator-metrics-vagina}
+    \caption{Vagina Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-vagina}
   \end{figure}
 
 \end{landscape}
@@ -1608,7 +1614,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Added Path Length scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \caption{Added Path Length scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss) using TotalSegmentator Region-based transferral}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
         \toprule
@@ -1630,7 +1636,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{DICE scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \caption{DICE scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss) using TotalSegmentator Region-based transferral}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
         \toprule
@@ -1652,7 +1658,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Haussdorf scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \caption{Haussdorf scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss) using TotalSegmentator Region-based transferral}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
         \toprule
@@ -1674,7 +1680,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Relative Volume Difference across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \caption{Relative Volume Difference across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss) using TotalSegmentator Region-based transferral}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
         \toprule
@@ -1696,7 +1702,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Surface DSC across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \caption{Surface DSC across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss) using TotalSegmentator Region-based transferral}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
         \toprule
@@ -1721,43 +1727,43 @@ Therefore, before integrating tools into workflows, a committee must establish t
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsanorectum_1_combinednotable_Global_analysis.png}
-    \caption{Anorectum Metrics}\label{fig:region-based-metrics-anorectum}
+    \caption{Anorectum Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-anorectum}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_Global_analysis.png}
-    \caption{Bladder Metrics}\label{fig:region-based-metrics-bladder}
+    \caption{Bladder Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-bladder}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_Global_analysis.png}
-    \caption{CTVn Metrics}\label{fig:region-based-metrics-ctvn}
+    \caption{CTVn Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-ctvn}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_Global_analysis.png}
-    \caption{CTVp Metrics}\label{fig:region-based-metrics-ctvp}
+    \caption{CTVp Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-ctvp}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_Global_analysis.png}
-    \caption{Parametrium Metrics}\label{fig:region-based-metrics-parametrium}
+    \caption{Parametrium Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-parametrium}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_Global_analysis.png}
-    \caption{Uterus Metrics}\label{fig:region-based-metrics-uterus}
+    \caption{Uterus Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-uterus}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_Global_analysis.png}
-    \caption{Vagina Metrics}\label{fig:region-based-metrics-vagina}
+    \caption{Vagina Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-vagina}
   \end{figure}
 
 \end{landscape}
@@ -1766,7 +1772,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Added Path Length scores across each anatomy}
+  \caption{Added Path Length scores across each anatomy using UniverSeg}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1788,7 +1794,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{DICE scores across each anatomy}
+  \caption{DICE scores across each anatomy using UniverSeg}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1810,7 +1816,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Haussdorf scores across each anatomy}
+  \caption{Haussdorf scores across each anatomy using UniverSeg}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1832,7 +1838,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Relative volume difference across each anatomy}
+  \caption{Relative volume difference across each anatomy using UniverSeg}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1854,7 +1860,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Surface DSC across each anatomy}
+  \caption{Surface DSC across each anatomy using UniverSeg}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1879,43 +1885,43 @@ Therefore, before integrating tools into workflows, a committee must establish t
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsanorectum_1_combinednotable_UniverSeg_analysis.png}
-    \caption{Anorectum Metrics}\label{fig:universeg-metrics-anorectum}
+    \caption{Anorectum Metrics using UniverSeg}\label{fig:universeg-metrics-anorectum}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_UniverSeg_analysis.png}
-    \caption{Bladder Metrics}\label{fig:universeg-metrics-bladder}
+    \caption{Bladder Metrics using UniverSeg}\label{fig:universeg-metrics-bladder}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_UniverSeg_analysis.png}
-    \caption{CTVn Metrics}\label{fig:universeg-metrics-ctvn}
+    \caption{CTVn Metrics using UniverSeg}\label{fig:universeg-metrics-ctvn}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_UniverSeg_analysis.png}
-    \caption{CTVp Metrics}\label{fig:universeg-metrics-ctvp}
+    \caption{CTVp Metrics using UniverSeg}\label{fig:universeg-metrics-ctvp}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_UniverSeg_analysis.png}
-    \caption{Parametrium Metrics}\label{fig:universeg-metrics-parametrium}
+    \caption{Parametrium Metrics using UniverSeg}\label{fig:universeg-metrics-parametrium}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_UniverSeg_analysis.png}
-    \caption{Uterus Metrics}\label{fig:universeg-metrics-uterus}
+    \caption{Uterus Metrics using UniverSeg}\label{fig:universeg-metrics-uterus}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_UniverSeg_analysis.png}
-    \caption{Vagina Metrics}\label{fig:universeg-metrics-vagina}
+    \caption{Vagina Metrics using UniverSeg}\label{fig:universeg-metrics-vagina}
   \end{figure}
 
 \end{landscape}
@@ -1924,7 +1930,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Added Path Length scores across each anatomy}
+  \caption{Added Path Length scores across each anatomy using MedSAM Box Prompt}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1946,7 +1952,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{DICE scores across each anatomy}
+  \caption{DICE scores across each anatomy MedSAM Box Prompt}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1968,7 +1974,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Haussdorf Distance across each anatomy}
+  \caption{Haussdorf Distance across each anatomy MedSAM Box Prompt}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1990,7 +1996,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Relative volume difference across each anatomy}
+  \caption{Relative volume difference across each anatomy MedSAM Box Prompt}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -2012,7 +2018,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Surface DSC across each anatomy}
+  \caption{Surface DSC across each anatomy MedSAM Box Prompt}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -2037,43 +2043,43 @@ Therefore, before integrating tools into workflows, a committee must establish t
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsanorectum_1_combinednotable_MedSAM_analysis.png}
-    \caption{Anorectum Metrics}\label{fig:medsam-metrics-anorectum}
+    \caption{Anorectum Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-anorectum}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_MedSAM_analysis.png}
-    \caption{Bladder Metrics}\label{fig:medsam-metrics-bladder}
+    \caption{Bladder Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-bladder}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_MedSAM_analysis.png}
-    \caption{CTVn Metrics}\label{fig:medsam-metrics-ctvn}
+    \caption{CTVn Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-ctvn}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_MedSAM_analysis.png}
-    \caption{CTVp Metrics}\label{fig:medsam-metrics-ctvp}
+    \caption{CTVp Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-ctvp}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_MedSAM_analysis.png}
-    \caption{Parametrium Metrics}\label{fig:medsam-metrics-parametrium}
+    \caption{Parametrium Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-parametrium}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_MedSAM_analysis.png}
-    \caption{Uterus Metrics}\label{fig:medsam-metrics-uterus}
+    \caption{Uterus Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-uterus}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_MedSAM_analysis.png}
-    \caption{Vagina Metrics}\label{fig:medsam-metrics-vagina}
+    \caption{Vagina Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-vagina}
   \end{figure}
 
 \end{landscape}
