@@ -28,21 +28,29 @@
 
 % \cleardoublepage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section*{Acknowledgments}
-% Comment this out if not needed.
+\renewcommand{\abstractname}{Acknowledgements}
+\begin{abstract}
+  \centering 
+  I want to thank my supervisor, Ben, and his colleagues in the MIRA team for dedicating their indispensable time to helping and advising my project. I wish you the best in your professional careers and your groundbreaking research!
 
-% \clearpage{\pagestyle{empty}\cleardoublepage}
+  \vspace{1em}
+
+  I want to thank my mother and father, who have been loving and firm role models during my upbringing. I hope I can continue to make you proud of your son.
+
+  \vspace{1em}
+
+  I want to thank Thalita for her unrelenting belief and support that is felt across the Ocean.
+
+\end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\renewcommand{\abstractname}{Abstract}
 \begin{abstract}\label{sect:abstract}
-  Radiotherapy planning involves outlining the macro and microscopic spreads of a cancer. Previously, bespoke models were trained on sufficient sample sizes of architectures that vary significantly in design to address distinct segmentation objectives. However, this makes models inaccessible to departments with limited datasets, increasing the barrier to experiencing the promised superiority beyond a model's specific use case.
+  Radiotherapy planning involves outlining the macro and microscopic spreads of a cancer. Current literature proposes custom models trained on large sample sizes. The custom models vary significantly in design to address distinct segmentation objectives. However, this makes models inaccessible to departments with limited datasets, increasing the barrier to experiencing the promised superiority beyond a model's specific use case.
 
-  We, therefore, analyse the effectiveness of transfer learning techniques in leveraging knowledge learned from one domain into another. Variants of transfer include zero-shot, few-shot and many-shot transfer learning. The evaluation of n-shot approaches of transfer learning onto the radiotherapy planning objective will clarify whether the transfer is a valid strategy for increasing performance over models learnt from scratch.
-
-  We represent three distinct model architectures for each type of transfer. We conclude that a many-shot transfer using TotalSegmentator remains a robust method for transfering knowledge. We find that few-shot transfer using UinverSeg does not apply to the complexity of 3-D volume delineations for cervical cancer. Finally, the finetuning of zero-shot models, represented by MedSAM, offers local bounded improvements on volume delineation independently of tumour localisation when compared to the baseline.
-
-  % The repo is available at \url{https://github.com/AntonZhitomirsky/radiotherapy}.
+  We, therefore, analyse the effectiveness of transfer learning techniques in leveraging knowledge learnt from one domain into another. Variants of transfer include zero-shot, few-shot and many-shot transfer learning. The evaluation of n-shot approaches of transfer learning onto the radiotherapy planning objective will clarify whether the transfer is a valid strategy for increasing performance over models learnt from scratch.
+  
+  Our study presents three distinct model architectures for each type of transfer. We found that many-shot transfer using TotalSegmentator remains a robust method for transferring knowledge in binary and multi-class segmentation objectives. It is the only approach providing transferred improvements for segmenting nuanced Clinical Target Volumes. Additionally, few-shot transfer methods, represented by UniverSeg, do not currently handle the complexity of 3-D volume delineations. Lastly, we observed that the finetuning of zero-shot models, represented by MedSAM, offers local bounded improvements on volume delineation, regardless of tumour localisation, compared to the baseline.
 \end{abstract}
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -69,25 +77,27 @@
 
 Currently, the most common network architecture backbone for radiotherapy planning is the U-Net architecture~\cite{Samarasinghe2021-ps, Lin2021-oz, Sartor2020-et, LIU2020184, Rhee2020-ms, LIU2020172}. However, each network requires specialized architectures or bespoke training schemes to achieve competitive performance. These tailored modifications contribute little to the overall development in medical segmentation~\cite{isensee2024nnunet}, as it becomes increasingly challenging for researchers to identify methods that live up to their promised superiority beyond the limited scenarios they are demonstrated on~\cite{nnunet}.
 
-Furthermore, the bespoke architectures assume a sufficient sample size representing a sound representation of the population of all individuals under the same circumstances. However, the underrepresented users of these models cannot apply this assumption; most hospital teams work in a specialized medical field with only in-house patients who follow specific hospital guidelines. A simple plug-and-play approach is unsuitable because segmentation guidelines often differ between facilities. Therefore, specific recalibration is necessary to effectively use these models because incorrect or inaccurate contours are the primary factors contributing to treatment failures in radiotherapy~\cite{Rhee2020-ms}.
+These bespoke segmentation architectures assume a sufficient sample size representative of the population of all individuals under the same circumstance. Thus, the assumption obstructs the utilisation of modern machine-assisted models for teams with small sample sizes. Additionally, because segmentation guidelines or biases may not match between teams, this means a plug-and-play solution from a pre-trained model is not always a perfect fit. Therefore, specific recalibration is necessary to effectively use these models because incorrect or inaccurate contours are the primary factors contributing to treatment failures in radiotherapy~\cite{Rhee2020-ms}.
 
 \section{Objective and Methodology}
 
-We therefore analyse the effectiveness of Transfer Learning in radiotherapy planning. The Transfer Learning approach aims to leverage other trained models with great performance and lift low-level features for the target domain. A PubMed accrual for deep learning solutions in radiotherapy planning found a gap in technical research surrounding Transfer Learning in the radiotherapy planning field\footnote{Search string used in the PubMed accrual in 2023-2024 is available at Figure~\ref{fig:pubmed-search-string}}. Therefore, research on transfer in the medical domain will also fill the literature gap, which has yet to consider transfer learning as a solution for radiotherapy planning volumes. 
+We therefore analyse the effectiveness of Transfer Learning in radiotherapy planning. The Transfer Learning approach aims to leverage other trained models with great performance and lift low-level features for the target domain. A PubMed accrual for deep learning solutions in radiotherapy planning found a gap in technical research surrounding Transfer Learning in the radiotherapy planning field.\footnote{Search string used in the PubMed accrual in 2023-2024 is available at Figure~\ref{fig:pubmed-search-string}} Therefore, research on transfer in the medical domain will also fill the literature gap, which has yet to consider transfer learning as a solution for radiotherapy planning volumes. 
 
 Firstly, we select a dataset from The Royal Marsden Hospital, which will act as the pillar for advocating the success and use of transfer learning in radiotherapy planning. The real-world clinical dataset provides segmentations for key anatomies and tumours that aid in radiotherapy planning for females with cervical cancer. It has yet to gain exposure to the public segmentation community and has uncommon and limited segmentation patterns specified by internal team-wide guidelines.
 
-Secondly, we analyse the effectiveness of transfer learning in radiotherapy planning. To research the application of this technique in the medical context, we utilize three popular architectures and their applications in transfer learning. These models are nnUNet~\cite{nnunet}, UniverSeg~\cite{universeg}, and MedSAM~\cite{Ma2024}. In tandem with the effectiveness of transferring knowledge from these models, we comment on the type of transfer, be it zero-shot, few-shot, or many-shot learning.
+Secondly, we analyse the effectiveness of transfer learning in radiotherapy planning. To research the application of this technique in the medical context, we utilize three popular architectures and their applications in transfer learning. These models are TotalSegmentator~\cite{nnunet,totalsegmentor-paper}, UniverSeg~\cite{universeg}, and MedSAM~\cite{Ma2024}. In tandem with the effectiveness of transferring knowledge from these models, we comment on the type of transfer, be it zero-shot, few-shot, or many-shot learning.
 
 \section{Results}
 
-% TODO
+Our study evaluated the performance of several transfer learning strategies for segmenting Organs at Risk (OR) and Clinical Target Volumes (CTV) in radiotherapy planning. The TotalSegmentator model demonstrated the most significant improvements across all anatomies, showing particular adaptability in zero-shot transfer learning for specific OR volumes. However, its performance on CTV delineations was inconsistent, often competitive with but sometimes underperforming compared to the nnUNet baseline.
+
+Few-shot learning strategies, particularly with the UniverSeg model, failed to meet strict 3D radiotherapy requirements, struggling to balance performance between OR and CTV segmentations. Conversely, zero-shot models like MedSAM showed promising adaptability post-transfer, aligning with ethical guidelines and potentially reducing annotation time in the clinicians' review and application pipeline.
 
 \section{Outline of Report}
 
-The report will commence by delving into the essential background knowledge needed for this project in Chapter~\ref{sect:motivation}. This chapter provides a high-level overview of anatomies and the clinical context (Section~\ref{sect:clinical-context}), as well as the fundamental existing academic knowledge in the field of Computer-assisted vision in Medical Imaging (Section~\ref{sect:machine-learning-for-image-segmentation}).
+The report will commence by delving into the essential background knowledge needed for this project in Chapter~\ref{sect:motivation}. This chapter provides a high-level overview of anatomies and the clinical context (Section~\ref{sect:clinical-context}), as well as the fundamental existing academic knowledge in the field of Computer-Assisted Vision in Medical Imaging (Section~\ref{sect:machine-learning-for-image-segmentation}).
 
-Following this, Chapter~\ref{sect:methodology} will detail the experiments utilized to assess the effectiveness of different architectures in transferring knowledge into the target domain. Chapter~\ref{sect:results} presents and dissects the results of the experiment as well as their implications onto the medical community. Finally, Chapter~\ref{sect:conclusion} will cover the conclusion and future work Chapter~\ref{sect:conclusion}.
+Following this, Chapter~\ref{sect:methodology} will detail the experiments utilized to assess the effectiveness of different architectures in transferring knowledge into the target domain. Chapter~\ref{sect:results} presents and dissects the results of the experiment as well as their implications for the medical community. Finally, Chapter~\ref{sect:conclusion} will cover the conclusions and future work.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Motivation}\label{sect:motivation}
@@ -100,17 +110,17 @@ In this section, we discuss the clinical context behind cervical cancer in the p
 
 \subsection{Cervical Cancer}\label{sect:cervical-cancer}
 
-Cancer is a burden around the globe that has been a driver for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer for 157 countries in 2022~\cite{Global-cancer-2022}. Furthermore, an estimated 1 million maternal orphans who lose their mothers to cancer suffer long-term disadvantages in health and education~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}. Paired with quality improvements offered by medical imaging models, this forms the motivation for total control over cervical cancer.
+Cancer is a burden around the globe that has been responsible for almost one-sixth of the world's mortality in 2022~\cite{Global-cancer-2022}. In females, cervical cancer makes up 25 countries' leading causes of cancer death, following breast cancer for 157 countries in 2022~\cite{Global-cancer-2022}. Furthermore, an estimated 1 million maternal orphans who lose their mothers to cancer suffer long-term disadvantages in health and education~\cite{Guida2022}. Thankfully, cancer screening services provided by hospitals around Europe have been shown to decrease incidence and mortality rates of cervical cancer in women over the recent years~\cite{Global-cancer-2022}. Paired with quality improvements offered by medical imaging models, this forms the motivation for total control over cervical cancer.
 
 \subsection{Radiotherapy Treatment}
 
 Radiation therapy is an option for cancer treatment where high beams of radiation energy are tuned to hone in to target cancerous cells in a clinically defined `target area'. The cells killed by the energy experience interphase or proliferative death depending on the cell cycle stage. Death occurs when the damage to genetic material within the cell prevents it from dividing, or the cell's accumulation of genetic aberrations leads to a ``mitotic catastrophe''~\cite{cell-death}. In Europe, such radiotherapy treatment was used on average for 70\% of cases, with a curative rate of 40\%~\cite{radiotherapy-advances, Thompson2018}.
 
-All cells subjected to high-energy beams experience death. This places much responsibility on the oncologist to deliver an accurate treatment area so that healthy cells are unaffected, as the compromise of healthy cells' function may cause adverse alterations to an organ's standard functionality.
+All cells subjected to high-energy beams experience death. This places much responsibility on the oncologist to deliver an accurate treatment area so to minimise the death of healthy cells, as the compromise of healthy cells' function may cause adverse alterations to an organ's standard functionality.
 
 % This death is characteristic of any cell subjected to high energy beams, placing much responsibility on the oncologist to deliver an accurate treatment area so that healthy cells are unaffected; any adverse alteration of an organ's standard functionality may cause grave implications for the already compromised patient. 
 
-Therefore, the care required causes oncologists to spend 90--120 mins to delineate target areas for radiotherapy~\cite{LIU2020184}. This time-consuming endeavour is never favourable for a patient already in a dangerous situation. For mid-low-income countries, where this may not be an available resource, this leaves them with a death rate 18 times that of a higher-income country~\cite{cervical-cancer-epidemic}. 
+Therefore, the care required causes oncologists to spend 90--120 mins to delineate target areas for radiotherapy~\cite{LIU2020184}. This time-consuming endeavour is never favourable for a patient already in a dangerous situation. For mid-low-income countries, where this may not be an available resource, this leaves them with a death rate 18 times that of higher-income countries~\cite{cervical-cancer-epidemic}. 
 
 \subsection{CT modality and Hounsfield Units}\label{sect:ct-modality}
 
@@ -126,7 +136,7 @@ High-resolution and high-contrast computed tomography (CT) machines have further
 
 The operator or physician selects the image slice thickness from 1mm to 10mm. This choice determines the resolution of the image, with the cubes (voxels) measuring Hounsfield Units (HU)~\cite{diagnostic-radiology-physics}. The Hounsfield scale is a quantitative scale used in medical imaging to describe radiodensity. Unlike natural images, where the pixel's intensity determines a colour's intensity between 0 and 255, the voxel's intensity reflects the average tissue type for the cube and ranges between -1000 and 3000. Positive values (white) indicate denser tissue with greater X-ray beam absorption, while negative values (black) represent less dense tissue with less X-ray beam absorption~\cite{Statpearls}.
 
-Therefore, because the HU scale is relative; different windows may be taken for a CT scan to highlight different tissues. Those voxels within the window will likely be tissues of a specific classification. An example is illustrated in Figure~\ref{fig:ct-windows}.
+Therefore, because the HU scale is relative, different windows may be taken for a CT scan to highlight different tissues. Those voxels within the window will likely be tissues of a specific classification. An example is illustrated in Figure~\ref{fig:ct-windows}.
 
 \subsection{Radiotherapy Planning}\label{sect:radiotherapy-planning}
 
@@ -146,11 +156,11 @@ Therefore, because the HU scale is relative; different windows may be taken for 
   \caption{Simplified representation of the clinical target volumes. Figure~\ref{fig:gtv-macroscopic} shows the visible tumor, Figure~\ref{fig:ctv-microscopic} shows microscopic spread of the tumor, Figure~\ref{fig:ptv-area} shows area to account for short-term organ misalignment.}\label{fig:planning-areas}
 \end{figure}
 
-Oncologists use CT scans to draw clinical volumes by combining their knowledge about the particular cancer to determine target structures, organs-at-risk structures, and areas where the cancer will likely spread to~\cite{AMLART-data}. We provide a simplified representation in Figure~\ref{fig:planning-areas}.
+Oncologists use CT scans to draw clinical volumes by combining their knowledge about the particular cancer to determine target structures, organs-at-risk structures, and areas where the cancer will likely spread~\cite{AMLART-data}. We provide a simplified representation in Figure~\ref{fig:planning-areas}.
 
 \subsubsection{Target Volumes}
 
-The first area is the macroscopic delineated area of the visible tumour area. This Gross Target Volume (GTV) has a high probability of containing the tumour. Secondly, the Clinical Target Volume (CTV) is derived to account for potential microscopic spread. The CTV will be an area at least as big as the GTV with an optional margin surrounding it containing a 'rind' of non-zero probability of tumour spread. Lastly, the Primary Target Volume (PTV) contains residual geometric uncertainties and safety margins surrounding the CTV, ensuring the radiotherapy dose gets delivered to the CTV~\cite{tumor-delineation,defining-target-volumes,Lin2021-oz,personalised-PTV-strategies}. The PTV is a necessary extension of the CTV since geometric uncertainties are impossible and not advised to eliminate; after all, static scans are only estimations, subject to short-term organ misalignment, relative movement between structures of reference and tumours, partial volume effects and skewed anisotropic resolution~\cite{VANHERK200452}.
+The first area is the macroscopic delineated area of the visible tumour area. This Gross Target Volume (GTV) has a high probability of containing the tumour. Secondly, the Clinical Target Volume (CTV) is derived to account for potential microscopic spread. The CTV will be an area at least as big as the GTV with an optional margin surrounding it containing a 'rind' of non-zero probability of tumour spread. Lastly, the Primary Target Volume (PTV) contains residual geometric uncertainties and safety margins surrounding the CTV, ensuring the radiotherapy dose gets delivered to the CTV~\cite{Lin2021-oz,tumor-delineation,defining-target-volumes,personalised-PTV-strategies}. The PTV is a necessary extension of the CTV since geometric uncertainties are impossible and not advised to eliminate; after all, static scans are only estimations, subject to: short-term organ misalignment, relative movement between structures of reference and tumours, partial volume effects and skewed anisotropic resolution~\cite{VANHERK200452}.
 
 \subsubsection{Organs at Risk}
 
@@ -158,7 +168,7 @@ In parallel, the oncologist constantly considers critical healthy tissue structu
 
 \subsubsection{International Guidelines}
 
-The final volumes have no internationally agreed-upon guidelines, which leaves it up to the interpretation of the oncologists and Hospitals to use their heuristics when drawing areas.  This time-consuming process has high variability, causing it to suffer significantly from inter and intra-observer variability~\cite{Lin2021-oz}. 
+The final volumes have no internationally agreed-upon guidelines, which leaves it up to the interpretation of the oncologists and hospitals to use their heuristics when drawing areas.  This time-consuming process has high variability, causing it to suffer significantly from inter- and intra-observer variability~\cite{Lin2021-oz}. 
 
 \subsection{Data Acquisition}
 
@@ -178,7 +188,7 @@ The training data provides 100 female patients that have been diagnosed with sim
 
 \subsection{Delineation classes}\label{sect:delineation-classes}
 
-The clinicians at the Royal Marsden Hospital have provided segmentation labels for seven high-priority regions of interest (ROI). These are the anorectum, bladder, CTVn, CTVp, parametrium, uterus, and vagina. The function of these anatomies is irrelevant to this project and is left to the reader to research further at their own discression. A high-level overview table and illustration has been supplied to provide important clinical context surrounding the anatomies [\ref{fig:delineation-classes}].
+The clinicians at the Royal Marsden Hospital have provided segmentation labels for seven high-priority regions of interest (ROI). These are the anorectum, bladder, CTVn, CTVp, parametrium, uterus, and vagina. The function of these anatomies is irrelevant to this project and is left to the reader to research further at their own discression. A high-level overview table and illustration has been supplied to provide important clinical context surrounding the anatomies (Figure \ref{fig:delineation-classes}).
 
 \begin{landscape}
   \begin{table}[h!]
@@ -191,7 +201,7 @@ The clinicians at the Royal Marsden Hospital have provided segmentation labels f
       Anorectum & OR & \ref{fig:example-anorectum} & \ref{eq:ctvn-ctvp-anorectum}, \ref{eq:parametrium} & The conjoined muscles from around the rectum with susceptible nerve and blood vessels. \\
       \midrule
       % \textit{Illustration available at Figure~\ref{fig:example-bladder-axial}-\ref{fig:example-bladder-sagittal}}
-      Bladder & OR & \ref{fig:example-bladder}  & \ref{eq:parametrium}, \ref{eq:bladder-ctvn} & The bladder is susceptible to urinary incontinence, infection, or impaired bladder control. \\
+      Bladder & OR & \ref{fig:example-bladder}  & \ref{eq:parametrium}, \ref{eq:bladder-ctvn} & The organ is susceptible to urinary incontinence, infection, or impaired bladder control. \\
       \midrule     
       % \textit{Illustration available at Figure~\ref{fig:example-CTVp}}. 
       CTVp & CTV & \ref{fig:example-ctvp} & \ref{eq:parametrium}, \ref{eq:ctvp2} &      
@@ -210,7 +220,7 @@ The clinicians at the Royal Marsden Hospital have provided segmentation labels f
       The tissue surrounding the cervix/vagina at risk of local spread. The Parametrium is drawn as a complete structure and edited back to the level of the vagina to be included~\cite{AMLART-data}. \\
       \midrule
       % \textit{Illustration available at Figure~\ref{fig:example-uterus-axial}-~\ref{fig:example-uterus-sagittal}}.
-      Uterus & CTV & \ref{fig:example-uterus} & \ref{eq:parametrium}, \ref{eq:ctvp2} & The whole Uterus with no editing back used to generate CTVp. \\
+      Uterus & CTV & \ref{fig:example-uterus} & \ref{eq:parametrium}, \ref{eq:ctvp2} & The whole Uterus with no editing back used to generate CTVp~\cite{AMLART-data}. \\
       \midrule
       %  \textit{Illustration available at Figure~\ref{fig:example-vagina-axial}-~\ref{fig:example-vagina-sagittal}}.
       Vagina & CTV & \ref{fig:example-vagina} & \ref{eq:parametrium}, \ref{eq:ctvp2} & From the whole vagina contour, slices deleted to leave either the upper 2cm of vagina, or 2cm below the tumour (contoured as 2cm from either cervix/ GTVp, whichever is lower)~\cite{AMLART-data}. \\
@@ -239,7 +249,7 @@ The clinicians at the Royal Marsden Hospital have provided segmentation labels f
     \subfigure[Parametrium]{\includegraphics[width=0.14\linewidth, trim=299 0 0 0, clip]{../figures/PatientStructureExamples/Parametrium_088/9-2-234.png}\label{fig:example-parametrium}}%
     \subfigure[Uterus]{\includegraphics[width=0.14\linewidth, trim=301 0 0 0, clip]{../figures/PatientStructureExamples/Uterus_012/9-1-306.png}\label{fig:example-uterus}}%
     \subfigure[Vagina]{\includegraphics[width=0.14\linewidth, trim=301 0 0 0, clip]{../figures/PatientStructureExamples/Vagina_69/79-1-267.png}\label{fig:example-vagina}}
-    \caption{A high-level overview of delineation classes with details regarding each if it deviates from typical objectives, e.g. see Vagina.}\label{fig:delineation-classes}
+    \caption{A high-level overview of delineation classes with details explaining clinical significance in cervical cancer radiotherapy planning volumes.}\label{fig:delineation-classes}
   \end{figure}
 
 \end{landscape}
@@ -254,11 +264,11 @@ Let us represent each organ anatomy as the first letter of its name, specificall
   \item The CTVn and CTVp as $C_n$ and $C_p$ respectively
   \item The GTVn and GTVp as $G_n$ and $G_p$ respectively
   \item The Pelvic, Common and Para-aortic Lymph Node as $L_p$, $L_c$, and $L_{pa}$ respectively  
-  \item The overlap of two structures is denoted by the set intersect symbol $\cap$.
-  \item The joint area of two structures is denoted by the set union symbol $\cup$.
+  \item The overlap of two structures is denoted by the set intersect symbol $\cap$
+  \item The joint area of two structures is denoted by the set union symbol $\cup$
 \end{enumerate}
 
-\subsubsection{Relationship between Structures}
+\subsubsection{Relationship Between Structures}
 
 \begin{enumerate}
   \item There should be no overlap between the CTVn, CTVp or Anorectum.
@@ -285,7 +295,7 @@ Let us represent each organ anatomy as the first letter of its name, specificall
           C_p = \overbrace{C \cup G_p}^{\text{High Risk CTV}} \cup \ \ U \cup V\label{eq:ctvp1}
         \end{equation}
 
-  However, since we are never explicitly provided with the segmentation maps for the Cervix $C$ and the GTVp $G_p$, we cannot use as strong of a definition as above. Instead, we operate on the assumption that the union of the Uterus and Vagina is at least as big as the CTVp.
+  However, since we are never explicitly provided with the segmentation maps for the Cervix $C$ and the GTVp $G_p$, we cannot use as strong of a definition as above. Instead, we operate on the assumption that the CTVp is at least as big as the union of the Uterus and Vagina.
 
         \begin{equation}
           U \cup V \subseteq C_p\label{eq:ctvp2}
@@ -297,7 +307,7 @@ Let us represent each organ anatomy as the first letter of its name, specificall
           C_n = G_n \cup L_i \cup L_p \cup L_{pa}
         \end{equation}
 
-  Similarly, we are not provided segmentations for these areas, therefore, operating under no clinical knoweldge apart from the provided, cannot make any claims as to the composition of the CTVn.
+  Similarly, we are not provided segmentations for these areas, therefore, operating under no clinical knoweldge apart from the provided, we cannot make any claims as to the composition of the CTVn.
 
 \end{enumerate}
 
@@ -307,9 +317,11 @@ The medical sector has been a hotbed for AI research since  Convolutional Neural
 
 The key objective of models trained for delineating target structures for this project is to see if an AI model can learn cervical cancer CTV pattern detection. The decision is complex as clinicians use information beyond the CT-imaging modality, such as how far along the tumour has progressed, and other clinical intuition to make proper judgements about the CTV volumes. Therefore, with this information missing from AI models, it is likely to misjudge target volumes, and a clinician will have to select which components of the CTV are required. However, a clinician will benefit from the time saved and improved consistency with the planning process if a trained model can produce the substructures required within the CTV that a clinician can review~\cite{AMLART-data}.
 
-\section{Machine learning for image segmentation}\label{sect:machine-learning-for-image-segmentation}
+\section{Machine Learning for Image Segmentation}\label{sect:machine-learning-for-image-segmentation}
 
 Before the popularization of machine learning, algorithms used to be defined by strict and convoluted rules. These heuristically defined algorithms struggled to scale to complex problems and were often complicated or confusing to maintain because the typical task does not warp easily into human intuition.
+
+Due to poor scalability, a new genre of algorithms emerged that fell into the classification of neural network models. Observations were rephrased and morphed into vectorised inputs, where each constituent of the vector represented a particular feature of the observation. For instance, the California Housing dataset~\cite{kelleypace1997} contains an input of 9 features (number of bedrooms, number of toilets, longitude, latitude, square footage, \dots) and one target feature (house price). After pre-processing and strategising, this input would be vectorised and fed into a network with several layers. Within each layer, sets of tunable parameters would optionally change the number of features and learn a relationship between parameters using weights until the $1 \times 9$ vector finally translates into a scalar value indicating the house price -- a simplified illustration of the process is shown in Figure~\ref{fig:california-housing}. After many repetitions of learning from examples, the model would learn an approximation to the complex objective. These models were termed Multi-Layered Perceptrons (MLPs).
 
 \begin{figure}[H]
   \centering
@@ -317,13 +329,11 @@ Before the popularization of machine learning, algorithms used to be defined by 
   \caption{An illustration of a multi-layered perceptron (MLP) for the California Housing dataset. Information is vectorised and fed into a network. Different weights/strengths are learnt for each feature. Ultimately, the model learns a relationship between the features and the target.}\label{fig:california-housing}
 \end{figure}
 
-Due to poor scalability, a new genre of algorithms emerged that fell into the classification of neural network models. Observations were rephrased and morphed into vectorised inputs, where each constituent of the vector represented a particular feature of the observation. For instance, the California Housing dataset~\cite{kelleypace1997} contains an input of 9 features (number of bedrooms, number of toilets, longitude, latitude, square footage, \dots) and one target feature (house price). After pre-processing and strategising, this input would be vectorised and fed into a network with several layers. Within each layer, sets of tunable parameters would optionally change the number of features and learn a relationship between parameters using weights until the $1 \times 9$ vector finally translates into a scalar value indicating the house price -- a simplified illustration of the process is shown in Figure~\ref{fig:california-housing}. After many repetitions of learning from examples, the model would learn an approximation to the complex objective. These models were termed Multi-Layered Perceptrons (MLPs).
-
 \subsection{Image Segmentation}\label{sect:image-segmentation}
 
-The current machine learning approach didn't work well with image data. Up until that point, rich structures such as images were neglected, and matrices of gray-scale images were mutilated into flat vectors. This approach was necessary to feed the flattened image representation through the MLP. The issue with vectorising an image is that it loses its spatial context-driven awareness. 
+The current machine learning approach did not work well with image data. Until that point, rich structures such as images were neglected, and matrices of gray-scale images were mutilated into flat vectors. This approach was necessary to feed the flattened image representation through the MLP. The issue with vectorising an image is that it loses its spatial context-driven awareness. 
 
-At the same time, J. Hull, sponsored by the United States Postal Service, published a Database for Handwritten Text Recognition with the incentive of providing an extensive dataset of images of characters of variable writing mediums, isolation, overlap, and neatness to aid research efforts in developing accurate digit classification algorithms~\cite{JJHull1994}. Yann LeCunn et al.~\cite{Lenet1998} used this database to propose the first Convolutional Neural Network (CNN) for image processing, which preserved the input in its 2D glory by applying convolutions. The fundamental Convolutional Filter is displayed in Figure~\ref{fig:sobel}.
+At the same time, J. Hull, sponsored by the United States Postal Service, published a Database for Handwritten Text Recognition with the incentive of providing an extensive dataset of characters images with variable writing mediums, isolation, overlap, and neatness to aid research efforts in developing accurate digit classification algorithms~\cite{JJHull1994}. Yann LeCunn et al.~\cite{Lenet1998} used this database to propose the first Convolutional Neural Network (CNN) for image processing, which preserved the input in its 2D glory by applying convolutions. The fundamental Convolutional Filter is displayed in Figure~\ref{fig:sobel}.
 
 \begin{figure}[H]
   \centering
@@ -345,8 +355,6 @@ This first convolutional network spawned a vicious flurry of convolutional archi
   \caption{Comparison of upsampling a base image using FCN~\cite{fully-CNNs-for-semantic-segmentation} and the VGG-16-based DeconvNet~\cite{noh2015learning, simonyan2014very} architectures.}\label{fig:fcn-vs-deconvnet}
 \end{figure}
 
-% TODO: maybe a bit more context surrounding VGG
-
 Trivial upsampling through de-convolutional layers allows the heatmap to translate back to the original size. This process would produce a largely inaccurate segmentation with much room for improvement. Therefore, similarly to learning the downsampling, the model learnt to upsample low-level heatmap representations~\cite{noh2015learning}. This way, the deconvolutional network also became ``a key component for precise object segmentation'', which improved the base upsampling provided by the FCN. This conclusion is shown in Figure~\ref{fig:fcn-vs-deconvnet}.
 
 The strategy of downsampling and upsampling for image segmentation is a common theme amongst many segmentation architectures.
@@ -362,9 +370,7 @@ The strategy of downsampling and upsampling for image segmentation is a common t
 
 Simultaneously, a unique architecture was under development. This architecture mirrored the hourglass structure of contracting and upsampling sections of the FCN, only this time, the illustration of its architecture led to its name, the U-Net~\cite{U-Net}.
 
-The U-Net similarly consists of a contractive and expansive side, with the added feature of so-called `skip-connections'. As shown in Figure~\ref{fig:unet}, at each stage of the contracting/expansive side, these copy operations help localise high-resolution features from the contracting path~\cite{U-Net}. The network yielded great results for a few training images and more precise segmentations.
-
-% TODO: skip connections glue the output of previous layer on
+The U-Net similarly consists of a contractive and expansive side, with so-called `skip-connections' added feature. The skip-connection, as shown in Figure~\ref{fig:unet}, copies features between each contracting/expansive side stage. These copy operations help localise high-resolution features from the contracting path~\cite{U-Net}. The initial implementation of the network yielded great results when trained on a few images and gave more precise segmentations than its competitors at the time.
 
 The U-Net was now very close to being a staple choice in biomedical data for anatomy segmentation. A limitation of its current implementation is that slices along the third dimension would most certainly contain contextual information that would influence the decision of the current design. Therefore, an identical network topology with extended 3D convolutions was proposed by \c{C}i{\c{c}}ek et al.~\cite{DBLP:journals/corr/CicekALBR16}.
 
@@ -372,11 +378,11 @@ The U-Net was now very close to being a staple choice in biomedical data for ana
 
 The nnUNet is closely related to the U-Net architecture. However, nnUNet's ability to adapt to the data improves this model performance over the vanilla implementation.
 
-Until now, architectures have operated on data pre-processed to a particular expected distribution and configured to deal with a specific problem. For instance, out-of-the-box configuration has stringent input size requirements, which require image resizing. Furthermore, 3D images commonly produce heterogeneous voxel spacing depending on the parameters chosen by the clinician or the machine from which they were produced~\cite{nnunet}. The number of moving parts often leaves a unidirectional dependency on the data depending on the architecture. 
+Until now, architectures have operated on data pre-processed to a particular expected distribution and configured to deal with a specific problem. For instance, out-of-the-box configuration has stringent input size requirements, which requires image resizing. Furthermore, 3D images commonly produce heterogeneous voxel spacing depending on the parameters chosen by the clinician or the machine from which they were produced~\cite{nnunet}. The number of moving parts often leaves a unidirectional dependency on the data depending on the architecture. 
 
 \subsubsection{Automated Method Configuration}\label{sect:nnunet-automated-method-configuration}
 
-Therefore, the nnUNet analyses the fingerprint of the dataset and the device to deliver a tailored experience and force a more codependent relationship; now, the architecture depends on the data and the data is pre-processed to conform to the network~\cite{nnunet}. Furthermore, hardware restrictions mean networks may be inaccessible to those with worse specifications or, at the other end of the spectrum, may underutilize powerful computation still available~\cite{nnunet}; the nnUNet analyses GPU constraints used to influence batch sizes and more~\cite{nnunet-git-paper}.
+Therefore, the nnUNet analyses the fingerprint of the dataset and the device to deliver a tailored experience and force a more codependent relationship; now, the architecture depends on the data and the data is pre-processed to conform to the network~\cite{nnunet}. Moreover, hardware restrictions mean networks may be inaccessible to those with worse specifications or, at the other end of the spectrum, may underutilize powerful computation still available~\cite{nnunet}; the nnUNet analyses GPU constraints used to influence batch sizes and more~\cite{nnunet-git-paper}.
 
 The automated method configuration is classified into three categories. A dataset fingerprint extracts training data distributions such as shape, spacing and intensity distributions. Rule-based parameters estimate the most common robust parameters for resampling and normalisation. Finally, the Empirical Parameters learn parameters, such as ensemble selection, which is not derivable from the dataset fingerprint.
 
@@ -390,7 +396,7 @@ The continued performance dominance gives the nnUNet a good foundation for being
 
 TotalSegmentator is a tool based around the nnUNet. TotalSegmentator is pre-trained on 1204 CT examinations to provide plans to segment 104 anatomical structures. The anatomies selected included apparent structures such as skeletal structures, gastrointestinal organs and other major organs. The training data contained many CT images, with differences in slice thickness, resolution, and contrast phase~\cite{totalsegmentor-paper}. However, it is important to note that 60\% of the scans occurred in a contrast-enhanced environment, which plays a role in how obvious delineations are during scanning, a scanning detail that was omitted during the training data collection for this research project. Furthermore, only an estimated 10\% of the data collected from this model contained relevant studies for the abdomen and pelvic areas.
 
-From the segmented organs that total segmentator provides, only the Bladder overlapped with the organs that were of interest in this study.
+From the segmented organs that TotalSegmentator provides, only the Bladder overlapped with the organs that were of interest in this study.
 
 \subsection{UniverSeg}\label{sect:universeg}
 
@@ -404,7 +410,7 @@ Convolutional architectures like those discussed above utilize many-shot learnin
 
 Butoi et al. present UniverSeg, a model that breaks away from the traditional approach; instead of training a model on a single task (e.g. bone delineation) and freezing parameters during inference, this architecture uses a support set of images to provide a practical few-shot approach to inferring segmentations from input images. Figure~\ref{fig:universeg} shows an example of this efficient querying, which manifests itself in a U-Net architecture where the support set passes through the network along the query to influence the final segmentation. This way, Butoi et al. attempt to provide segmentation on a target image based on examples of other samples with the same anatomy contoured in a selection of other images. Therefore, the model can learn to segment both bone and organ segmentation tasks without the need for fine-tuning~\cite{universeg}.
 
-This model operates on 2D slices of images and directly avoids the finetuning argument for medical imaging. They argue that finetuning can be unhelpful due to the differences between medical domains, features, and data fingerprints. As such, UniverSeg avoids significant retaining for each subtask.
+This model operates on 2D slices of images and directly avoids the finetuning argument for medical imaging. They argue that finetuning can be unhelpful due to the differences between medical domains, features, and data fingerprints. As such, UniverSeg avoids significant retraining for each subtask.
 
 % Fully transferable, no retraining, few shot learning
 
@@ -431,10 +437,10 @@ The SAM (Segment Anything Model) model implemented a modification of the transfo
 \begin{figure}[H]
   \centering
   \includegraphics[width=1\linewidth]{../figures/sam-performance.png}
-  \caption{Performance of a SAM model across a reference nnUNet baseline when applied to different datasets. The evaluation was considered for semantic, point and box prompts.~\cite{he2023computervision}.}\label{fig:sam-performance}
+  \caption{Performance of a SAM model across a reference nnUNet baseline when applied to different datasets. The evaluation was considered for semantic, point and box prompts~\cite{he2023computervision}.}\label{fig:sam-performance}
 \end{figure}
 
-SAM trains its network on a collection of natural images, not medical images such as CT and MRI scans. Extensive stress tests performed on SAM concluded that SAM's out-of-the-box promotable segmentation tool had good baseline performance on large visible objects~\cite{deng2023segment} but required exact prompt segmentation, making it inaccessible to automated contouring. Regarding the number of points required to make a sensible prediction, SAM quantitatively underperformed a nnUNet baseline, with qualitative evaluation showing fuzzy boundaries in medical contexts~\cite{hu2023sam}. Finally, Figure~\ref{fig:sam-performance} shows the performance of SAM against an nnUNet baseline across a set of datasets and imaging modalities~\cite{he2023computervision} which concludes that SAM never outperformed the nnUNet baseline when trained on the 11M natural images~\cite{SAM}. 
+SAM trains its network on a collection of natural images, not medical images such as CT and MRI scans. Extensive stress tests performed on SAM concluded that SAM's out-of-the-box promotable segmentation tool had good baseline performance on large visible objects~\cite{deng2023segment} but required exact prompt segmentation, making it inaccessible to automated contouring. Regarding the number of points required to make a sensible prediction, SAM quantitatively underperformed a nnUNet baseline, with qualitative evaluation showing fuzzy boundaries in medical contexts~\cite{hu2023sam}. Finally, Figure~\ref{fig:sam-performance} shows the performance of SAM against a nnUNet baseline across a set of datasets and imaging modalities~\cite{he2023computervision} which concludes that SAM never outperformed the nnUNet baseline when trained on the 11M natural images~\cite{SAM}. 
 
 Therefore, Ma et al. enhanced the architecture provided by SAM by training it on a dataset of nearly 500k CT scan test examples to train a model for medical images, named MedSAM~\cite{Ma2024}. Ma et al. decided to keep close to its original despite medical images being 3-dimensional in CT and MRI scans because of ``enhanced flexibility and adaptability'' where slices along an axis substitute 3D scans~\cite{Ma2024}. This model demonstrates an improvement over SAM, nnUNet, and Deepmedic models when MedSAM bounding boxes extracted from the ground truth prompt the model~\cite{Ma2024}.
 
@@ -446,7 +452,7 @@ Arguably, the universality of the parameters learnt in a model with prosperous a
 
 Transfer Learning has the potential to improve initial performance using only the transferred knowledge before any further learning begins, improve the time it takes to thoroughly learn the target task given the transferred knowledge, and improve the final performance all when compared to initial benchmarks without transfer~\cite{torrey-handbook}. Medical contexts have already applied Transfer Learning, which reportedly improved weight initialisation for 332 abdominal liver CT scans and resulted in faster convergence, providing a more robust representation~\cite{liver-lesion-via-transfer-learning}.
 
-Transfer Learning has been seen to prevent overfitting in domains where data volume is low and where generality without overfitting is hard to come by. The prevention is because the model has already learnt features likely to be helpful in the second task~\cite{geeks-transfer-learning}. Overfitting may still occurr if the model is fine-tuned too much on the second task, as it may `learn task-specific features that do not generalise well to new data'~\cite{geeks-transfer-learning}.
+Transfer Learning has been seen to prevent overfitting in domains where data volume is low and where generality without overfitting is hard to come by. The prevention is because the model has already learnt features likely to be helpful in the second task~\cite{geeks-transfer-learning}. Overfitting may still occur if the model is fine-tuned too much on the second task, as it may `learn task-specific features that do not generalise well to new data'~\cite{geeks-transfer-learning}.
 
 \subsection{Mathematical Definition}
 
@@ -460,7 +466,7 @@ Transfer Learning can be formalised mathematically~\cite{survey-on-transfer-lear
   \item The transfer learning task involves a source domain $\mathcal{D}_S$ with corresponding source tasks $\mathcal{T}_S$, and a target domain $\mathcal{D}_T$ with corresponding target task $\mathcal{T}_T$. The goal is to transfer the related knowledge to boost the performance of the target predictive function $f_T(\cdot)$.
 \end{itemize}
 
-\subsection{Shot based learning}
+\subsection{Shot Based Learning}
 
 \begin{figure}[H]
   \centering
@@ -474,7 +480,7 @@ Transfer Learning can be formalised mathematically~\cite{survey-on-transfer-lear
       \includegraphics[width=.4\linewidth]{../figures/few-shot-learning.png}\label{fig:few-shot}
     }
   }
-  \caption{Shot based learning captured in the natural language context~\cite{openaishotbasedlearning}}
+  \caption{Shot based learning captured in the natural language context~\cite{openaishotbasedlearning}.}
 \end{figure}
 
 The transfer of models is dependent on the strategy the model uses to make predictions. Shot-based learning is a substantial factor. This describes the model's exposure to data in domains and its ability to handle cases it has never seen before. Thus, shot-based learning can be separated into meta-learning tasks or multitask learning. 
@@ -500,7 +506,7 @@ Improvements over the transfer from models trained on other domains could hypoth
 
 \section{Transfer Strategy}
 
-Transfer learning involves obtaining a pre-trained "base" model, identifying transfer layers, and fine-tuning the remaining layers. Key considerations include preventing overfitting on smaller datasets and making decisive adjustments to learning rates during the fine-tuning phase.
+Transfer learning involves obtaining a pre-trained `base' model, identifying transfer layers, and fine-tuning the remaining layers. Key considerations include preventing overfitting on smaller datasets and making decisive adjustments to learning rates during the fine-tuning phase.
 
 \begin{enumerate}
   \item Obtain a pre-trained ``base'' model trained on extensive data which identifies general features and patterns relevant to the target domain.
@@ -516,7 +522,7 @@ Transfer learning involves obtaining a pre-trained "base" model, identifying tra
 
 \section{Baseline -- nnUNet}
 
-The provided examples of the objective are enough to train an nnUNet model from scratch. It has been shown that in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}. Therefore, we first train a baseline nnUNet model on the provided examples to establish a benchmark for the transfer models.
+The provided examples of the objective are enough to train a nnUNet model from scratch. It has been shown that in many biomedical applications, ``only very few images are required to train a network that generalises reasonably well''~\cite{DBLP:journals/corr/CicekALBR16}. Therefore, we first train a baseline nnUNet model on the provided examples to establish a benchmark for the transfer models.
 
 \subsection{Preprocessing}\label{sec:nnunet-preprocessing}
 
@@ -540,7 +546,7 @@ When transferring information, many-shot transfer is the most obvious choice. Th
 
 \subsection{Separate Training}
 
-Like the nnUNet, we apply the default fine-tuning strategy to a pre-trained TotalSegmentator model. TotalSegmentator has 23 separate nnUNet pre-trained models on different sub-tasks in the anatomical segmentation~\cite{totalsegmentor-git}. These individual models segment structures like the vertebrae, cardiac muscles, ribs, and lung vessels. For this required delineation objective, we chose the 'organ' model trained on a withheld dataset of 1200 CT scans. The only anatomy shared between the two domains is the Bladder which will hypothetically provide a performance improvement for this anatomy due to the additional thousand examples of the bladder.
+Like the nnUNet, we apply the default fine-tuning strategy to a pre-trained TotalSegmentator model. TotalSegmentator has 23 separate nnUNet pre-trained models on different sub-tasks in the anatomical segmentation~\cite{totalsegmentor-git}. These individual models segment structures like the vertebrae, cardiac muscles, ribs, and lung vessels. For this required delineation objective, we chose the 'organ' model trained on a withheld dataset of 1200 CT scans. The only anatomy shared between the two domains is the bladder which will hypothetically provide a performance improvement for this anatomy due to the additional thousand examples of the bladder TotalSegmentator has already seen.
 
 We therefore setup seven transfer models, one for each anatomy, to assess the performance of many and zero-shot transfer between similar network backbones. The training procedure is the same as in Section~\ref{sec:train-nnunet}.
 
@@ -566,7 +572,7 @@ The natural extension of separate training is to consider training each class si
 
 \subsubsection{No Rule Enforcement}
 
-Firstly, samples are preprocessed into a region-based format specified by the nnUNet pipeline; a new id is introduced for each new overlap. The model trains similarly on seven classes, with the objective of learning the segmentation patterns for each class. For comparison, an nnUNet network is trained in parallel to the fine-tuning of a TotalSegmentator model to evaluate the performance of the region-based training with transfer.
+Firstly, samples are preprocessed into a region-based format specified by the nnUNet pipeline; a new id is introduced for each new overlap. The model trains similarly on seven classes, with the objective of learning the segmentation patterns for each class. For comparison, a nnUNet network is trained in parallel to the fine-tuning of a TotalSegmentator model to evaluate the performance of the region-based training with transfer.
 
 \subsubsection{With Rule Enforcement}
 
@@ -574,15 +580,13 @@ A sensible and calibrated set of ids could be drawn based on the rules in Sectio
 
 When considering the total sample set, the overlap makes up a minimal percentage of the total volume with non-background label classification. Figure~\ref{fig:illegal_overlap} shows all cases of `illegal' overlap found within the samples. The most frequent culprit overlap that breaks the condition is between the CTVn, CTVp and the Uterus. The Uterus is a necessary subset of the CTVp, which implies that this segmentation of CTVp does not include microscopic spread, including in the Cervix and GTVp. By eliminating this style of error from the model, it might be possible to obtain more general segmentations that align with the clinical team's rules.
 
-% TODO: say that region-based learning without rule enforcement scored the same w.r.t illegal overlap because the model deosn't overfit on training data.
-
 \begin{figure}[H]
   \centering
   \includegraphics[height=.4\textheight]{../../research/source/code/nnUNet/3_gt_engineering/illegal_overlap_ground_truth.png}
-  \caption{Total frequency and percentage overlap of non-zero occurrences of `illegal' overlap between the CTVn, CTVp, and Anorectum (Equation~\ref{eq:ctvn-ctvp-anorectum}).}\label{fig:illegal_overlap}
+  \caption{Total frequency and percentage overlap of non-zero occurrences of `illegal' overlap between the CTVn, CTVp, and anorectum (Equation~\ref{eq:ctvn-ctvp-anorectum}).}\label{fig:illegal_overlap}
 \end{figure}
 
-We implement the rules with the hypothesis of generalisation despite the rules not strictly followed in practice. Therefore, an augmentation of the nnUNet trainer is necessary to capture this result. Specifically, we introduce an additional loss component dubbed `custom\_loss' during training. This custom loss parameter implements two of the many rules that the Royal Marsden Hospital clinical staff provided. The two rules are thoroughly discussed in Section~\ref{sec:rules} and are Equation~\ref{eq:ctvn-ctvp-anorectum} and Equation~\ref{eq:ctvp2}. 
+We implement the rules with the hypothesis of generalisation despite the rules not strictly followed in practice. Therefore, an augmentation of the nnUNet trainer is necessary to capture this result. Specifically, we introduce an additional loss component dubbed `custom\_loss' during training. This custom loss parameter implements the rules discussed in Section~\ref{sec:rules}, specifically Equation~\ref{eq:ctvn-ctvp-anorectum} and Equation~\ref{eq:ctvp2}. 
 
 To consistently include the loss parameter, we have two sub-loss objectives operating on dice loss (Section~\ref{sect:spatial-overlap-based}). The first captures Equation~\ref{eq:ctvn-ctvp-anorectum}, which focuses on the strict requirement that the CTVn, the CTVp, and the anorectum do not overlap. The loss term is minimal when the dice score is the lowest, indicating minimal overlap; thus, to calculate this result on the intersection, the implementation of vanilla dice loss applies to the rule's three permutations independently. Secondly, Equation~\ref{eq:ctvp2} insights more overlap between the vagina and uterus with the CTVp, which is equivalent to 1 minus the previous learning objective. As a hyperparameter, we attribute a weight of 0.3 to this term, while other loss terms (dice and binary cross-entropy) are assigned weights of 1 to keep the original objective function reasonably unchanged.
 
@@ -619,9 +623,7 @@ To consider this model's overall transfer ability, we also consider a supervised
 
 Authors in UniverSeg tested performance on central slices along 3D volumes~\cite{universeg}. However, the model's performance on the central slice is not indicative of the model's performance on the entire volume. To investigate this further, we will continue with a heavily supervised setting. In this setting, support slices are generated from any patient's slices containing a contour, allowing us to more accurately assess the model's performance across the entire volume. 
 
-For training, and providing sufficient slice support, we provide a supoprt size of 80 images, and a batch 
-
-% The main difference from the previous implementation is that we always expect a contour to be produced from the query, and we always know the support will have variable segmentations across the axis.
+We provide a support size of 80 images for training and sufficient slice support. However, the effect of the support size should be investigated further to determine the optimal support size and batch size hyperparameters that can fit on commodity GPU hardware.
 
 \section{MedSAM}
 
@@ -656,7 +658,7 @@ Further, in contrast to previous strategies, the MedSAM preprocessing step also 
 
 % This strategy, however, is not enough; the MedSAM model often provides whispy boundaries in a response to the point prompts as it must work harder at guessing the boundaries of the object. Therefore, this strategy is dispelled from consideration.
 
-\subsection{Box based transfer}
+\subsection{Box Based Transfer}
 
 \begin{figure}
   \centering
@@ -672,11 +674,11 @@ Further, in contrast to previous strategies, the MedSAM preprocessing step also 
   \caption{The process of selection bounding box for a given boxed tumor with an augmented ground truth used at training time for the MedSAM bax-based prompt model.}\label{fig:box-prompt-sam-selection}
 \end{figure}
 
-A box prompted solution will define the area where the tumour is likely to be. Box prompts for training are obtained from the ground truth, with a margin surrounding the box\footnote{An alternative approach would be to include points into the position encoder. However, limited tests demonstrated that transfer did not succeed and left predictions as a whispy and innacurate segmentation.}.
+A box prompted solution will define the area where the tumour is likely to be. Box prompts for training are obtained from the ground truth, with a margin surrounding the box.\footnote{An alternative approach would be to include points into the position encoder. However, limited tests demonstrated that transfer did not succeed and left predictions as a wispy and innacurate segmentation.}
 
 For training, only one box may be fed into the model for inference. Therefore, we select a random structure from the boxes encompassing the tumour for a given slice. Figure~\ref{fig:box-prompt-sam-selection} demonstrates the tumour box selection at training time. 
 
-Furthermore, images are augmented with a random rotation, scaling, and translation to improve generalisation. Data augmentation ensures that the model does not overfit the training data and can generalise to unseen examples.
+Furthermore, images are augmented with a random rotation, scaling, and translation to improve generalisation. Data augmentation ensures that the model does not overfit to the training data and can generalise to unseen examples.
 
 % \subsection{Training Bottlenecks}
 
@@ -699,17 +701,17 @@ During training, the test set is divided by ID to ensure that a portion of an im
 
 The authors of the paper measure performance according to the ground truth~\cite{SAM, Ma2024}. Refining the model pipeline to include bounding box predictions extracted from a baseline like nnUNet is possible, where MedSAM acts as a refinement to an already reasonably accurate guess. This allows for noise to be permeated into the model, thus allowing for a better auto-contour planning pipeline. However, we provide boxes from the ground truth because the MedSAM model is most well suited for interactive use. therefore, it is something that clinicians can use to cast a prediction, and refine it as necessary.
 
-\chapter{Quantiative Evaluation of Segmentation}\label{sect:performance-evaluation}
+\chapter{Quantitative Evaluation of Segmentation}\label{sect:performance-evaluation}
 
 Calculating the difference between the provided labelled data would be one way to determine if a contour can be used in a clinical context. However, we have different ways to evaluate this measure in a delineation context.
 
-If we were attempting to fit a model onto a line in 2D space, the performance of our model would be the total minimum distance between each point and the prediction. Our objective would be to drive the model's distance metric as close to 0 without overfitting. Here, the points act as a 'ground truth', alternatively referred to as the gold standard, which represents the actual measured value.
+If we were attempting to fit a model to a data distribution on an x-y plane onto a line in 2D space, the performance of our model would be the total minimum distance between each point and the prediction. Our objective would be to drive the model's distance metric as close to 0 without overfitting. Here, the points act as a 'ground truth', alternatively referred to as the gold standard, which represents the actual measured value.
 
 The reasoning above extends to 3D and 2D in a segmentation context with variants to measure other quantities, like the minimum distance between prediction and truth or the extent of volume overlap between the two. These are examples of geometric measures, which Mackay et al. has found to be the most popular measure in segmentation tasks~\cite{review-metrics}.
 
 \section{Classification Based}\label{sect:classification-based}
 
-Assesses if voxels within and outside the auto-contour have been correctly labelled~\cite{review-metrics}. To begin, we define 'positive' to mean that the voxel selected indeed needs radiotherapy treatment and 'negative' to mean that the voxel classifies as healthy.
+This assesses if voxels within and outside the auto-contour have been correctly labelled~\cite{review-metrics}. To begin, we define 'positive' to mean that the voxel selected indeed needs radiotherapy treatment and 'negative' to mean that the voxel classifies as healthy.
 
 A standard measure of classification is accuracy. It measures the total number of correct predictions vs. the total predictions it made. However, more than this measure is needed to fully capture a model's bias because it does not tell the whole story with class-imbalanced data when there is no even number between positive and negative labels.
 
@@ -727,13 +729,13 @@ Better measures are Precision and Recall scores. The Precision (also known as th
 
 Similarly to classification-based metrics in Section~\ref{sect:classification-based}, an overlap-based metric measures the extent of overlap between an auto-contour and a reference structure~\cite{review-metrics}.
 
-The scores above combined into a more general score $F_\beta$ to give
+The scores above combine into a more general score $F_\beta$ to give
 
 \begin{equation*}
  \text{F}_\beta = (1+\beta^2)\cdot \frac{\text{Precision} \cdot \text{Recall}}{\beta^2 \cdot \text{Precision}+\text{Recall}}
 \end{equation*}
 
-A specific case of this equation with $\beta=1$ is mathematically equivalent to the DICE Similarity Coefficient. A review found that DICE is the most popular evaluation metric amongst 2021 studies~\cite{review-metrics,evaluation-metrics, Sherer2021-le}.
+A specific case of this equation with $\beta=1$ is mathematically equivalent to the DICE Similarity Coefficient. A review found that DICE is the most popular evaluation metric amongst 2021 studies~\cite{review-metrics,evaluation-metrics, Sherer2021-le}. Here, the best score is 1, and the worst is 0.
 
 % \begin{align*}
 %   F_1 = \text{DICE} & = \frac{2 \cdot \text{Precision} \cdot \text{Recall}} {\text{Precision} + \text{Recall}} & \\ 
@@ -749,7 +751,7 @@ A specific case of this equation with $\beta=1$ is mathematically equivalent to 
  F_1 = \text{DICE} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}} {\text{Precision} + \text{Recall}} = \frac{2 \cdot TP}{2TP + FP + FN} \quad = \quad \frac{2|S_g\cap S_p|}{|S_g|+|S_p|}
 \end{equation*}
 
-Where $S_g$ is the ground truth segmentation and $S_p$ is the predicted segmentation. From this relationship, the DICE score has found popularity in image segmentation for similar reasons that the $F_1$ score has found its popularity in classical machine learning; it can provide a fair result for imbalanced datasets. This mentality is applicable in our scenario because a tumour will make up very little of the total volume of the domain space. This argument extends to a Volumetric DSC by considering the above in all three dimensions~\cite{APL}.
+Where $S_g$ is the ground truth segmentation and $S_p$ is the predicted segmentation. From this relationship, the DICE score has found popularity in image segmentation for similar reasons that the $F_1$ score has found its popularity in classical machine learning; it can provide a fair result for imbalanced datasets. This mentality is applicable in our scenario because a tumour will make up very little of the total volume of the domain space. This argument extends to a Volumetric DSC by considering the above in all three dimensions~\cite{APL}. 
 
 Another popular related evaluation method is the Jaccard Index, which measures the intersection over the union of two sets:
 
@@ -761,16 +763,17 @@ Since the numerator for the Jaccard Index is smaller than the DICE (since we avo
 
 \section{Surface Based}\label{sect:surface-based}
 
-Also commonly known as Boundary-Distance-Based Methods~\cite{boundary-overlap-metrics} compares the distance between two structure
-surfaces. These can be maximum, average or distance at a set percentile of ordered distances~\cite{evaluation-metrics}.
+These are commonly known as Boundary-Distance-Based Methods~\cite{boundary-overlap-metrics} compares the distance between two structure surfaces. These can be maximum, average or distance at a set percentile of ordered distances~\cite{evaluation-metrics}.
 
-A typical example is the Haussdorf Distance. Here, a directed distance metric is the maximum distance from a point in the first set to the nearest point in the other between two individual voxels~\cite{boundary-overlap-metrics}. Therefore, the better the HD metric, the smaller the value it returns. Here, the distance is typically Euclidian distance.
+A typical example is the Haussdorf Distance (HD). Here, a directed distance metric is the maximum distance from a point in the first set to the nearest point in the other between two individual voxels~\cite{boundary-overlap-metrics}. Therefore, the better the HD metric, the smaller the value it returns. Here, the metric is typically the Euclidian distance.
 
 \begin{equation*}
  \text{HD}(A,B) = \max(h(A,B), h(B,A)), \quad \text{ and directed h}(A,B)=\max_{a\in A}\min_{b \in B} ||a-b||
 \end{equation*}
 
-The HD is generally sensitive to outliers; therefore, direct HD application gives uninspiring results because noise and outliers are common in medical segmentations~\cite{boundary-overlap-metrics}. Therefore, we can calculate the average directed Haussdorf Distance.
+The HD is generally sensitive to outliers; therefore, direct HD application gives uninspiring results because noise and outliers are common in medical segmentations~\cite{boundary-overlap-metrics}. Therefore, we can calculate the average directed Haussdorf Distance. Therefore, the best score is 0, and the worst is $\infty$.
+
+\clearpage
 
 \section{Volume Based}
 
@@ -780,14 +783,16 @@ Volume-based metrics consider only the volume of the segmentation~\cite{evaluati
  \text{Relative Volume Difference (RVD)} = \bigg| \frac{|S_g|-|S_p|}{|S_g|}\bigg|
 \end{equation*}
 
+Therefore, the best result is 0, and results deviate around either side.
+
 \section{Evaluation}\label{sect:evaluation-of-evaluation-methods}
 
-All these methods can be advantageous in some places rather than others. To decide which segmentation is best, we can list some challenging scenarios.
+There is no best method as they perform differently in various scenarios. To decide which segmentation is best, we can list some challenging scenarios.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{../figures/segmentation-cases-1.png}
-  \caption{Figure from~\cite{boundary-overlap-metrics} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics}\label{fig:segmentation-cases-1}
+  \caption{Figure from~\cite{boundary-overlap-metrics} illustrating cases of segmentation to aid with explanation of set-backs of certain evaluation metrics.}\label{fig:segmentation-cases-1}
 \end{figure}
 
 \begin{itemize}
@@ -808,7 +813,7 @@ Selecting a measurement that can reflect a clinician's acceptability score is di
   \caption{Taken from~\cite{Nikolov2021-xe}. Illustrates the computation of the surface DICE, where the continuous line is the predicted surface, and the dashed line is the ground truth. The black arrows show the maximum deviation tolerated without penalty; therefore, in pink are the unacceptable deviations and green otherwise.}\label{fig:surface-dice}
 \end{figure}
 
-The study at~\cite{Sherer2021-le} helped drive an initiative to combine aspects of surface Based evaluation (Section~\ref{sect:surface-based}) and Spatial Overlap Based evaluation (Section~\ref{sect:spatial-overlap-based}) into a Surface DICE which assesses the specified tolerance instead of the overlap of the two volumes.
+The study at~\cite{Sherer2021-le} helped drive an initiative to combine aspects of surface based evaluation (Section~\ref{sect:surface-based}) and Spatial Overlap Based evaluation (Section~\ref{sect:spatial-overlap-based}) into a Surface DICE which assesses the specified tolerance instead of the overlap of the two volumes.
 
 We can formulate the Surface DSC score in a mathematical definition~\cite{Sherer2021-le} with its corresponding illustration in Figure~\ref{fig:surface-dice}.
 
@@ -818,7 +823,9 @@ We can formulate the Surface DSC score in a mathematical definition~\cite{Sherer
 
 This definition measures the agreement between just the surfaces of two structures above a clinically determined tolerance parameter, $\tau$. Here, $B_{p,\tau}$ represents the boundary region of the predicted surface within a maximum margin of deviation $\tau$ and similarly for $B_{g,\tau}$ for the ground truth.
 
-Similarly, the APL score predicts ``the path length of a contour that has to be added''~\cite{APL}. APL achieved similarly by considering the number of added voxels required between the prediction and the gold standard with no regard to tolerance as a pose to Surface DSC (Section~\ref{sct:surface-dice})
+Here, the best score is similar to DICE, where the best score is 1 and the worst is 0. However, the Surface DSC score is more clinically relevant as it considers the spatial distribution of the voxels and the tolerance of the clinician. 
+
+Similarly, the APL score predicts ``the path length of a contour that has to be added''~\cite{APL}. APL was achieved similarly by considering the number of added voxels required between the prediction and the gold standard, with no regard for tolerance as opposed to surface DSC. The expected values match the Haussdorf distance, where the best score is 0 and the worst is $\infty$.
 
 % \begin{warning}
 %  For future reference, \textit{\href{https://stackoverflow.com/questions/73286639/how-to-calculate-added-path-length-apl-image-segmentation-metric}{stack overflow discussion}}
@@ -829,28 +836,30 @@ Similarly, the APL score predicts ``the path length of a contour that has to be 
 \section{Summary}
 
 
-For this project, we shall select an evaluation measurement more biased towards conservative boundary estimates not to touch the organs at risk. The clinician's review pipeline, in part, influenced this choice; it would be easier to correct Figure~\ref{fig:segmentation-cases-1}(d) instead of Figure~\ref{fig:segmentation-cases-1}(e) because correcting the latter would likely take a considerable amount of time as it would require redrawing almost all of the boundary, whereas the former could be corrected much faster~\cite{Nikolov2021-xe}.
+This project requires segmentations of complex anatomies for CTV delineations and ORs. Therefore, evaluation metrics more biased towards conservative boundary estimates to minimise overlap with ORs would be a wise choice. For example, the clinician's review pipeline when using an assistant tool would be faster when correcting cases such as Figure~\ref{fig:segmentation-cases-1}(d) instead of Figure~\ref{fig:segmentation-cases-1}(e) because correcting the latter would likely take a considerable amount of time as it would require redrawing almost all of the boundary, whereas the former could be corrected much faster~\cite{Nikolov2021-xe}.
 
-This is why we settle at the Surface DSC (Section~\ref{sect:surface-dice}), which prioritizes deviation along the boundary to a certain degree while measuring the fraction of the surface that needs to be redrawn. Furthermore, to keep in tradition with previous studies, we will also report the DICE and RVD scores to broaden the scope of evaluation into all three categories of evaluation metrics discussed above. 
+However, to compare performance with other modes, we must also keep metric scores consistent among research proposals. In keeping with this tradition, the DICE score is best suited for discussing performance improvements. For auxiliary reasoning, other metrics discussed above will also be referenced. For example, Surface DSC would be considered as it prioritises deviation along the boundary to a certain degree while measuring the fraction of the surface that needs to be redrawn. This is because it allows us to reason about the time it would take an oncologist to supervise and correct volumes.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Results and Discussion}\label{sect:results}\label{sect:discussion}
 
-In this chapter, we present the results and discussion regarding the experiments carried out with each type of transfer learning strategy. The baseline in each will be displayed alongside the model performance for evaluation. Finally, we step back and consider the performance of different transfer strategies across the anatomies.
+We present the results and discussion from experiments using each type of transfer learning strategy. The baseline in each will be displayed alongside the model performance for evaluation. Finally, we step back and consider the performance of different transfer strategies across the anatomies.
+
+\textbf{Note}: \textit{We use the convention in box-and-whisker plots that the box represents the data's interquartile range (IQR), and the whiskers represent the range of the data. The green and orange line represents the mean and median respetively. Furthermore, $\hat{x}$ represents the mean, $\mathbf\sigma$ represents the standard deviation, and \textbf{Med} represents the median.}
 
 \section{TotalSegmentator -- Binary Classifier}
 
-The total summary of results for the separate training of TotalSegmentator transferral is available at the Appendix; Metric Tables~\ref{tab:totalsegmentator-apl}-~\ref{tab:totalsegmentator-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:totalsegmentator-metrics-anorectum}-~\ref{fig:totalsegmentator-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
+The total summary of results for the separate training of TotalSegmentator transferral is available at the Appendix; Metric Tables~\ref{tab:totalsegmentator-apl}-~\ref{tab:totalsegmentator-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:totalsegmentator-metrics-anorectum}-~\ref{fig:totalsegmentator-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the Appendix for discussion.
 
 % TODO: add legend to the metrics to say what the green dotted line is and what the orange line is.
 
-\subsection{Many-shot transfer success}\label{sec:totalsegmentator-many-shot-transfer-success}
+\subsection{Many-shot Transfer Success}\label{sec:totalsegmentator-many-shot-transfer-success}
 
-TotalSegmentator offers a promising potential for transferral into segmentation tasks for radiotherapy planning. As mentioned in Section~\ref{sect:totalsegmentator}, the model trains on many segmentation organ tasks. The lower levels and encoding layers can be frozen, and the expansive layer can be fine-tuned to utilize many shot segmentation advantages. 
+The TotalSegmentator model trains on many segmentation organ tasks. The lower levels can be frozen, and the remainder can be fine-tuned to utilise transfer learning advantages. 
 
-The only candidate of this pre-trained network for many-shot transfer is the Bladder. The bladder appeared in all of the approximately 1200 CT scans of both the male and female samples. To evaluate the effectiveness of transfer we evaluate both the pre-trained model, and a transferred many-shot finetuning on the bladder class.
+The sole candidate for this pre-trained network in the many-shot transfer is the bladder. The bladder was present in all of the approximately 1200 CT scans of both the male and female samples. To ensure a comprehensive evaluation, we assessed both the pre-trained model and a transferred many-shot fine-tuning on the bladder class.
 
-Initial transferal without fine-tuning does not beat the baseline in many benchmarks, apart from the Surface DSC and the Haussdorf distance metrics (Table~\ref{tab:totalsegmentator-bladder-transfer-stats}, Figure~\ref{fig:totalsegmentator-metrics-bladder-copy}); Totalsegmentator has had more training examples of bladder labels, and therefore, it possesses more spatial context about where to look for and where to find the bladder. Furthermore, the model was trained on a multi-class segmentation problem. It is possible that this improves the model's object localisation and prevents it from searching for the bladder in unlikely areas because, during training, its location was contextualised amongst other organs, so neighbouring anatomies anchored the region of interest of the bladder to the correct parts. An example of beneficial object localisation can be seen by comparing the third and fourth columns of Figure~\ref{fig:totseg-bladder-stomach-correction} in the qualitative evaluation of all TotalSegmentator methods.
+Initial transferral without fine-tuning does not beat the baseline in many benchmarks, apart from the Surface DSC and the Haussdorf distance metrics (Table~\ref{tab:totalsegmentator-bladder-transfer-stats}, Figure~\ref{fig:totalsegmentator-metrics-bladder-copy}); TotalSegmentator has had more training examples of bladder labels, and therefore, it possesses more spatial context about where to look for and where to find the bladder. Furthermore, the model was trained on a multi-class segmentation problem. It is possible that this improves the model's object localisation and prevents it from searching for the bladder in unlikely areas because, during training, its location was contextualised amongst other organs, so neighbouring anatomies anchored the region of interest of the bladder to the correct parts. An example of beneficial object localisation can be seen by comparing the third and fourth columns of Figure~\ref{fig:totseg-bladder-stomach-correction} in the qualitative evaluation of all TotalSegmentator methods.
 
 After fine-tuning, TotalSegmentator experienced more accurate segmentations. By comparing the fourth and fifth columns in Figure~\ref{fig:bladder-totalsegmentator-qualitative}, TotalSegmentator was able to adjust to the niche and abnormal cases. Quantitative evaluation between the baseline, the out-of-the-box TotalSegmentator, and the fine-tuned TotalSegmentator demonstrates the improvement in performance for metrics across the board.
 
@@ -884,7 +893,7 @@ After fine-tuning, TotalSegmentator experienced more accurate segmentations. By 
   \centering
   \subfigure[Niche and abnormal ground truth segmentation confuse both the baseline and the out-of-the-box model.]{\includegraphics[width=\linewidth]{../figures/totseg-bladder-1.png}}
   \subfigure[Incorrect location for bladder in the stomach for the baseline, corrected and then refined by TotalSegmentator.]{\includegraphics[width=\linewidth]{../figures/totseg-bladder-4.png}\label{fig:totseg-bladder-stomach-correction}}
-  \subfigure[Total Segmentator after fine-tuneing improves bladder segmentation]{\includegraphics[width=\linewidth]{../figures/totseg-bladder-2.png}}
+  \subfigure[TotalSegmentator after fine-tuneing improves bladder segmentation]{\includegraphics[width=\linewidth]{../figures/totseg-bladder-2.png}}
   \caption{A Qualitative study. From left to right: an arbitrary slice of a patient, the ground truth segmentation (in yellow), the nnUNet baseline prediction, the unrefined TotalSegmentator prediction, the fine-tuned TotalSegmentator prediction.}\label{fig:bladder-totalsegmentator-qualitative}
 \end{figure}
 
@@ -894,9 +903,9 @@ Another reason for TotalSegmentators transferral success is the nnUNet fingerpri
 
 We conclude that many-shot transfer learning techniques improve the performance on baselines due to their increased exposure to the class it is segmenting. Coupled with a strong and robust nnUNet network~\cite{isensee2024nnunet, nnunet} this improves segmentation performance after transferral.
 
-\subsection{Zero-shot transferral}\label{sec:totseg-zero-shot-transfer}
+\subsection{Zero-shot Transferral}\label{sec:totseg-zero-shot-transfer}
 
-The baseline TotalSegmentator model segments 24 anatomies ranging betweenthe bladder and the esophagus~\cite{totalsegmentor-git}. Therefore, this is a firm foundation for zero-shot transferral onto unseen anatomies. The Anorectum, CTVn, and Parametrium all benefited from zero-shot transferral using Totalsegmentator. A Table aggregating the DICE scores is lifted from the Table~\ref{tab:totalsegmentator-dice} for convenience in Table~\ref{tab:totalsegmentator-dice-copy}.
+The baseline TotalSegmentator model segments 24 anatomies ranging betweenthe bladder and the esophagus~\cite{totalsegmentor-git}. Therefore, this is a firm foundation for zero-shot transferral onto unseen anatomies. The anorectum, CTVn, and Parametrium all benefited from zero-shot transferral using TotalSegmentator. A Table aggregating the DICE scores is lifted from the Table~\ref{tab:totalsegmentator-dice} for convenience in Table~\ref{tab:totalsegmentator-dice-copy}.
 
 \begin{table}[h!]
   \centering
@@ -924,9 +933,9 @@ In contrast, the Anorectum, CTVn, and Parametrium transfer well onto unseen anat
 
 We conclude that transfer effectiveness relies heavily on good contrast; anatomies with visible boundaries and anchor points benefit from transfer and score highly on transferred performance. This is good evidence that networks can segment microscopic delineations, especially in CTV volumes such as the CTVn, where the progression of the disease influences the segmentation. However, to segment poor contrast regions accurately, clinicians may have to employ a many-shot transferral of similar networks.
 
-\section{TotalSegmentator -- Multi-class segmentation}
+\section{TotalSegmentator -- Multi-class Segmentation}
 
-The total summary of results for the region based transferral for nnUNet back-bone architectures is available at the Appendix; Metric Tables~\ref{tab:region-based-apl}-~\ref{tab:region-based-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:region-based-metrics-anorectum}-~\ref{fig:region-based-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
+The total summary of results for the region based transferral for nnUNet back-bone architectures is available at the Appendix; Metric Tables~\ref{tab:region-based-apl}-~\ref{tab:region-based-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:region-based-metrics-anorectum}-~\ref{fig:region-based-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the Appendix for discussion. \textit{\textbf{Note}: we use `multi-class', `region-based 'and `global' as interchangable terms.}
 
 \subsection{Basic Region-based Training}
 
@@ -942,7 +951,7 @@ The total summary of results for the region based transferral for nnUNet back-bo
 % ctvp: n, t, b
 % uter: n, t, b
 
-Region-based methods consistently gave competitive metrics across all categories and anatomies thanks to the engineered pipeline of the nnUNet. All results fell within a similar range of the original baseline, with some reporting benefits and some performing worse. To perform meaningful analysis, an nnUNet was trained from scratch with a similar region-based pipeline for the sound evaluation of transfer.
+Region-based methods consistently gave competitive metrics across all categories and anatomies thanks to the engineered pipeline of the nnUNet. All results fell within a similar range of the original baseline, with some reporting benefits and some performing worse. To perform meaningful analysis, a nnUNet was trained from scratch with a similar region-based pipeline for the sound evaluation of transfer.
 
 A recurring character in the transfer story experienced performance improvements with a multi-class segmentation pipeline in both learnt and transferred methods. This anatomy is the bladder. Table~\ref{tab:nnunet-region-baseline-bladder} summarises these improvements from Figure~\ref{fig:dice-region-based-vanilla-bladder} with grey columns highlighting the vanilla Region-based models.
 
@@ -981,15 +990,15 @@ Unfortunately, the benefits of transfer in a multi-class domain are not prevalen
   \caption{DICE metric evaluation for anatomies that experienced performance improvements after region based transfer.}\label{fig:dice-region-based-vanilla} 
 \end{figure}
 
-\subsection{Rule enforced Region-based Training}
+\subsection{Rule Enforced Region-based Training}
 
 \begin{minipage}[c]{.4\linewidth}
   \vspace{-\fboxsep}
   \begin{figure}[H]
     \centering
-    \subfigure[CTVn]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
-    \subfigure[CTVp]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
-    \subfigure[Parametrium]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
+    \subfigure[CTVn]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsctvn_2_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
+    \subfigure[CTVp]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsctvp_2_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
+    \subfigure[Parametrium]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsparametrium_2_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
     % \subfigure[Uterus]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
     % \subfigure[Vagina]{\includegraphics[width=\linewidth, trim=350 0 1100 30, clip]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_Comparison_of_TotalSegmentator_Methods.png}}
     \caption{Comparison between TotalSegmentator transfer for CTV segmentations.}\label{fig:region-based-metrics-ctv-totseg}
@@ -999,7 +1008,7 @@ Unfortunately, the benefits of transfer in a multi-class domain are not prevalen
 \begin{minipage}[c]{.55\linewidth}
     % \vspace{0pt}
 
-    A custom loss term was added to the nnUNet and TotalSegmentator models to enforce the rules in Section~\ref{sec:rules}. We find that in all cases, defining the rules in the loss function improves the corresponding un-modified architecture in the averages of the metrics and in the robustness of the span of their quartiles. In particular, among the four region-based models, the best performer is always the zero-shot transferred TotalSegmentator model (see Section~\ref{sect:region-based-appendix} and Figures~\ref{fig:region-based-metrics-anorectum} - \ref{fig:region-based-metrics-vagina}). In isolation, we demonstrate that multi-class segmentation tasks benefit from transfer from other domains.
+    A custom loss term was added to the nnUNet and TotalSegmentator models to enforce the rules in Section~\ref{sec:rules}. We find that in all cases, defining the rules in the loss function improves the corresponding un-modified architecture in the averages of the metrics and in the robustness of the span of their quartiles. In particular, among the four region-based models, the best performer is always the zero-shot transferred TotalSegmentator model (see Section~\ref{sect:region-based-Appendix} and Figures~\ref{fig:region-based-metrics-anorectum} - \ref{fig:region-based-metrics-vagina}). In isolation, we demonstrate that multi-class segmentation tasks benefit from transfer from other domains.
     
     \vspace{1em}
 
@@ -1073,20 +1082,17 @@ Notably, by introducing an additional loss term, this performs as expected by re
 
 When comparing transferred models, we see no difference. Therefore, when transfering data between domains, it is inadvisable to use a custom loss function with the sole objective to enforce rules; the decrease in overlap is likely a symptom of generalisation of a model, as minor cases that appear less than 1000 times would result from overfitting, rather than a direct result of an auxiliary heuristic in the loss function. 
 
-% TODO: total segmentator had 500 females to 700 males which may explain the struggle to locate the uterus and vagina.
-
 \clearpage
 
 \section{UniverSeg}
 
-The total summary of results for the Supervised UniverSeg architecture is available at the Appendix; Metric Tables~\ref{tab:universeg-apl}-~\ref{tab:universeg-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:universeg-metrics-anorectum}-~\ref{fig:universeg-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
+The total summary of results for the Supervised UniverSeg architecture is available at the Appendix; Metric Tables~\ref{tab:universeg-apl}-~\ref{tab:universeg-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:universeg-metrics-anorectum}-~\ref{fig:universeg-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the Appendix for discussion.
 
 \subsection{Supervised Support Set Sampling}
 
-% TODO: An imporvmenet, nnUNet 2D to compare with medsam and UniverSeg
 UniverSeg is a U-net-based architecture that allows us to reason entirely about the performance of the transfer instead of using a different segmentation method.
 
-The original model's performance, without the transfer of data, is marked by significant inconsistency. Quartiles for the DICE score range between 1 and 0.2 for many cases, a range that is far from ideal. The author's claim for few-shot generalisation without transfer, while optimistic, underscores the need for a more robust solution for 3D problems like radiotherapy planning. 
+The original model's performance without data transfer is marked by significant inconsistency. In many cases, the DICE score's quartiles range between 1 and 0.2, a range that is far from ideal. While optimistic, the author's claim for few-shot generalisation without transfer underscores the need for a more robust solution for 3D problems like radiotherapy planning. 
 
 A quantitative review in Figure~\ref{fig:universeg-metrics} shows improvements in the DICE score compared to the out-of-the-box solution; however, this is not enough to justify using the method as it does not reach the competitive performance of the nnUNet baseline as nuanced volumes such as CTV fail to reach acceptible performance. Qualitative examples in Figure~\ref{fig:universeg-inference} show the model's improvement after few-shot transfer, but the model still struggles to segment nuanced anatomies.
 
@@ -1095,7 +1101,7 @@ The metrics use a support size of 80. However, the support size is a hyperparame
 \begin{figure}[H]
   \centering
   \includegraphics[width=.7\linewidth]{../../research/source/code/UniverSeg/support_size_metric_implications_universeg.png}
-  \caption{How performance varies with support size for the transferred UniverSeg model; an average aross all anatomies.}\label{fig:universeg-support-size}
+  \caption{How performance varies with support size for the transferred UniverSeg model; an average aross all anatomies. Note, the Hausdorff scale is reduced due to a smaller resolution of $128\times 128$.}\label{fig:universeg-support-size}
 \end{figure}
 
 % A qunatitative review highlights the transfer process as an improvement over the base. However, 
@@ -1144,7 +1150,7 @@ The UniverSeg architecture's performance falls short of the competitive and cutt
 
 \section{MedSAM}
 
-The total summary of results for the MedSAM architecture, both fine-tuned and out-of-the-box, is available at the Appendix; Metric Tables~\ref{tab:medsam-apl}-~\ref{tab:medsam-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:medsam-metrics-anorectum}-~\ref{fig:medsam-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the appendix for discussion.
+The total summary of results for the MedSAM architecture, both fine-tuned and out-of-the-box, is available at the Appendix; Metric Tables~\ref{tab:medsam-apl}-~\ref{tab:medsam-sdc} aggregate the results along the different metrics discussed in Section~\ref{sect:performance-evaluation}, and Figures~\ref{fig:medsam-metrics-anorectum}-~\ref{fig:medsam-metrics-vagina} aggregate metric results along the anatomy level discussed in Section~\ref{sect:delineation-classes}. The relevant figures and diagrams are lifted out of the Appendix for discussion.
 
 \subsection{MedSAM's claim to zero-shot transferability}
 
@@ -1152,7 +1158,7 @@ The authors of MedSAM engineer the model to be zero-shot transferable by providi
 
 \subsubsection{Obvious Delineations}\label{sec:medsam-ootb-obvious-delineations}
 
-The bladder is arguably the most apparent organ delineation within the dataset; across all models, the bladder has outperformed other anatomies. However, the MedSAM out-of-the-box solution consistently performed worse than its baseline apart from the Haussdorf Distance metric. Table~\ref{tab:medsam-bladder-performance} aggregates data at Appendix~\ref{sect:medsam-appendix} from Figure~\ref{fig:medsam-metrics-bladder}.
+The bladder is arguably the most apparent organ delineation within the dataset; across all models, the bladder has outperformed other anatomies. However, the MedSAM out-of-the-box solution consistently performed worse than its baseline apart from the Haussdorf Distance metric. Table~\ref{tab:medsam-bladder-performance} aggregates data at Appendix~\ref{sect:medsam-Appendix} from Figure~\ref{fig:medsam-metrics-bladder}.
 
 \begin{table}[h!]
   \centering
@@ -1179,12 +1185,12 @@ The bladder is arguably the most apparent organ delineation within the dataset; 
  \includegraphics[width=.7\linewidth]{../figures/bladder-nnunet-innacuracy.png}
   \includegraphics[width=.226\linewidth, trim=1000px 45px 0 0px, clip]{../figures/medsam-bladder-prediction.png}
   \caption{From left to right, a slice of a patients CT scan, the ground truth overlayed onto the slice in yellow, and the nnUNet prediction overlayed onto the slice, MedSAM prediction along with the additional box prompt in red.}\label{fig:bladder-nnunet-innacuracy}
-\end{figure}% TODO change in the inference script to use just the baseline model for consistency.
+\end{figure}
 
 
 This promising performance spike over the non-finetuned model is due to the nature of the box prompts supplied to the model during inference. The MedSAM model heavily relies on good supervision. Otherwise, invalid or imprecise definitions of areas of interest will lead to wrong results. Therefore, this result alone cannot be used to determine the transferability of this model when put into the context of the other metrics; this metric is heavily influenced and biased by the ground truth object's location. Therefore, areas segmented by the MedSAM model at any fine-tuning stage will return masks close to the gold standard.
 
-The Haussdorf discrepancy with the baseline is explained by its difficult objective of also localising the search area to the region where the tumour is; where this was provided for MedSAM, the baseline model had to learn to locate and segment the object. An example has been provided in Figure~\ref{fig:bladder-nnunet-innacuracy}, which shows how the nnUNet has hallucinated a bladder in the stomach, thus causing a massive spike in the Haussdorf distance metric. This problem would not appear in the MedSAM model because the box prompt would have localised the search area to the region around the pelvis as illustrated by the red bounding box in the rightmost cell in Figure~\ref{fig:bladder-nnunet-innacuracy}. Therefore, a base-line MedSAM model does provide benefits for conventional anatomies.
+The Haussdorf discrepancy with the baseline is explained by its difficult objective of also localising the search area to the region where the tumour is; where this was provided for MedSAM, the baseline model had to learn to locate and segment the object. An example has been provided in Figure~\ref{fig:bladder-nnunet-innacuracy}, which shows how the nnUNet has hallucinated a bladder in the stomach, thus causing a massive spike in the Haussdorf distance metric. This problem would not appear in the MedSAM model because the box prompt would have localised the search area to the region around the pelvis as illustrated by the red bounding box in the rightmost cell in Figure~\ref{fig:bladder-nnunet-innacuracy}.
 
 
 Therefore, a baseline MedSAM model benefits conventional anatomies by binding the region of interest around the target with strict supervision. However, zero-shot inference still falls short of the baseline accuracy across other metrics used and thus still requires fine-tuning even when applied to obvious delineations such as the bladder.
@@ -1238,7 +1244,7 @@ A separate MedSAM model was trained for 100 epochs on training data across all a
   \caption{Two out of seven training curves. The CTVn shows continuous improvement, whereas the Vagina shows signs of overfitting.}\label{fig:medsam-training-curves}
 \end{figure}
 
-\subsubsection{Obvious delineations}
+\subsubsection{Obvious Delineations}
 
 We have shown in Section~\ref{sec:medsam-ootb-obvious-delineations} that the base-line model has competitive performance on visible anatomies when compared to the baseline. This only improves once the MedSAM model is fine-tuned on the data. Figure~\ref{fig:medsam-finetune-dice} shows the extent of competitive performance among the Anorectum and the Bladder.
 
@@ -1256,7 +1262,7 @@ The contrast between the anatomical structure and surrounding tissue makes the b
 
 Therefore, zero-shot transfer provides a robust starting point for anatomies with a previous history in pre-training. However, this model's success on the bladder and anorectum is likely misleading, as they are likely to have appeared in the MedSAM model's training data. This lends the success of this approach to credit the many-shot transfer offered by a bladder and anorectum-aware model.
 
-\subsubsection{Nuanced volume performance}
+\subsubsection{Nuanced Volume Performance}
 
 \begin{figure}[H]
   \centering
@@ -1300,13 +1306,13 @@ Therefore, zero-shot transfer provides a robust starting point for anatomies wit
 
 \clearpage
 
-The dataset contains less straightforward, and more intuitive segmentations which segment microscopic spreads of the tumour. An example for consideration is the CTVn volume, which, as described in Section~\ref{sect:delineation-classes}, outlines lymphatic nodes with variable contouring depending on the progression of the disease. Table~\ref{tab:medsam-finetuned-ctvn-performance} aggregates data at Appendix~\ref{sect:medsam-appendix} from Figure~\ref{fig:medsam-metrics-ctvn}.
+The dataset contains less straightforward, and more intuitive segmentations which segment microscopic spreads of the tumour. An example for consideration is the CTVn volume, which, as described in Section~\ref{sect:delineation-classes}, outlines lymphatic nodes with variable contouring depending on the progression of the disease. Table~\ref{tab:medsam-finetuned-ctvn-performance} aggregates data at Appendix~\ref{sect:medsam-Appendix} from Figure~\ref{fig:medsam-metrics-ctvn}.
 
 The figures suggest a competitive performance of structures in the axial (0) and sagittal (2) axes. The qualitative evaluation in Figure~\ref{fig:ctvn-medsam-prediction-all-three-axis} gains an insight into why the performance might be the way it is. The hypothesised reason for this upset in performance is that the coronal view contains, on average, more disjoint areas and, therefore, more bounding boxes are passed as input into the model. Indeed, a dataset review shows that, on average, the corresponding number of boxes on each axis is 1.27, 1.78, and 1.12, respectively. 
 
-Therefore, MedSAM has provided great promise for outperforming an nnUNet baseline; the performance gap is minor considering the CTVn anatomy was trained on approximately 100 epochs, whereas the nnUNet was trained on 500. The training curve of the CTVn in Figure~\ref{fig:medsam-training-curves} gives good evidence to suggest that a zero-shot transfer onto anatomies with microscopic spread may outperform a baseline if permitted to run for longer and on more compute power. 
+Therefore, MedSAM has provided great promise for outperforming a nnUNet baseline; the performance gap is minor considering the CTVn anatomy was trained on approximately 100 epochs, whereas the nnUNet was trained on 500. The training curve of the CTVn in Figure~\ref{fig:medsam-training-curves} gives good evidence to suggest that a zero-shot transfer onto anatomies with microscopic spread may outperform a baseline if permitted to run for longer and on more compute power. 
 
-\subsubsection{Segmenting invisible boundaries}
+\subsubsection{Segmenting Invisible Boundaries}
 
 We have previously discussed why MedSAM has good initial out-of-the-box performance on anatomies that are clear on a scan. However, pre-processing images into slices, you run the risk of drawing a contour around an anatomy that is invisible to the eye.
 
@@ -1338,20 +1344,73 @@ Figure~\ref{fig:invisible-vagina} shows the prediction of a Vagina against the g
 
 The training curve started to overfit precisely due to these cases. The model may learn to move towards a global average across the training set, decreasing the training loss but causing the validation loss to stay still or rise. This memorisation of the average shape and relative positioning within the box based on the axis would, therefore, not apply to unseen data because the ground truth segmentations would not have impacted the 'moving average' of the model. This is evidenced by Figure~\ref{fig:medsam-training-curves} when the green Dice loss starts to creep up towards later epochs.
 
-On paper, the metrics for the vagina are promising, as they offer improvements over the out-of-the-box solution, and the upper quartile of its distribution matches the bottom half of the baselines. However, as evidenced by the qualitative assessment of the vagina, MedSAM has not shown transferability to all types of segmentation. Specifically, the model does not transfer well to small anatomies amongst a background of similar tissue types. % TODO mention nnunet preprocessor.
+On paper, the metrics for the vagina are promising, as they offer improvements over the out-of-the-box solution, and the upper quartile of its distribution matches the bottom half of the baselines. However, as evidenced by the qualitative assessment of the vagina, MedSAM has not shown transferability to all types of segmentation. Specifically, the model does not transfer well to small anatomies amongst a background of similar tissue types.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Conclusion}\label{sect:conclusion}
 
-In progress
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_All_methods.png}
+%   \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_All_methods.png}
+%   \caption{Two selected anatomies to represent OR volumes and CTV delineations across all tested models.}\label{fig:conclusion-all-methods}
+% \end{figure}
 
-% the annotation time cost between the two pipelines (Fig. 5b). The results demonstrate that with the assistance of MedSAM, the annotation time is substantially reduced by 82.37% and 82.95% for the two experts, respectively (medsam)
+\begin{table}[h!]
+  \centering
+  \caption{Average DICE scores across Organ at Risk anatomies and Clinical Target Volume delineations. We plot the mean, standard deviation and median for each anatomy respectively. Most successful appraoches have larger values for the mean and median, and smaller values for the standard deviation.}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{l*{6}{>{\centering\arraybackslash}p{2cm}}}
+        \toprule
+        \textbf{Model} & \multicolumn{3}{c}{\textbf{Organs at Risk}} & \multicolumn{3}{c}{\textbf{Clinical Target Volumes}} \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7}
+        & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Med} & $\hat{\textbf{x}}$ & $\mathbf\sigma$ & \textbf{Med}\\
+        \midrule
+        nnUNet baseline & 0.92	& 0.05 &	0.95 & 0.93	& 0.02 &	0.93 \\
+        \midrule
+        nnUNet multi-class & 0.94	& 0.02 & 0.94 & 0.91 &	0.03 &	0.92 \\
+        nnUnet multi-class + loss-term & 0.94 &	0.04 &	0.95 & 0.91 &	0.05 &	0.93 \\
+        TotalSegmentator fine-tuned & 0.94 &	0.07 &	0.95 & 0.92 &	0.04 &	0.93 \\
+        TotalSegmentator fine-tuned multi-class & 0.94 &	0.03 &	0.95 & 0.91 & 0.03 & 0.92 \\
+        TotalSegmentator fine-tuned multi-class + loss-term & 0.94 & 0.04 &	0.95 & 0.92 &	0.05 &	0.94 \\
+        UniverSeg out-of-the-box & 0.68 &	0.23 &	0.75 & 0.64	& 0.21 &	0.70 \\
+        UniverSeg fine-tuned & 0.79 &	0.16 &	0.84 & 0.77 &	0.15 & 0.81 \\
+        MedSAM out-of-the-box & 0.85 &	0.11 &	0.88 &  0.70 &	0.12 &	0.72 \\
+        MedSAM fine-tuned & 0.93 &	0.05 &	0.95 & 0.88 &	0.06	 & 0.90 \\
+        \bottomrule
+    \end{tabular}
+  }\label{tab:final-conclusion-dice-metrics}
+\end{table}
 
-% because of the way the CTV is drawn based on the progression of the tumor and how far along the patient is, this influences the contour drawen. Perhaps, the metrics suggest that a model with only one modality is not enough to make a decision which sparks the idea of a model which is capable of multi-modal analysis.
+% In conclusion, many-shot transfer strategies are the most effective at improving performance over baseline models in radiotherapy planning. Furthermore, the nnUNet backbone provides a robust foundation for learning from scratch and robust transferral without overfitting. 
 
-% Maybe run inference on a nnUNet preprocessed image where the normalisation affects only the ground truth region. (especially vagina case in the MedSAM fine-tuned discussion)
+The TotalSegmentator model, with its adaptability, has shown the most promise in improving the quantitative metrics across all anatomies. It has learnt low-level features of Organs at Risk volumes that transfer well onto the dataset, instilling confidence in its potential. In Clinical Target Volumes, the story is less consistent, but the zero-shot transfer of TotalSegmentator models has shown improvements among specific anatomies, further reinforcing its adaptability to unseen nuanced volumes. For CTV delineations that did not transfer well, the transfer performed competitively against the nnUNet baseline but underperformed on the average due to poor contrast. Additionally, multi-class segmentation tasks with the custom loss term did not perform exceptionally, suggesting that a model's performance is not positively influenced by the surrounding contextual information of other volumes.
 
-% for MedSAM have a low resolution image and try to predict where the anatomy is, this box is general and accounts for noise for more automatic segmentation.
+Few-shot learning strategies currently fall short of strict 3-dimensional radiotherapy requirements. In particular, because UniverSeg's performance converges in its performance as the support set volume increases, this means that the limitation in quantitative metrics is to blame on the few-shot learning strategy. UniverSeg's performance on OR volumes and CTV delineations is roughly the same, a crucial difference from other learning strategies. Current multi-shot transfer models struggle to balance performance between OR and CTV segmentations. The urgency and importance of developing few-shot learning strategies to match the performance of many-shot transfers in OR volumes is clear. We should expect equal improvements among CTV delineations once this gap is bridged.
+
+Zero-shot models perform suboptimally out-of-the-box but transfer to levels comparable to the many-shot methods. Prompt encoding by MedSAM moulds the original auto-contouring objective of many researchers to play more into the current ethical issues and international guidelines on using AI-assisted segmentation tools. Transformer-based methods can provide supervised suggestions that improve annotation time by 80\%~\cite{Ma2024}. After the transferal, this time will surely improve. However, further experiments with clinicians are required to justify whether zero-shot transferral is a technique that can significantly assist medical professionals.
+
+\section{Further Work}
+
+\subsubsection{Scale up the dimensions in few and zero shot methods.}
+
+A robust 3D U-net architecture solidifies the benefit of many-shot transferred models. This adds the third dimension to the pool of potential reasons for TotalSegmentator's success over the two-dimensional MedSAM and UniverSeg. Therefore, it is still being determined whether transfer performance favours many-shot transfer over added contextual information given by convolutions over a third dimension.
+
+Either the nnUNet architecture should be reduced to operate along the two-dimensional plane, or the few and zero-shot models should be extended to answer whether these methods can outperform a many-shot transfer concretely. However, because removing an axis of information from a 3D U-Net decreases available helpful information, it would not make sense to dampen the state-of-the-art performance of 3D models to put it in the same ballpark as less performative methods.
+
+Once the axes along which a model can extract information are standardised, more confidence can be made in which type of n-shot transfer is the most effective.
+
+\subsubsection{Many-shot CTV tasks}
+
+The bladder class has benefited from many-shot transfer in models such as the TotalSegmentator model. Therefore, it is likely that expanding a model's pre-trained knowledge to include more CTV volume delineations can improve its transfer onto CTVn, CTVp, and parametrium volumes. In future work, similar microscopic spread delineations should be selected to see if they can duplicate their performance improvements as they did with the bladder.
+
+\subsubsection{Transfer Learning Techniques}
+
+Transfer boosting algorithms should be considered to taper off the discussion of transfer learning in radiotherapy planning. For instance, algorithms such as TrAdaBoost~\cite{transfer-learning-boosting} have been shown to boost performance in classification tasks with small volumes of data. Therefore, its application in segmentation tasks is not out of the question and may provide similar scalable improvements to the n-shot transfer strategies.
+
+\subsubsection{nnUNets promised superiority}
+
+Thus far, the nnUNet has given advanced performance thanks to its dynamic preprocessing and model architecture stage. However, these two dependent factors make it difficult to say if the model's success is due to its 3D convolutions or the thorough data preprocessing. Therefore, an investigation should evaluate the application of models on the nnUNet preprocessing pipeline to definitively ascertain if the nnUNet's dominance is due to its preprocessing or its model architecture. A specialised preprocessing pipeline would benefit smaller samples as it normalises around region-of-interest volumes, which UniverSeg and MedSAM fail to consider.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Ethics}
@@ -1362,13 +1421,13 @@ Researchers may collaborate with third parties, such as Imperial College London,
 
 Without such disclosure, anonymisation, and a security guarantee of the data, patients may be reluctant to provide candid and complete disclosures of their sensitive information, even to physicians, which may prevent a complete diagnosis if their data is not maintained anonymously. Otherwise, breaches in anonymity may result in ``stigma, embarrassment, and discrimination''~\cite{health-privacy}.
 
-The MIRA team acts as responsible data stewards by storing anonymised data within a restricted folder on the college network~\cite{Larson2020-ib}. Data is received and stored in the \texttt{NIfTI} file format, which discloses no personally identifiable information~\cite{gov-gdpr}.
+The MIRA team acts as responsible data stewards by storing anonymised data within a restricted folder on the College network~\cite{Larson2020-ib}. Data is received and stored in the \texttt{NIfTI} file format, which discloses no personally identifiable information~\cite{gov-gdpr}.
 
 \subsubsection{Using the tool}
 
-The applications of this tool bode well in the healthcare ecosystem as the community slowly accepts the involvement of AI-powered medical tools. Radiology is one application that has been most welcoming of the new technological advances as there is potential for substantial aid by reducing manual labour, increasing precision and freeing up the primary care physician's time~\cite{Amisha2019-ki}.
+The applications of this tool bode well in the healthcare ecosystem as the community slowly accepts the involvement of AI-powered medical tools. Radiology is one application that has been most welcoming of the new technological advances as there is potential for substantial aid by reducing manual labour, increasing precision and freeing up the primary care physicians' time~\cite{Amisha2019-ki}.
 
-However, it is too early to take the results of the medical tool as gospel. For current cervical radiotherapy delineation tools, only 90\% of the output is acceptable for clinical use~\cite{LIU2020172}. Therefore, The remainder can cause more harm than good if not checked properly. For example, the overlap of a PTV with an organ-at-risk may invoke a cascade of adverse effects for the patient. The remaining 10\% of outputs may score incorrectly because the model uses a single modality, but physicians may base their final judgement on a multivariate analysis. Therefore, clinicians should use the tool as a second opinion rather than a primary source of information. Otherwise, an ethical dilemma of establishing the responsible party for incorrect decisions made by DL tools should also be determined~\cite{Chen2021-dg}.
+However, it is too early to take the results of the medical tool as gospel. For current cervical radiotherapy delineation tools, only 90\% of the output is acceptable for clinical use~\cite{LIU2020172}. Therefore, the remainder can cause more harm than good if not checked properly. For example, the overlap of a PTV with an organ-at-risk may invoke a cascade of adverse effects for the patient. The remaining 10\% of outputs may score incorrectly because the model uses a single modality, but physicians may base their final judgement on a multivariate analysis. Therefore, clinicians should use the tool as a second opinion rather than a primary source of information. Otherwise, an ethical dilemma of establishing the responsible party for incorrect decisions made by DL tools should also be determined~\cite{Chen2021-dg}.
 
 Clinicians can fall into the trap of automation bias as AI becomes more commonplace in clinical environments~\cite{STRAW2020101965}. However, many models of this age codify the existing bias in common cases, which often will fail those patients who do not fit the majority's expectations. 
 
@@ -1389,11 +1448,13 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \section{Metrics}
 
-\subsection{Total Segmentator}\label{sect:totalsegmentator-appendix}
+\textbf{Note}: \textit{We use the convention in box-and-whisker plots that the box represents the data's interquartile range (IQR), and the whiskers represent the range of the data. The green and orange line represents the mean and median respetively. Furthermore, $\hat{x}$ represents the mean, $\mathbf\sigma$ represents the standard deviation, and \textbf{Med} represents the median.}
+
+\subsection{TotalSegmentator}\label{sect:totalsegmentator-Appendix}
 
 \begin{table}[h!]
   \centering
-  \caption{Added Path Length scores across each anatomy}
+  \caption{Added Path Length scores across each anatomy using TotalSegmentator}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1415,7 +1476,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{DICE scores across each anatomy}
+  \caption{DICE scores across each anatomy using TotalSegmentator}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1437,7 +1498,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Haussdorf scores across each anatomy}
+  \caption{Haussdorf scores across each anatomy using TotalSegmentator}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1459,7 +1520,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Relative volume difference across each anatomy}
+  \caption{Relative volume difference across each anatomy using TotalSegmentator}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1481,7 +1542,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Surface DSC across each anatomy}
+  \caption{Surface DSC across each anatomy using TotalSegmentator}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1506,54 +1567,54 @@ Therefore, before integrating tools into workflows, a committee must establish t
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsanorectum_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{Anorectum Metrics}\label{fig:totalsegmentator-metrics-anorectum}
+    \caption{Anorectum Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-anorectum}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{Bladder Metrics}\label{fig:totalsegmentator-metrics-bladder}
+    \caption{Bladder Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-bladder}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{CTVn Metrics}\label{fig:totalsegmentator-metrics-ctvn}
+    \caption{CTVn Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-ctvn}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{CTVp Metrics}\label{fig:totalsegmentator-metrics-ctvp}
+    \caption{CTVp Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-ctvp}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{Parametrium Metrics}\label{fig:totalsegmentator-metrics-parametrium}
+    \caption{Parametrium Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-parametrium}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{Uterus Metrics}\label{fig:totalsegmentator-metrics-uterus}
+    \caption{Uterus Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-uterus}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_TotalSegmentator_analysis.png}
-    \caption{Vagina Metrics}\label{fig:totalsegmentator-metrics-vagina}
+    \caption{Vagina Metrics using TotalSegmentator}\label{fig:totalsegmentator-metrics-vagina}
   \end{figure}
 
 \end{landscape}
 
-\subsection{Region Based}\label{sect:region-based-appendix}
+\subsection{Region Based}\label{sect:region-based-Appendix}
 
 
 
 \begin{table}[h!]
   \centering
-  \caption{Added Path Length scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \caption{Added Path Length scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss) using TotalSegmentator Region-based transferral}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
         \toprule
@@ -1575,7 +1636,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{DICE scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \caption{DICE scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss) using TotalSegmentator Region-based transferral}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
         \toprule
@@ -1597,7 +1658,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Haussdorf scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \caption{Haussdorf scores across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss) using TotalSegmentator Region-based transferral}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
         \toprule
@@ -1619,7 +1680,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Relative Volume Difference across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \caption{Relative Volume Difference across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss) using TotalSegmentator Region-based transferral}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
         \toprule
@@ -1641,7 +1702,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Surface DSC across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss)}
+  \caption{Surface DSC across each anatomy (TS = TotalSegmentator (fine-tuned), RB = Region Based, CL = Custom Loss) using TotalSegmentator Region-based transferral}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{15}{>{\centering\arraybackslash}p{1cm}}}
         \toprule
@@ -1666,52 +1727,52 @@ Therefore, before integrating tools into workflows, a committee must establish t
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsanorectum_1_combinednotable_Global_analysis.png}
-    \caption{Anorectum Metrics}\label{fig:region-based-metrics-anorectum}
+    \caption{Anorectum Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-anorectum}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_Global_analysis.png}
-    \caption{Bladder Metrics}\label{fig:region-based-metrics-bladder}
+    \caption{Bladder Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-bladder}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_Global_analysis.png}
-    \caption{CTVn Metrics}\label{fig:region-based-metrics-ctvn}
+    \caption{CTVn Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-ctvn}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_Global_analysis.png}
-    \caption{CTVp Metrics}\label{fig:region-based-metrics-ctvp}
+    \caption{CTVp Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-ctvp}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_Global_analysis.png}
-    \caption{Parametrium Metrics}\label{fig:region-based-metrics-parametrium}
+    \caption{Parametrium Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-parametrium}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_Global_analysis.png}
-    \caption{Uterus Metrics}\label{fig:region-based-metrics-uterus}
+    \caption{Uterus Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-uterus}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_Global_analysis.png}
-    \caption{Vagina Metrics}\label{fig:region-based-metrics-vagina}
+    \caption{Vagina Metrics using TotalSegmentator Region-based transferral}\label{fig:region-based-metrics-vagina}
   \end{figure}
 
 \end{landscape}
 
-\subsection{UniverSeg Metrics}\label{sect:universeg-appendix}
+\subsection{UniverSeg Metrics}\label{sect:universeg-Appendix}
 
 \begin{table}[h!]
   \centering
-  \caption{Added Path Length scores across each anatomy}
+  \caption{Added Path Length scores across each anatomy using UniverSeg}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1733,7 +1794,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{DICE scores across each anatomy}
+  \caption{DICE scores across each anatomy using UniverSeg}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1755,7 +1816,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Haussdorf scores across each anatomy}
+  \caption{Haussdorf scores across each anatomy using UniverSeg}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1777,7 +1838,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Relative volume difference across each anatomy}
+  \caption{Relative volume difference across each anatomy using UniverSeg}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1799,7 +1860,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Surface DSC across each anatomy}
+  \caption{Surface DSC across each anatomy using UniverSeg}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1824,52 +1885,52 @@ Therefore, before integrating tools into workflows, a committee must establish t
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsanorectum_1_combinednotable_UniverSeg_analysis.png}
-    \caption{Anorectum Metrics}\label{fig:universeg-metrics-anorectum}
+    \caption{Anorectum Metrics using UniverSeg}\label{fig:universeg-metrics-anorectum}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_UniverSeg_analysis.png}
-    \caption{Bladder Metrics}\label{fig:universeg-metrics-bladder}
+    \caption{Bladder Metrics using UniverSeg}\label{fig:universeg-metrics-bladder}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_UniverSeg_analysis.png}
-    \caption{CTVn Metrics}\label{fig:universeg-metrics-ctvn}
+    \caption{CTVn Metrics using UniverSeg}\label{fig:universeg-metrics-ctvn}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_UniverSeg_analysis.png}
-    \caption{CTVp Metrics}\label{fig:universeg-metrics-ctvp}
+    \caption{CTVp Metrics using UniverSeg}\label{fig:universeg-metrics-ctvp}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_UniverSeg_analysis.png}
-    \caption{Parametrium Metrics}\label{fig:universeg-metrics-parametrium}
+    \caption{Parametrium Metrics using UniverSeg}\label{fig:universeg-metrics-parametrium}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_UniverSeg_analysis.png}
-    \caption{Uterus Metrics}\label{fig:universeg-metrics-uterus}
+    \caption{Uterus Metrics using UniverSeg}\label{fig:universeg-metrics-uterus}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_UniverSeg_analysis.png}
-    \caption{Vagina Metrics}\label{fig:universeg-metrics-vagina}
+    \caption{Vagina Metrics using UniverSeg}\label{fig:universeg-metrics-vagina}
   \end{figure}
 
 \end{landscape}
 
-\subsection{MedSAM Box Prompt Metrics}\label{sect:medsam-appendix}
+\subsection{MedSAM Box Prompt Metrics}\label{sect:medsam-Appendix}
 
 \begin{table}[h!]
   \centering
-  \caption{Added Path Length scores across each anatomy}
+  \caption{Added Path Length scores across each anatomy using MedSAM Box Prompt}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1891,7 +1952,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{DICE scores across each anatomy}
+  \caption{DICE scores across each anatomy MedSAM Box Prompt}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1913,7 +1974,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Haussdorf Distance across each anatomy}
+  \caption{Haussdorf Distance across each anatomy MedSAM Box Prompt}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1935,7 +1996,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Relative volume difference across each anatomy}
+  \caption{Relative volume difference across each anatomy MedSAM Box Prompt}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1957,7 +2018,7 @@ Therefore, before integrating tools into workflows, a committee must establish t
 
 \begin{table}[h!]
   \centering
-  \caption{Surface DSC across each anatomy}
+  \caption{Surface DSC across each anatomy MedSAM Box Prompt}
   \resizebox{\textwidth}{!}{
     \begin{tabular}{l*{9}{>{\centering\arraybackslash}p{2cm}}}
         \toprule
@@ -1982,43 +2043,43 @@ Therefore, before integrating tools into workflows, a committee must establish t
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsanorectum_1_combinednotable_MedSAM_analysis.png}
-    \caption{Anorectum Metrics}\label{fig:medsam-metrics-anorectum}
+    \caption{Anorectum Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-anorectum}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsbladder_1_combinednotable_MedSAM_analysis.png}
-    \caption{Bladder Metrics}\label{fig:medsam-metrics-bladder}
+    \caption{Bladder Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-bladder}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvn_1_combinednotable_MedSAM_analysis.png}
-    \caption{CTVn Metrics}\label{fig:medsam-metrics-ctvn}
+    \caption{CTVn Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-ctvn}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsctvp_1_combinednotable_MedSAM_analysis.png}
-    \caption{CTVp Metrics}\label{fig:medsam-metrics-ctvp}
+    \caption{CTVp Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-ctvp}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsparametrium_1_combinednotable_MedSAM_analysis.png}
-    \caption{Parametrium Metrics}\label{fig:medsam-metrics-parametrium}
+    \caption{Parametrium Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-parametrium}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsuterus_1_combinednotable_MedSAM_analysis.png}
-    \caption{Uterus Metrics}\label{fig:medsam-metrics-uterus}
+    \caption{Uterus Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-uterus}
   \end{figure}
 
   \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{../../research/source/code/data/metrics/metricsvagina_1_combinednotable_MedSAM_analysis.png}
-    \caption{Vagina Metrics}\label{fig:medsam-metrics-vagina}
+    \caption{Vagina Metrics MedSAM Box Prompt}\label{fig:medsam-metrics-vagina}
   \end{figure}
 
 \end{landscape}
