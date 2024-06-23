@@ -12,6 +12,7 @@ class MedSAM(nn.Module):
         self.image_encoder = image_encoder
         self.mask_decoder = mask_decoder
         self.prompt_encoder = prompt_encoder
+        self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
         # freeze prompt encoder
         for param in self.prompt_encoder.parameters():
@@ -22,11 +23,15 @@ class MedSAM(nn.Module):
             for param in self.image_encoder.parameters():
                 param.requires_grad = False
 
+
+    def _image_embedding(self, image):
+        return self.image_encoder(image)
+
     def forward(self, image, point_prompt=None, boxes=None):
 
         # do not compute gradients for pretrained img encoder and prompt encoder
         with torch.no_grad():
-            image_embedding = self.image_encoder(image) # (B, 256, 64, 64)
+            image_embedding = self._image_embedding(image) # (B, 256, 64, 64)
             # not need to convert box to 1024x1024 grid
             # bbox is already in 1024x1024
             sparse_embeddings, dense_embeddings = self.prompt_encoder(
@@ -43,3 +48,5 @@ class MedSAM(nn.Module):
           ) # (B, 1, 256, 256)
 
         return low_res_masks
+    
+    
